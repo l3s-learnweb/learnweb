@@ -113,7 +113,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         }
 
         organisationDao.save(organisation);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public Organisation getSelectedOrganisation() {

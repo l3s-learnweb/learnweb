@@ -77,9 +77,13 @@ public class SurveyResource extends Resource {
     public Resource save() {
         if (openDate != null) {
             setMetadataValue("openDate", String.valueOf(openDate.toInstant(ZoneOffset.UTC).getEpochSecond()));
+        } else {
+            removeMetadataValue("openDate");
         }
         if (closeDate != null) {
             setMetadataValue("closeDate", String.valueOf(closeDate.toInstant(ZoneOffset.UTC).getEpochSecond()));
+        } else {
+            removeMetadataValue("closeDate");
         }
 
         setMetadataValueBoolean("quiz", quiz);

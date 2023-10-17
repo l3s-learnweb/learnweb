@@ -45,10 +45,10 @@
     <h:form prependId="false">
         <p:panel styleClass="ui-widget-content-flat">
             <f:facet name="header">
-                #{msg['ForumIndex.topic']}: #{forumTopicBean.topic.title}
+                #{msg['forum.topic']}: #{forumTopicBean.topic.title}
             </f:facet>
             <f:facet name="actions">
-                <p:commandButton value="#{msg['ForumIndex.post_reply']}" update=":post_dialog" styleClass="ui-button-warning" immediate="true"
+                <p:commandButton value="#{msg['forum.post_reply']}" update=":post_dialog" styleClass="ui-button-warning" immediate="true"
                                  action="#{forumTopicBean.replyPost}" oncomplete="PF('postDialog').show();"
                                  rendered="#{forumTopicBean.group.isMember(userBean.user)}">
                 </p:commandButton>
@@ -75,12 +75,12 @@
                             </h:outputText>
                         </p>
                         <p class="mb-0">
-                            <h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}"/>
+                            <h:outputText value="#{msg['forum.messages']}: #{post.user.forumPostCount}"/>
                         </p>
                     </div>
                 </p:column>
 
-                <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="h-100">
+                <p:column headerText="#{msg['forum.messages']}" styleClass="h-100">
                     <div class="d-flex flex-column h-100">
                         <div class="row border-bottom pb-1">
                             <ui:fragment rendered="#{not empty post.category}">
@@ -89,7 +89,7 @@
                                 </div>
                             </ui:fragment>
                             <div class="col text-end">
-                                #{msg['ForumIndex.postedOn']}
+                                #{msg['forum.postedOn']}
                                 <h:outputText value="#{post.createdAt}">
                                     <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
@@ -105,7 +105,7 @@
                         <div class="row border-top pt-1 mt-auto">
                             <ui:fragment rendered="#{post.editCount gt 0}">
                                 <div class="col">
-                                    <h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+                                    <h:outputFormat value="#{msg['forum.post_edited_state']}">
                                         <f:param value="#{post.editCount}"/>
                                         <f:param value="#{post.updatedAt}"/>
                                         <f:param value="#{post.editUser.username}"/>
@@ -124,7 +124,7 @@
                                                action="#{forumTopicBean.editPost(post)}" oncomplete="PF('postDialog').show();"
                                                rendered="#{post.canEditPost(userBean.user)}"/>
 
-                                <p:commandLink value="#{msg['ForumIndex.quote']}" update=":post_dialog" styleClass="mx-2" immediate="true"
+                                <p:commandLink value="#{msg['forum.quote']}" update=":post_dialog" styleClass="mx-2" immediate="true"
                                                action="#{forumTopicBean.quotePost(post)}" oncomplete="PF('postDialog').show();"
                                                rendered="#{forumTopicBean.group.isMember(userBean.user)}"/>
                             </div>
@@ -135,7 +135,7 @@
         </p:panel>
     </h:form>
 
-    <p:dialog id="post_dialog" widgetVar="postDialog" header="#{forumTopicBean.replyDialog ? msg['ForumIndex.reply'] : msg['edit']}"
+    <p:dialog id="post_dialog" widgetVar="postDialog" header="#{forumTopicBean.replyDialog ? msg['forum.reply'] : msg['edit']}"
               modal="true" closeOnEscape="true" dynamic="true"
               resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
         <h:form id="post_form">

@@ -39,7 +39,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
 
     public void onSave(Announcement announcement) {
         announcementDao.save(announcement);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public List<Announcement> getAnnouncements() {

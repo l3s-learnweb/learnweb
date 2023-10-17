@@ -18,15 +18,15 @@
         <div class="row">
             <div class="col-12">
                 <h:outputLink value="dashboard/glossary.jsf">#{msg.glossary_dashboard}</h:outputLink>
-                <h:outputText class="d-block">#{msg['Activity.dashboard_glossary_description']}</h:outputText>
+                <h:outputText class="d-block">#{msg['activity.dashboard_glossary_description']}</h:outputText>
             </div>
             <div class="col-12 my-2">
-                <h:outputLink value="dashboard/activity.jsf">#{msg['Activity.dashboard']}</h:outputLink>
-                <h:outputText class="d-block">#{msg['Activity.dashboard_activity_description']}</h:outputText>
+                <h:outputLink value="dashboard/activity.jsf">#{msg['activity.dashboard']}</h:outputLink>
+                <h:outputText class="d-block">#{msg['activity.dashboard_activity_description']}</h:outputText>
             </div>
             <h:panelGroup layout="block" styleClass="col-12" rendered="#{userBean.trackingEnabled}">
-                <h:outputLink value="dashboard/tracker.jsf">#{msg['Tracker.dashboard']}</h:outputLink>
-                <h:outputText class="d-block">#{msg['Activity.dashboard_tracker_description']}</h:outputText>
+                <h:outputLink value="dashboard/tracker.jsf">#{msg['dashboard.tracker']}</h:outputLink>
+                <h:outputText class="d-block">#{msg['activity.dashboard_tracker_description']}</h:outputText>
             </h:panelGroup>
         </div>
     </p:panel>

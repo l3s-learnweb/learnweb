@@ -143,7 +143,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         tedTranscriptDao.saveTranscriptLog(transcriptLog);
 
         getUser().clearCaches();
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     /**

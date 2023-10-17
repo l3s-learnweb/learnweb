@@ -14,16 +14,16 @@
 				<ui:repeat value="#{surveyEditBean.pages}" var="page" varStatus="pageStatus">
 					<div class="survey-page bg-body-tertiary d-flex flex-nowrap mb-3">
 						<div class="d-flex flex-column justify-content-center bg-info" style="width: 3rem;">
-							<p:commandButton form="page_edit_form" alt="#{msg['survey.up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
+							<p:commandButton form="page_edit_form" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
 											 actionListener="#{surveyEditBean.onMovePage(page, -1)}" update=":pages" process="@this" immediate="true"/>
-							<p:commandButton form="page_edit_form" alt="#{msg['survey.down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
+							<p:commandButton form="page_edit_form" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
 											 action="#{surveyEditBean.onMovePage(page, 1)}" update=":pages" process="@this" immediate="true"/>
 						</div>
 
 						<div class="flex-grow-1 p-2">
 							<h:form id="page_edit_form">
 								<div class="field">
-									<p:outputLabel for="@next" value="#{msg['survey.header_text']}:" styleClass="fw-bold"/>
+									<p:outputLabel for="@next" value="#{msg['survey.mod_header_text']}:" styleClass="fw-bold"/>
 									<p:inputTextarea value="#{page.title}" rows="1">
 										<p:ajax event="change" listener="#{surveyEditBean.onPageChange(page)}"/>
 									</p:inputTextarea>
@@ -31,7 +31,7 @@
 								</div>
 
 								<div class="field">
-									<p:outputLabel for="@next" value="#{msg['survey.description_text']}:" styleClass="fw-bold"/>
+									<p:outputLabel for="@next" value="#{msg['survey.mod_description_text']}:" styleClass="fw-bold"/>
 									<p:textEditor value="#{page.description}" allowBlocks="false">
 										<p:ajax event="change" listener="#{surveyEditBean.onPageChange(page)}"/>
 										<f:facet name="toolbar">
@@ -57,9 +57,9 @@
 								<ui:repeat value="#{page.questions}" var="question" varStatus="questionStatus">
 									<h:form id="question_edit_form" styleClass="survey-question bg-body-secondary mb-3 d-flex flex-nowrap" rendered="#{!question.deleted}">
 										<div class="d-flex flex-column justify-content-center bg-primary">
-											<p:commandButton id="a" alt="#{msg['survey.up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!questionStatus.first}"
+											<p:commandButton id="a" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!questionStatus.first}"
 															 actionListener="#{surveyEditBean.onMoveQuestion(page, question, -1)}" update="@parent:@parent:@parent" process="@this"/>
-											<p:commandButton id="b" alt="#{msg['survey.down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!questionStatus.last}"
+											<p:commandButton id="b" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!questionStatus.last}"
 															 action="#{surveyEditBean.onMoveQuestion(page, question, 1)}" update="@parent:@parent:@parent" process="@this"/>
 										</div>
 
@@ -71,7 +71,7 @@
 											</div>
 											<div class="d-flex flex-nowrap justify-content-end">
 												<p:commandButton value="#{msg['delete']}" actionListener="#{surveyEditBean.onDeleteQuestion(page, question)}" immediate="true" id="c" update="@parent:@parent:@parent" styleClass="ui-button-danger ui-button-flat">
-													<p:confirm message="#{msg['survey.are_you_sure']}"/>
+													<p:confirm message="#{msg['survey.mod_delete_question_confirmation']}"/>
 												</p:commandButton>
 											</div>
 										</div>
@@ -80,9 +80,9 @@
 							</h:panelGroup>
 
 							<div class="d-flex flex-nowrap">
-								<p:commandButton form="page_edit_form" action="#{surveyEditBean.onAddQuestion(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.add_question']}"
+								<p:commandButton form="page_edit_form" action="#{surveyEditBean.onAddQuestion(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_question']}"
 												 process="@this" immediate="true" update="@parent:questions"/>
-								<p:commandButton form="page_edit_form" action="#{surveyEditBean.onAddHeader(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.add_header']}"
+								<p:commandButton form="page_edit_form" action="#{surveyEditBean.onAddHeader(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
 												 process="@this" immediate="true" update="@parent:questions"/>
 							</div>
 						</div>
@@ -90,7 +90,7 @@
 				</ui:repeat>
 
 				<h:form id="survey_add" styleClass="d-flex flex-nowrap">
-					<p:commandButton action="#{surveyEditBean.onAddPage}" styleClass="ui-button-info ui-button-flat" value="#{msg['survey.add_page']}"
+					<p:commandButton action="#{surveyEditBean.onAddPage}" styleClass="ui-button-info ui-button-flat" value="#{msg['survey.mod_add_page']}"
 									 process="@this" immediate="true" update="@parent:@parent:@parent:pages"/>
 				</h:form>
 			</h:panelGroup>

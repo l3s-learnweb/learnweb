@@ -100,7 +100,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         }
 
         courseDao.save(course);
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public List<OptionWrapperGroup> getOptionGroups() {

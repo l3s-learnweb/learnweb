@@ -2,7 +2,8 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html"
                 xmlns:ui="jakarta.faces.facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
@@ -21,6 +22,22 @@
                 <f:selectItems value="#{res.defaultTabs}" var="defaultTab" itemLabel="#{msg['resource.tab.'+=defaultTab]}" itemValue="#{defaultTab}"/>
             </p:selectOneRadio>
             <p:message for="@previous"/>
+        </div>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{res.type eq 'survey'}">
+        <p:outputLabel for="@next" value="#{msg['survey.meta_open_date']}:"/>
+        <div class="fg-col">
+            <p:datePicker id="editDialogOpenDate" value="#{res.openDate}" pattern="dd.MM.yyyy" showIcon="true"/>
+            <p:message for="@previous"/>
+        </div>
+
+        <p:outputLabel for="@next" value="#{msg['survey.meta_close_date']}:"/>
+        <div class="fg-col">
+            <p:datePicker id="editDialogCloseDate" value="#{res.closeDate}" pattern="dd.MM.yyyy" showIcon="true"/>
+            <p:message for="@previous"/>
+            <o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
+                             message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
         </div>
     </ui:fragment>
 

@@ -48,7 +48,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
 
     public String onSave() {
         announcementDao.save(announcement);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
         setKeepMessages();
 
         return "/lw/admin/announcements.xhtml?faces-redirect=true";

@@ -28,7 +28,7 @@
             <div class="row p-1">
                 <p:outputPanel styleClass="col">
                     <h:outputText value="#{msg.filter}" styleClass="fw-light me-2"/>
-                    <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
+                    <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
                 <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto ui-button-warning" process="@this"
                                  update=":glossary_add" oncomplete="PF('glossaryEditDialog').show();return false;" global="false"/>
@@ -38,7 +38,7 @@
         <f:facet name="footer">
             <div class="row p-1">
                 <div class="col">
-                    <h:outputText value="#{msg['Glossary.total_entries']} = #{glossaryBean.entryCount}"></h:outputText>
+                    <h:outputText value="#{msg['glossary.total_entries']} = #{glossaryBean.entryCount}"></h:outputText>
                 </div>
                 <div class="col text-end">
                     <p:commandLink styleClass="text-warning me-2" onclick="PF('glossaryImportDialog').show();return false;"
@@ -123,7 +123,7 @@
     </p:dataTable>
 </h:form>
 
-<p:dialog widgetVar="glossaryImportDialog" header="#{msg['Glossary.import_glossary']}" modal="true" closeOnEscape="true"
+<p:dialog widgetVar="glossaryImportDialog" header="#{msg['glossary.import_glossary']}" modal="true" closeOnEscape="true"
           resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="import_form">
         <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse == null}">
@@ -132,11 +132,11 @@
         </h:panelGroup>
 
         <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse != null}">
-            <h:outputFormat value="#{msg['Glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
+            <h:outputFormat value="#{msg['glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
                 <f:param value="#{glossaryBean.importResponse.entryCount}"/>
             </h:outputFormat>
 
-            <h:outputText value="#{msg['Glossary.import_error']}" styleClass="d-block ui-messages-error p-2"
+            <h:outputText value="#{msg['glossary.import_error']}" styleClass="d-block ui-messages-error p-2"
                           rendered="#{not glossaryBean.importResponse.successful}"/>
             <p:dataTable var="error" value="#{glossaryBean.importResponse.errors}" rendered="#{not glossaryBean.importResponse.successful}">
                 <p:column headerText="#{msg.row}">
@@ -153,12 +153,12 @@
     </h:form>
 </p:dialog>
 
-<p:dialog widgetVar="glossaryEditDialog" header="#{msg['Glossary.edit_glossary']}" modal="true" closeOnEscape="true"
+<p:dialog widgetVar="glossaryEditDialog" header="#{msg['glossary.edit_glossary']}" modal="true" closeOnEscape="true"
           resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="glossary_add" prependId="false" enctype="multipart/form-data">
         <div class="row mb-3">
             <p:panelGrid id="grid" layout="flex" styleClass="col-12 col-md-6" contentStyleClass="row border-0" columnClasses="col-5, col-7" columns="2">
-                <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 1"/>
+                <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 1"/>
                 <p:column>
                     <p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" editable="true">
                         <f:selectItems value="#{glossaryBean.availableTopicOne}"/>
@@ -167,7 +167,7 @@
                     <p:message for="@previous"/>
                 </p:column>
 
-                <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 2"/>
+                <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 2"/>
                 <p:column>
                     <h:panelGroup id="topic_2">
                         <p:selectOneMenu value="#{glossaryBean.formEntry.topicTwo}" editable="true" rendered="#{not empty glossaryBean.availableTopicTwo}">
@@ -179,7 +179,7 @@
                     <p:message for="@previous"/>
                 </p:column>
 
-                <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 3"/>
+                <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 3"/>
                 <p:column>
                     <h:panelGroup id="topic_3">
                         <p:selectOneMenu value="#{glossaryBean.formEntry.topicThree}" editable="true" rendered="#{not empty glossaryBean.availableTopicThree}">
@@ -190,7 +190,7 @@
                     <p:message for="@previous"/>
                 </p:column>
 
-                <p:outputLabel for="description" styleClass="fw-bold" value="#{msg['Glossary.Definition']}"/>
+                <p:outputLabel for="description" styleClass="fw-bold" value="#{msg['glossary.definition']}"/>
                 <p:column>
                     <h:panelGroup>
                         <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"/>
@@ -221,9 +221,9 @@
         </div>
 
         <p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms">
-            <p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
+            <p:column headerText="#{msg['glossary.term']}" rendered="#{not term.deleted}">
                 <p:inputText id="term" value="#{term.term}" styleClass="w-100" required="#{not empty param[save.clientId]}"
-                             pt:onpaste="setPasteStatus(this, 'term');" label="#{msg['Glossary.term']}"/>
+                             pt:onpaste="setPasteStatus(this, 'term');" label="#{msg['glossary.term']}"/>
                 <p:message for="@previous"/>
 
                 <h:inputHidden value="#{term.termPasted}" id="paste_status_term"></h:inputHidden>
@@ -239,35 +239,35 @@
                 <p:message for="@previous"/>
             </p:column>
 
-            <p:column headerText="#{msg['Glossary.use']}" rendered="#{not term.deleted}">
+            <p:column headerText="#{msg['glossary.use']}" rendered="#{not term.deleted}">
                 <p:selectCheckboxMenu id="use" value="#{term.uses}" label="Uses" multiple="true" filter="true" filterMatchMode="startsWith">
-                    <f:selectItem itemValue="technical" itemLabel="#{msg['Glossary.use_technical']}"/>
-                    <f:selectItem itemValue="popular" itemLabel="#{msg['Glossary.use_popular']}"/>
-                    <f:selectItem itemValue="informal" itemLabel="#{msg['Glossary.use_informal']}"/>
+                    <f:selectItem itemValue="technical" itemLabel="#{msg['glossary.use_technical']}"/>
+                    <f:selectItem itemValue="popular" itemLabel="#{msg['glossary.use_popular']}"/>
+                    <f:selectItem itemValue="informal" itemLabel="#{msg['glossary.use_informal']}"/>
                 </p:selectCheckboxMenu>
             </p:column>
-            <p:column headerText="#{msg['Glossary.pronounciation']}" rendered="#{not term.deleted}">
+            <p:column headerText="#{msg['glossary.pronounciation']}" rendered="#{not term.deleted}">
                 <p:inputText id="pronoun" value="#{term.pronounciation}" styleClass="w-100" pt:onpaste="setPasteStatus(this, 'pronounciation');"/>
             </p:column>
-            <p:column headerText="#{msg['Glossary.acronym']}" rendered="#{not term.deleted}">
+            <p:column headerText="#{msg['glossary.acronym']}" rendered="#{not term.deleted}">
                 <p:inputText id="acro" value="#{term.acronym}" styleClass="w-100" pt:onpaste="setPasteStatus(this, 'acronym');"/>
             </p:column>
             <p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
                 <p:selectOneMenu id="ref" value="#{term.source}">
-                    <f:selectItem itemValue="#{null}" itemLabel="--#{msg['Glossary.select']}--"/>
-                    <f:selectItem itemValue="Wikipedia" itemLabel="#{msg['Glossary.wikipedia']}"></f:selectItem>
-                    <f:selectItem itemValue="encyclopaedia" itemLabel="#{msg['Glossary.encyclopaedia']}"></f:selectItem>
-                    <f:selectItem itemValue="monolingual dictionary" itemLabel="#{msg['Glossary.mono_dictionary']}"></f:selectItem>
-                    <f:selectItem itemValue="bilingual dictionary" itemLabel="#{msg['Glossary.bi_dictionary']}"></f:selectItem>
-                    <f:selectItem itemValue="scientific/academic publication" itemLabel="#{msg['Glossary.publication']}"></f:selectItem>
-                    <f:selectItem itemValue="institutional website" itemLabel="#{msg['Glossary.website']}"></f:selectItem>
-                    <f:selectItem itemValue="glossary" itemLabel="#{msg['Glossary.glossary']}"></f:selectItem>
+                    <f:selectItem itemValue="#{null}" itemLabel="--#{msg['glossary.select']}--"/>
+                    <f:selectItem itemValue="Wikipedia" itemLabel="#{msg['glossary.wikipedia']}"></f:selectItem>
+                    <f:selectItem itemValue="encyclopaedia" itemLabel="#{msg['glossary.encyclopaedia']}"></f:selectItem>
+                    <f:selectItem itemValue="monolingual dictionary" itemLabel="#{msg['glossary.mono_dictionary']}"></f:selectItem>
+                    <f:selectItem itemValue="bilingual dictionary" itemLabel="#{msg['glossary.bi_dictionary']}"></f:selectItem>
+                    <f:selectItem itemValue="scientific/academic publication" itemLabel="#{msg['glossary.publication']}"></f:selectItem>
+                    <f:selectItem itemValue="institutional website" itemLabel="#{msg['glossary.website']}"></f:selectItem>
+                    <f:selectItem itemValue="glossary" itemLabel="#{msg['glossary.glossary']}"></f:selectItem>
                     <f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
-                    <f:selectItem itemValue="patients' websites and blogs" itemLabel="#{msg['Glossary.web_blog']}"></f:selectItem>
+                    <f:selectItem itemValue="patients' websites and blogs" itemLabel="#{msg['glossary.web_blog']}"></f:selectItem>
                     <f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
                 </p:selectOneMenu>
             </p:column>
-            <p:column headerText="#{msg['Glossary.phraseology']}" rendered="#{not term.deleted}">
+            <p:column headerText="#{msg['glossary.phraseology']}" rendered="#{not term.deleted}">
                 <p:inputTextarea id="phraseology" value="#{term.phraseology}" styleClass="w-100" autoResize="false"
                                  pt:onpaste="setPasteStatus(this, 'phraseology');"/>
             </p:column>
@@ -281,7 +281,7 @@
 
         <div class="d-flex mt-3">
             <div class="me-auto">
-                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="ui-button-warning"
+                <p:commandButton id="add_synonym" value="#{msg['glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="ui-button-warning"
                                  update=":glossary_add :lang_terms" process="@this lang_terms">
                 </p:commandButton>
             </div>

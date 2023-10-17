@@ -2,7 +2,7 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:c="jakarta.tags.core"
                 xmlns:p="http://primefaces.org/ui">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.survey.SurveyResource"-->
@@ -10,15 +10,15 @@
 <c:if test="#{res.canModerateResource(userBean.user)}">
     <p:tabView id="survey_tabs" styleClass="ui-tabs-plaid res-embedded-tabs" activeIndex="${resourceDetailBean.tab}" prependId="false"
                dynamic="true" cache="false" effect="fade" onTabChange="updateSearchQuery('tab', index);">
-        <p:tab id="questions_tab" title="Edit Questions">
+        <p:tab id="questions_tab" title="#{msg['survey.mod_tabs_questions']}">
             <ui:decorate template="/WEB-INF/templates/blocks/survey/questions.xhtml"/>
         </p:tab>
-        <p:tab id="responses_tab" title="Responses">
+        <p:tab id="responses_tab" title="#{msg['survey.mod_tabs_responses']}">
             <ui:decorate template="/WEB-INF/templates/blocks/survey/responses.xhtml">
                 <ui:param name="res" value="#{res}"/>
             </ui:decorate>
         </p:tab>
-        <p:tab id="preview_tab" title="Answer (Preview)">
+        <p:tab id="preview_tab" title="#{msg['survey.mod_tabs_answer']}">
             <ui:decorate template="/WEB-INF/templates/blocks/survey/answer.xhtml"/>
         </p:tab>
     </p:tabView>

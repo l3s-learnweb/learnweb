@@ -153,7 +153,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         userDao.save(selectedUser);
 
         log(Action.changing_profile, 0, selectedUser.getId());
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void onChangePassword() {
@@ -329,12 +329,12 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             groupDao.updateNotificationFrequency(groupUser.getNotificationFrequency(), groupUser.getGroupId(), selectedUser.getId());
         }
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void onSaveNotificationFrequency(GroupUser group, int userId) {
         groupDao.updateNotificationFrequency(group.getNotificationFrequency(), group.getGroupId(), userId);
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public Theme[] getAvailableThemes() {

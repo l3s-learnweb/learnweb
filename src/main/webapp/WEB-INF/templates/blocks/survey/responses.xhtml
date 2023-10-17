@@ -28,10 +28,7 @@
 			<p:column headerText="#{msg.student_id}">
 				<h:outputText value="#{result.user.studentId}"/>
 			</p:column>
-			<p:column headerText="#{msg.courses}">
-				<h:outputText value="#{result.user.courses}"/>
-			</p:column>
-			<p:column headerText="#{msg.submit}?">
+			<p:column headerText="#{msg.submitted}">
 				<h:outputText value="#{result.submitted}"/>
 			</p:column>
 			<p:columns var="q" value="#{surveyResponsesBean.writeableQuestions}" headerText="#{q.question}">

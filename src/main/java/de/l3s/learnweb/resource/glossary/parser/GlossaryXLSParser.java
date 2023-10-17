@@ -41,7 +41,7 @@ public class GlossaryXLSParser {
                 if (value.contains(" = ")) {
                     String[] parts = value.split(" = ");
 
-                    if (GlossaryRowBuilder.isEqualForAnyLocale(parts[0], "Glossary.total_entries")) {
+                    if (GlossaryRowBuilder.isEqualForAnyLocale(parts[0], "glossary.total_entries")) {
                         return true;
                     }
                 }

@@ -1139,6 +1139,10 @@ public class Resource extends AbstractResource implements Serializable {
         return metadata.put(key, value.replace(METADATA_SEPARATOR, ','));
     }
 
+    public String removeMetadataValue(String key) {
+        return metadata.remove(key);
+    }
+
     public Set<String> getMetadataKeys() {
         return metadata.keySet();
     }

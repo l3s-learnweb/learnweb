@@ -142,7 +142,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         resource.save();
 
         log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
 
         resource.unlockResource(getUser());
         viewAction = ViewAction.viewResource;
@@ -263,7 +263,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void onEditComment(Comment comment) {
         commentDao.save(comment);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void onDeleteComment(Comment comment) {

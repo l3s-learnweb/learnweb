@@ -47,7 +47,7 @@
             <li class="filter #{searchBean.searchMode =='image' ? 'active':''}">
                 <h:link outcome="search">
                     <span class="filter-title">
-                        <span class="text-truncate">#{msg.Images}</span>
+                        <span class="text-truncate">#{msg.images}</span>
                     </span>
                     <f:param name="action" value="image"/>
                     <f:param name="query" value="#{searchBean.query}"/>
@@ -56,7 +56,7 @@
             <li class="filter #{searchBean.searchMode =='video' ? 'active':''}">
                 <h:link outcome="search">
                      <span class="filter-title">
-                        <span class="text-truncate">#{msg.Videos}</span>
+                        <span class="text-truncate">#{msg.videos}</span>
                     </span>
                     <f:param name="action" value="video"/>
                     <f:param name="query" value="#{searchBean.query}"/>

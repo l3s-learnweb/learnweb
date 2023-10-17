@@ -218,7 +218,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
 
         if (!containsUndeletedTerms(formEntry)) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "glossary.entry_validation");
             return;
         }
 
@@ -228,7 +228,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
         glossaryResource.getEntries().add(formEntry);
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         onClearEntryForm();
     }
 
@@ -253,7 +253,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public void onDeleteTerm(GlossaryTerm term) {
         if (!containsUndeletedTerms(formEntry)) {
-            addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
+            addGrowl(FacesMessage.SEVERITY_INFO, "glossary.term_validation");
             return;
         }
 

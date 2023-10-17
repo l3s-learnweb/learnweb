@@ -65,17 +65,15 @@
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
-                <p:outputLabel for="@next" value="#{msg['survey.open_date']}:"/>
+                <p:outputLabel for="@next" value="#{msg['survey.meta_open_date']}:"/>
                 <div class="fg-col">
-                    <p:datePicker id="editDialogOpenDate" value="#{addResourceBean.resource.openDate}"
-                                  required="true" pattern="dd.MM.yyyy" showIcon="true"/>
+                    <p:datePicker id="editDialogOpenDate" value="#{addResourceBean.resource.openDate}" pattern="dd.MM.yyyy" showIcon="true"/>
                     <p:message for="@previous"/>
                 </div>
 
-                <p:outputLabel for="@next" value="#{msg['survey.close_date']}:"/>
+                <p:outputLabel for="@next" value="#{msg['survey.meta_close_date']}:"/>
                 <div class="fg-col">
-                    <p:datePicker id="editDialogCloseDate" value="#{addResourceBean.resource.closeDate}"
-                                  required="true" pattern="dd.MM.yyyy" showIcon="true"/>
+                    <p:datePicker id="editDialogCloseDate" value="#{addResourceBean.resource.closeDate}" pattern="dd.MM.yyyy" showIcon="true"/>
                     <p:message for="@previous"/>
                     <o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
                                      message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />

@@ -35,7 +35,7 @@
         </ui:repeat>
     </p:tab>
 
-    <p:tab title="#{msg['Archive.versions']} (#{res.archiveUrls.size()})" rendered="#{res.type eq 'website' and not empty res.archiveUrls}">
+    <p:tab title="#{msg['archive.versions']} (#{res.archiveUrls.size()})" rendered="#{res.type eq 'website' and not empty res.archiveUrls}">
         <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive.xhtml">
             <ui:param name="res" value="#{res}"/>
         </ui:decorate>

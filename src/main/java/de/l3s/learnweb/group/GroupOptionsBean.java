@@ -96,7 +96,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         //getLearnweb().getGroupManager().resetCache();
         getUser().clearCaches();
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void copyGroup() {

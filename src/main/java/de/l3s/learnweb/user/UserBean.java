@@ -371,8 +371,8 @@ public class UserBean implements Serializable {
                 .addElement(DefaultMenuItem.builder().value(msg.getString("statistics")).icon("fas fa-chart-line").url("admin/statistics.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("transcript")).icon("fas fa-language").url("admin/transcript.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("glossary_dashboard")).icon("fas fa-chart-bar").url("dashboard/glossary.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("Activity.dashboard")).icon("fas fa-chart-line").url("dashboard/activity.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("Tracker.dashboard")).icon("fas fa-mouse-pointer").url("dashboard/tracker.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("activity.dashboard")).icon("fas fa-chart-line").url("dashboard/activity.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("dashboard.tracker")).icon("fas fa-mouse-pointer").url("dashboard/tracker.jsf").build())
                 .build();
             model.getElements().add(moderatorSubmenu);
         }
