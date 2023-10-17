@@ -79,11 +79,11 @@
 			</p:column>
 
 			<p:column headerText="#{msg.word}">
-				<h:outputText value="#{log.wordsSelected}"/>
+				<h:outputText value="#{log.selection}"/>
 			</p:column>
 
-			<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
-				<h:outputText value="#{log.userAnnotation}"/>
+			<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.annotation}">
+				<h:outputText value="#{log.annotation}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
@@ -102,8 +102,8 @@
 				<h:outputText value="#{log.action}"/>
 			</p:column>
 
-			<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
-				<h:outputText value="#{log.timestamp}"/>
+			<p:column headerText="#{msg.time_stamp}" sortBy="#{log.createdAt}">
+				<h:outputText value="#{log.createdAt}"/>
 			</p:column>
 		</p:dataTable>
 	</h:form>

@@ -2,9 +2,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:faces="jakarta.faces"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+                xmlns:fn="jakarta.tags.functions">
 
 <!--@elvariable id="question" type="de.l3s.learnweb.resource.survey.SurveyQuestion"-->
 
@@ -38,7 +38,7 @@
     <p:message for="@previous"/>
 </div>
 
-<div class="row field align-items-end" jsf:rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
+<div class="row field align-items-end" faces:rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
     <p:outputPanel styleClass="col d-flex flex-column">
         <p:outputLabel for="@next" value="#{msg['survey.question_type']}:" styleClass="fw-bold"/>
         <p:selectOneMenu value="#{question.type}">

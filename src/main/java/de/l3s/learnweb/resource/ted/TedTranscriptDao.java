@@ -47,10 +47,6 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
     @SqlQuery("SELECT resource_id FROM lw_resource WHERE url = ? and owner_user_id = 7727")
     Optional<Integer> findResourceIdByTedXUrl(String url);
 
-    @RegisterRowMapper(TranscriptLogMapper.class)
-    @SqlQuery("SELECT a.* FROM lw_transcript_log a JOIN lw_resource USING(resource_id) WHERE user_id IN(<userIds>) and deleted = 0 ORDER BY user_id, created_at DESC")
-    List<TranscriptLog> findTranscriptLogsByUserIds(@BindList("userIds") Collection<Integer> userIds);
-
     @RegisterRowMapper(SimpleTranscriptLogMapper.class)
     @SqlQuery("SELECT t1.owner_user_id, t1.resource_id, title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount "
         + "FROM lw_resource t1 LEFT JOIN lw_transcript_log t2 ON t1.resource_id = t2.resource_id "
@@ -107,17 +103,6 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
 
     @SqlUpdate("INSERT INTO learnweb_large.ted_transcripts_lang_mapping (language_code,language) VALUES (?,?) ON DUPLICATE KEY UPDATE language_code = language_code")
     void saveTranscriptLangMapping(String langCode, String language);
-
-    default void saveTranscriptLog(TranscriptLog transcriptLog) {
-        getHandle().createUpdate("INSERT into lw_transcript_log(user_id,resource_id,words_selected,user_annotation,action,created_at) VALUES (?,?,?,?,?,?)")
-            .bind(0, transcriptLog.getUserId())
-            .bind(1, transcriptLog.getResourceId())
-            .bind(2, transcriptLog.getWordsSelected())
-            .bind(3, transcriptLog.getUserAnnotation())
-            .bind(4, transcriptLog.getAction())
-            .bind(5, transcriptLog.getTimestamp())
-            .execute();
-    }
 
     default void saveTranscriptSelection(String transcript, int resourceId) {
         if (StringUtils.isEmpty(transcript)) {
@@ -184,20 +169,6 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
             video.setTags(rs.getString("tags"));
             video.setDuration(rs.getInt("duration"));
             return video;
-        }
-    }
-
-    class TranscriptLogMapper implements RowMapper<TranscriptLog> {
-        @Override
-        public TranscriptLog map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            return new TranscriptLog(
-                rs.getInt("user_id"),
-                rs.getInt("resource_id"),
-                rs.getString("words_selected"),
-                rs.getString("user_annotation"),
-                rs.getString("action"),
-                rs.getTimestamp("created_at").toInstant()
-            );
         }
     }
 
