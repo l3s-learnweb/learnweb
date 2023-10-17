@@ -74,7 +74,7 @@ jobs:
 
   deploy-prod:
     runs-on: ubuntu-latest
-    if: startsWith(github.event.head_commit.message, 'chore') && endsWith(github.event.head_commit.message, 'version release')
+    if: contains(github.event.workflow_run.head_commit.message, 'version release')
     needs: [ build ]
     steps:
       - uses: actions/download-artifact@v3
@@ -101,7 +101,7 @@ jobs:
               ProxyJump bastion
 
       - name: Check if artifact exists
-        run: ssh learnweb test -f "${{ secrets.DEPLOY_PATH }}/ROOT##${{ needs.build.outputs.version }}.war" && exit 1
+        run: "! ssh learnweb test -f '${{ secrets.DEPLOY_PATH }}/ROOT##${{ needs.build.outputs.version }}.war' || false"
 
       - name: Copy artifact to server
         run: rsync -avzh --ignore-existing ROOT##*.war learnweb:${{ secrets.DEPLOY_PATH }}/
