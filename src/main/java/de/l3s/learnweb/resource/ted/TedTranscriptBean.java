@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,10 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -38,7 +42,7 @@ import de.l3s.util.bean.BeanHelper;
 public class TedTranscriptBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -1803725556672379697L;
-    //private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
+    private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
 
     private static final Pattern SPACES = Pattern.compile("\\s+");
 
@@ -237,11 +241,20 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
         if (languageList == null) {
             languageList = new LinkedList<>();
-            Map<String, String> langList = tedTranscriptDao.findLanguages(videoResourceId);
+            List<String> langList = tedTranscriptDao.findLanguagesByResourceId(videoResourceId);
             if (langList.isEmpty()) {
                 languageList.add(new SelectItem("NA", "No Transcripts Available"));
             } else {
-                languageList.addAll(BeanHelper.getLanguagesAsSelectItems(langList.values().toArray(new String[0]), getBundle()));
+                List<Locale> locales = new ArrayList<>();
+                try {
+                    for (String lang : langList) {
+                        locales.add(LocaleUtils.toLocale(lang));
+                    }
+                } catch (IllegalArgumentException e) {
+                    log.error("Error while converting language code to locale", e);
+                }
+
+                languageList.addAll(BeanHelper.getLocalesAsSelectItems(locales, getLocale()));
             }
         }
         return languageList;

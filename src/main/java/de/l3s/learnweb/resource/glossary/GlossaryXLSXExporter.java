@@ -117,7 +117,7 @@ public final class GlossaryXLSXExporter {
                 cell.setCellStyle(style);
 
                 cell = row.createCell(5);
-                cell.setCellValue(bundle.getString("language_" + term.getLanguage().toLanguageTag()));
+                cell.setCellValue(term.getLanguage().getDisplayLanguage(bundle.getLocale()));
                 cell.setCellStyle(style);
 
                 cell = row.createCell(6);

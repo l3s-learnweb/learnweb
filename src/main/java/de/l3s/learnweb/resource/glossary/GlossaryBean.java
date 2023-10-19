@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -47,7 +46,6 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
-import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
@@ -364,10 +362,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     private Map<String, Locale> getLanguageMap() {
         HashMap<String, Locale> languageMap = new HashMap<>();
         for (Locale locale : BeanHelper.getSupportedLocales()) {
-            ResourceBundle bundle = MessagesBundle.of(locale);
-
             for (Locale glossaryLocale : glossaryResource.getAllowedLanguages()) {
-                languageMap.put(bundle.getString("language_" + glossaryLocale.getLanguage()), glossaryLocale);
+                languageMap.put(glossaryLocale.getDisplayLanguage(locale), glossaryLocale);
             }
         }
         return languageMap;
@@ -551,7 +547,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public List<SelectItem> getAllowedTermLanguages() {
         if (null == allowedTermLanguages) {
-            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getBundle());
+            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getLocale());
         }
         return allowedTermLanguages;
     }

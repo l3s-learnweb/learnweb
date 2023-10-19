@@ -1,6 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:f="jakarta.faces.core"
 				xmlns:h="jakarta.faces.html"
+				xmlns:c="jakarta.tags.core"
 				xmlns:ui="jakarta.faces.facelets"
 				xmlns:p="http://primefaces.org/ui">
 
@@ -11,30 +12,13 @@
 			</h:outputLink>
 
 			<p:menu overlay="true" trigger="languageDropdown" my="right top" at="right bottom" collision="fit" styleClass="ui-menu-navbar">
-				<p:menuitem action="#{userBean.setLocaleCode('de')}" immediate="true" process="@this">
-					<h:graphicImage name="images/flags/flag_de.svg" alt="#{msg.language_de}"/>
-					<span>Deutsch</span>
-				</p:menuitem>
-				<p:menuitem action="#{userBean.setLocaleCode('en')}" immediate="true" process="@this">
-					<h:graphicImage name="images/flags/flag_en.svg" alt="#{msg.language_en}"/>
-					<span>English</span>
-				</p:menuitem>
-				<p:menuitem action="#{userBean.setLocaleCode('es')}" immediate="true" process="@this">
-					<h:graphicImage name="images/flags/flag_es.svg" alt="#{msg.language_es}"/>
-					<span>Español</span>
-				</p:menuitem>
-				<p:menuitem action="#{userBean.setLocaleCode('it')}" immediate="true" process="@this">
-					<h:graphicImage name="images/flags/flag_it.svg" alt="#{msg.language_it}"/>
-					<span>Italiano</span>
-				</p:menuitem>
-				<p:menuitem action="#{userBean.setLocaleCode('pt')}" immediate="true" process="@this">
-					<h:graphicImage name="images/flags/flag_pt.svg" alt="#{msg.language_pt}"/>
-					<span>Português</span>
-				</p:menuitem>
-				<p:menuitem action="#{userBean.setLocaleCode('uk')}" immediate="true" process="@this">
-					<h:graphicImage name="images/flags/flag_uk.svg" alt="#{msg.language_uk}"/>
-					<span>Українська</span>
-				</p:menuitem>
+				<c:forEach items="#{userBean.supportedLocales}" var="locale">
+					<p:menuitem action="#{userBean.setLocaleCode(locale.language)}" immediate="true" process="@this">
+						<h:graphicImage name="images/flags/flag_#{locale.language}.svg" alt="#{locale.displayName}"/>
+						<span class="text-capitalize">#{locale.getDisplayName(locale)}</span>
+					</p:menuitem>
+				</c:forEach>
+
 				<p:menuitem action="#{userBean.setLocaleCode('xx')}" immediate="true" process="@this" rendered="#{userBean.admin}">
 					<h:graphicImage name="images/flags/flag_xx.svg" alt="Show message keys"/>
 					<span>Developer</span>

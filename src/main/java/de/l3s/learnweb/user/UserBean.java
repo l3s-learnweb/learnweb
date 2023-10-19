@@ -58,6 +58,7 @@ public class UserBean implements Serializable {
     private transient List<Group> newGroups;
     private transient BaseMenuModel sidebarMenuModel;
     private transient Instant sidebarMenuModelUpdate;
+    private transient List<Locale> supportedLocales;
     private final HashMap<Integer, SurveyResponse> surveyResponses = new HashMap<>();
 
     @PostConstruct
@@ -504,6 +505,13 @@ public class UserBean implements Serializable {
 
     public boolean isLanguageSwitchEnabled() {
         return !getActiveOrganisation().map(o -> o.getOption(Option.Users_Hide_language_switch)).orElse(false);
+    }
+
+    public List<Locale> getSupportedLocales() {
+        if (supportedLocales == null) {
+            supportedLocales = Faces.getSupportedLocales();
+        }
+        return supportedLocales;
     }
 
     public boolean isHideSidebarMenu() {
