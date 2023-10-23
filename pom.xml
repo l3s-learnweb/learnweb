@@ -517,7 +517,7 @@
             <!-- Provides commands to check dependency tree -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
             </plugin>
             <!-- Provides commands to check for duplicate classes across dependencies -->
             <plugin>
