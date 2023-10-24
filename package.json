@@ -23,7 +23,7 @@
     "@popperjs/core": "^2.11.8",
     "@simonwep/pickr": "^1.8.2",
     "bootstrap": "^5.3.0",
-    "highcharts": "^8.2.2",
+    "highcharts": "^11.1.0",
     "jquery-contextmenu": "^2.9.2",
     "justifiedGallery": "^3.8.1",
     "shepherd.js": "^11.1.1",
