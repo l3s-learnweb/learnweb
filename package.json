@@ -27,7 +27,7 @@
     "jquery-contextmenu": "^2.9.2",
     "justifiedGallery": "^3.8.1",
     "shepherd.js": "^11.1.1",
-    "video.js": "^8.3.0"
+    "video.js": "^8.6.1"
   },
   "devDependencies": {
     "esbuild": "^0.19.2",
