@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero paddings to make sure v10 is newer than v9 -->
-    <version>3.22.00</version>
+    <version>3.23.00</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -409,7 +409,7 @@
             <!-- Runs linter on Java sources to check code style -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <configLocation>src/main/conf/checkstyle-config.xml</configLocation>
                     <consoleOutput>false</consoleOutput>
@@ -444,7 +444,7 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
             </plugin>
             <!-- Specifies WebARchive configuration -->
             <plugin>
@@ -473,7 +473,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.17</version>
+                <version>11.0.18</version>
                 <configuration>
                     <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
                     <webApp>
