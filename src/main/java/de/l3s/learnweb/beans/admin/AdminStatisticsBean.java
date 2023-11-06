@@ -55,8 +55,8 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             return;
         }
 
-        String query = "SELECT g.group_id, g.title, COUNT(r.resource_id) AS resources, IFNULL(SUM(rate_number), 0) AS ratings, "
-            + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_thumb c ON c.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as thumb_ratings, "
+        String query = "SELECT g.group_id, g.title, COUNT(r.resource_id) AS resources, "
+            + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_rating c ON c.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as ratings, "
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_comment c ON c.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as comments, "
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_tag t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as tags, "
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_versions, "
@@ -70,8 +70,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                 int groupId = rs.getInt("group_id");
                 result.put("title", rs.getString("title"));
                 result.put("resources", rs.getString("resources"));
-                result.put("star_ratings", rs.getString("ratings"));
-                result.put("thumb_ratings", rs.getString("thumb_ratings"));
+                result.put("ratings", rs.getString("ratings"));
                 result.put("comments", rs.getString("comments"));
                 result.put("tags", rs.getString("tags"));
                 result.put("no_of_archived_versions", rs.getString("no_of_archived_versions"));

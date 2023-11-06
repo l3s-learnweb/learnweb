@@ -187,18 +187,6 @@ public class ResourceDecorator implements Serializable {
         return resource.getUser();
     }
 
-    public double getStarRating() {
-        return resource.getStarRating();
-    }
-
-    public int getRateNumber() {
-        return resource.getRateNumber();
-    }
-
-    public int getRatingSum() {
-        return resource.getRatingSum();
-    }
-
     //getters for new variables for extended metadata (Chloe)
 
     public String getLanguage() {

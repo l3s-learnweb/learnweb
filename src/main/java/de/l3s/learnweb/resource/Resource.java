@@ -93,8 +93,6 @@ public class Resource extends AbstractResource implements Serializable {
     private int width;
     private int height;
     private String idAtService;
-    private int ratingSum;
-    private int rateNumber;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
     private String embeddedUrl; // stored in the database
@@ -109,14 +107,10 @@ public class Resource extends AbstractResource implements Serializable {
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
     private DefaultTab defaultTab = DefaultTab.SCREENSHOT;
 
-    // rating
-    private int thumbUp = -1;
-    private int thumbDown = -1;
-    private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
-    private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
+    private HashMap<String, ResourceRating> ratings; // ratingType : rating
     private EnumMap<FileType, File> files; // type : file
-    private final HashSet<File> addedFiles = new HashSet<>(); // files that were added to the resource since last save
-    private final HashSet<File> deletedFiles = new HashSet<>(); // files that were deleted from the resource since last save
+    private final HashSet<File> addedFiles = new HashSet<>(); // files added to the resource since last save
+    private final HashSet<File> deletedFiles = new HashSet<>(); // files deleted from the resource since last save
 
     // caches
     private transient String thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
@@ -447,36 +441,46 @@ public class Resource extends AbstractResource implements Serializable {
         this.format = format;
     }
 
-    public double getStarRating() {
-        return ratingSum == 0 ? 0.0 : (double) ratingSum / (double) rateNumber;
+    public Map<String, ResourceRating> getRatings() {
+        if (ratings == null && id != 0) {
+            ratings = Learnweb.dao().getResourceDao().findRatings(this);
+        }
+        return ratings;
     }
 
-    public int getStarRatingRounded() {
-        return ratingSum == 0 ? 0 : getRatingSum() / getRateNumber();
+    public ResourceRating getRating(String ratingType) {
+        return getRatings().computeIfAbsent(ratingType, ResourceRating::new);
     }
 
-    public void setStarRatingRounded(int value) {
-        // dummy method, is required by p:rating
+    public float getRatingAvg(String ratingType) {
+        return getRating(ratingType).average();
     }
 
-    public int getRateNumber() {
-        return rateNumber;
+    public int getRatingVotes(String ratingType) {
+        return getRating(ratingType).total();
     }
 
-    public void setRateNumber(int rateNumber) {
-        this.rateNumber = rateNumber;
+    public boolean isRated(int userId, String ratingType) {
+        if (getRatings().containsKey(ratingType)) {
+            return getRating(ratingType).isRated(userId);
+        }
+        return false;
     }
 
-    public int getRatingSum() {
-        return ratingSum;
+    public Integer getRateByUser(int userId, String ratingType) {
+        if (getRatings().containsKey(ratingType)) {
+            return getRating(ratingType).getRate(userId);
+        }
+        return null;
     }
 
-    public void setRatingSum(int rating) {
-        this.ratingSum = rating;
+    public void rate(User user, String ratingType, int value) {
+        Learnweb.dao().getResourceDao().insertRating(this, user, ratingType, value);
+        getRatings().computeIfAbsent(ratingType, ResourceRating::new).addRate(user.getId(), value);
     }
 
     /**
-     * @return Returns a comma separated list of tags
+     * @return a comma-separated list of tags
      */
     public String getTagsAsString() {
         return getTagsAsString(", ");
@@ -515,31 +519,6 @@ public class Resource extends AbstractResource implements Serializable {
     @Override
     public int hashCode() {
         return getId();
-    }
-
-    /**
-     * Rate this resource.
-     *
-     * @param value the rating 1-5
-     * @param user the user who rates
-     */
-    public void rate(int value, User user) {
-        Learnweb.dao().getResourceDao().insertResourceRating(id, user.getId(), value);
-
-        rateNumber++;
-        ratingSum += value;
-
-        rateByUser.put(user.getId(), value);
-    }
-
-    public Integer getRateByUser(int userId) {
-        // get value from cache, or query database if absent
-        return rateByUser.computeIfAbsent(userId, key -> Learnweb.dao().getResourceDao().findResourceRating(id, key).orElse(null));
-    }
-
-    public boolean isRatedByUser(int userId) {
-        Integer value = getRateByUser(userId);
-        return value != null;
     }
 
     /**
@@ -584,64 +563,6 @@ public class Resource extends AbstractResource implements Serializable {
             log.error("Unknown type for format: {}; resourceId: {}", format, getId(), new Exception());
             this.type = ResourceType.file;
         }
-    }
-
-    public int getThumbUp() {
-        if (thumbUp < 0) {
-            Learnweb.dao().getResourceDao().findThumbRatings(this).ifPresent(pair -> {
-                setThumbUp(pair.left);
-                setThumbDown(pair.right);
-            });
-        }
-        return thumbUp;
-    }
-
-    public void setThumbUp(int thumbUp) {
-        this.thumbUp = thumbUp;
-    }
-
-    public int getThumbDown() {
-        if (thumbDown < 0) {
-            Learnweb.dao().getResourceDao().findThumbRatings(this).ifPresent(pair -> {
-                setThumbUp(pair.left);
-                setThumbDown(pair.right);
-            });
-        }
-        return thumbDown;
-    }
-
-    public void setThumbDown(int thumbDown) {
-        this.thumbDown = thumbDown;
-    }
-
-    public void thumbRate(User user, int direction) throws IllegalAccessError {
-        if (direction != 1 && direction != -1) {
-            throw new IllegalArgumentException("Illegal value [" + direction + "] for direction. Valid values are 1 and -1");
-        }
-
-        if (isThumbRatedByUser(user)) {
-            throw new IllegalAccessError("You have already rated this resource");
-        }
-
-        if (direction == 1) {
-            thumbUp++;
-        } else {
-            thumbDown++;
-        }
-
-        Learnweb.dao().getResourceDao().insertThumbRate(this, user, direction);
-
-        thumbRateByUser.put(user.getId(), direction);
-    }
-
-    public Integer getThumbRateByUser(User user) {
-        // get value from cache, or query database if absent
-        return thumbRateByUser.computeIfAbsent(user.getId(), key -> Learnweb.dao().getResourceDao().findThumbRate(this, user).orElse(null));
-    }
-
-    public boolean isThumbRatedByUser(User user) {
-        Integer value = getThumbRateByUser(user);
-        return value != null;
     }
 
     public String getUrl() {
