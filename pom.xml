@@ -444,7 +444,7 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.2.2</version>
             </plugin>
             <!-- Specifies WebARchive configuration -->
             <plugin>
