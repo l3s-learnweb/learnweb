@@ -43,6 +43,9 @@
     "@percy/cli": "^1.26.0",
     "@percy/puppeteer": "^2.0.2"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "eslintConfig": {
     "extends": [
       "airbnb-base",

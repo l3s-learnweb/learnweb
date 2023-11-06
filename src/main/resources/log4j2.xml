@@ -2,7 +2,7 @@
 <Configuration packages="org.apache.logging.log4j.core,io.sentry.log4j2">
     <Properties>
         <Property name="LEARNWEB_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{9}:%line - %msg%n</Property>
-        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs</Property>
+        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.base:-.}/logs</Property>
         <Property name="LEARNWEB_LOG_BASENAME">${web:contextPath:-}learnweb</Property>
     </Properties>
 
