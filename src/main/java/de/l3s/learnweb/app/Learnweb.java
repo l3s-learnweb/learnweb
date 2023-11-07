@@ -6,10 +6,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Inject;
 
+import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.Handle;
 import org.omnifaces.cdi.Eager;
 
 import de.l3s.interweb.client.Interweb;
+import de.l3s.learnweb.gdpr.YourActivityBean;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
@@ -84,6 +86,7 @@ public final class Learnweb {
      */
     @PreDestroy
     public void destroy() {
+        LogManager.getLogger(Learnweb.class).info("Learnweb is shutting down...");
         daoProvider.destroy();
     }
 
