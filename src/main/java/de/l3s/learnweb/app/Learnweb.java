@@ -11,7 +11,6 @@ import org.jdbi.v3.core.Handle;
 import org.omnifaces.cdi.Eager;
 
 import de.l3s.interweb.client.Interweb;
-import de.l3s.learnweb.gdpr.YourActivityBean;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;

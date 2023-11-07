@@ -6,8 +6,6 @@ import jakarta.servlet.annotation.WebListener;
 
 import org.apache.logging.log4j.LogManager;
 
-import de.l3s.learnweb.app.DaoProvider;
-
 import io.sentry.HubAdapter;
 
 @WebListener
