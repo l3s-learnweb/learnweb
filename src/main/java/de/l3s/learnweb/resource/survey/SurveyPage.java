@@ -39,7 +39,7 @@ public class SurveyPage implements HasId, Deletable, Serializable {
         setOrder(other.order);
 
         for (SurveyQuestion question : other.getQuestions()) {
-            questions.add(new SurveyQuestion(question));
+            getQuestions().add(new SurveyQuestion(question));
         }
     }
 
@@ -125,10 +125,10 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     public List<SurveyQuestion> getQuestions() {
         if (null == questions) {
             if (getId() == 0) {
-                return new ArrayList<>();
+                questions = new ArrayList<>();
+            } else {
+                questions = Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByResourceId(getResourceId(), getId());
             }
-
-            questions = Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByResourceId(getResourceId(), getId());
         }
         return questions;
     }
