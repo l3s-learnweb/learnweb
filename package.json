@@ -30,7 +30,7 @@
     "video.js": "^8.6.1"
   },
   "devDependencies": {
-    "esbuild": "^0.19.2",
+    "esbuild": "^0.19.8",
     "esbuild-sass-plugin": "^2.16.0",
     "eslint": "^8.45.0",
     "eslint-config-airbnb-base": "^15.0.0",
