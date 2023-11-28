@@ -41,6 +41,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws InterwebException {
         BeanAssert.authorized(isLoggedIn());
+        BeanAssert.hasPermission(getUser().isModerator() || getUserBean().isSearchChatEnabled());
         interweb = getLearnweb().getInterweb();
 
         newChat();
@@ -65,8 +66,8 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
         message = null;
 
         interweb.chatComplete(conversation);
-        if (!conversations.contains(conversation)) {
-            conversations.add(0, conversation);
+        if (!getConversations().contains(conversation)) {
+            getConversations().add(0, conversation);
         }
     }
 

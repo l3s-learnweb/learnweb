@@ -496,6 +496,10 @@ public class UserBean implements Serializable {
         return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Logging_disabled)).orElse(true);
     }
 
+    public boolean isSearchChatEnabled() {
+        return getActiveOrganisation().map(o -> o.getOption(Option.Search_Chat_enabled)).orElse(false);
+    }
+
     public boolean isTrackingEnabled() {
         if (StringUtils.isEmpty(getTrackerApiKey())) {
             return false;

@@ -1,6 +1,7 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
+                xmlns:faces="jakarta.faces"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="jakarta.faces.facelets">
 
@@ -59,6 +60,14 @@
                         <span class="text-truncate">#{msg.videos}</span>
                     </span>
                     <f:param name="action" value="video"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
+            </li>
+            <li class="filter" faces:rendered="#{userBean.searchChatEnabled}">
+                <h:link outcome="search/chat">
+                     <span class="filter-title">
+                        <span class="text-truncate">#{msg.chat}</span>
+                    </span>
                     <f:param name="query" value="#{searchBean.query}"/>
                 </h:link>
             </li>

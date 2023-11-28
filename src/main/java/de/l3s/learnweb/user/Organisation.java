@@ -54,6 +54,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Search_Disable_alternative_sources,
         Resource_Disallow_editing,
         Resource_Disable_video_preview,
+        Search_Chat_enabled,
     }
 
     private int id;
