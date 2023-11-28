@@ -129,8 +129,8 @@
                             <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                 <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}"/>
-                                <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
-                                               itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
+                                <f:selectItems value="#{adminOrganisationBean.supportedLocales}" var="locale"
+                                               itemLabel="${locale.getDisplayName(locale)}" itemValue="#{locale.language}"></f:selectItems>
                             </p:selectOneMenu>
                             <p:message for="@previous"/>
                         </div>

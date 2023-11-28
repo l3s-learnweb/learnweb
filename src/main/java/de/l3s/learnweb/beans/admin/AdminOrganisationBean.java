@@ -92,9 +92,8 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     /**
      * @return list of supported languages (codes) of this Learnweb instance
      */
-    public List<String> getSupportedLanguages() {
-        List<Locale> locales = BeanHelper.getSupportedLocales();
-        return locales.stream().map(Locale::getLanguage).distinct().collect(Collectors.toList());
+    public List<Locale> getSupportedLocales() {
+        return BeanHelper.getSupportedLocales();
     }
 
     /**

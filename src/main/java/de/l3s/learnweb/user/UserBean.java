@@ -39,6 +39,7 @@ import de.l3s.learnweb.resource.survey.SurveyResponse;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -58,7 +59,6 @@ public class UserBean implements Serializable {
     private transient List<Group> newGroups;
     private transient BaseMenuModel sidebarMenuModel;
     private transient Instant sidebarMenuModelUpdate;
-    private transient List<Locale> supportedLocales;
     private final HashMap<Integer, SurveyResponse> surveyResponses = new HashMap<>();
 
     @PostConstruct
@@ -512,10 +512,7 @@ public class UserBean implements Serializable {
     }
 
     public List<Locale> getSupportedLocales() {
-        if (supportedLocales == null) {
-            supportedLocales = Faces.getSupportedLocales();
-        }
-        return supportedLocales;
+        return BeanHelper.getSupportedLocales();
     }
 
     public boolean isHideSidebarMenu() {
