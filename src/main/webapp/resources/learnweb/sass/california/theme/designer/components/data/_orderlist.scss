@@ -60,7 +60,7 @@ body {
         margin: $inputListItemMargin;
         border: $inputListItemBorder;
         color: $inputListItemTextColor;
-        border-radius: $inputListItemBorderRadius ;
+        border-radius: $inputListItemBorderRadius;
         transition: $transition;
 
         &.ui-state-hover {
@@ -95,6 +95,7 @@ body {
       &.ui-grid-responsive {
         .ui-orderlist-controls {
           @include flex-direction-row();
+
           .ui-button {
             margin-top: $inlineSpacing;
             margin-right: $inlineSpacing;

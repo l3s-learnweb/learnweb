@@ -1,11 +1,11 @@
 body {
   .ui-carousel {
     .ui-carousel-prev-icon {
-      @include icon_override('\e904');
+      @include icon-override('\e904');
     }
 
     .ui-carousel-next-icon {
-      @include icon_override('\e901');
+      @include icon-override('\e901');
     }
   }
 }

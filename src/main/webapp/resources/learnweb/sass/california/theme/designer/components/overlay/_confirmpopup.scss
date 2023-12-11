@@ -36,8 +36,7 @@ body {
       @if (nth($overlayContentBorder, 2) == 'none') {
         border-color: rgba($panelContentBg, 0);
         border-bottom-color: $panelContentBg;
-      }
-      @else {
+      } @else {
         border-color: rgba(nth($overlayContentBorder, 3), 0);
         border-bottom-color: nth($overlayContentBorder, 3);
       }
@@ -51,8 +50,7 @@ body {
       &:before {
         @if (nth($overlayContentBorder, 2) == 'none') {
           border-top-color: $panelContentBg;
-        }
-        @else {
+        } @else {
           border-top-color: nth($overlayContentBorder, 3);
         }
       }

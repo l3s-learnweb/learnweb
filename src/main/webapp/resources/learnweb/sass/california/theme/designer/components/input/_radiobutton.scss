@@ -26,9 +26,9 @@ body {
       }
 
       &.ui-state-active {
-        border-color:$radiobuttonActiveBorderColor;
+        border-color: $radiobuttonActiveBorderColor;
         background: $radiobuttonActiveBg;
-        color:$radiobuttonTextActiveColor;
+        color: $radiobuttonTextActiveColor;
 
         &.ui-state-hover {
           background: $radiobuttonActiveHoverBg;

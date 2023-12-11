@@ -1,16 +1,18 @@
 body {
   .ui-chkbox {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     vertical-align: middle;
     margin: 0;
-    width: $checkboxWidth;
-    height: $checkboxHeight;
+    width: auto;
+    height: auto;
 
     .ui-chkbox-box {
       border: $inputBorder;
       border-width: $checkboxBorderWidth;
       background: $inputBg;
       width: $checkboxWidth;
+      min-width: $checkboxWidth;
       height: $checkboxHeight;
       text-align: center;
       position: relative;
@@ -27,9 +29,9 @@ body {
       }
 
       &.ui-state-active {
-        border-color:$checkboxActiveBorderColor;
+        border-color: $checkboxActiveBorderColor;
         background: $checkboxActiveBg;
-        color:$checkboxTextActiveColor;
+        color: $checkboxTextActiveColor;
 
         &.ui-state-hover {
           background: $checkboxActiveHoverBg;
@@ -49,11 +51,11 @@ body {
         margin-top: divide(-1 * $iconSize, 2);
 
         &.ui-icon-check {
-          @include icon_override("\e909");
+          @include icon-override("\e909");
         }
 
         &.ui-icon-closethick {
-          @include icon_override("\e90b");
+          @include icon-override("\e90b");
         }
       }
     }
