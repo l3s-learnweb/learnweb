@@ -36,7 +36,7 @@ jobs:
         id: vars
         run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: learnweb-war
           path: target/Learnweb.war
