@@ -22,7 +22,7 @@
          <maven.dependency.jdbi3.version>3.43.0</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>10.5.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.22.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>7.1.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>7.2.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.1</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.8.0</maven.dependency.mockito.version>
 
