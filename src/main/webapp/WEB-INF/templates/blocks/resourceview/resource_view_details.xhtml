@@ -41,7 +41,7 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{userBean.user.organisationId == 1604}">
+	<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="${userBean.user.organisationId == 1604}">
 		<dt class="col-sm-4">Einstellung zum Klimawandel im Video:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relation" layout="block">
@@ -54,10 +54,8 @@
 				</p:selectOneButton>
 			</h:panelGroup>
 		</dd>
-	</ui:fragment>
 
-	<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="${userBean.user.organisationId == 1604}">
-		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind fachlich plausibel:</dt>
+        <dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind fachlich plausibel:</dt>
 		<dd class="col-12 mt-1 mt-2">
 			<p:rating id="star_plausible" value="#{resourceDetailBean.ratingValues['star_plausible']}" cancel="false" immediate="true"
 					  readonly="${not empty resourceDetailBean.ratingValues['star_plausible'] or not res.canAnnotateResource(userBean.user)}">

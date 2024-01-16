@@ -235,7 +235,7 @@
                 <div class="text-end mt-3">
                     <p:defaultCommand target="addSelectedResourceButton"/>
                     <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('copyResourceDialog').hide()"/>
-                    <p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
+                    <p:commandButton id="addSelectedResourceButton" styleClass="guide-search-resource-save" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
                                      widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="if(!args.validationFailed){PF('copyResourceDialog').hide()}"/>
                 </div>
             </h:form>
