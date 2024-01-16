@@ -42,29 +42,29 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.user.organisationId == 1604}">
-		<dt class="col-sm-4">Beziehung zum Klimawandel:</dt>
+		<dt class="col-sm-4">Einstellung zum Klimawandel im Video:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relation" layout="block">
 				<p:selectOneButton value="#{res.metadataWrapper['someclics_relation']}">
 					<p:ajax listener="#{res.save}" />
 
 					<f:selectItem itemLabel="Akzeptanz" itemValue="acceptance"/>
-					<f:selectItem itemLabel="Denial" itemValue="denial"/>
-					<f:selectItem itemLabel="Beide" itemValue="both"/>
+					<f:selectItem itemLabel="Leugnung" itemValue="denial"/>
+					<f:selectItem itemLabel="Beides" itemValue="both"/>
 				</p:selectOneButton>
 			</h:panelGroup>
 		</dd>
 	</ui:fragment>
 
 	<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="${userBean.user.organisationId == 1604}">
-		<dt class="col-12">Dargestellte Informationen im Kontext Klimawandel sind fachlich plausibel:</dt>
+		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind fachlich plausibel:</dt>
 		<dd class="col-12 mt-1 mt-2">
 			<p:rating id="star_plausible" value="#{resourceDetailBean.ratingValues['star_plausible']}" cancel="false" immediate="true"
 					  readonly="${not empty resourceDetailBean.ratingValues['star_plausible'] or not res.canAnnotateResource(userBean.user)}">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
-		<dt class="col-12">Dargestellte Informationen im Kontext Klimawandel sind glaubwürdig:</dt>
+		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind glaubwürdig:</dt>
 		<dd class="col-12 mt-1 mt-2">
 			<p:rating id="star_credibility" value="#{resourceDetailBean.ratingValues['star_credibility']}" cancel="false" immediate="true"
 					  readonly="${not empty resourceDetailBean.ratingValues['star_credibility'] or not res.canAnnotateResource(userBean.user)}">
@@ -78,38 +78,31 @@
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
-		<dt class="col-12">Dargestellte Informationen im Kontext Klimawandel sind mit verlässlichen Quellen/Daten belegt:</dt>
+		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind mit verlässlichen Quellen/Daten belegt:</dt>
 		<dd class="col-12 mt-1 mt-2">
 			<p:rating id="star_reliable" value="#{resourceDetailBean.ratingValues['star_reliable']}" cancel="false" immediate="true"
 					  readonly="${not empty resourceDetailBean.ratingValues['star_reliable'] or not res.canAnnotateResource(userBean.user)}">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
-		<dt class="col-12">Dargestellte Informationen im Kontext Klimawandel sind vollständig und angemessen:</dt>
-		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_complete" value="#{resourceDetailBean.ratingValues['star_complete']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_complete'] or not res.canAnnotateResource(userBean.user)}">
-				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
-			</p:rating>
-		</dd>
 		<dt class="col-12">Die Informationsquelle des Videos ist vertrauenswürdig:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_trustworthy" value="#{resourceDetailBean.ratingValues['star_trustworthy']}" cancel="false" immediate="true"
+			<p:rating id="star_complete" value="#{resourceDetailBean.ratingValues['star_trustworthy']}" cancel="false" immediate="true"
 					  readonly="${not empty resourceDetailBean.ratingValues['star_trustworthy'] or not res.canAnnotateResource(userBean.user)}">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Das Video ist verständlich dargestellt:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_easy" value="#{resourceDetailBean.ratingValues['star_easy']}" cancel="false" immediate="true"
+			<p:rating id="star_trustworthy" value="#{resourceDetailBean.ratingValues['star_easy']}" cancel="false" immediate="true"
 					  readonly="${not empty resourceDetailBean.ratingValues['star_easy'] or not res.canAnnotateResource(userBean.user)}">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
-		<dt class="col-12">Das Video beabsichtigt meine Wahrnehmung dargestellter Inhalte zu beeinflussen:</dt>
+		<dt class="col-12">Das Video ist neutral dargestellt:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_intended" value="#{resourceDetailBean.ratingValues['star_intended']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_intended'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_easy" value="#{resourceDetailBean.ratingValues['star_neutrall']}" cancel="false" immediate="true"
+					  readonly="${not empty resourceDetailBean.ratingValues['star_neutrall'] or not res.canAnnotateResource(userBean.user)}">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
