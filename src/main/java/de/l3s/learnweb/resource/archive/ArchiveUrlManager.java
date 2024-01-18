@@ -68,19 +68,14 @@ public final class ArchiveUrlManager {
         }
     }
 
-    public String addResourceToArchive(WebResource resource) {
-        String response = "";
-        Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
-
+    public Boolean addResourceToArchive(WebResource resource) throws IOException {
         try {
-            response = executorResponse.get();
-            //log.debug(response);
-        } catch (InterruptedException e) {
-            log.error("Execution of the thread was interrupted on a task for resource: {}", resource.getId(), e);
-        } catch (ExecutionException e) {
+            Future<Boolean> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
+            return executorResponse.get();
+        } catch (InterruptedException | ExecutionException e) {
             log.error("Error while retrieving response from a task that was interrupted by an exception for resource: {}", resource.getId(), e);
         }
-        return response;
+        return false;
     }
 
     @PreDestroy
@@ -121,7 +116,7 @@ public final class ArchiveUrlManager {
         }
     }
 
-    class ArchiveNowWorker implements Callable<String> {
+    class ArchiveNowWorker implements Callable<Boolean> {
         private final DateTimeFormatter responseDate = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
         final WebResource resource;
@@ -131,9 +126,9 @@ public final class ArchiveUrlManager {
         }
 
         @Override
-        public String call() throws InterruptedException, IOException {
+        public Boolean call() throws InterruptedException, IOException, IllegalArgumentException {
             if (resource == null) {
-                return "resource was NULL";
+                throw new IllegalArgumentException("resource was NULL");
             }
 
             if (resource.getArchiveUrls() != null) {
@@ -141,7 +136,7 @@ public final class ArchiveUrlManager {
                 if (versions > 0) {
                     boolean isArchivedRecently = resource.getArchiveUrls().getLast().timestamp().isAfter(LocalDateTime.now().minusMinutes(5));
                     if (isArchivedRecently) {
-                        return "resource was last archived less than 5 minutes ago";
+                        throw new IllegalArgumentException("resource was last archived less than 5 minutes ago");
                     }
                 }
             }
@@ -178,20 +173,20 @@ public final class ArchiveUrlManager {
 
                 log.debug("Archived URL:{} Memento DateTime:{}", archiveURL, mementoDateString);
                 archiveUrlDao.insertArchiveUrl(resource.getId(), archiveURL, archiveUrlDate);
-                resource.addArchiveUrl(null);
+                resource.setArchiveUrls(null);
             } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
                 Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
                 if (livewebError.isPresent()) {
                     if ("RobotAccessControlException: Blocked By Robots".equalsIgnoreCase(livewebError.get())) {
-                        return "ROBOTS_ERROR";
+                        throw new IOException("Blocked by robots.txt");
                     }
                 }
 
                 log.error("Cannot archive URL because of an error other than robots.txt for resource: {}; Response: {}", resource.getId(), response.body());
-                return "GENERIC_ERROR";
+                throw new InterruptedException("Cannot archive URL because of an error other than robots.txt");
             }
 
-            return "ARCHIVE_SUCCESS";
+            return true;
         }
 
     }

@@ -46,7 +46,10 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
                 {from: 'node_modules/@fortawesome/fontawesome-free/webfonts'},
                 {from: 'node_modules/video.js/dist/video-js.min.css'},
                 {from: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', to: 'video-js.min.js'},
-                {from: 'node_modules/highcharts/highcharts.js'},
+                {from: 'node_modules/luxon/build/global/luxon.js', to: 'luxon.js'}, // Needed for chartjs-adapter-luxon, to work with timeseries
+                {from: 'node_modules/chartjs-adapter-luxon/dist/chartjs-adapter-luxon.umd.min.js', to: 'chartjs-adapter-luxon.js'},
+                {from: 'node_modules/hammerjs/hammer.min.js', to: 'hammer.js'}, // Needed for chartjs-plugin-zoom, to support touch events
+                {from: 'node_modules/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js', to: 'chartjs-plugin-zoom.min.js'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js'},
                 {from: 'node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js'},

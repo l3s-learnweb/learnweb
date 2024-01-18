@@ -1,19 +1,14 @@
 package de.l3s.learnweb.resource.web;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
-import java.text.DateFormatSymbols;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.TreeMap;
 
 import jakarta.annotation.PostConstruct;
@@ -21,15 +16,25 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import org.primefaces.event.ItemSelectEvent;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.DefaultScheduleModel;
+import org.primefaces.model.ScheduleModel;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.axes.cartesian.CartesianScales;
+import org.primefaces.model.charts.axes.cartesian.CartesianTime;
+import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
+import org.primefaces.model.charts.bar.BarChartModel;
+import org.primefaces.model.charts.bar.BarChartOptions;
+import org.primefaces.model.charts.data.NumericPoint;
+import org.primefaces.model.charts.optionconfig.legend.Legend;
+import org.primefaces.model.charts.optionconfig.title.Title;
+import org.primefaces.model.charts.optionconfig.tooltip.Tooltip;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.component.charts.BarTimeChartDataSet;
+import de.l3s.learnweb.component.charts.CartesianTimeImpl;
 import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
@@ -39,9 +44,13 @@ import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
 public class WebResourceBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -655001215017199006L;
-    private static final Logger log = LogManager.getLogger(WebResourceBean.class);
 
     private WebResource resource;
+
+    private transient LocalDate selectedDate;
+    private transient BarChartModel timelineModel;
+    private transient ScheduleModel calendarModel;
+    private transient List<NumericPoint> timelineData;
 
     @PostConstruct
     public void init() {
@@ -56,102 +65,110 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
         }
 
         if (addToQueue) {
-            final ArchiveUrlManager manager = Beans.getInstance(ArchiveUrlManager.class);
-            String response = manager.addResourceToArchive(resource);
-            if (response.equalsIgnoreCase("archive_success")) {
-                addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-            } else if (response.equalsIgnoreCase("robots_error")) {
+            try {
+                final ArchiveUrlManager manager = Beans.getInstance(ArchiveUrlManager.class);
+                Boolean response = manager.addResourceToArchive(resource);
+                if (response) {
+                    addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+                } else {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
+                }
+            } catch (IOException e) {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "archiveRobotsMessage");
-            } else if (response.equalsIgnoreCase("generic_error")) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
             }
         } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
         }
     }
 
-    /**
-     * The method is used from JS in resource_view_archive_timeline.xhtml.
-     */
-    public String getArchiveTimelineJsonData() {
-        TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
-        JsonArray highChartsData = new JsonArray();
-        monthlySeriesData.forEach((key, value) -> {
-            JsonArray innerArray = new JsonArray();
-            innerArray.add(key.toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000);
-            innerArray.add(value);
-            highChartsData.add(innerArray);
-        });
-        return new Gson().toJson(highChartsData);
+    public LocalDate getSelectedDate() {
+        return selectedDate;
     }
 
-    /**
-     * The method is used from JS in resource_view_archive_timeline.xhtml.
-     */
-    public String getArchiveCalendarJsonData() {
-        JsonObject archiveDates = new JsonObject();
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
-        DateTimeFormatter localizedDateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+    public void setSelectedDate(final LocalDate selectedDate) {
+        this.selectedDate = selectedDate;
+    }
 
-        TreeMap<LocalDate, Integer> dailySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByDays(resource.getId(), resource.getUrl());
-        for (final Map.Entry<LocalDate, Integer> entry : dailySeriesData.entrySet()) {
-            JsonObject archiveDay = new JsonObject();
-            archiveDay.addProperty("number", entry.getValue());
-            archiveDay.addProperty("badgeClass", "badge-warning");
+    public void timelineItemSelect(ItemSelectEvent event) {
+        selectedDate = LocalDate.ofInstant(Instant.ofEpochMilli(getTimelineData().get(event.getItemIndex()).getX().longValue()), ZoneOffset.UTC);
+    }
 
-            List<ArchiveUrl> archiveUrlsData = dao().getArchiveUrlDao().findByResourceId(resource.getId(), entry.getKey());
-            archiveUrlsData.addAll(dao().getWaybackUrlDao().findByUrl(resource.getUrl(), entry.getKey()));
+    public void backToTimeline() {
+        selectedDate = null;
+    }
 
-            JsonArray archiveVersions = new JsonArray();
-            for (ArchiveUrl archiveUrl : archiveUrlsData) {
-                JsonObject archiveVersion = new JsonObject();
-                archiveVersion.addProperty("url", archiveUrl.archiveUrl());
-                archiveVersion.addProperty("time", localizedDateFormat.format(archiveUrl.timestamp()));
-                archiveVersions.add(archiveVersion);
-            }
-            archiveDay.add("dayEvents", archiveVersions);
-            archiveDates.add(dateFormat.format(entry.getKey()), archiveDay);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public BarChartModel getArchiveTimelineModel() {
+        if (timelineModel == null) {
+            CartesianScales scales = new CartesianScales();
+            CartesianLinearAxes xAxes = new CartesianLinearAxes();
+            xAxes.setType("time");
+            CartesianTime time = new CartesianTimeImpl();
+            time.setTooltipFormat("MMMM yyyy");
+            time.setMinUnit("month");
+            xAxes.setTime(time);
+            scales.addXAxesData(xAxes);
+
+            Title title = new Title();
+            title.setDisplay(true);
+            title.setText(getLocaleMessage("archive.timeline_click_zoom"));
+
+            BarChartOptions options = new BarChartOptions();
+            options.setScales(scales);
+            options.setTitle(title);
+
+            Tooltip tooltip = new Tooltip();
+            tooltip.setMode("index");
+            tooltip.setIntersect(false);
+            options.setTooltip(tooltip);
+            Legend legend = new Legend();
+            legend.setDisplay(false);
+            options.setLegend(legend);
+
+            BarTimeChartDataSet dataSet = new BarTimeChartDataSet();
+            dataSet.setLabel(getLocaleMessage("archive.timeline_series_name"));
+            dataSet.setBackgroundColor("rgb(74,163,130)");
+
+            List<Object> dataVal = (List<Object>) (List) getTimelineData();
+            dataSet.setData(dataVal);
+
+            ChartData data = new ChartData();
+            data.addChartDataSet(dataSet);
+
+            timelineModel = new BarChartModel();
+            timelineModel.setData(data);
+            timelineModel.setOptions(options);
+            timelineModel.setExtender("chartExtender");
         }
-        return new Gson().toJson(archiveDates);
+
+        return timelineModel;
     }
 
-    /**
-     * Function to get short week day names for the calendar.
-     */
-    public List<String> getShortWeekDays() {
-        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        List<String> dayNames = Arrays.asList(symbols.getShortWeekdays());
-        Collections.rotate(dayNames.subList(1, 8), -1);
-        return dayNames.subList(1, 8);
-    }
+    private List<NumericPoint> getTimelineData() {
+        if (timelineData == null) {
+            TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
 
-    /**
-     * Function to localized month names for the calendar.
-     * The method is used from JS in resource_view_archive_timeline.xhtml
-     */
-    public String getMonthNames() {
-        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        JsonArray monthNames = new JsonArray();
-        for (String month : symbols.getMonths()) {
-            if (!month.isBlank()) {
-                monthNames.add(month);
-            }
+            timelineData = new ArrayList<>();
+            monthlySeriesData.forEach((key, value) -> timelineData.add(new NumericPoint(key.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(), value)));
+
+            timelineModel = null; // make sure the model is recreated
         }
-        return new Gson().toJson(monthNames);
+        return timelineData;
     }
 
-    /**
-     * Function to get localized short month names for the timeline.
-     * The method is used from JS in resource_view_archive_timeline.xhtml
-     */
-    public String getShortMonthNames() {
-        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        JsonArray monthNames = new JsonArray();
-        for (String month : symbols.getShortMonths()) {
-            if (!month.isBlank()) {
-                monthNames.add(month);
+    public ScheduleModel getArchiveCalendarModel() {
+        if (calendarModel == null) {
+            ScheduleModel model = new DefaultScheduleModel();
+
+            for (final ArchiveUrl archiveUrl : resource.getArchiveUrls()) {
+                DefaultScheduleEvent<?> scheduleEventAllDay = DefaultScheduleEvent.builder()
+                    .url(archiveUrl.archiveUrl())
+                    .startDate(archiveUrl.timestamp())
+                    .build();
+                model.addEvent(scheduleEventAllDay);
             }
+            this.calendarModel = model;
         }
-        return new Gson().toJson(monthNames);
+        return calendarModel;
     }
 }
