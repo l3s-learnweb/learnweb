@@ -133,7 +133,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
             return null;
         }
 
-        return userDao.findByIdOrElseThrow(selectedUsersIds.get(0));
+        return userDao.findByIdOrElseThrow(selectedUsersIds.getFirst());
     }
 
     public List<Integer> getSelectedGroupsIds() {

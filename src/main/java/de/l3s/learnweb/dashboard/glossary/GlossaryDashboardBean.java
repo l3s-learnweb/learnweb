@@ -27,24 +27,22 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     private static final long serialVersionUID = 1708095580068235081L;
     //private static final Logger log = LogManager.getLogger(GlossaryDashboardBean.class);
 
-    private Integer totalConcepts;
-    private Integer totalTerms;
-    private Integer totalSources;
-    private List<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
-    private List<GlossaryUserActivity> glossaryStatisticPerUser;
-    private Map<String, Integer> glossaryConceptsCountPerUser;
-    private Map<String, Integer> glossarySourcesWithCounters;
-    private Map<String, Integer> glossaryTermsCountPerUser;
-    private Map<Integer, Integer> actionsWithCounters;
-    private Map<String, Integer> actionsCountPerDay;
-    private List<GlossaryDescriptionSummary> descFieldsStatistic;
-
+    private transient List<GlossaryResource> glossaryResources;
+    private transient Integer totalConcepts;
+    private transient Integer totalTerms;
+    private transient Integer totalSources;
+    private transient List<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
+    private transient List<GlossaryUserActivity> glossaryStatisticPerUser;
+    private transient Map<String, Integer> glossaryConceptsCountPerUser;
+    private transient Map<String, Integer> glossarySourcesWithCounters;
+    private transient Map<String, Integer> glossaryTermsCountPerUser;
+    private transient Map<Integer, Integer> actionsWithCounters;
+    private transient Map<String, Integer> actionsCountPerDay;
+    private transient List<GlossaryDescriptionSummary> descFieldsStatistic;
     private transient LineChartModel interactionsChart;
     private transient BarChartModel usersActivityTypesChart;
     private transient BarChartModel usersGlossaryChart;
     private transient PieChartModel usersSourcesChart;
-
-    private List<GlossaryResource> glossaryResources;
 
     @Inject
     private LogDao logDao;

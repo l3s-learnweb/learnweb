@@ -8,7 +8,7 @@ import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 
-public class PrivateGroup extends Group {
+public final class PrivateGroup extends Group {
     @Serial
     private static final long serialVersionUID = -4541934616443225307L;
 

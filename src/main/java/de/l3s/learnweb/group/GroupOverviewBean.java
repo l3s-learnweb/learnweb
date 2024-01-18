@@ -41,14 +41,14 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     private int groupId;
     private Group group;
 
-    private boolean showAllMembers = false;
-    private List<User> members;
+    private transient boolean showAllMembers = false;
+    private transient List<User> members;
 
-    private String summaryTitle;
-    private SummaryOverview groupSummary;
+    private transient String summaryTitle;
+    private transient SummaryOverview groupSummary;
 
-    private boolean showAllLogs = false;
-    private List<LogEntry> logMessages;
+    private transient boolean showAllLogs = false;
+    private transient List<LogEntry> logMessages;
 
     @Inject
     private GroupDao groupDao;

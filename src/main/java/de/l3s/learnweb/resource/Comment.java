@@ -9,7 +9,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
-public class Comment implements Serializable, Comparable<Comment>, HasId {
+public final class Comment implements Serializable, Comparable<Comment>, HasId {
     @Serial
     private static final long serialVersionUID = -5854582234222584285L;
 

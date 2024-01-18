@@ -22,8 +22,8 @@ public class GlossaryResource extends Resource {
     @Serial
     private static final long serialVersionUID = 8388778401614338522L;
 
-    private List<Locale> allowedLanguages = new ArrayList<>();
-    private List<GlossaryEntry> entries = new LinkedList<>();
+    private ArrayList<Locale> allowedLanguages = new ArrayList<>();
+    private LinkedList<GlossaryEntry> entries = new LinkedList<>();
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource() {
@@ -35,8 +35,9 @@ public class GlossaryResource extends Resource {
      */
     protected GlossaryResource(GlossaryResource other) {
         super(other);
-        setAllowedLanguages(new ArrayList<>(other.allowedLanguages));
-        setClonedButNotPersisted(true);
+
+        this.allowedLanguages = new ArrayList<>(other.allowedLanguages);
+        this.clonedButNotSaved = true;
 
         other.getEntries().forEach(entry -> this.entries.add(new GlossaryEntry(entry)));
     }
@@ -46,11 +47,11 @@ public class GlossaryResource extends Resource {
         return new GlossaryResource(this);
     }
 
-    public List<Locale> getAllowedLanguages() {
+    public ArrayList<Locale> getAllowedLanguages() {
         return allowedLanguages;
     }
 
-    public void setAllowedLanguages(List<Locale> allowedLanguages) {
+    public void setAllowedLanguages(ArrayList<Locale> allowedLanguages) {
         this.allowedLanguages = allowedLanguages;
     }
 
@@ -81,11 +82,11 @@ public class GlossaryResource extends Resource {
         return this;
     }
 
-    public List<GlossaryEntry> getEntries() {
+    public LinkedList<GlossaryEntry> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<GlossaryEntry> entries) {
+    public void setEntries(LinkedList<GlossaryEntry> entries) {
         this.entries = entries;
     }
 

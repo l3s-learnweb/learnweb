@@ -2,7 +2,6 @@ package de.l3s.util;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,9 +19,7 @@ public final class ProfileImageHelper {
      */
     public static ImmutableTriple<String, String, InputStream> getGravatarAvatar(final String hash) {
         try {
-            HttpURLConnection con = (HttpURLConnection) new URL("https://www.gravatar.com/avatar/" + hash + "?d=404").openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
+            HttpURLConnection con = UrlHelper.getHttpURLConnection("https://www.gravatar.com/avatar/" + hash + "?d=404");
             if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String contentDisposition = con.getHeaderField("content-disposition");
                 String fileName = contentDisposition.substring(contentDisposition.indexOf('"') + 1, contentDisposition.lastIndexOf('"'));

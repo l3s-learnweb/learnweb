@@ -56,7 +56,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
             List<User> users = userDao.findByEmail(email);
             if (!users.isEmpty() && users.stream().anyMatch(User::isEmailConfirmed)) {
                 // redirect to welcome page (a login form is shown there, if user is not logged in)
-                return "/lw/" + users.get(0).getOrganisation().getWelcomePage() + "?faces-redirect=true";
+                return "/lw/" + users.getFirst().getOrganisation().getWelcomePage() + "?faces-redirect=true";
             }
             throw new BadRequestHttpException("confirm_token_invalid", e);
         }

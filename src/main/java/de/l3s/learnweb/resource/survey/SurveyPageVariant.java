@@ -16,8 +16,8 @@ public class SurveyPageVariant implements HasId, Serializable {
     }
 
     public SurveyPageVariant(SurveyPageVariant page) {
-        setId(0);
-        setDescription(page.description);
+        this.id = 0;
+        this.description = page.description;
     }
 
     @Override

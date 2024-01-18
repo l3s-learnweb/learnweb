@@ -102,7 +102,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 randomPool.add(courseDao.findByIdOrElseThrow(1630));
 
                 Collections.shuffle(randomPool);
-                course = randomPool.get(0);
+                course = randomPool.getFirst();
             }
         } else {
             List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
@@ -110,7 +110,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 throw BeanAssert.NOT_FOUND.get();
             }
 
-            course = publicCourses.get(0);
+            course = publicCourses.getFirst();
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning", config().getAppName());
         }
 

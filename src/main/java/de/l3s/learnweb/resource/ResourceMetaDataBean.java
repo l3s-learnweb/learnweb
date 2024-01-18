@@ -27,7 +27,7 @@ import de.l3s.util.bean.BeanHelper;
  */
 public class ResourceMetaDataBean {
     private static final Logger log = LogManager.getLogger(ResourceMetaDataBean.class);
-    private static final List<Locale> LANGUAGES = Arrays.stream(Locale.getISOLanguages()).map(Locale::new).toList();
+    private static final List<Locale> LANGUAGES = Arrays.stream(Locale.getISOLanguages()).map(lang -> Locale.of(lang)).toList();
 
     private static final HashMap<String, List<SelectItem>> languageLists = new HashMap<>();
     private static final HashMap<Integer, List<String>> authorLists = new HashMap<>(); // quick and very dirt implementation

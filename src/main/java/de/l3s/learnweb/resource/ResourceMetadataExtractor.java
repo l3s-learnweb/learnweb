@@ -2,10 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -254,13 +251,5 @@ public class ResourceMetadataExtractor {
         String fileName = FileUtility.getFileName(url);
         InputStream inputStream = UrlHelper.getInputStream(url);
         return fileInspector.inspect(inputStream, fileName);
-    }
-
-    private static JsonObject readJsonObjectFromUrl(String url) throws IOException {
-        return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
-    }
-
-    private static JsonArray readJsonArrayFromUrl(String url) throws IOException {
-        return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonArray();
     }
 }

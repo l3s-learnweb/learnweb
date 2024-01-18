@@ -31,12 +31,12 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
     @Serial
     private static final long serialVersionUID = 5584983377737726111L;
 
-    private TreeNode<?>[] selectedNodes;
     private boolean showDetails = true;
     private String detailedDescription = "";
 
-    private TreeNode<?> treeRoot;
-    private List<Map<String, String>> groupStatistics;
+    private transient TreeNode<?>[] selectedNodes;
+    private transient TreeNode<?> treeRoot;
+    private transient List<Map<String, String>> groupStatistics;
 
     @Inject
     private GroupDao groupDao;

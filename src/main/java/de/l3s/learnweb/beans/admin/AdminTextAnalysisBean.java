@@ -29,9 +29,10 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     private String textNL;
     private int usersCount = 0;
     private int commentCount = 0;
-    private List<Comment> comments;
-    private TreeNode<?> treeRoot;
-    private TreeNode<?>[] selectedNodes;
+
+    private transient List<Comment> comments;
+    private transient TreeNode<?> treeRoot;
+    private transient TreeNode<?>[] selectedNodes;
 
     @Inject
     private CommentDao commentDao;

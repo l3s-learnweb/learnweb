@@ -30,8 +30,8 @@ public class YourActivityBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -53694900500236594L;
     private static final Logger log = LogManager.getLogger(YourActivityBean.class);
 
-    private List<LogEntry> userActions;
-    private Map<Integer, String> groupTitles;
+    private transient List<LogEntry> userActions;
+    private transient Map<Integer, String> groupTitles;
 
     @Inject
     private GroupDao groupDao;

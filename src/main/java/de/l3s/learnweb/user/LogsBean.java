@@ -38,11 +38,12 @@ public class LogsBean extends ApplicationBean implements Serializable {
 
     private int userId;
     private User selectedUser;
-    private List<LogEntry> logEntries;
+    private EnumSet<Action> selectedActions = AVAILABLE_ACTIONS; // TODO implement client side selector
+
+    private transient List<LogEntry> logEntries;
 
     @Inject
     private UserDao userDao;
-    private EnumSet<Action> selectedActions = AVAILABLE_ACTIONS; // TODO implement client side selector
 
     public void onLoad() {
         User loggedInUser = getUser();

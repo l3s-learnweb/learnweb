@@ -30,10 +30,9 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
 
     private int groupId;
     private Group group;
-
     private MembersView view = MembersView.grid;
-    private List<User> members;
 
+    private transient List<User> members;
     private transient Map<Integer, Integer> postCounts;
     private transient Map<Integer, Integer> resourceCounts;
 

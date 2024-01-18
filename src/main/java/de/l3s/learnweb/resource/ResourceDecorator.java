@@ -34,7 +34,7 @@ public class ResourceDecorator implements Serializable {
     // used for search history
     private boolean clicked;
     private boolean saved;
-    private List<SearchAnnotation> annotations;
+    private transient List<SearchAnnotation> annotations;
 
     public ResourceDecorator(Resource resource) {
         this.resource = resource;

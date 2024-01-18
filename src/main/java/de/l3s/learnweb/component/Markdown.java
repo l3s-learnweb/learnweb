@@ -4,7 +4,7 @@ import jakarta.faces.component.FacesComponent;
 import jakarta.faces.component.UIComponentBase;
 
 @FacesComponent(createTag = true, tagName = "outputMarkdown", namespace = "http://l3s.de/learnweb")
-public class Markdown extends UIComponentBase {
+public final class Markdown extends UIComponentBase {
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";
     public static final String DEFAULT_RENDERER = "de.l3s.learnweb.component.MarkdownRenderer";
 

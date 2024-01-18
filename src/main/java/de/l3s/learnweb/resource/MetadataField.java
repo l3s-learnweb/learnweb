@@ -34,7 +34,7 @@ public class MetadataField implements Serializable {
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
     private MetadataType type; // represents primefaces input types
-    private List<String> options = new LinkedList<>(); // default options for some input types like OneMenu
+    private LinkedList<String> options = new LinkedList<>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
 
@@ -73,11 +73,11 @@ public class MetadataField implements Serializable {
         this.type = type;
     }
 
-    public List<String> getOptions() {
+    public LinkedList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(List<String> options) {
+    public void setOptions(LinkedList<String> options) {
         this.options = options;
     }
 

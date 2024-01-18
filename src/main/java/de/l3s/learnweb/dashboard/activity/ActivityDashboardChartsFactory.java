@@ -29,8 +29,8 @@ public final class ActivityDashboardChartsFactory {
 
             dataSet.setData(values);
             dataSet.setFill(false);
-            dataSet.setBorderColor(colors.get(0));
-            colors.remove(0);
+            dataSet.setBorderColor(colors.getFirst());
+            colors.removeFirst();
             dataSet.setLabel(activityData.getName());
             dataSet.setTension(0.1);
 

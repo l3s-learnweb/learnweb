@@ -134,7 +134,7 @@ public final class SolrClient {
 
         //get response
         QueryResponse response = httpSolrClient.query(solrQuery);
-        FacetField facetFieldsResult = response.getFacetFields().get(0);
+        FacetField facetFieldsResult = response.getFacetFields().getFirst();
 
         List<String> suggestions = new ArrayList<>(10);
 

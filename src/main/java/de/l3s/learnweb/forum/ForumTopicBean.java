@@ -29,11 +29,11 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     private Group group;
     private ForumTopic topic;
-    private List<ForumPost> posts;
     private ForumPost dialogPost = new ForumPost();
 
     // used only by breadcrumbs
-    private List<ForumTopic> topics;
+    private transient List<ForumTopic> topics;
+    private transient List<ForumPost> posts;
 
     @Inject
     private GroupDao groupDao;

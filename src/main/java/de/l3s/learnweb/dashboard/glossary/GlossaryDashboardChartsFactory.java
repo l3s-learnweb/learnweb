@@ -216,7 +216,7 @@ final class GlossaryDashboardChartsFactory {
         source.setLabel("source");
 
         if (!glossaryFieldSummeryPerUser.isEmpty()) {
-            GlossaryUserTermsSummary gfs = glossaryFieldSummeryPerUser.get(0);
+            GlossaryUserTermsSummary gfs = glossaryFieldSummeryPerUser.getFirst();
             pronounciation.setData(Collections.singletonList(gfs.getPronounciation()));
             acronym.setData(Collections.singletonList(gfs.getAcronym()));
             phraseology.setData(Collections.singletonList(gfs.getPhraseology()));

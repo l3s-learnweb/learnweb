@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeMap;
 
 import jakarta.annotation.PostConstruct;
@@ -50,7 +49,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
     private transient LocalDate selectedDate;
     private transient BarChartModel timelineModel;
     private transient ScheduleModel calendarModel;
-    private transient List<NumericPoint> timelineData;
+    private transient ArrayList<NumericPoint> timelineData;
 
     @PostConstruct
     public void init() {
@@ -128,9 +127,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
             BarTimeChartDataSet dataSet = new BarTimeChartDataSet();
             dataSet.setLabel(getLocaleMessage("archive.timeline_series_name"));
             dataSet.setBackgroundColor("rgb(74,163,130)");
-
-            List<Object> dataVal = (List<Object>) (List) getTimelineData();
-            dataSet.setData(dataVal);
+            dataSet.setData(getTimelineData());
 
             ChartData data = new ChartData();
             data.addChartDataSet(dataSet);
@@ -144,7 +141,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
         return timelineModel;
     }
 
-    private List<NumericPoint> getTimelineData() {
+    private ArrayList<NumericPoint> getTimelineData() {
         if (timelineData == null) {
             TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
 

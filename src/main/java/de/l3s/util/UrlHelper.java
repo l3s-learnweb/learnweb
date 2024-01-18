@@ -6,7 +6,6 @@ import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -55,9 +54,8 @@ public final class UrlHelper {
             }
             url = toAscii(StringHelper.urlDecode(url.trim()));
 
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection connection = getHttpURLConnection(url);
             connection.setInstanceFollowRedirects(false);
-            connection.setRequestProperty("User-Agent", USER_AGENT);
 
             int responseCode = connection.getResponseCode();
             if (responseCode >= 200 && responseCode < 300) {
@@ -85,11 +83,21 @@ public final class UrlHelper {
         return context;
     }
 
-    public static InputStream getInputStream(String url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    public static HttpURLConnection getHttpURLConnection(String url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         connection.setInstanceFollowRedirects(true);
         connection.setRequestProperty("User-Agent", USER_AGENT);
-        return connection.getInputStream();
+        return connection;
+    }
+
+    public static InputStream getInputStream(String url) throws IOException {
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            HttpRequest request = HttpRequest.newBuilder(URI.create(url)).GET().build();
+
+            return client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body();
+        } catch (InterruptedException tout) {
+            throw new IOException(tout);
+        }
     }
 
     public static boolean isOnline(String url) {

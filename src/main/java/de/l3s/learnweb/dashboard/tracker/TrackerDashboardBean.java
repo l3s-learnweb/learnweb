@@ -22,8 +22,9 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     private static final int TRACKER_CLIENT_ID = 2;
 
     private TrackerDao trackerDao;
-    private Map<String, Integer> proxySources;
-    private List<TrackerUserActivity> statistics;
+
+    private transient Map<String, Integer> proxySources;
+    private transient List<TrackerUserActivity> statistics;
 
     @Override
     public void onLoad() {

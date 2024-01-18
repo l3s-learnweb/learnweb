@@ -18,7 +18,7 @@ import org.primefaces.model.menu.MenuModel;
 
 @FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
 @ListenerFor(sourceClass = LearnwebMenu.class, systemEventClass = PostAddToViewEvent.class)
-public class LearnwebMenu extends AbstractMenu implements Widget, ComponentSystemEventListener {
+public final class LearnwebMenu extends AbstractMenu implements Widget, ComponentSystemEventListener {
 
     public static final String COMPONENT_TYPE = "de.l3s.learnweb.component.LearnwebMenu";
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";
@@ -26,7 +26,7 @@ public class LearnwebMenu extends AbstractMenu implements Widget, ComponentSyste
     private static final String[] REQUIRED_RESOURCES = {"components.css", "jquery/jquery.js", "jquery/jquery-plugins.js", "core.js"};
 
     protected enum PropertyKeys {
-        widgetVar, model, style, styleClass;
+        widgetVar, model, style, styleClass
     }
 
     public LearnwebMenu() {

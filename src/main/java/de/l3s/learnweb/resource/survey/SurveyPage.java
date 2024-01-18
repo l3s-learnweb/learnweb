@@ -21,25 +21,31 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     private String title; // question on the website, is replaced by a translated term if available
     private String description; // an explanation, displayed as tooltip
     private boolean sampling = false;
-    private List<SurveyPageVariant> variants = new ArrayList<>();
+    private ArrayList<SurveyPageVariant> variants = new ArrayList<>();
 
     private transient List<SurveyQuestion> questions;
 
     public SurveyPage(int resourceId) {
-        setResourceId(resourceId);
+        this.resourceId = resourceId;
     }
 
     public SurveyPage(SurveyPage other) {
-        setId(0);
-        setResourceId(0);
-        setTitle(other.title);
-        setDescription(other.description);
-        setSampling(other.sampling);
-        setDeleted(other.deleted);
-        setOrder(other.order);
+        this.id = 0;
+        this.resourceId = 0;
+        this.title = other.title;
+        this.description = other.description;
+        this.sampling = other.sampling;
+        this.deleted = other.deleted;
+        this.order = other.order;
 
+        this.variants = new ArrayList<>();
+        for (SurveyPageVariant variant : other.getVariants()) {
+            this.variants.add(new SurveyPageVariant(variant));
+        }
+
+        this.questions = new ArrayList<>();
         for (SurveyQuestion question : other.getQuestions()) {
-            getQuestions().add(new SurveyQuestion(question));
+            this.questions.add(new SurveyQuestion(question));
         }
     }
 
@@ -80,11 +86,11 @@ public class SurveyPage implements HasId, Deletable, Serializable {
         this.sampling = sampling;
     }
 
-    public List<SurveyPageVariant> getVariants() {
+    public ArrayList<SurveyPageVariant> getVariants() {
         return variants;
     }
 
-    public void setVariants(final List<SurveyPageVariant> variants) {
+    public void setVariants(final ArrayList<SurveyPageVariant> variants) {
         this.variants = variants;
     }
 

@@ -67,7 +67,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
 
         interweb.chatComplete(conversation);
         if (!getConversations().contains(conversation)) {
-            getConversations().add(0, conversation);
+            getConversations().addFirst(conversation);
         }
     }
 

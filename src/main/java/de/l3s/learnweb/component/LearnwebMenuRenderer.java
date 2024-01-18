@@ -55,10 +55,8 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     }
 
     protected void encodeElements(FacesContext context, AbstractMenu menu, List<MenuElement> elements) throws IOException {
-        int size = elements.size();
-
-        for (int i = 0; i < size; i++) {
-            encodeElement(context, menu, elements.get(i));
+        for (MenuElement element : elements) {
+            encodeElement(context, menu, element);
         }
     }
 

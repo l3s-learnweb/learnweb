@@ -32,7 +32,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
 
     private int groupId;
     private Group group;
-    private List<ForumTopic> topics;
+    private transient List<ForumTopic> topics;
 
     @NotBlank
     @Size(max = 100)

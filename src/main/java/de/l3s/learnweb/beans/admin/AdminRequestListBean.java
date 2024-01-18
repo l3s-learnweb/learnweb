@@ -24,9 +24,9 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     @Serial
     private static final long serialVersionUID = -3469152668344315959L;
 
-    private List<Request> requests;
-    private Map<String, Set<String>> logins;
-    private List<Request> aggregatedRequests;
+    private transient ArrayList<Request> requests;
+    private transient Map<String, Set<String>> logins;
+    private transient List<Request> aggregatedRequests;
 
     @Inject
     private RequestManager requestManager;

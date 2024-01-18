@@ -33,7 +33,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
     private Integer banMinutes;
     private boolean permaban;
 
-    private List<Request> suspiciousActivityList;
+    private transient List<Request> suspiciousActivityList;
 
     @Inject
     private RequestManager requestManager;

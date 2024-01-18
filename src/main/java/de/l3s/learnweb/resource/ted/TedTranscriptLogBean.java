@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.ted;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -24,10 +23,9 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
     private static final long serialVersionUID = -1803725556672379697L;
 
     //private int selectedCourseId;
-    private TreeNode<?> treeRoot;
-    private TreeNode<?>[] selectedNodes;
-    private Collection<Integer> selectedUsers = new TreeSet<>();
-
+    private transient TreeNode<?> treeRoot;
+    private transient TreeNode<?>[] selectedNodes;
+    private transient TreeSet<Integer> selectedUsers = new TreeSet<>();
     private transient List<SimpleTranscriptLog> simpleTranscriptLogs;
     private transient List<TranscriptLog> detailedTranscriptLogs;
     private transient List<TranscriptSummary> transcriptSummaries;

@@ -71,7 +71,7 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     private Integer minLength;
     private Integer maxLength;
 
-    private List<SurveyQuestionOption> options = new ArrayList<>(); // predefined options for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
+    private ArrayList<SurveyQuestionOption> options = new ArrayList<>(); // predefined options for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
     public SurveyQuestion(QuestionType type) {
         this.type = type;
@@ -84,25 +84,27 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
 
     public SurveyQuestion(QuestionType type, int resourceId) {
         this(type);
-        setResourceId(resourceId);
+
+        this.resourceId = resourceId;
     }
 
     public SurveyQuestion(SurveyQuestion question) {
-        setId(0);
-        setResourceId(0);
-        setPageId(question.pageId);
-        setQuestion(question.question);
-        setDescription(question.description);
-        setMinLength(question.minLength);
-        setMaxLength(question.maxLength);
-        setRequired(question.required);
-        setDeleted(question.deleted);
-        setOrder(question.order);
+        this.id = 0;
+        this.resourceId = 0;
+        this.pageId = question.pageId;
+        this.question = question.question;
+        this.description = question.description;
+        this.required = question.required;
+        this.deleted = question.deleted;
+        this.order = question.order;
+        this.minLength = question.minLength;
+        this.maxLength = question.maxLength;
+        this.type = question.type;
+
         for (SurveyQuestionOption answer : question.getOptions()) {
             answer.setId(0);
             options.add(answer);
         }
-        setType(question.type);
     }
 
     public QuestionType getType() {
@@ -141,11 +143,11 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         this.required = required;
     }
 
-    public List<SurveyQuestionOption> getOptions() {
+    public ArrayList<SurveyQuestionOption> getOptions() {
         return options;
     }
 
-    public void setOptions(List<SurveyQuestionOption> options) {
+    public void setOptions(ArrayList<SurveyQuestionOption> options) {
         this.options = options;
     }
 

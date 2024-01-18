@@ -82,7 +82,7 @@ public final class BeanHelper {
         return root;
     }
 
-    public static Collection<Integer> getSelectedUsers(final TreeNode<?>[] selectedNodes) {
+    public static TreeSet<Integer> getSelectedUsers(final TreeNode<?>[] selectedNodes) {
         // Set is used to make sure that every user gets the message only once
         TreeSet<Integer> selectedUsers = new TreeSet<>();
         if (selectedNodes != null) {

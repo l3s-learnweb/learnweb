@@ -28,7 +28,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     @Size(min = 2, max = 50)
     private String newOrganisationTitle;
 
-    private List<Organisation> organisations;
+    private transient List<Organisation> organisations;
 
     @Inject
     private OrganisationDao organisationDao;

@@ -70,7 +70,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private String view = "float"; // float, grid or list
 
     private int counter = 0;
-    private List<GroupedResources> resourcesGroupedBySource;
+    private transient List<GroupedResources> resourcesGroupedBySource;
 
     @PostConstruct
     public void init() {

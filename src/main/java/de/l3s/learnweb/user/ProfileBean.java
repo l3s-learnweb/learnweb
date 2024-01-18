@@ -64,8 +64,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     private boolean studentIdRequired = false;
     private boolean mailRequired = false;
     private boolean anonymizeUsername;
-    private List<GroupUser> userGroups;
 
+    private transient List<GroupUser> userGroups;
     private transient List<SelectItem> timeZoneIds; // A list of all available time zone ids
 
     @Inject

@@ -117,21 +117,20 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     );
 
     private GlossaryResource glossaryResource;
-    private List<GlossaryTableView> tableItems;
 
     private GlossaryEntry formEntry;
-    private final List<SelectItem> availableTopicOne = new ArrayList<>();
-    private final List<SelectItem> availableTopicTwo = new ArrayList<>();
-    private final List<SelectItem> availableTopicThree = new ArrayList<>();
+    private final ArrayList<SelectItem> availableTopicOne = new ArrayList<>();
+    private final ArrayList<SelectItem> availableTopicTwo = new ArrayList<>();
+    private final ArrayList<SelectItem> availableTopicThree = new ArrayList<>();
 
     private boolean optionMandatoryDescription;
     private boolean optionImportEnabled;
 
-    private List<Locale> tableLanguageFilter;
+    private ArrayList<Locale> tableLanguageFilter;
 
-    private GlossaryParserResponse importResponse;
-    private LazyGlossaryTableView lazyTableItems;
-
+    private transient GlossaryParserResponse importResponse;
+    private transient LazyGlossaryTableView lazyTableItems;
+    private transient List<GlossaryTableView> tableItems;
     private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
 
     @Inject
@@ -290,7 +289,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             unusedLanguages = glossaryResource.getAllowedLanguages();
         }
 
-        newTerm.setLanguage(unusedLanguages.get(0));
+        newTerm.setLanguage(unusedLanguages.getFirst());
         formEntry.addTerm(newTerm);
 
         log(Action.glossary_term_add, glossaryResource, formEntry.getId());
@@ -560,11 +559,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         return importResponse;
     }
 
-    public List<Locale> getTableLanguageFilter() {
+    public ArrayList<Locale> getTableLanguageFilter() {
         return tableLanguageFilter;
     }
 
-    public void setTableLanguageFilter(List<Locale> tableLanguageFilter) {
+    public void setTableLanguageFilter(ArrayList<Locale> tableLanguageFilter) {
         this.tableLanguageFilter = tableLanguageFilter;
     }
 

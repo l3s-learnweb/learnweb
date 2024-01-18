@@ -33,15 +33,13 @@ public class WebResource extends Resource {
     }
 
     public WebResource(ResourceType type, ResourceService service) {
-        setStorageType(StorageType.WEB);
-        setType(type);
-        setService(service);
+        super(StorageType.WEB, type, service);
     }
 
     protected WebResource(final WebResource other) {
         super(other);
 
-        setArchiveUrls(new LinkedHashSet<>(other.getArchiveUrls()));
+        this.archiveUrls = new LinkedHashSet<>(other.getArchiveUrls());
     }
 
     @Override

@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
@@ -31,8 +30,8 @@ public class YourPostsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 4437146430672930717L;
     private static final Logger log = LogManager.getLogger(YourPostsBean.class);
 
-    private List<ForumPost> userPosts;
-    private Map<Integer, String> postThreadTopics;
+    private transient List<ForumPost> userPosts;
+    private transient HashMap<Integer, String> postThreadTopics;
 
     @PostConstruct
     public void init() {
@@ -65,7 +64,7 @@ public class YourPostsBean extends ApplicationBean implements Serializable {
         return this.userPosts;
     }
 
-    public Map<Integer, String> getPostThreadTopics() {
+    public HashMap<Integer, String> getPostThreadTopics() {
         return postThreadTopics;
     }
 }

@@ -31,12 +31,12 @@ public class GroupsBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 5364340827474357098L;
 
-    private List<Group> joinAbleGroups;
-    private List<Group> myGroups;
-    private Group selectedGroup;
+    private transient List<Group> joinAbleGroups;
+    private transient List<Group> myGroups;
+    private transient Group selectedGroup;
 
-    private Group newGroup;
-    private List<Course> editAbleCourses; // courses to which the user can add groups to
+    private transient Group newGroup;
+    private transient List<Course> editAbleCourses; // courses to which the user can add groups to
 
     @Inject
     private GroupDao groupDao;
@@ -123,7 +123,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         newGroup.setLeader(user);
 
         if (newGroup.getCourseId() == 0) { // this happens when the user is only member of a single course and the course selector isn't shown
-            newGroup.setCourseId(user.getCourses().get(0).getId());
+            newGroup.setCourseId(user.getCourses().getFirst().getId());
         }
         groupDao.save(newGroup);
         user.joinGroup(newGroup);

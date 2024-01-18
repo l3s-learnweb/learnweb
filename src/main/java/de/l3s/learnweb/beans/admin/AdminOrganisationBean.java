@@ -42,7 +42,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private int organisationId;
     private Organisation organisation;
     private LinkedList<OptionWrapperGroup> optionGroups;
-    private List<SelectItem> availableGlossaryLanguages;
+    private transient List<SelectItem> availableGlossaryLanguages;
 
     @Inject
     private FileDao fileDao;
@@ -152,9 +152,9 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public List<SelectItem> getAvailableGlossaryLanguages() {
         if (null == availableGlossaryLanguages) {
-            List<Locale> glossaryLanguages = Arrays.asList(new Locale("ar"), new Locale("de"), new Locale("el"),
-                new Locale("en"), new Locale("es"), new Locale("fr"), new Locale("it"), new Locale("nl"),
-                new Locale("pt"), new Locale("ru"), new Locale("sv"), new Locale("zh"));
+            List<Locale> glossaryLanguages = Arrays.asList(Locale.of("ar"), Locale.of("de"), Locale.of("el"),
+                Locale.of("en"), Locale.of("es"), Locale.of("fr"), Locale.of("it"), Locale.of("nl"),
+                Locale.of("pt"), Locale.of("ru"), Locale.of("sv"), Locale.of("zh"));
             availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getLocale());
         }
         return availableGlossaryLanguages;

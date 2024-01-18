@@ -208,7 +208,7 @@ public final class WaybackUrlManager {
 
                     for (String cookie : cookiesHeader) {
                         try {
-                            cookies.add(HttpCookie.parse(cookie).get(0).toString());
+                            cookies.add(HttpCookie.parse(cookie).getFirst().toString());
                         } catch (IllegalArgumentException e) {
                             //log.debug("Invalid cookie: " + cookie);
                         }
@@ -287,8 +287,8 @@ public final class WaybackUrlManager {
 
         // check if a URL was redirected to the base URL. This can usually be handled as some kind of error 404
         if (!Objects.equals(originalUrl, urlStr)) { // got a redirect
-            String pathOld = new java.net.URL(originalUrl).getPath();
-            String pathNew = new java.net.URL(urlStr).getPath();
+            String pathOld = URI.create(originalUrl).getPath();
+            String pathNew = URI.create(urlStr).getPath();
 
             if (responseCode < 300 && pathOld != null && pathOld.length() > 4 && (pathNew == null || pathNew.length() < 4)) {
                 responseCode = 605; // redirect to main page

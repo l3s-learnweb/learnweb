@@ -39,7 +39,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1354024417928664741L;
     private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
 
-    private final DashboardModel model;
+    private final DefaultDashboardModel model;
 
     private transient RuntimeInfo runtimeInfo;
     private transient List<DatabaseProcess> databaseProcesses;

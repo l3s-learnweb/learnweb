@@ -216,16 +216,16 @@ public class UserBean implements Serializable {
         String languageVariant = getActiveOrganisation().map(Organisation::getLanguageVariant).orElse("");
 
         return switch (localeCode) {
-            case "de" -> new Locale("de", "DE", languageVariant);
-            case "en" -> new Locale("en", "UK", languageVariant);
-            case "it" -> new Locale("it", "IT", languageVariant);
-            case "pt" -> new Locale("pt", "BR", languageVariant);
-            case "es" -> new Locale("es", "ES", languageVariant);
-            case "uk" -> new Locale("uk", "UA", languageVariant);
-            case "xx" -> new Locale("xx"); // only for translation editors
+            case "de" -> Locale.of("de", "DE", languageVariant);
+            case "en" -> Locale.of("en", "UK", languageVariant);
+            case "it" -> Locale.of("it", "IT", languageVariant);
+            case "pt" -> Locale.of("pt", "BR", languageVariant);
+            case "es" -> Locale.of("es", "ES", languageVariant);
+            case "uk" -> Locale.of("uk", "UA", languageVariant);
+            case "xx" -> Locale.of("xx"); // only for translation editors
             default -> {
                 log.error("Unsupported language: {}", localeCode);
-                yield new Locale("en", "UK");
+                yield Locale.of("en", "UK");
             }
         };
     }

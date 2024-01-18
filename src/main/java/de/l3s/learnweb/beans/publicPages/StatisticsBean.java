@@ -28,9 +28,9 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 8540469716342151138L;
     private static final Logger log = LogManager.getLogger(StatisticsBean.class);
 
-    private List<SimpleEntry<LocalDateTime, Integer>> activeUsersPerMonth;
-    private List<SimpleEntry<String, Integer>> resourcesPerSource;
-    private final Map<String, Number> generalStatistics = new LinkedHashMap<>();
+    private transient List<SimpleEntry<LocalDateTime, Integer>> activeUsersPerMonth;
+    private transient List<SimpleEntry<String, Integer>> resourcesPerSource;
+    private transient Map<String, Number> generalStatistics;
 
     @PostConstruct
     public void init() {
@@ -52,6 +52,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             Double taggedResourcesAverage = (double) tagCount / (double) taggedResourcesCount;
             Double commentedResourcesAverage = (double) commentCount / (double) commentedResourcesCount;
 
+            generalStatistics = new LinkedHashMap<>();
             generalStatistics.put("users", users);
             generalStatistics.put("groupsTitle", groups);
             generalStatistics.put("courses", courses);

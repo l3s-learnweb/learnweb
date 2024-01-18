@@ -107,8 +107,8 @@ public class Resource extends AbstractResource implements Serializable {
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
     private DefaultTab defaultTab = DefaultTab.SCREENSHOT;
 
-    private HashMap<String, ResourceRating> ratings; // ratingType : rating
-    private EnumMap<FileType, File> files; // type : file
+    private transient HashMap<String, ResourceRating> ratings; // ratingType : rating
+    private transient EnumMap<FileType, File> files; // type : file
     private final HashSet<File> addedFiles = new HashSet<>(); // files added to the resource since last save
     private final HashSet<File> deletedFiles = new HashSet<>(); // files deleted from the resource since last save
 
@@ -141,40 +141,45 @@ public class Resource extends AbstractResource implements Serializable {
      * Copy constructor.
      */
     protected Resource(Resource old) {
-        setGroupId(old.groupId);
-        setFolderId(old.folderId);
-        setTitle(old.title);
-        setDescription(old.description);
-        setUrl(old.url);
-        setStorageType(old.storageType);
-        setPolicyView(old.policyView);
-        setService(old.service);
-        setAuthor(old.author);
-        setType(old.type);
-        setFormat(old.format);
-        setUserId(old.ownerUserId);
-        setMaxImageUrl(old.maxImageUrl);
-        setQuery(old.query);
-        setEmbeddedUrl(old.embeddedUrl);
-        setDuration(old.duration);
-        setWidth(old.width);
-        setHeight(old.height);
-        setMachineDescription(old.machineDescription);
-        setTranscript(old.transcript);
-        setOnlineStatus(old.onlineStatus);
-        setIdAtService(old.idAtService);
-        setUpdatedAt(LocalDateTime.now());
-        setCreatedAt(LocalDateTime.now());
-        setDeleted(old.deleted);
-        setReadOnlyTranscript(old.readOnlyTranscript);
+        this.id = 0;
+        this.deleted = old.deleted;
+        this.groupId = old.groupId;
+        this.folderId = old.folderId;
+        this.ownerUserId = old.ownerUserId;
+        this.title = old.title;
+        this.description = old.description;
+        this.url = old.url;
+        this.storageType = old.storageType;
+        this.policyView = old.policyView;
+        this.service = old.service;
+        this.language = old.language;
+        this.author = old.author;
+        this.type = old.type;
+        this.format = old.format;
+        this.duration = old.duration;
+        this.width = old.width;
+        this.height = old.height;
+        this.idAtService = old.idAtService;
+        this.maxImageUrl = old.maxImageUrl;
+        this.query = old.query;
+        this.embeddedUrl = old.embeddedUrl;
+        this.embeddedCode = old.embeddedCode;
+        this.transcript = old.transcript;
+        this.readOnlyTranscript = old.readOnlyTranscript;
+        this.onlineStatus = old.onlineStatus;
+        this.machineDescription = old.machineDescription;
+        this.updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.defaultTab = old.defaultTab;
+
         // sets the originalResourceId to the id of the source resource
         if (old.originalResourceId == 0) {
-            setOriginalResourceId(old.id);
+            this.originalResourceId = old.id;
         } else {
-            setOriginalResourceId(old.originalResourceId);
+            this.originalResourceId = old.originalResourceId;
         }
 
-        setMetadata(new HashMap<>(old.getMetadata()));
+        this.metadata = new HashMap<>(old.getMetadata());
     }
 
     public Resource cloneResource() {
@@ -262,7 +267,7 @@ public class Resource extends AbstractResource implements Serializable {
         Learnweb.dao().getCommentDao().save(comment);
 
         getComments(); // make sure comments are loaded before adding a new one
-        comments.add(0, comment);
+        comments.addFirst(comment);
 
         Learnweb.getInstance().getSolrClient().reIndexResource(this);
         return comment;
@@ -1192,9 +1197,9 @@ public class Resource extends AbstractResource implements Serializable {
     public static final class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable {
         @Serial
         private static final long serialVersionUID = 1514209886446380743L;
-        private final Map<String, String> wrappedMap;
+        private final MetadataMapWrapper wrappedMap;
 
-        private MetadataMultiValueMapWrapper(Map<String, String> wrappedMap) {
+        private MetadataMultiValueMapWrapper(MetadataMapWrapper wrappedMap) {
             this.wrappedMap = wrappedMap;
         }
 
@@ -1268,13 +1273,13 @@ public class Resource extends AbstractResource implements Serializable {
     public class MetadataMapWrapper implements Map<String, String>, Serializable {
         @Serial
         private static final long serialVersionUID = -7357288281713761896L;
-        private final Map<String, String> wrappedMap;
+        private final HashMap<String, String> wrappedMap;
 
-        public MetadataMapWrapper(Map<String, String> wrappedMap) {
+        public MetadataMapWrapper(HashMap<String, String> wrappedMap) {
             this.wrappedMap = wrappedMap;
         }
 
-        public Map<String, String> getWrappedMap() {
+        public HashMap<String, String> getWrappedMap() {
             return wrappedMap;
         }
 
@@ -1297,22 +1302,25 @@ public class Resource extends AbstractResource implements Serializable {
 
         @Override
         public String put(String key, String value) {
-            switch (key) {
-                case "title":
+            return switch (key) {
+                case "title" -> {
                     setTitle(value);
-                    return value;
-                case "author":
+                    yield value;
+                }
+                case "author" -> {
                     setAuthor(value);
-                    return value;
-                case "description":
+                    yield value;
+                }
+                case "description" -> {
                     setDescription(value);
-                    return value;
-                case "language":
+                    yield value;
+                }
+                case "language" -> {
                     setLanguage(value);
-                    return value;
-                default:
-                    return wrappedMap.put(key, value);
-            }
+                    yield value;
+                }
+                default -> wrappedMap.put(key, value);
+            };
         }
 
         @Override

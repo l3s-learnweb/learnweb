@@ -2,8 +2,8 @@ package de.l3s.util;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 
 import org.primefaces.util.SerializableSupplier;
@@ -16,13 +16,13 @@ public final class Expirable<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 6877022635730725601L;
 
-    private final TemporalAmount duration;
+    private final Duration duration;
     private final SerializableSupplier<T> supplier;
 
     private transient T value;
     private transient Instant expireAfter;
 
-    public Expirable(TemporalAmount duration, SerializableSupplier<T> supplier) {
+    public Expirable(Duration duration, SerializableSupplier<T> supplier) {
         this.duration = duration;
         this.supplier = supplier;
     }

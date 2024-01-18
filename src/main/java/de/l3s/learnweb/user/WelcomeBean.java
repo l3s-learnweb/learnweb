@@ -54,15 +54,14 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     );
 
     private String organisationWelcomeMessage;
-
-    // TODO @kemkes: this separation is useless, all log entries are already included in the general logs; It needs to be discussed what we shall show here
-    private List<LogEntry> newsForums;
-    private List<LogEntry> newsResources;
-    private List<LogEntry> newsGeneral;
-    private List<Message> receivedMessages;
     private boolean hideNewsPanel; // true when there is nothing to show in the news tabs
 
-    private List<Course> coursesWithWelcomeMessage;
+    // TODO @kemkes: this separation is useless, all log entries are already included in the general logs; It needs to be discussed what we shall show here
+    private transient List<LogEntry> newsForums;
+    private transient List<LogEntry> newsResources;
+    private transient List<LogEntry> newsGeneral;
+    private transient List<Message> receivedMessages;
+    private transient List<Course> coursesWithWelcomeMessage;
 
     @Inject
     private MessageDao messageDao;

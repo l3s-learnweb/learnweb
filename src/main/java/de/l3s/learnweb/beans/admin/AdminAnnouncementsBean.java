@@ -21,7 +21,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
     private static final long serialVersionUID = -5638619427036990427L;
     // private static final Logger log = LogManager.getLogger(AdminAnnouncementsBean.class);
 
-    private List<Announcement> announcements;
+    private transient List<Announcement> announcements;
 
     @Inject
     private AnnouncementDao announcementDao;

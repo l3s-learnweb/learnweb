@@ -72,11 +72,11 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         setOption(Option.Users_Require_mail_address, true);
     }
 
-    public boolean getOption(Option option) {
+    public final boolean getOption(Option option) {
         return options.get(option.ordinal());
     }
 
-    public void setOption(Option option, boolean value) {
+    public final void setOption(Option option, boolean value) {
         options.set(option.ordinal(), value);
     }
 

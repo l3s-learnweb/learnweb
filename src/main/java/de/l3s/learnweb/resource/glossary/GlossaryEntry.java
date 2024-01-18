@@ -34,7 +34,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private String topicTwo;
     @Size(max = 90)
     private String topicThree;
-    private List<GlossaryTerm> terms = new LinkedList<>();
+    private LinkedList<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; // fulltext search in glossary
     private boolean imported; // This value is `true` when the entry has been imported from a file.
     private int picturesCount;
@@ -47,29 +47,32 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
      * do nothing constructor.
      */
     public GlossaryEntry() {
-
     }
 
     /**
      * copy constructor.
      */
-    public GlossaryEntry(GlossaryEntry oldEntry) {
-        setOriginalEntryId(oldEntry.id);
-        setResourceId(oldEntry.resourceId);
-        setDeleted(oldEntry.deleted);
-        setUserId(oldEntry.userId);
-        setLastChangedByUserId(oldEntry.lastChangedByUserId);
-        setDescription(oldEntry.description);
-        setDescriptionPasted(oldEntry.descriptionPasted);
-        setTopicOne(oldEntry.topicOne);
-        setTopicTwo(oldEntry.topicTwo);
-        setTopicThree(oldEntry.topicThree);
-        setFulltext(oldEntry.fulltext);
-        setPicturesCount(oldEntry.picturesCount);
-        setPictures(oldEntry.pictures);
+    public GlossaryEntry(GlossaryEntry other) {
+        this.id = 0;
+        this.originalEntryId = other.id;
+        this.resourceId = other.resourceId;
+        this.deleted = other.deleted;
+        this.userId = other.userId;
+        this.lastChangedByUserId = other.lastChangedByUserId;
+        this.description = other.description;
+        this.descriptionPasted = other.descriptionPasted;
+        this.topicOne = other.topicOne;
+        this.topicTwo = other.topicTwo;
+        this.topicThree = other.topicThree;
+        this.fulltext = other.fulltext;
+        this.imported = other.imported;
+        this.picturesCount = other.picturesCount;
+        this.updatedAt = other.updatedAt;
+        this.createdAt = other.createdAt;
+        this.pictures = other.pictures;
 
-        for (GlossaryTerm oldTerm : oldEntry.terms) {
-            this.addTerm(new GlossaryTerm(oldTerm));
+        for (GlossaryTerm oldTerm : other.terms) {
+            this.terms.add(new GlossaryTerm(oldTerm));
         }
     }
 
@@ -193,11 +196,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.userId = userId;
     }
 
-    public List<GlossaryTerm> getTerms() {
+    public LinkedList<GlossaryTerm> getTerms() {
         return terms;
     }
 
-    void setTerms(List<GlossaryTerm> terms) {
+    void setTerms(LinkedList<GlossaryTerm> terms) {
         Objects.requireNonNull(terms);
 
         this.terms = terms;

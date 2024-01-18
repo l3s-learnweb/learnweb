@@ -33,7 +33,7 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(SurveyEditBean.class);
 
     private SurveyResource resource;
-    private List<SelectItem> questionTypes;
+    private ArrayList<SelectItem> questionTypes;
 
     @Inject
     private SurveyDao surveyDao;
@@ -45,7 +45,7 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
         BeanAssert.hasPermission(resource.canModerateResource(getUser()));
     }
 
-    public List<SelectItem> getQuestionTypes() {
+    public ArrayList<SelectItem> getQuestionTypes() {
         if (questionTypes == null) {
             questionTypes = new ArrayList<>();
             ResourceBundle msg = getBundle();

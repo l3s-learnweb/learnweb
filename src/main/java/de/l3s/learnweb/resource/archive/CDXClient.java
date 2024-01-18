@@ -2,7 +2,7 @@ package de.l3s.learnweb.resource.archive;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -18,6 +18,7 @@ import org.omnifaces.util.Beans;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
+import de.l3s.util.UrlHelper;
 
 public class CDXClient {
     private static final Logger log = LogManager.getLogger(CDXClient.class);
@@ -74,7 +75,7 @@ public class CDXClient {
     private LocalDateTime getCaptureDate(String url, int limit) throws IOException {
         for (int retry = 2; retry >= 0; retry--) { // retry 2 times if we get retrieve "Unexpected end of file from server"
             try {
-                URLConnection connection = new java.net.URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit).openConnection();
+                URLConnection connection = UrlHelper.getHttpURLConnection("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit);
                 connection.setRequestProperty("User-Agent", "L3S-CDX-Client/1.0 (User=https://learnweb.l3s.uni-hannover.de/)");
 
                 String response = IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
@@ -144,7 +145,7 @@ public class CDXClient {
 
             url = url.substring(url.indexOf("//") + 2); // remove leading http(s)://
             log.debug("Getting wayback captures for: {}", url);
-            response = IOUtils.readLines(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").openStream(), StandardCharsets.UTF_8);
+            response = IOUtils.readLines(URI.create("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").toURL().openStream(), StandardCharsets.UTF_8);
 
             if (response.isEmpty()) {
                 log.debug("No Captures for: {}", url);

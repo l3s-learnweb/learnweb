@@ -17,8 +17,8 @@ public class MessageBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6231162839099220868L;
     //private static final Logger log = LogManager.getLogger(MessageBean.class);
 
-    private List<Message> receivedMessages;
-    private Integer howManyNewMessages;
+    private transient List<Message> receivedMessages;
+    private transient Integer howManyNewMessages;
 
     @Inject
     private MessageDao messageDao;

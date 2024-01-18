@@ -30,8 +30,8 @@ public class InterwebResultsWrapper implements Serializable {
     private static final Logger log = LogManager.getLogger(InterwebResultsWrapper.class);
 
     private long totalResults = 0;
-    private final List<ResourceDecorator> resources = new LinkedList<>();
-    private final List<Count> resultCountPerService = new ArrayList<>();
+    private final LinkedList<ResourceDecorator> resources = new LinkedList<>();
+    private final ArrayList<Count> resultCountPerService = new ArrayList<>();
 
     public InterwebResultsWrapper(SearchResults response) {
         if (response == null || response.getResults() == null) {
@@ -149,11 +149,11 @@ public class InterwebResultsWrapper implements Serializable {
         return totalResults;
     }
 
-    public List<ResourceDecorator> getResources() {
+    public LinkedList<ResourceDecorator> getResources() {
         return resources;
     }
 
-    public List<Count> getResultCountPerService() {
+    public ArrayList<Count> getResultCountPerService() {
         return resultCountPerService;
     }
 }

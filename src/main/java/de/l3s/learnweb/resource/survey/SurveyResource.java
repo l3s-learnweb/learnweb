@@ -35,12 +35,14 @@ public class SurveyResource extends Resource {
      */
     protected SurveyResource(SurveyResource other) {
         super(other);
-        setOpenDate(other.getOpenDate());
-        setCloseDate(other.getCloseDate());
-        setQuiz(other.isQuiz());
-        setSingleResponse(other.isSingleResponse());
-        setDisableAutosave(other.isDisableAutosave());
 
+        this.openDate = other.openDate;
+        this.closeDate = other.closeDate;
+        this.quiz = other.quiz;
+        this.singleResponse = other.singleResponse;
+        this.disableAutosave = other.disableAutosave;
+
+        this.pages = new ArrayList<>();
         for (SurveyPage page : other.getPages()) {
             pages.add(new SurveyPage(page));
         }

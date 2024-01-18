@@ -32,10 +32,10 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     @Serial
     private static final long serialVersionUID = 3326736281893564706L;
 
-    private Map<String, String> actions;
-    private List<SelectItemGroup> groupedActions;
-    private List<String> selectedActionItems;
-    private List<Integer> selectedGroupedActions;
+    private TreeMap<String, String> actions;
+    private ArrayList<SelectItemGroup> groupedActions;
+    private ArrayList<String> selectedActionItems;
+    private ArrayList<Integer> selectedGroupedActions;
 
     private transient LineChartModel interactionsChart;
     private transient List<Map<String, Object>> interactionsTable;
@@ -137,35 +137,35 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
             return null;
         }
 
-        return getInteractionsTable().isEmpty() ? new HashSet<>() : interactionsTable.get(0).keySet();
+        return getInteractionsTable().isEmpty() ? new HashSet<>() : interactionsTable.getFirst().keySet();
     }
 
     public Map<String, String> getActions() {
         return actions;
     }
 
-    public List<String> getSelectedActionItems() {
+    public ArrayList<String> getSelectedActionItems() {
         return selectedActionItems;
     }
 
-    public void setSelectedActionItems(List<String> selectedActionItems) {
+    public void setSelectedActionItems(ArrayList<String> selectedActionItems) {
         this.selectedGroupedActions = null;
         this.selectedActionItems = selectedActionItems;
     }
 
-    public List<SelectItemGroup> getGroupedActions() {
+    public ArrayList<SelectItemGroup> getGroupedActions() {
         return groupedActions;
     }
 
-    public void setGroupedActions(List<SelectItemGroup> groupedActions) {
+    public void setGroupedActions(ArrayList<SelectItemGroup> groupedActions) {
         this.groupedActions = groupedActions;
     }
 
-    public List<Integer> getSelectedGroupedActions() {
+    public ArrayList<Integer> getSelectedGroupedActions() {
         return selectedGroupedActions;
     }
 
-    public void setSelectedGroupedActions(List<Integer> selectedGroupedActions) {
+    public void setSelectedGroupedActions(ArrayList<Integer> selectedGroupedActions) {
         this.selectedActionItems = null;
         this.selectedGroupedActions = selectedGroupedActions;
     }

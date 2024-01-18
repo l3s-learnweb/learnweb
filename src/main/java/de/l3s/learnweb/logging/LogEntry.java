@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -35,7 +34,7 @@ public class LogEntry implements Serializable {
     private transient Optional<Resource> resource;
     private transient User user;
     private transient Group group;
-    private Map<Locale, String> descriptions; // stores a description of this entry for different locales
+    private HashMap<Locale, String> descriptions; // stores a description of this entry for different locales
 
     public LogEntry(int userId, Action action, LocalDateTime date, String params, int groupId, int targetId) {
         this.userId = userId;

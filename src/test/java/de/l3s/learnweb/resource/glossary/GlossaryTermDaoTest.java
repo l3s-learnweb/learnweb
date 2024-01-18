@@ -99,11 +99,10 @@ class GlossaryTermDaoTest {
     @Test
     void save() {
         GlossaryTerm glossaryTerm = new GlossaryTerm();
-        Locale aLocale = new Locale.Builder().setLanguage("fr").build();
         glossaryTerm.setId(21);
         glossaryTerm.setEntryId(2);
         glossaryTerm.setTerm("term");
-        glossaryTerm.setLanguage(aLocale);
+        glossaryTerm.setLanguage(Locale.of("fr"));
         glossaryTerm.setUses(Collections.singletonList("technical"));
         glossaryTerm.setPronounciation("");
         glossaryTerm.setAcronym("");

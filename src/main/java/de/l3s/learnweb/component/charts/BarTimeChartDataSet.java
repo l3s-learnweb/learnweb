@@ -1,34 +1,37 @@
 package de.l3s.learnweb.component.charts;
 
 import java.io.IOException;
-import java.util.List;
+import java.io.Serial;
+import java.util.ArrayList;
 
 import org.primefaces.model.charts.ChartDataSet;
+import org.primefaces.model.charts.data.NumericPoint;
 import org.primefaces.util.ChartUtils;
 import org.primefaces.util.FastStringWriter;
 
 public class BarTimeChartDataSet extends ChartDataSet {
+    @Serial
     private static final long serialVersionUID = -2261676926838466056L;
 
-    private List<Object> data;
+    private ArrayList<NumericPoint> data;
     private String label;
     private String xaxisID;
     private String yaxisID;
     private String stack;
-    private Object backgroundColor;
-    private Object borderColor;
-    private Object borderWidth;
+    private String backgroundColor;
+    private String borderColor;
+    private Integer borderWidth;
     private String borderSkipped;
-    private Object hoverBackgroundColor;
-    private Object hoverBorderColor;
-    private Object hoverBorderWidth;
+    private String hoverBackgroundColor;
+    private String hoverBorderColor;
+    private Integer hoverBorderWidth;
 
     /**
      * Gets the list of data in this dataSet
      *
      * @return List&#60;Number&#62; list of data
      */
-    public List<Object> getData() {
+    public ArrayList<NumericPoint> getData() {
         return data;
     }
 
@@ -37,7 +40,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param data List&#60;Number&#62; list of data
      */
-    public void setData(List<Object> data) {
+    public void setData(ArrayList<NumericPoint> data) {
         this.data = data;
     }
 
@@ -120,7 +123,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @return backgroundColor
      */
-    public Object getBackgroundColor() {
+    public String getBackgroundColor() {
         return backgroundColor;
     }
 
@@ -129,7 +132,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param backgroundColor The fill color of the bar.
      */
-    public void setBackgroundColor(Object backgroundColor) {
+    public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 
@@ -138,7 +141,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @return borderColor
      */
-    public Object getBorderColor() {
+    public String getBorderColor() {
         return borderColor;
     }
 
@@ -147,7 +150,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param borderColor The color of the bar border.
      */
-    public void setBorderColor(Object borderColor) {
+    public void setBorderColor(String borderColor) {
         this.borderColor = borderColor;
     }
 
@@ -156,7 +159,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @return borderWidth
      */
-    public Object getBorderWidth() {
+    public Integer getBorderWidth() {
         return borderWidth;
     }
 
@@ -165,7 +168,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param borderWidth The stroke width of the bar in pixels.
      */
-    public void setBorderWidth(Object borderWidth) {
+    public void setBorderWidth(Integer borderWidth) {
         this.borderWidth = borderWidth;
     }
 
@@ -192,7 +195,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @return hoverBackgroundColor
      */
-    public Object getHoverBackgroundColor() {
+    public String getHoverBackgroundColor() {
         return hoverBackgroundColor;
     }
 
@@ -201,7 +204,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param hoverBackgroundColor The fill colour of the bars when hovered.
      */
-    public void setHoverBackgroundColor(Object hoverBackgroundColor) {
+    public void setHoverBackgroundColor(String hoverBackgroundColor) {
         this.hoverBackgroundColor = hoverBackgroundColor;
     }
 
@@ -210,7 +213,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @return hoverBorderColor
      */
-    public Object getHoverBorderColor() {
+    public String getHoverBorderColor() {
         return hoverBorderColor;
     }
 
@@ -219,7 +222,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param hoverBorderColor The stroke colour of the bars when hovered.
      */
-    public void setHoverBorderColor(Object hoverBorderColor) {
+    public void setHoverBorderColor(String hoverBorderColor) {
         this.hoverBorderColor = hoverBorderColor;
     }
 
@@ -228,7 +231,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @return hoverBorderWidth
      */
-    public Object getHoverBorderWidth() {
+    public Integer getHoverBorderWidth() {
         return hoverBorderWidth;
     }
 
@@ -237,7 +240,7 @@ public class BarTimeChartDataSet extends ChartDataSet {
      *
      * @param hoverBorderWidth The stroke width of the bars when hovered.
      */
-    public void setHoverBorderWidth(Object hoverBorderWidth) {
+    public void setHoverBorderWidth(Integer hoverBorderWidth) {
         this.hoverBorderWidth = hoverBorderWidth;
     }
 

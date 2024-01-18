@@ -5,7 +5,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
@@ -50,10 +49,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     private boolean editResource = false;
 
     private Resource resource;
-    private Map<String, Integer> ratingValues;
+    private HashMap<String, Integer> ratingValues;
     private int embeddedTab = 0;
     private ViewAction viewAction = ViewAction.viewResource;
-    private List<LogEntry> logs;
+
+    private transient List<LogEntry> logs;
 
     @Inject
     private ResourceDao resourceDao;
@@ -333,7 +333,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         this.newComment = newComment;
     }
 
-    public Map<String, Integer> getRatingValues() {
+    public HashMap<String, Integer> getRatingValues() {
         if (null == ratingValues) {
             ratingValues = new HashMap<>();
             resource.getRatings().forEach((key, value) -> ratingValues.put(key, value.getRate(getUser().getId())));
