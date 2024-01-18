@@ -51,6 +51,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     private Resource resource;
     private Map<String, Integer> ratingValues;
+    private int embeddedTab = 0;
     private ViewAction viewAction = ViewAction.viewResource;
     private List<LogEntry> logs;
 
@@ -74,6 +75,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
         log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
 
+        embeddedTab = resource.getDefaultTab().ordinal();
         if (editResource) {
             editResource();
         }
@@ -117,6 +119,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public int getEmbeddedTab() {
+        return embeddedTab;
+    }
+
+    public void setEmbeddedTab(final int embeddedTab) {
+        this.embeddedTab = embeddedTab;
     }
 
     public ViewAction getViewAction() {
