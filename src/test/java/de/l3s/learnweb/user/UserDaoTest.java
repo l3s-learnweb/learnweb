@@ -47,7 +47,7 @@ class UserDaoTest {
         assertEquals(310, user.get().getPassword().length());
         assertEquals(User.PasswordHashing.PBKDF2, user.get().getHashing());
         assertEquals(User.NotificationFrequency.NEVER, user.get().getPreferredNotificationFrequency());
-        assertEquals(new Locale("en", "UK"), user.get().getLocale());
+        assertEquals(Locale.of("en", "UK"), user.get().getLocale());
         assertEquals(User.Gender.OTHER, user.get().getGender());
         assertNull(user.get().getDateOfBirth());
         assertNull(user.get().getAddress());
