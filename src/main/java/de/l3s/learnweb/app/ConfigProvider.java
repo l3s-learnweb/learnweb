@@ -85,6 +85,7 @@ public class ConfigProvider implements Serializable {
         this(true);
     }
 
+    @SuppressWarnings("this-escape")
     public ConfigProvider(final boolean servlet) {
         loadProperties();
         loadEnvironmentVariables();

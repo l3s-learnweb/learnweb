@@ -57,50 +57,43 @@
 
         <dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind fachlich plausibel:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_plausible" value="#{resourceDetailBean.ratingValues['star_plausible']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_plausible'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_plausible" value="#{resourceDetailBean.ratingValues['star_plausible']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind glaubwürdig:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_credibility" value="#{resourceDetailBean.ratingValues['star_credibility']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_credibility'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_credibility" value="#{resourceDetailBean.ratingValues['star_credibility']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Die Informationen im Kontext Klimawandel sind logisch dargestellt:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_logical" value="#{resourceDetailBean.ratingValues['star_logical']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_logical'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_logical" value="#{resourceDetailBean.ratingValues['star_logical']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind mit verlässlichen Quellen/Daten belegt:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_reliable" value="#{resourceDetailBean.ratingValues['star_reliable']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_reliable'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_reliable" value="#{resourceDetailBean.ratingValues['star_reliable']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Die Informationsquelle des Videos ist vertrauenswürdig:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_complete" value="#{resourceDetailBean.ratingValues['star_trustworthy']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_trustworthy'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_complete" value="#{resourceDetailBean.ratingValues['star_trustworthy']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Das Video ist verständlich dargestellt:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_trustworthy" value="#{resourceDetailBean.ratingValues['star_easy']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_easy'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_trustworthy" value="#{resourceDetailBean.ratingValues['star_easy']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
 		<dt class="col-12">Das Video ist neutral dargestellt:</dt>
 		<dd class="col-12 mt-1 mt-2">
-			<p:rating id="star_easy" value="#{resourceDetailBean.ratingValues['star_neutrall']}" cancel="false" immediate="true"
-					  readonly="${not empty resourceDetailBean.ratingValues['star_neutrall'] or not res.canAnnotateResource(userBean.user)}">
+			<p:rating id="star_easy" value="#{resourceDetailBean.ratingValues['star_neutrall']}" cancel="false" immediate="true">
 				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
 			</p:rating>
 		</dd>
