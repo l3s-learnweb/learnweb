@@ -53,6 +53,9 @@ public final class UrlHelper {
                 url = "http://" + url;
             }
             url = toAscii(StringHelper.urlDecode(url.trim()));
+            if (url != null && url.startsWith("https://waps.io/live/")) {
+                url = url.substring(21);
+            }
 
             HttpURLConnection connection = getHttpURLConnection(url);
             connection.setInstanceFollowRedirects(false);
