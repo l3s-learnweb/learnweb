@@ -31,8 +31,6 @@ import de.l3s.learnweb.i18n.MessagesBundle;
  *
  */
 public final class GlossaryXLSXExporter {
-    //private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
-
     private final GlossaryResource glossaryResource;
     private final ResourceBundle bundle; // language of the exported header fields
 

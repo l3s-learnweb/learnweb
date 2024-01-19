@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.annotation.PostConstruct;
@@ -151,6 +150,6 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
     }
 
     public List<SurveyPage> getPages() {
-        return resource.getPages().stream().filter(page -> !page.isDeleted()).collect(Collectors.toList());
+        return resource.getPages().stream().filter(page -> !page.isDeleted()).toList();
     }
 }

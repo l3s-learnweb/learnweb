@@ -347,6 +347,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public void setTimeZone(final String preferredTimeZone) {
-        this.timeZone = preferredTimeZone.replaceAll("\"", "");
+        this.timeZone = preferredTimeZone.replace("\"", "");
     }
 }

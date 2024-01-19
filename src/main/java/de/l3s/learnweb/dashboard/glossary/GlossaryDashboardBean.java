@@ -25,7 +25,6 @@ import de.l3s.learnweb.resource.glossary.GlossaryTermDao;
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1708095580068235081L;
-    //private static final Logger log = LogManager.getLogger(GlossaryDashboardBean.class);
 
     private transient List<GlossaryResource> glossaryResources;
     private transient Integer totalConcepts;

@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
@@ -58,7 +57,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
         List<Resource> resources = getResourceDao().findByOwnerIdsAndType(userIds, ResourceType.glossary);
 
         // convert to glossary resource but filter resources that could not be converted
-        return resources.stream().map(this::convertToGlossaryResource).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+        return resources.stream().map(this::convertToGlossaryResource).filter(Optional::isPresent).map(Optional::get).toList();
     }
 
     default void save(GlossaryResource resource) { // Called when resource is created in right-pane

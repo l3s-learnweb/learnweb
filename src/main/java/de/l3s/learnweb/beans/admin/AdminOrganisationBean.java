@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.model.SelectItem;
@@ -101,7 +100,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
      */
     public List<String> getSupportedLanguageVariants() {
         List<Locale> locales = BeanHelper.getSupportedLocales();
-        return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
+        return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().toList();
     }
 
     public void onSave() {

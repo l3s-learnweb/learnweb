@@ -8,7 +8,6 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
@@ -351,7 +350,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
             timeZoneIds = ZoneId.getAvailableZoneIds().stream().filter(id -> !StringUtils.startsWithAny(id, "Etc/", "SystemV/", "PST8PDT", "GMT")).sorted()
                 .map(id -> new SelectItem(ZoneId.of(id), id.replace("_", " ") + " (" + ZoneId.of(id).getDisplayName(TextStyle.FULL_STANDALONE, locale) + ")"))
-                .collect(Collectors.toList());
+                .toList();
         }
         return timeZoneIds;
     }

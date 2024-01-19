@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author Oleh Astappiev
  */
 public final class HashHelper {
-    // private static final Logger log = LogManager.getLogger(HashHelper.class);
 
     /**
      * Don't use it! :/

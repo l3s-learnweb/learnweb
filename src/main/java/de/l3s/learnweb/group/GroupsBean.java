@@ -3,7 +3,6 @@ package de.l3s.learnweb.group;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -50,7 +49,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         myGroups = user.getGroups();
         newGroup = new Group();
 
-        editAbleCourses = user.getCourses().stream().filter(course -> !course.getOption(Option.Groups_Only_moderators_can_create_groups)).collect(Collectors.toList());
+        editAbleCourses = user.getCourses().stream().filter(course -> !course.getOption(Option.Groups_Only_moderators_can_create_groups)).toList();
     }
 
     public void joinGroup() {
@@ -60,11 +59,9 @@ public class GroupsBean extends ApplicationBean implements Serializable {
             return;
         }
 
-        if (selectedGroup.isMemberCountLimited()) {
-            if (selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount()) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
-                return;
-            }
+        if (selectedGroup.isMemberCountLimited() && (selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount())) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
+            return;
         }
 
         user.joinGroup(selectedGroup);

@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
@@ -90,7 +89,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         // retrieve all the users courses whose welcome message isn't blank
         coursesWithWelcomeMessage = user.getCourses().stream()
             .filter(course -> !StringHelper.isBlankDisregardingHTML(course.getWelcomeMessage()))
-            .collect(Collectors.toList());
+            .toList();
 
     }
 

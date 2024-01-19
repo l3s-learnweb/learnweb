@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.jdbi.v3.core.argument.Argument;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -144,7 +143,7 @@ public enum Action implements Argument {
     }
 
     public static List<Integer> collectOrdinals(EnumSet<Action> actions) {
-        return actions.stream().map(Enum::ordinal).collect(Collectors.toList());
+        return actions.stream().map(Enum::ordinal).toList();
     }
 
     public static Set<Action> getActionsByCategory(ActionCategory category) {

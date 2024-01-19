@@ -30,7 +30,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
     @Serial
     private static final long serialVersionUID = 7748993079932830367L;
-    //private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
 
     private int groupId;
     private Group group;

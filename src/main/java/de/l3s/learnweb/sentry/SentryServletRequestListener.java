@@ -34,7 +34,7 @@ public class SentryServletRequestListener implements ServletRequestListener {
             hint.set("servlet:request", httpRequest);
             this.hub.clearBreadcrumbs();
             this.hub.addBreadcrumb(Breadcrumb.http(httpRequest.getRequestURI(), httpRequest.getMethod()), hint);
-            this.hub.configureScope((scope) -> scope.addEventProcessor(new SentryRequestHttpServletRequestProcessor(httpRequest)));
+            this.hub.configureScope(scope -> scope.addEventProcessor(new SentryRequestHttpServletRequestProcessor(httpRequest)));
         }
     }
 }

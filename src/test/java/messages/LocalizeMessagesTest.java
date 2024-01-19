@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import de.l3s.util.MessagesHelper;
 
-public class LocalizeMessagesTest {
+class LocalizeMessagesTest {
 
     @Test
     @Disabled("Right now many languages missing translations")

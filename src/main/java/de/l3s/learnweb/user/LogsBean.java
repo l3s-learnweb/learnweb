@@ -20,7 +20,6 @@ import de.l3s.learnweb.logging.LogEntry;
 public class LogsBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 42220709533639671L;
-    //private static final Logger log = LogManager.getLogger(LogsBean.class);
 
     private static final EnumSet<Action> AVAILABLE_ACTIONS;
 

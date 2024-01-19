@@ -28,7 +28,6 @@ import de.l3s.learnweb.logging.Action;
 public class ForumBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 8303246537720508084L;
-    //private static final Logger log = LogManager.getLogger(ForumBean.class);
 
     private int groupId;
     private Group group;

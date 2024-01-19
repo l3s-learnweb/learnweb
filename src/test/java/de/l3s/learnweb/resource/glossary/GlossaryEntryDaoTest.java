@@ -31,7 +31,7 @@ class GlossaryEntryDaoTest {
     void findByResourceId() {
         List<GlossaryEntry> glossaryEntries = glossaryEntryDao.findByResourceId(9);
         assertEquals(9, glossaryEntries.size());
-        assertNotEquals("Dummy Text", glossaryEntries.get(0).getDescription());
+        assertNotEquals("Dummy Text", glossaryEntries.getFirst().getDescription());
         assertEquals("a unit for measuring an area of land, equal to 10,000 square metres", glossaryEntries.get(8).getDescription());
     }
 
@@ -39,13 +39,13 @@ class GlossaryEntryDaoTest {
     void deleteSoft() {
         List<GlossaryEntry> glossaryEntries = glossaryEntryDao.findByResourceId(9);
         assertEquals(9, glossaryEntries.size());
-        assertFalse(glossaryEntries.get(0).isDeleted());
-        assertEquals(4, glossaryEntries.get(0).getUserId());
+        assertFalse(glossaryEntries.getFirst().isDeleted());
+        assertEquals(4, glossaryEntries.getFirst().getUserId());
 
-        glossaryEntryDao.deleteSoft(glossaryEntries.get(0), 5);
+        glossaryEntryDao.deleteSoft(glossaryEntries.getFirst(), 5);
         List<GlossaryEntry> updated = glossaryEntryDao.findByResourceId(9);
         assertEquals(8, updated.size());
-        assertNotEquals("Dummy Text", glossaryEntries.get(0).getDescription());
+        assertNotEquals("Dummy Text", glossaryEntries.getFirst().getDescription());
     }
 
     @Test
@@ -69,12 +69,12 @@ class GlossaryEntryDaoTest {
     @Test
     void countGlossaryDescriptionSummary() {
         List<Integer> users = Arrays.asList(1, 4);
-        List<GlossaryDescriptionSummary> retreieved = glossaryEntryDao.countGlossaryDescriptionSummary(users, LocalDate.of(2020, 3, 21), LocalDate.of(2021, 3, 21));
-        assertEquals("Dummy Text", retreieved.get(0).getDescription());
-        assertEquals("a unit for measuring an area of land, equal to 10,000 square metres", retreieved.get(9).getDescription());
-        assertEquals(10, retreieved.size());
-        retreieved.forEach(element -> assertEquals(9, element.getResourceId()));
-        retreieved.forEach(element -> assertFalse(element.isDescriptionPasted()));
+        List<GlossaryDescriptionSummary> retrieved = glossaryEntryDao.countGlossaryDescriptionSummary(users, LocalDate.of(2020, 3, 21), LocalDate.of(2021, 3, 21));
+        assertEquals("Dummy Text", retrieved.getFirst().getDescription());
+        assertEquals("a unit for measuring an area of land, equal to 10,000 square metres", retrieved.get(9).getDescription());
+        assertEquals(10, retrieved.size());
+        retrieved.forEach(element -> assertEquals(9, element.getResourceId()));
+        retrieved.forEach(element -> assertFalse(element.isDescriptionPasted()));
     }
 
     @Test

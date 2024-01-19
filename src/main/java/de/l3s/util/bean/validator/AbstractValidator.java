@@ -26,7 +26,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
 
         if (validatorMessage == null) {
             Object label = component.getAttributes().get("label");
-            if (label == null || (label instanceof String && ((String) label).isEmpty())) {
+            if (label == null || (label instanceof String str && str.isEmpty())) {
                 label = component.getValueExpression("label");
             }
 

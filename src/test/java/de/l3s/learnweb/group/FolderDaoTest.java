@@ -51,9 +51,9 @@ class FolderDaoTest {
     void findByPrivateGroupAndRootFolder() {
         List<Folder> retrieved = folderDao.findByPrivateGroupAndRootFolder(1);
         assertEquals(1, retrieved.size());
-        assertEquals(6, retrieved.get(0).getId());
-        assertEquals(0, retrieved.get(0).getGroupId());
-        assertEquals(0, retrieved.get(0).getParentFolderId());
+        assertEquals(6, retrieved.getFirst().getId());
+        assertEquals(0, retrieved.getFirst().getGroupId());
+        assertEquals(0, retrieved.getFirst().getParentFolderId());
     }
 
     @Test

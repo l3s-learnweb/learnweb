@@ -84,7 +84,7 @@ class FileDaoTest {
 
         List<File> retrieved = fileDao.findByResourceId(1);
 
-        assertEquals(CollectionUtils.intersection(retrieved, toDelete).size(), 0);
+        assertEquals(0, CollectionUtils.intersection(retrieved, toDelete).size());
     }
 
     @Test

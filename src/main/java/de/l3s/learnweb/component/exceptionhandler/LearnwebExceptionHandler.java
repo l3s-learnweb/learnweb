@@ -38,7 +38,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
             return;
         }
 
-        if (rootCause instanceof HttpException && ((HttpException) rootCause).isSilent()) {
+        if (rootCause instanceof HttpException httpException && httpException.isSilent()) {
             log.warn("Bean exception", rootCause);
             return;
         }

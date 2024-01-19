@@ -70,6 +70,7 @@ public final class LearnwebMenu extends AbstractMenu implements Widget, Componen
         getStateHelper().put(PropertyKeys.styleClass, styleClass);
     }
 
+    @Override
     public String resolveWidgetVar() {
         FacesContext context = getFacesContext();
         String userWidgetVar = (String) getAttributes().get("widgetVar");

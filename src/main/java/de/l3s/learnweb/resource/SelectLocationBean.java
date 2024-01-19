@@ -23,7 +23,6 @@ import de.l3s.learnweb.user.User;
 public class SelectLocationBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 6699391944318695838L;
-    //private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
 
     private Group privateGroup;
 

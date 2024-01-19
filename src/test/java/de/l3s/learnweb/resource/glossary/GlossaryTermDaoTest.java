@@ -80,9 +80,9 @@ class GlossaryTermDaoTest {
         List<Integer> users = Arrays.asList(1, 4);
         List<GlossaryUserTermsSummary> retrieved = glossaryTermDao.countGlossaryUserTermsSummary(users, LocalDate.of(2020, 3, 21), LocalDate.of(2021, 3, 21));
         assertEquals(1, retrieved.size());
-        assertEquals(4, retrieved.get(0).getUserId());
-        assertEquals(20, retrieved.get(0).getTerms());
-        assertEquals(9, retrieved.get(0).getEntries());
+        assertEquals(4, retrieved.getFirst().getUserId());
+        assertEquals(20, retrieved.getFirst().getTerms());
+        assertEquals(9, retrieved.getFirst().getEntries());
     }
 
     @Test
@@ -90,10 +90,10 @@ class GlossaryTermDaoTest {
         List<Integer> users = Arrays.asList(1, 4);
         List<GlossaryUserActivity> retrieved = glossaryTermDao.countGlossaryUserActivity(users, LocalDate.of(2020, 3, 21), LocalDate.of(2021, 3, 21));
         assertEquals(1, retrieved.size());
-        assertEquals(4, retrieved.get(0).getUserId());
-        assertEquals(20, retrieved.get(0).getTotalTerms());
-        assertEquals(9, retrieved.get(0).getTotalGlossaries());
-        assertEquals(6, retrieved.get(0).getTotalReferences());
+        assertEquals(4, retrieved.getFirst().getUserId());
+        assertEquals(20, retrieved.getFirst().getTotalTerms());
+        assertEquals(9, retrieved.getFirst().getTotalGlossaries());
+        assertEquals(6, retrieved.getFirst().getTotalReferences());
     }
 
     @Test

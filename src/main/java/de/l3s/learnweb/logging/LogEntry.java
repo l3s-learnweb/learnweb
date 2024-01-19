@@ -21,7 +21,6 @@ import de.l3s.util.StringHelper;
 public class LogEntry implements Serializable {
     @Serial
     private static final long serialVersionUID = -4239479233091966928L;
-    //private static final Logger log = LogManager.getLogger(LogEntry.class);
 
     private final int userId;
     private final Action action;

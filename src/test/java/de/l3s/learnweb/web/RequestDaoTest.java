@@ -21,7 +21,7 @@ class RequestDaoTest {
     void findByIp() {
         List<Request> retrieved = requestDao.findByIp("33.143.226.138");
         assertFalse(retrieved.isEmpty());
-        assertEquals(retrieved.get(0).getAddr(), "33.143.226.138");
+        assertEquals("33.143.226.138", retrieved.getFirst().getAddr());
     }
 
     @Test
@@ -48,7 +48,7 @@ class RequestDaoTest {
 
         List<Request> retrieved = requestDao.findByIp("123.0.0.1");
         assertFalse(retrieved.isEmpty());
-        assertEquals(req.getUsernames(), retrieved.get(0).getUsernames());
-        assertEquals(req.getCreatedAt(), retrieved.get(0).getCreatedAt());
+        assertEquals(req.getUsernames(), retrieved.getFirst().getUsernames());
+        assertEquals(req.getCreatedAt(), retrieved.getFirst().getCreatedAt());
     }
 }

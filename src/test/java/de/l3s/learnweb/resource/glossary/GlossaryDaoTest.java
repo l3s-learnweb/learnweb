@@ -61,8 +61,8 @@ class GlossaryDaoTest {
     void findByOwnerIds() {
         List<GlossaryResource> retrieved = glossaryDao.findByOwnerIds(Arrays.asList(1, 4));
         assertEquals(1, retrieved.size());
-        assertEquals("Glossary res", retrieved.get(0).getTitle());
-        assertEquals(9, retrieved.get(0).getId());
+        assertEquals("Glossary res", retrieved.getFirst().getTitle());
+        assertEquals(9, retrieved.getFirst().getId());
     }
 
     @Test

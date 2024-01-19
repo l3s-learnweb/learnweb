@@ -17,7 +17,6 @@ import de.l3s.util.Deletable;
  * All methods should accept {@code true} as valid (no error) input and {@code false} as invalid input which triggers exception.
  */
 public final class BeanAssert {
-
     public static final Supplier<NotFoundHttpException> NOT_FOUND = () -> new NotFoundHttpException("error_pages.not_found_object_description");
 
     /**

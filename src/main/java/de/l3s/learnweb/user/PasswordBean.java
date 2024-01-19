@@ -24,7 +24,6 @@ import de.l3s.util.HashHelper;
 public class PasswordBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 2237249691336567548L;
-    //private static final Logger log = LogManager.getLogger(PasswordBean.class);
 
     private String email;
 

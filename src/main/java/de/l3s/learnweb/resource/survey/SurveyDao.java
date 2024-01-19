@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +43,7 @@ public interface SurveyDao extends SqlObject, Serializable {
 
     default List<SurveyResource> findByUserId(int userId) {
         return getResourceDao().findByOwnerIdsAndType(Collections.singleton(userId), ResourceType.survey)
-            .stream().map(this::convertToSurveyResource).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+            .stream().map(this::convertToSurveyResource).filter(Optional::isPresent).map(Optional::get).toList();
     }
 
     default Optional<SurveyResource> convertToSurveyResource(Resource resource) {
@@ -87,19 +86,19 @@ public interface SurveyDao extends SqlObject, Serializable {
     default List<SurveyPage> findPagesAndVariantsByResourceId(int resourceId) {
         return findPagesByResourceId(resourceId).stream()
             .peek(page -> page.getVariants().addAll(findVariantsByPageId(page.getId())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     default List<SurveyQuestion> findQuestionsAndOptionsByResourceId(int resourceId) {
         return findQuestionsByResourceId(resourceId).stream()
             .peek(question -> question.getOptions().addAll(findOptionsByQuestionId(question.getId())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     default List<SurveyQuestion> findQuestionsAndOptionsByResourceId(int resourceId, int pageId) {
         return findQuestionsByResourceIdAndPageId(resourceId, pageId).stream()
             .peek(question -> question.getOptions().addAll(findOptionsByQuestionId(question.getId())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
@@ -215,19 +214,19 @@ public interface SurveyDao extends SqlObject, Serializable {
     default List<SurveyResponse> findResponsesByResourceId(final int resourceId) {
         return getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ?", resourceId)
             .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
-            .map(this::findAnswersByResponse).collect(Collectors.toList());
+            .map(this::findAnswersByResponse).list();
     }
 
     default List<SurveyResponse> findSubmittedResponsesByResourceId(final int resourceId) {
         return getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ? AND submitted = 1", resourceId)
             .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
-            .map(this::findAnswersByResponse).collect(Collectors.toList());
+            .map(this::findAnswersByResponse).list();
     }
 
     default List<SurveyResponse> findResponsesByUserId(final int resourceId) {
         return getHandle().select("SELECT * FROM lw_survey_response WHERE user_id = ?", resourceId)
             .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
-            .map(this::findAnswersByResponse).collect(Collectors.toList());
+            .map(this::findAnswersByResponse).list();
     }
 
     default SurveyResponse findAnswersByResponse(final SurveyResponse response) {

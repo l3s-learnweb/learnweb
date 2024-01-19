@@ -11,6 +11,7 @@ public final class Misc {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
         }
     }
 }

@@ -73,7 +73,6 @@ public class InterwebResultsWrapper implements Serializable {
     private static WebResource createResource(final ResourceService service, SearchItem searchItem) {
         WebResource resource = new WebResource(ResourceType.fromContentType(searchItem.getType()), service);
         resource.setTitle(searchItem.getTitle());
-        // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchItem.getId());
         resource.setAuthor(searchItem.getAuthor());
 

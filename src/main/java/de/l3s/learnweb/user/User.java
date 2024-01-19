@@ -641,11 +641,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         }
 
         // check whether the user is moderator of the given users organisation
-        if (isModerator() && getOrganisation().equals(userToBeModerated.getOrganisation())) {
-            return true;
-        }
-
-        return false;
+        return isModerator() && getOrganisation().equals(userToBeModerated.getOrganisation());
     }
 
     public Locale getLocale() {

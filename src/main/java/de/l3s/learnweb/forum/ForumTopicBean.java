@@ -22,7 +22,6 @@ import de.l3s.learnweb.user.User;
 public class ForumTopicBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 6077135964610986190L;
-    // private static final Logger log = LogManager.getLogger(ForumTopicBean.class);
 
     // params
     private int topicId;

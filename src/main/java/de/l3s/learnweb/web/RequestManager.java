@@ -258,7 +258,7 @@ public class RequestManager implements Serializable {
         List<LoginAttempt> list;
         list = attemptedLogins.stream()
             .filter(x -> x.getAddr().equals(ban.getAddr()) && x.getCreatedAt().isAfter(threshold))
-            .collect(Collectors.toList());
+            .toList();
 
         if (list.size() > BAN_THRESHOLD) {
             flagSuspicious(ban);

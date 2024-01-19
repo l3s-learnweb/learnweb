@@ -215,11 +215,7 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
                 this.params = new LinkedHashMap<>();
             }
 
-            if (!this.params.containsKey(key)) {
-                this.params.put(key, new ArrayList<>());
-            }
-
-            this.params.get(key).add(value.toString());
+            this.params.computeIfAbsent(key, k -> new ArrayList<>()).add(value.toString());
         }
     }
 

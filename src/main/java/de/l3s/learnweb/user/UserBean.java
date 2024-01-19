@@ -201,7 +201,6 @@ public class UserBean implements Serializable {
 
     public String setLocaleCode(String localeCode) {
         setSidebarMenuModel(null);
-        //log.debug("set locale " + localeCode);
         locale = getLocaleByLocaleCode(localeCode);
 
         FacesContext fc = FacesContext.getCurrentInstance();

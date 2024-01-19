@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.faces.model.SelectItem;
 
@@ -93,7 +92,7 @@ public class MetadataField implements Serializable {
         if (StringUtils.isEmpty(query)) {
             return getOptions();
         }
-        return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).collect(Collectors.toList());
+        return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).toList();
     }
 
     public boolean isModeratorOnly() {
