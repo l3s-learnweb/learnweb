@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -91,7 +92,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
         List<GlossaryEntry> data = glossaryResource.getEntries().stream()
             .filter(allPredicates.stream().reduce(x -> true, Predicate::and))
-            .toList();
+            .collect(Collectors.toList()); // we can't use .toList() because it produces unmodifiable list
 
         if (filterBy.get("globalFilter") != null) {
             highlightText(data, filterBy.get("globalFilter").getFilterValue().toString());
