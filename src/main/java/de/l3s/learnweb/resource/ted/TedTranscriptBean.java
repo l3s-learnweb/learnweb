@@ -33,7 +33,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
-import de.l3s.learnweb.user.Course;
 import de.l3s.util.NlpHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -245,7 +244,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             if (langList.isEmpty()) {
                 languageList.add(new SelectItem("NA", "No Transcripts Available"));
             } else {
-                List<Locale> locales = new ArrayList<>();
+                ArrayList<Locale> locales = new ArrayList<>();
                 try {
                     for (String lang : langList) {
                         locales.add(LocaleUtils.toLocale(lang));
@@ -270,10 +269,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
-    }
-
-    public List<Course> getCourses() {
-        return getUser().getCourses();
     }
 
     public String getSummaryTextS() {
