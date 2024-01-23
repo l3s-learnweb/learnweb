@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.ted;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,6 +47,10 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT resource_id FROM lw_resource WHERE url = ? and owner_user_id = 7727")
     Optional<Integer> findResourceIdByTedXUrl(String url);
+
+    @RegisterRowMapper(TranscriptLogMapper.class)
+    @SqlQuery("SELECT a.* FROM lw_transcript_log a JOIN lw_resource USING(resource_id) WHERE user_id IN(<userIds>) and deleted = 0 ORDER BY user_id, created_at DESC")
+    List<TranscriptLog> findTranscriptLogsByUserIds(@BindList("userIds") Collection<Integer> userIds);
 
     @RegisterRowMapper(SimpleTranscriptLogMapper.class)
     @SqlQuery("SELECT t1.owner_user_id, t1.resource_id, title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount "
@@ -103,6 +108,22 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
 
     @SqlUpdate("INSERT INTO learnweb_large.ted_transcripts_lang_mapping (language_code,language) VALUES (?,?) ON DUPLICATE KEY UPDATE language_code = language_code")
     void saveTranscriptLangMapping(String langCode, String language);
+
+    default void saveTranscriptLog(TranscriptLog annotation) {
+        if (annotation.getCreatedAt() == null) {
+            annotation.setCreatedAt(Instant.now());
+        }
+
+        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("resource_id", annotation.getResourceId());
+        params.put("user_id", annotation.getUserId());
+        params.put("action", SqlHelper.toNullable(annotation.getAction()));
+        params.put("selection", SqlHelper.toNullable(annotation.getSelection()));
+        params.put("annotation", SqlHelper.toNullable(annotation.getAnnotation()));
+        params.put("created_at", annotation.getCreatedAt());
+
+        SqlHelper.handleSave(getHandle(), "lw_transcript_log", params).execute();
+    }
 
     default void saveTranscriptSelection(String transcript, int resourceId) {
         if (StringUtils.isEmpty(transcript)) {
@@ -169,6 +190,20 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
             video.setTags(rs.getString("tags"));
             video.setDuration(rs.getInt("duration"));
             return video;
+        }
+    }
+
+    class TranscriptLogMapper implements RowMapper<TranscriptLog> {
+        @Override
+        public TranscriptLog map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            TranscriptLog log = new TranscriptLog();
+            log.setResourceId(rs.getInt("resource_id"));
+            log.setUserId(rs.getInt("user_id"));
+            log.setAction(rs.getString("action"));
+            log.setSelection(rs.getString("selection"));
+            log.setAnnotation(rs.getString("annotation"));
+            log.setCreatedAt(rs.getTimestamp("created_at").toInstant());
+            return log;
         }
     }
 

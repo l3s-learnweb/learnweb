@@ -1,17 +1,17 @@
-package de.l3s.learnweb.resource;
+package de.l3s.learnweb.resource.ted;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
-public class Annotation implements Serializable {
+public class TranscriptLog implements Serializable {
     @Serial
     private static final long serialVersionUID = 6321296603254649454L;
 
-    private int annotationId;
     private int resourceId;
     private int userId;
     private String action;
@@ -23,15 +23,7 @@ public class Annotation implements Serializable {
     private transient User user;
     private transient Resource resource;
 
-    public Annotation() {
-    }
-
-    public int getAnnotationId() {
-        return annotationId;
-    }
-
-    public void setAnnotationId(final int annotationId) {
-        this.annotationId = annotationId;
+    public TranscriptLog() {
     }
 
     public int getResourceId() {

@@ -167,24 +167,15 @@ class Annotator {
       html: true,
       trigger: 'hover',
       selector: '[data-bs-toggle="tooltip"]',
-      // eslint-disable-next-line
-      title: function () {
-        return this.getAttribute(self.options.noteTitleAttribute);
-      },
+      title: (el) => el.getAttribute(self.options.noteTitleAttribute),
     });
 
     const popover = new bootstrap.Popover(this.containerEl, {
       html: true,
       trigger: 'hover',
       selector: '[data-bs-toggle="popover"]',
-      // eslint-disable-next-line
-      title: function () {
-        return this.getAttribute(self.options.noteTitleAttribute) || '';
-      },
-      // eslint-disable-next-line
-      content: function () {
-        return this.getAttribute(self.options.noteContentAttribute);
-      },
+      title: (el) => el.getAttribute(self.options.noteTitleAttribute) || '',
+      content: (el) => el.getAttribute(self.options.noteContentAttribute),
     });
   }
 
