@@ -24,7 +24,7 @@
         <maven.dependency.log4j.version>2.22.1</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>7.2.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.1</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>5.9.0</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>5.10.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
