@@ -34,7 +34,7 @@ class ResourceDaoTest {
     @Test
     void findAll() {
         Stream<Resource> resources = resourceDao.findAll();
-        assertEquals(10, resources.count());
+        assertEquals(11, resources.count());
     }
 
     @Test
@@ -96,7 +96,7 @@ class ResourceDaoTest {
 
     @Test
     void countUndeleted() {
-        assertEquals(10, resourceDao.countUndeleted());
+        assertEquals(11, resourceDao.countUndeleted());
     }
 
     @Test
