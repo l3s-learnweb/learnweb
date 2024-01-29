@@ -55,7 +55,9 @@ public final class BeanHelper {
         ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
 
         for (Locale locale : locales) {
-            selectItems.add(new SelectItem(locale, StringUtils.capitalize(locale.getDisplayLanguage(inLocale))));
+            if (!locale.getDisplayLanguage(inLocale).isEmpty()) {
+                selectItems.add(new SelectItem(locale, StringUtils.capitalize(locale.getDisplayLanguage(inLocale))));
+            }
         }
         selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
 

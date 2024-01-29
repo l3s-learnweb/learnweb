@@ -53,8 +53,8 @@
 					<div class="p-2 bg-light">
 						<h:form>
 							<p:outputLabel for="@next" styleClass="me-2" value="#{msg.select_transcript_lang}:"/>
-							<p:selectOneMenu id="select_lang" styleClass="me-2" value="#{tedTranscriptBean.transcriptLanguage}">
-								<f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
+							<p:selectOneMenu id="select_lang" styleClass="me-2" value="#{tedTranscriptBean.transcriptLanguage}" converter="localeConverter">
+								<f:selectItems value="#{tedTranscriptBean.languageList}"/>
 								<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 							</p:selectOneMenu>
 							<p:commandButton id="save" styleClass="me-2" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>

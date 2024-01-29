@@ -14,7 +14,7 @@ const copyPlugin = ({copyOnce, targets}) => ({
             }
 
             for (const {from, to} of targets) {
-                const dest = to ? to : path.basename(from);
+                const dest = to || path.basename(from);
                 fs.cpSync(from, path.join(build.initialOptions.outdir, dest), {
                     recursive: true,
                     force: true,
@@ -37,7 +37,7 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
         sassPlugin({
             precompile(source) {
                 // Replace relative paths to images with relative to the output directory (../images)
-                return source.replace(/(url\(['"]?)(..?\/)+images\/([^'")]+['"]?\))/g, `$1../images/$3`)
+                return source.replace(/(url\(['"]?)(\.{1,2}\/)+images\/([^'")]+['"]?\))/g, `$1../images/$3`)
             },
         }),
         copyPlugin({

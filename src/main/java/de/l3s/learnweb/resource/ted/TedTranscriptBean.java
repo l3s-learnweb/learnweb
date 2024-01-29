@@ -16,7 +16,6 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +32,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
+import de.l3s.util.LocaleUtils;
 import de.l3s.util.NlpHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -102,7 +102,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             }
 
         } else {
-            transcriptLanguage = "en";
+            transcriptLanguage = Locale.ENGLISH.getLanguage();
             setTranscript();
         }
 
@@ -242,7 +242,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             languageList = new LinkedList<>();
             List<String> langList = tedTranscriptDao.findLanguagesByResourceId(videoResourceId);
             if (langList.isEmpty()) {
-                languageList.add(new SelectItem("NA", "No Transcripts Available"));
+                languageList.add(new SelectItem(null, "No Transcripts Available"));
             } else {
                 ArrayList<Locale> locales = new ArrayList<>();
                 try {
