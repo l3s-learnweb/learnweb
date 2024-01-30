@@ -62,7 +62,7 @@
 
     <div class="bg-body">
         <div class="row px-3 py-5 px-md-4 px-lg-5">
-            <h:form id="history" styleClass="col-4 col-lg-3" style="max-width: 300px;">
+            <h:form id="history" styleClass="col-4 col-md-3" style="max-width: 300px;">
                 <p:commandButton styleClass="mb-3 ui-button-info" value="Start new chat" action="#{searchChatBean.newChat}" update=":chat :history" process="@this"/>
 
                 <ui:repeat value="#{searchChatBean.conversations}" var="conv">
@@ -76,7 +76,7 @@
                 </ui:repeat>
             </h:form>
 
-            <h:form id="chat" styleClass="col-8 col-lg-6 mx-auto" style="max-width: 800px;">
+            <h:form id="chat" styleClass="col-4 col-md-6 mx-auto" style="max-width: 800px;">
                 <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
 
                     <ui:repeat value="#{searchChatBean.messages}" var="message" varStatus="status">
@@ -112,6 +112,7 @@
                                                      rendered="#{not empty searchChatBean.responseSurveyId}"/>
                                     <p:commandButton icon="fas fa-rotate-left" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
                                                      action="#{searchChatBean.retry}" immediate="true" update="@form" title="Regenerate"/>
+                                    <p:commandButton icon="fas fa-bookmark" styleClass="ui-button-flat ui-button-plain"/>
                                 </div>
                             </div>
                         </ui:fragment>
@@ -170,7 +171,214 @@
                     </div>
                 </h:panelGroup>
             </h:form>
+
+            <h:form id="bots" styleClass="col-4 col-md-3">
+                <div class="border rounded p-3">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="me-2">
+                            <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle" style="min-width:2.5rem; min-height: 2.5rem">
+                                <i class="fas fa-robot"></i>
+                            </span>
+                        </div>
+                        <h5>Learnweb Assistant</h5>
+                    </div>
+
+                    <p class="text-muted">You are Learnweb Assistant, a helpful chat bot.</p>
+
+                    <div class="row mb-2">
+                        <div class="col-6 fw-bold">Model:</div>
+                        <div class="col-6">GPT-3.5-Turbo</div>
+
+                        <div class="col-6 fw-bold">Model version:</div>
+                        <div class="col-6">03.06.2023</div>
+                    </div>
+
+                    <p:commandButton styleClass="ui-button-info" value="Request response"/>
+                </div>
+
+                <div class="border rounded p-3 mt-2">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="me-2">
+                            <span class="bg-info text-white d-flex align-items-center justify-content-center rounded-circle" style="min-width:2.5rem; min-height: 2.5rem">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
+                        <h5 class="text-info">Patient</h5>
+                    </div>
+
+                    <p class="text-muted">You are a patient of a psychotherapist with chronic stress.</p>
+
+                    <div class="row mb-2">
+                        <div class="col-6 fw-bold">Model:</div>
+                        <div class="col-6">GPT-3.5-Turbo</div>
+
+                        <div class="col-6 fw-bold">Model version:</div>
+                        <div class="col-6">03.06.2023</div>
+                    </div>
+
+                    <p:commandButton styleClass="ui-button-info" value="Request response"/>
+                </div>
+
+                <div class="border rounded p-3 mt-2">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="me-2">
+                            <span class="bg-warning text-white d-flex align-items-center justify-content-center rounded-circle" style="min-width:2.5rem; min-height: 2.5rem">
+                                <i class="fas fa-user-doctor"></i>
+                            </span>
+                        </div>
+                        <h5 class="text-warning">Doctor</h5>
+                    </div>
+
+                    <p class="text-muted">You are a certified psychotherapist, listen to pationt and carefully reply.</p>
+
+                    <div class="row mb-2">
+                        <div class="col-6 fw-bold">Model:</div>
+                        <div class="col-6">GPT-3.5-Turbo</div>
+
+                        <div class="col-6 fw-bold">Model version:</div>
+                        <div class="col-6">03.06.2023</div>
+                    </div>
+
+                    <p:commandButton styleClass="ui-button-info" value="Request response"/>
+                    <p:commandButton styleClass="ui-button-info" icon="fas fa-sliders" onclick="PF('responseDlg').show();"/>
+                </div>
+
+                <p:commandButton styleClass="mt-2 ms-1 ui-button-primary" value="Add another" onclick="PF('participantDlg').show();"/>
+            </h:form>
         </div>
     </div>
+
+    <p:dialog header="Describe your prompt" widgetVar="evaluateDlg" minHeight="40" width="350" showEffect="fade">
+        <h:form>
+            <div class="field">
+                <p:outputLabel for="@next" value="Type:" styleClass="fw-bold"/>
+                <p:selectOneButton>
+                    <f:selectItem itemLabel="Direct" itemValue="Option1"/>
+                    <f:selectItem itemLabel="Chain-of-Thought" itemValue="Option2"/>
+                    <f:selectItem itemLabel="Other" itemValue="Option3"/>
+                </p:selectOneButton>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="No. of shots:" styleClass="fw-bold"/>
+                <p:selectOneButton>
+                    <f:selectItem itemLabel="0" itemValue="Option1"/>
+                    <f:selectItem itemLabel="1" itemValue="Option2"/>
+                    <f:selectItem itemLabel="Less than 3" itemValue="Option3"/>
+                    <f:selectItem itemLabel="More than 3" itemValue="Option3"/>
+                </p:selectOneButton>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="Core instructions:" styleClass="fw-bold text-danger"/>
+                <p:inputTextarea placeholder="e.g., simulate this, define that, explain those, ..." rows="2"/>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="Context elements:" styleClass="fw-bold text-danger"/>
+                <p:inputTextarea placeholder="e.g., doctor specializing in cardiology, French tourist visiting Lecce, ..." rows="2"/>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="Explicit constraints:" styleClass="fw-bold text-danger"/>
+                <p:inputTextarea placeholder="e.g., max 3 sentences / turns; wait for my indications, ..." rows="2"/>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="Lexical and grammatical correctness:" styleClass="fw-bold"/>
+                <p:rating cancel="false"/>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="Motivation:" styleClass="fw-bold text-warning"/>
+                <p:selectOneMenu>
+                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                    <f:selectItem itemLabel="New conversation" itemValue="Option1"/>
+                    <f:selectItem itemLabel="New strategy for a previous conversation" itemValue="Option2"/>
+                    <f:selectItem itemLabel="Improvement of an inadequate previous conversation" itemValue="Option3"/>
+                    <f:selectItem itemLabel="Fine-tuning of an already valid previous conversation" itemValue="Option3"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+            </div>
+        </h:form>
+
+        <f:facet name="footer">
+            <p:commandButton type="button" value="Submit"/>
+        </f:facet>
+    </p:dialog>
+
+    <p:dialog header="Request response" widgetVar="responseDlg" minHeight="40" width="350" showEffect="fade">
+        <h:form>
+            <div class="d-flex flex-row align-items-center">
+                <div class="me-2">
+                    <span class="bg-warning text-white d-flex align-items-center justify-content-center rounded-circle" style="min-width:2.5rem; min-height: 2.5rem">
+                        <i class="fas fa-user-doctor"></i>
+                    </span>
+                </div>
+                <h5 class="text-warning">Doctor</h5>
+            </div>
+
+            <p class="text-muted">You are a certified psychotherapist, listen to pationt and carefully reply.</p>
+
+            <div class="row mb-2">
+                <div class="col-6 fw-bold">Model:</div>
+                <div class="col-6">GPT-3.5-Turbo</div>
+
+                <div class="col-6 fw-bold">Model version:</div>
+                <div class="col-6">03.06.2023</div>
+            </div>
+
+            <div class="field">
+                <p:outputLabel for="@next" value="System instruction:" styleClass="fw-bold"/>
+                <p:inputTextarea/>
+                <p:message for="@previous"/>
+            </div>
+        </h:form>
+
+        <f:facet name="footer">
+            <p:commandButton type="button" value="Request"/>
+        </f:facet>
+    </p:dialog>
+
+    <p:dialog header="Add participant" widgetVar="participantDlg" minHeight="40" width="350" showEffect="fade">
+        <h:form>
+            <div class="field">
+                <p:outputLabel for="@next" value="Name:" styleClass="fw-bold"/>
+                <p:inputText/>
+                <p:message for="@previous"/>
+            </div>
+
+            <div class="field">
+                <p:outputLabel for="@next" value="Model:" styleClass="fw-bold"/>
+                <p:selectOneMenu>
+                    <f:selectItem itemLabel="GPT-3.5-Turbo 16B" itemValue="gpt3"/>
+                    <f:selectItem itemLabel="GPT-4" itemValue="Option1"/>
+                    <f:selectItem itemLabel="GPT-4-Turbo" itemValue="Option2"/>
+                    <f:selectItem itemLabel="Alpaca 2 16B" itemValue="Option3"/>
+                    <f:selectItem itemLabel="Faccone 7B" itemValue="Option4"/>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+            </div>
+
+            <div class="field thumbnail">
+                <p:outputLabel for="@next" value="Color:" styleClass="fw-bold"/>
+                <p:colorPicker id="thumbnail"
+                    swatchesOnly="true" theme="polaroid" clearButton="true"
+                    closeButton="true" value="#e76f51"
+                    swatches="#264653, #2a9d8f, #e9c46a, #f4a261, #e76f51, #d62828, #023e8a, #0077b6, #0096c7, #00b4d8, #48cae4"/>
+                <p:message for="@previous"/>
+            </div>
+
+            <div class="field">
+                <p:outputLabel for="@next" value="System role" styleClass="fw-bold"/>
+                <p:inputTextarea/>
+                <p:message for="@previous"/>
+            </div>
+        </h:form>
+
+        <f:facet name="footer">
+            <p:commandButton type="button" value="Add"/>
+        </f:facet>
+    </p:dialog>
 </ui:define>
 </ui:composition>
