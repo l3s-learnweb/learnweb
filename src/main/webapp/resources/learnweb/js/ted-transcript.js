@@ -93,8 +93,6 @@ $(() => {
     deleteSelection();
   });
 
-  if (!readOnly) initializeJQueryContextMenu();
-
   // initializeResizableDiv();
   $('#selectable').selectable({
     stop() {
@@ -153,41 +151,6 @@ function updateTagList() {
   });
 }
 
-function initializeJQueryContextMenu() {
-  const $contextmenuItems = $(document.getElementById('contextmenu_items'));
-  // check if container is selectable
-  if (!$contextmenuItems) return;
-
-  $.contextMenu({
-    selector: '.tran-note',
-    build() {
-      const items = {};
-      $('li', $contextmenuItems).each((i, el) => {
-        const name = el.textContent;
-        const { action } = el.dataset;
-        items[name.toLowerCase()] = {
-          name,
-          action,
-          icon: el.dataset.icon,
-          className: el.dataset.class,
-          disabled() {
-            if (this.attr('data-title') && action === 'add-annotation') return true;
-            if (!this.attr('data-title') && (action === 'edit-annotation' || action === 'delete-annotation')) return true;
-            return this.attr('data-content') && action === 'add-wordnet-definition';
-          },
-        };
-      });
-      return {
-        callback(itemKey, opt) {
-          const item = opt.items[itemKey];
-          doAction(item, this);
-        },
-        items,
-      };
-    },
-  });
-}
-
 const pickrConfig = {
   theme: 'nano',
   lockOpacity: true,
@@ -229,19 +192,49 @@ function openColorPicker(elId, el) {
   });
 }
 
-function doAction(action, item) {
-  switch (action.action) {
-    case 'add-annotation':
+let contextMenuNote = null;
+
+function shouldHideMenuItem(item, note) {
+  switch (item.dataset.action) {
+    case 'add':
+      return note.dataset.title;
+    case 'edit':
+    case 'clear':
+      return !note.dataset.title;
+    case 'define':
+      return note.dataset.content;
+    default:
+      return false;
+  }
+}
+
+function onContextMenuClick(menu, note) {
+  menu.links.each((i, el) => {
+    if (shouldHideMenuItem(el, note)) {
+      el.parentNode.classList.add('collapse');
+    } else {
+      el.parentNode.classList.remove('collapse');
+    }
+  });
+  contextMenuNote = note;
+}
+
+function doAction(menuItem) {
+  const { action } = menuItem.dataset;
+  const item = $(contextMenuNote);
+
+  switch (action) {
+    case 'add':
       selectedNodeId = item.attr('id');
       PF('userinput_dialog').show();
       break;
-    case 'edit-annotation':
+    case 'edit':
       selectedNodeId = item.attr('id');
       $('#text').val(item.attr('data-title'));
       isEditAnnotation = true;
       PF('userinput_dialog').show();
       break;
-    case 'delete-annotation':
+    case 'clear':
       selectedNodeId = item.attr('id');
       saveTranscriptAction(item.text(), item.attr('data-title'), 'delete annotation');
       item.removeAttr('data-title');
@@ -252,11 +245,11 @@ function doAction(action, item) {
       delete tags[selectedNodeId];
       updateTagList();
       break;
-    case 'add-wordnet-definition':
+    case 'define':
       selectedNodeId = item.attr('id');
       commandSetSynonyms([{ name: 'word', value: item.text() }]);
       break;
-    case 'delete-selection':
+    case 'delete':
       // eslint-disable-next-line no-alert
       if (window.confirm(`${deleteSelectionText}(${item.text()})?`)) {
         saveTranscriptAction(item.text(), item.attr('data-title'), 'deselection');
@@ -266,7 +259,7 @@ function doAction(action, item) {
         item.remove();
       }
       break;
-    case 'colorpicker':
+    case 'colour':
       selectedNodeId = item.attr('id');
       openColorPicker(selectedNodeId, item);
       break;

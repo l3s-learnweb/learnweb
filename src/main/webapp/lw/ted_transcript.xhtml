@@ -2,6 +2,7 @@
 				xmlns:ui="jakarta.faces.facelets"
 				xmlns:h="jakarta.faces.html"
 				xmlns:f="jakarta.faces.core"
+                xmlns:pt="jakarta.faces.passthrough"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:o="http://omnifaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
@@ -144,14 +145,15 @@
 		</h:form>
 	</p:dialog>
 
-	<ul class="d-none" id="contextmenu_items">
-		<li data-action="add-annotation" data-icon="fa-plus">#{msg.add_annotation}</li>
-		<li data-action="edit-annotation" data-icon="fa-pencil-alt">#{msg.edit_annotation}</li>
-		<li data-action="delete-annotation" data-icon="fa-minus">#{msg.delete_annotation}</li>
-		<li data-action="add-wordnet-definition" data-icon="fa-language">#{msg.add_wordnet_definition}</li>
-		<li data-action="delete-selection" data-icon="fa-trash">#{msg.delete_selection}</li>
-		<li data-action="colorpicker" data-icon="fa-folder">#{msg.color}</li>
-	</ul>
+    <p:contextMenu widgetVar="transcriptContextMenu" targetFilter=".tran-note" beforeShow="onContextMenuClick(this, arguments[0].target)"
+                   rendered="#{not tedTranscriptBean.tedResource.readOnlyTranscript}">
+        <p:menuitem value="#{msg.add_annotation}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="add" icon="fas fa-plus"/>
+        <p:menuitem value="#{msg.edit_annotation}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="edit" icon="fas fa-pencil-alt"/>
+        <p:menuitem value="#{msg.delete_annotation}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="clear" icon="fas fa-minus"/>
+        <p:menuitem value="#{msg.add_wordnet_definition}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="define" icon="fas fa-language"/>
+        <p:menuitem value="#{msg.delete_selection}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="delete" icon="fas fa-trash"/>
+        <p:menuitem value="#{msg.color}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="colour" icon="fas fa-folder"/>
+    </p:contextMenu>
 
 	<div class="d-none">
 		<p id="delete_selection">#{msg.delete_selection}</p>
