@@ -19,11 +19,11 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.dependency.myfaces.version>4.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.10.1</maven.dependency.imageio.version>
-         <maven.dependency.jdbi3.version>3.43.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>10.6.0</maven.dependency.flyway.version>
+         <maven.dependency.jdbi3.version>3.44.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>10.7.1</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.22.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>7.2.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.10.1</maven.dependency.junit.version>
+        <maven.dependency.sentry.version>7.3.0</maven.dependency.sentry.version>
+        <maven.dependency.junit.version>5.10.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.10.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -421,7 +421,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.12.7</version>
+                        <version>10.13.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -473,7 +473,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.19</version>
+                <version>11.0.20</version>
                 <configuration>
                     <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
                     <webApp>
