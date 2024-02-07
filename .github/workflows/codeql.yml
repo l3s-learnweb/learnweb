@@ -51,17 +51,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Cache .m2/repository
-    - name: Cache local Maven repository
-      uses: actions/cache@v3
-      continue-on-error: true
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ matrix.language }} ${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-${{ matrix.language }}
-          ${{ runner.os }}-maven-
-
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -78,6 +67,9 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '21'
+        cache: 'maven'
+        server-id: github-l3s-learnweb
+      if: matrix.language == 'java-kotlin'
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
