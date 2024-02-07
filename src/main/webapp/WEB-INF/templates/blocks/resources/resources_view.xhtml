@@ -2,7 +2,8 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:pt="jakarta.faces.passthrough">
+                xmlns:pt="jakarta.faces.passthrough"
+                xmlns:p="http://primefaces.org/ui">
 
 <!--@elvariable id="view" type="de.l3s.learnweb.group.GroupResourcesBean.ResourceView"-->
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
@@ -12,7 +13,6 @@
 
 <h:panelGroup id="resourcesView" layout="block" styleClass="res-container res-contextmenu flex-grow-1"
               pt:data-canSelectResources="true"
-              pt:data-canAddResources="#{canAddResources}"
               pt:data-canOrganizeResources="#{canOrganizeResources}">
 
     <h:panelGroup styleClass="mx-3" layout="block" rendered="#{query != null}">
@@ -42,17 +42,28 @@
     <ui:param name="paginator" value="${paginator}"/>
 </ui:decorate>
 
-<ul class="d-none" id="contextmenu_items">
-    <li data-type="container" data-action="create-folder" data-per="canaddresources" data-icon="fa-folder">#{msg.create_folder}</li>
-    <li data-type="container" data-action="upload-file" data-per="canaddresources" data-icon="fa-cloud-upload-alt">#{msg.upload_file}</li>
-    <li data-type="container" data-action="add-website" data-per="canaddresources" data-icon="fa-link">#{msg.upload_url}</li>
-    <li data-type="folder" data-action="open-folder" data-per="canviewresource" data-icon="fa-folder-open">#{msg.open}</li>
-    <li data-type="folder|resource" data-action="edit" data-per="caneditresource" data-icon="fa-edit">#{msg.edit}</li>
-    <li data-type="resource|resources" data-action="add-tag" data-per="canannotateresource" data-icon="fa-tag">#{msg.add_tag}</li>
-    <li data-type="folder|folders|resource|resources|mixed" data-action="copy" data-per="canviewresource" data-icon="fa-copy">#{msg.copy}</li>
-    <li data-type="folder|folders|resource|resources|mixed" data-action="move" data-per="candeleteresource" data-icon="fa-arrows-alt-h">#{msg.move}</li>
-    <li data-type="folder|folders|resource|resources|mixed" data-action="delete" data-per="candeleteresource" data-icon="fa-trash">#{msg.removeFromGroup}</li>
-    <li data-type="folder|folders|resource|resources|mixed" data-action="download" data-per="candeleteresource" data-icon="fa-download">#{msg.download}</li>
-</ul>
+<p:contextMenu widgetVar="resourceMenu" for="resourcesView" beforeShow="beforeShowResourceMenu(this, arguments[0].target)" style="width: 200px;" selectionMode="single">
+    <p:menuitem value="#{msg.create_folder}" url="javascript:void(0)" icon="fas fa-folder" rendered="#{canAddResources}"
+                onclick="doResourceAction('create-folder')" pt:data-type="container"/>
+    <p:menuitem value="#{msg.upload_file}" url="javascript:void(0)" icon="fas fa-cloud-upload-alt" rendered="#{canAddResources}"
+                onclick="doResourceAction('create-file')" pt:data-type="container"/>
+    <p:menuitem value="#{msg.upload_url}" url="javascript:void(0)" icon="fas fa-link" rendered="#{canAddResources}"
+                onclick="doResourceAction('create-url')" pt:data-type="container"/>
+
+    <p:menuitem value="#{msg.open}" url="javascript:void(0)" icon="fas fa-folder-open"
+                onclick="doResourceAction('open')" pt:data-type="folder" pt:data-check="canviewresource"/>
+    <p:menuitem value="#{msg.edit}" url="javascript:void(0)" icon="fas fa-edit"
+                onclick="doResourceAction('edit')" pt:data-type="folder|resource" pt:data-check="caneditresource"/>
+    <p:menuitem value="#{msg.add_tag}" url="javascript:void(0)" icon="fas fa-tag"
+                onclick="doResourceAction('tag')" pt:data-type="resource|resources" pt:data-check="canannotateresource"/>
+    <p:menuitem value="#{msg.copy}" url="javascript:void(0)" icon="fas fa-copy"
+                onclick="doResourceAction('copy')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="canviewresource"/>
+    <p:menuitem value="#{msg.move}" url="javascript:void(0)" icon="fas fa-arrows-alt-h"
+                onclick="doResourceAction('move')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="candeleteresource"/>
+    <p:menuitem value="#{msg.removeFromGroup}" url="javascript:void(0)" icon="fas fa-trash"
+                onclick="doResourceAction('delete')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="candeleteresource"/>
+    <p:menuitem value="#{msg.download}" url="javascript:void(0)" icon="fas fa-download"
+                onclick="doResourceAction('download')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="candeleteresource"/>
+</p:contextMenu>
 
 </ui:composition>

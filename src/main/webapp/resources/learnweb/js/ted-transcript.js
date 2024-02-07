@@ -168,11 +168,7 @@ function shouldHideMenuItem(item, note) {
 
 function beforeShowTranscriptMenu(menu, note) {
   menu.links.each((i, el) => {
-    if (shouldHideMenuItem(el, note)) {
-      el.parentNode.classList.add('collapse');
-    } else {
-      el.parentNode.classList.remove('collapse');
-    }
+    el.parentNode.classList.toggle('collapse', shouldHideMenuItem(el, note));
   });
   activeNote = note;
 }

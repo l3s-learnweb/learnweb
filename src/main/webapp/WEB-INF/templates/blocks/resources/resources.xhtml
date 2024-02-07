@@ -7,6 +7,10 @@
 
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
+<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
+<h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
+<h:outputScript name="learnweb/js/group-resources.js" target="body"/>
+
 <h:form>
     <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree"
                      onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
@@ -290,10 +294,14 @@
     $(function () {
         $(document).on('dblclick', '.res-item', openItems);
 
-        createContextMenu();
         createSelectable('resourcesView');
         createDropArea('resourcesView');
         onResourcesUpdated();
+
+        if (PF('learnweb').isTouchDevice()) {
+            // only on mobile
+            $(document).on('click', '.res-item .res-bl-menu', (e) => PF('resourceMenu').show(e));
+        }
     });
 </h:outputScript>
 
