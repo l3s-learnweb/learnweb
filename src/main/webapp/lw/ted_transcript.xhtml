@@ -32,9 +32,6 @@
 		<p:remoteCommand name="commandSaveLog" actionListener="${tedTranscriptBean.commandSaveLog()}" immediate="true" process="@this" update="@none"/>
 	</h:form>
 
-	<h:outputStylesheet name="bundle/pickr.min.css"/>
-	<h:outputScript name="bundle/pickr.min.js" target="body"/>
-	<h:outputScript name="bundle/jquery.contextMenu.min.js" target="body"/>
 	<h:outputScript name="learnweb/js/ted-transcript.js" target="body"/>
 
 	<h:outputScript>
@@ -145,14 +142,19 @@
 		</h:form>
 	</p:dialog>
 
-    <p:contextMenu widgetVar="transcriptContextMenu" targetFilter=".tran-note" beforeShow="onContextMenuClick(this, arguments[0].target)"
-                   rendered="#{not tedTranscriptBean.tedResource.readOnlyTranscript}">
-        <p:menuitem value="#{msg.add_annotation}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="add" icon="fas fa-plus"/>
-        <p:menuitem value="#{msg.edit_annotation}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="edit" icon="fas fa-pencil-alt"/>
-        <p:menuitem value="#{msg.delete_annotation}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="clear" icon="fas fa-minus"/>
-        <p:menuitem value="#{msg.add_wordnet_definition}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="define" icon="fas fa-language"/>
-        <p:menuitem value="#{msg.delete_selection}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="delete" icon="fas fa-trash"/>
-        <p:menuitem value="#{msg.color}" url="javascript:void(0)" onclick="doAction(this)" pt:data-action="colour" icon="fas fa-folder"/>
+    <p:contextMenu widgetVar="transcriptMenu" targetFilter=".tran-note" beforeShow="beforeShowTranscriptMenu(this, arguments[0].target)"
+                   rendered="#{not tedTranscriptBean.tedResource.readOnlyTranscript}" style="width: 220px;">
+        <p:menuitem value="#{msg.add_annotation}" url="javascript:void(0)" onclick="doTranscriptAction(this)" pt:data-action="add" icon="fas fa-plus"/>
+        <p:menuitem value="#{msg.edit_annotation}" url="javascript:void(0)" onclick="doTranscriptAction(this)" pt:data-action="edit" icon="fas fa-pencil-alt"/>
+        <p:menuitem value="#{msg.delete_annotation}" url="javascript:void(0)" onclick="doTranscriptAction(this)" pt:data-action="clear" icon="fas fa-minus"/>
+        <p:menuitem value="#{msg.add_wordnet_definition}" url="javascript:void(0)" onclick="doTranscriptAction(this)" pt:data-action="define" icon="fas fa-language"/>
+        <p:menuitem value="#{msg.delete_selection}" url="javascript:void(0)" onclick="doTranscriptAction(this)" pt:data-action="delete" icon="fas fa-trash"/>
+        <p:menuitem styleClass="mouse" url="javascript:void(0)" pt:data-action="colour">
+            <p:colorPicker styleClass="ui-colorpicker-inline" mode="inline" swatchesOnly="true" alpha="false"
+                           swatches="#ea9999, #f6b26b, #ffd966, #b6d7a8, #9fc5e8, #b4a7d6, #d5a6bd, #cccccc">
+                <p:ajax event="change" onstart="onColorSelected(ext)"/>
+            </p:colorPicker>
+        </p:menuitem>
     </p:contextMenu>
 
 	<div class="d-none">

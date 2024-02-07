@@ -54,8 +54,6 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js'},
                 {from: 'node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js'},
                 {from: 'node_modules/shepherd.js/dist/js/shepherd.min.js'},
-                {from: 'node_modules/@simonwep/pickr/dist/pickr.min.js'},
-                {from: 'node_modules/@simonwep/pickr/dist/themes/nano.min.css', to: 'pickr.min.css'},
                 {from: 'node_modules/justifiedGallery/dist/js/jquery.justifiedGallery.min.js'},
             ],
         }),

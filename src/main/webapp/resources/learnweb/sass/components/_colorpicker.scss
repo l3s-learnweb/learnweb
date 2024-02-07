@@ -1,0 +1,18 @@
+body .ui-colorpicker-inline {
+ .clr-picker {
+   width: auto;
+   padding: 0;
+   box-shadow: none;
+   background: none;
+   cursor: initial;
+
+   .clr-swatches {
+     margin: 0;
+     width: auto;
+
+     div {
+       padding: 0;
+     }
+   }
+ }
+}
