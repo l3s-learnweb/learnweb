@@ -3,49 +3,51 @@ package de.l3s.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import software.xdev.chartjs.model.color.Color;
+
 /**
  * Provides colors that are applicable for the Learnweb theme.
  */
 public final class ColorHelper {
 
-    private static final List<String> COLORS = List.of(
-        "#0071bc",
-        "#6A4AA5",
-        "#9f4488",
-        "#fe875d",
-        "#F9C642",
-        "#4aa564",
-        "#07A089",
-        "#00bfe7",
-        "#4B6D7E",
-        "#606c88",
-        "#514A9D",
-        "#684c4e",
-        "#85344E",
-        "#4AA382",
-        "#5B616B",
-        "#514A9D",
-        "#8f3b4f",
-        "#4b6cb7",
-        "#31827b",
-        "#4a505d"
+    private static final List<Color> COLORS = List.of(
+        new Color(0, 113, 188),
+        new Color(106, 74, 165),
+        new Color(159, 68, 136),
+        new Color(254, 135, 93),
+        new Color(249, 198, 66),
+        new Color(74, 165, 100),
+        new Color(7, 160, 137),
+        new Color(0, 191, 231),
+        new Color(75, 109, 126),
+        new Color(96, 108, 136),
+        new Color(81, 74, 157),
+        new Color(104, 76, 78),
+        new Color(133, 52, 78),
+        new Color(74, 163, 130),
+        new Color(91, 97, 107),
+        new Color(81, 74, 157),
+        new Color(143, 59, 79),
+        new Color(75, 108, 183),
+        new Color(49, 130, 123),
+        new Color(74, 80, 93)
     );
 
     /**
      * Returns the color with the given index. If the index is greater than color list then the method will use the modulo if the given index.
      */
-    public static String getColor(int index) {
+    public static Color getColor(int index) {
         return COLORS.get(Math.abs(index % COLORS.size()));
     }
 
-    public static List<String> getColorList(int size) {
-        final ArrayList<String> randColors = new ArrayList<>(COLORS);
+    public static List<Color> getColorList(int size) {
+        final ArrayList<Color> randColors = new ArrayList<>(COLORS);
         // Collections.shuffle(randColors);
         return fillColors(randColors, size);
     }
 
     @SuppressWarnings("CollectionAddedToSelf")
-    private static List<String> fillColors(ArrayList<String> colors, int size) {
+    private static List<Color> fillColors(ArrayList<Color> colors, int size) {
         if (colors.size() >= size) {
             return colors.subList(0, size);
         }

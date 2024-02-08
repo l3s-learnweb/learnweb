@@ -20,23 +20,18 @@ import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleModel;
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.axes.cartesian.CartesianScales;
-import org.primefaces.model.charts.axes.cartesian.CartesianTime;
-import org.primefaces.model.charts.axes.cartesian.linear.CartesianLinearAxes;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.bar.BarChartOptions;
-import org.primefaces.model.charts.data.NumericPoint;
-import org.primefaces.model.charts.optionconfig.legend.Legend;
-import org.primefaces.model.charts.optionconfig.title.Title;
-import org.primefaces.model.charts.optionconfig.tooltip.Tooltip;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.component.charts.BarTimeChartDataSet;
-import de.l3s.learnweb.component.charts.CartesianTimeImpl;
 import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.color.Color;
+import software.xdev.chartjs.model.data.BarData;
+import software.xdev.chartjs.model.datapoint.XYDataPoint;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.options.BarOptions;
+import software.xdev.chartjs.model.options.Plugins;
 
 @Named
 @ViewScoped
@@ -47,9 +42,9 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
     private WebResource resource;
 
     private transient LocalDate selectedDate;
-    private transient BarChartModel timelineModel;
+    private transient String timelineModel;
     private transient ScheduleModel calendarModel;
-    private transient ArrayList<NumericPoint> timelineData;
+    private transient ArrayList<XYDataPoint> timelineData;
 
     @PostConstruct
     public void init() {
@@ -96,57 +91,42 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
         selectedDate = null;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public BarChartModel getArchiveTimelineModel() {
+    public String getArchiveTimelineModel() {
         if (timelineModel == null) {
-            CartesianScales scales = new CartesianScales();
-            CartesianLinearAxes xAxes = new CartesianLinearAxes();
-            xAxes.setType("time");
-            CartesianTime time = new CartesianTimeImpl();
-            time.setTooltipFormat("MMMM yyyy");
-            time.setMinUnit("month");
-            xAxes.setTime(time);
-            scales.addXAxesData(xAxes);
-
-            Title title = new Title();
-            title.setDisplay(true);
-            title.setText(getLocaleMessage("archive.timeline_click_zoom"));
-
-            BarChartOptions options = new BarChartOptions();
-            options.setScales(scales);
-            options.setTitle(title);
-
-            Tooltip tooltip = new Tooltip();
-            tooltip.setMode("index");
-            tooltip.setIntersect(false);
-            options.setTooltip(tooltip);
-            Legend legend = new Legend();
-            legend.setDisplay(false);
-            options.setLegend(legend);
-
-            BarTimeChartDataSet dataSet = new BarTimeChartDataSet();
-            dataSet.setLabel(getLocaleMessage("archive.timeline_series_name"));
-            dataSet.setBackgroundColor("rgb(74,163,130)");
-            dataSet.setData(getTimelineData());
-
-            ChartData data = new ChartData();
-            data.addChartDataSet(dataSet);
-
-            timelineModel = new BarChartModel();
-            timelineModel.setData(data);
-            timelineModel.setOptions(options);
-            timelineModel.setExtender("chartExtender");
+            timelineModel = new FixedBarChart()
+                .setData(new BarData()
+                    .addDataset(new BarDataset()
+                        .setLabel(getLocaleMessage("archive.timeline_series_name"))
+                        .setDataUnchecked(getTimelineData())
+                        .setBackgroundColor(new Color(74, 163, 130))))
+                .setOptions(new BarOptions()
+                    .setPlugins(new Plugins()
+                        .setTitle(new software.xdev.chartjs.model.options.Title()
+                            .setDisplay(true)
+                            .setText(getLocaleMessage("archive.timeline_click_zoom")))
+                        .setTooltip(new software.xdev.chartjs.model.options.Tooltip()
+                            .setMode("index"))
+                        .setLegend(new software.xdev.chartjs.model.options.Legend()
+                            .setDisplay(false))))
+                .toJson();
         }
 
         return timelineModel;
     }
 
-    private ArrayList<NumericPoint> getTimelineData() {
+    private static class FixedBarChart extends BarChart {
+        @Override
+        public boolean isDrawable() {
+            return true;
+        }
+    }
+
+    private ArrayList<XYDataPoint> getTimelineData() {
         if (timelineData == null) {
             TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
 
             timelineData = new ArrayList<>();
-            monthlySeriesData.forEach((key, value) -> timelineData.add(new NumericPoint(key.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(), value)));
+            monthlySeriesData.forEach((key, value) -> timelineData.add(new XYDataPoint(key.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(), value)));
 
             timelineModel = null; // make sure the model is recreated
         }

@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>13.0.5</version>
+            <version>14.0.0-RC1</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -119,6 +119,12 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.5</version>
+        </dependency>
+        <!-- Optional dependency of PrimeFaces (required for Chart models) -->
+        <dependency>
+            <groupId>software.xdev</groupId>
+            <artifactId>chartjs-java-model</artifactId>
+            <version>1.1.2</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>

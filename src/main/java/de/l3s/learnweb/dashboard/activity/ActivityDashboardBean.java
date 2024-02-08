@@ -18,7 +18,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.model.charts.line.LineChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
@@ -37,7 +36,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     private ArrayList<String> selectedActionItems;
     private ArrayList<Integer> selectedGroupedActions;
 
-    private transient LineChartModel interactionsChart;
+    private transient String interactionsChart;
     private transient List<Map<String, Object>> interactionsTable;
 
     @Inject
@@ -116,7 +115,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
-    public LineChartModel getInteractionsChart() {
+    public String getInteractionsChart() {
         if (null == interactionsChart) {
             fetchDataFromManager();
         }

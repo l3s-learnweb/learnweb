@@ -10,9 +10,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.line.LineChartModel;
-import org.primefaces.model.charts.pie.PieChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.logging.LogDao;
@@ -38,10 +35,10 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     private transient Map<Integer, Integer> actionsWithCounters;
     private transient Map<String, Integer> actionsCountPerDay;
     private transient List<GlossaryDescriptionSummary> descFieldsStatistic;
-    private transient LineChartModel interactionsChart;
-    private transient BarChartModel usersActivityTypesChart;
-    private transient BarChartModel usersGlossaryChart;
-    private transient PieChartModel usersSourcesChart;
+    private transient String interactionsChart;
+    private transient String usersActivityTypesChart;
+    private transient String usersGlossaryChart;
+    private transient String usersSourcesChart;
 
     @Inject
     private LogDao logDao;
@@ -105,7 +102,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return glossaryResources;
     }
 
-    public LineChartModel getInteractionsChart() {
+    public String getInteractionsChart() {
         if (interactionsChart == null) {
             if (actionsCountPerDay == null) {
                 actionsCountPerDay = logDao.countActionsPerDay(getSelectedUsersIds(), startDate, endDate);
@@ -115,7 +112,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return interactionsChart;
     }
 
-    public BarChartModel getUsersActivityTypesChart() {
+    public String getUsersActivityTypesChart() {
         if (usersActivityTypesChart == null) {
             if (actionsWithCounters == null) {
                 actionsWithCounters = logDao.countUsagePerAction(getSelectedUsersIds(), startDate, endDate);
@@ -125,7 +122,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return usersActivityTypesChart;
     }
 
-    public BarChartModel getUsersGlossaryChart() {
+    public String getUsersGlossaryChart() {
         if (usersGlossaryChart == null) {
             if (glossaryConceptsCountPerUser == null) {
                 glossaryConceptsCountPerUser = glossaryEntryDao.countEntriesPerUser(getSelectedUsersIds(), startDate, endDate);
@@ -136,7 +133,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return usersGlossaryChart;
     }
 
-    public PieChartModel getUsersSourcesChart() {
+    public String getUsersSourcesChart() {
         if (usersSourcesChart == null) {
             if (glossarySourcesWithCounters == null) {
                 glossarySourcesWithCounters = glossaryTermDao.countUsagePerSource(getSelectedUsersIds(), startDate, endDate);

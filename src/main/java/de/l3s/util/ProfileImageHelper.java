@@ -59,7 +59,7 @@ public final class ProfileImageHelper {
      * @return RGB color code without hash prefix
      */
     public static String getColorForProfilePicture(String name) {
-        return ColorHelper.getColor(name.hashCode());
+        return ColorHelper.getColor(name.hashCode()).rgba();
     }
 
     /**

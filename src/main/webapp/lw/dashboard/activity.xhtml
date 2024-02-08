@@ -68,7 +68,7 @@
         <p:tabView dynamic="true" cache="true" styleClass="ui-tabs-plaid"
                    rendered="#{!empty activityDashboardBean.interactionsChart and !empty activityDashboardBean.interactionsTable}">
             <p:tab title="#{msg.chart_view}">
-                <p:lineChart model="#{activityDashboardBean.interactionsChart}" />
+                <p:chart value="#{activityDashboardBean.interactionsChart}" />
             </p:tab>
             <p:tab title="#{msg.table_view}">
                 <p:dataTable var="entry" value="#{activityDashboardBean.interactionsTable}">

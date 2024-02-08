@@ -85,20 +85,18 @@
                                 <p:button icon="fas fa-circle-question" onclick="return false;"/>
                                 <p:tooltip for="@previous" value="#{msg['glossary.activity_type_description']}" escape="false"/>
                             </f:facet>
-                            <p:barChart model="#{glossaryDashboardBean.usersActivityTypesChart}"/>
+                            <p:chart value="#{glossaryDashboardBean.usersActivityTypesChart}"/>
                         </p:panel>
                     </p:outputPanel>
                 </div>
                 <div class="col-md-6 ps-2">
-                    <p:outputPanel id="sourcePanel"
-                                   rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
+                    <p:outputPanel id="sourcePanel" rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                         <p:panel id="chart_barModel_stSources" header="#{msg['glossary.sources']}">
                             <f:facet name="actions">
                                 <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                                <p:tooltip for="@previous"
-                                           value="#{msg['glossary.sources_panel_description']}"/>
+                                <p:tooltip for="@previous" value="#{msg['glossary.sources_panel_description']}"/>
                             </f:facet>
-                            <p:pieChart model="#{glossaryDashboardBean.usersSourcesChart}"/>
+                            <p:chart value="#{glossaryDashboardBean.usersSourcesChart}"/>
                         </p:panel>
                     </p:outputPanel>
                 </div>
@@ -111,7 +109,7 @@
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['glossary.glossary_description']}"/>
                         </f:facet>
-                        <p:barChart model="#{glossaryDashboardBean.usersGlossaryChart}"/>
+                        <p:chart value="#{glossaryDashboardBean.usersGlossaryChart}"/>
                     </p:panel>
                 </div>
                 <div class="col-md-8 mb-3">
@@ -161,7 +159,7 @@
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['glossary.interactions_description']}"/>
                         </f:facet>
-                        <p:lineChart model="#{glossaryDashboardBean.interactionsChart}"/>
+                        <p:chart value="#{glossaryDashboardBean.interactionsChart}"/>
                     </p:panel>
                 </div>
             </div>
