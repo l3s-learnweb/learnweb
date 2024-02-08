@@ -133,7 +133,7 @@ function shouldShowMenuItem(el, triggerType, trigger) {
   const itemTypes = el.dataset.type.split('|');
   if (itemTypes.includes(triggerType)) {
     const itemCheck = el.dataset.check;
-    return !itemCheck || trigger.data(itemCheck)
+    return !itemCheck || trigger.data(itemCheck);
   }
 
   return false;
