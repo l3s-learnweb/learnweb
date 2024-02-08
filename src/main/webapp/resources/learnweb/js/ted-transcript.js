@@ -5,7 +5,6 @@
 let isEditAnnotation = false;
 let selectedNodeId;
 let tags = {};
-const deleteSelectionText = document.getElementById('delete_selection').innerHTML;
 
 function saveTranscriptAction(word, annotation, action) {
   commandSaveLog([
@@ -41,7 +40,7 @@ $(() => {
     $(document).on('click', '.tran-note', (e) => {
       const $this = $(e.currentTarget);
       // eslint-disable-next-line no-alert
-      if (window.confirm(`${deleteSelectionText}(${this.text()})?`)) {
+      if (window.confirm(`${PrimeFaces.getLocaleLabel('transcriptDeleteSelection')} (${this.text()})?`)) {
         saveTranscriptAction($this.text(), $this.attr('data-title'), 'deselection');
         delete tags[$this.attr('id')];
         updateTagList();
@@ -210,7 +209,7 @@ function doTranscriptAction(menuItem) {
       break;
     case 'delete':
       // eslint-disable-next-line no-alert
-      if (window.confirm(`${deleteSelectionText}(${item.text()})?`)) {
+      if (window.confirm(`${PrimeFaces.getLocaleLabel('transcriptDeleteSelection')} (${item.text()})?`)) {
         saveTranscriptAction(item.text(), item.attr('data-title'), 'deselection');
         delete tags[item.attr('id')];
         updateTagList();

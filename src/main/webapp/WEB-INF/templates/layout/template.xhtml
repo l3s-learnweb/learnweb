@@ -22,6 +22,7 @@
             <ui:include src="parts/head.xhtml"/>
             <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{not empty pageTitle}"/>#{config.appName}</title>
 
+            <h:outputScript library="locale" name="locale.js"/>
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
             <h:outputScript name="bundle/learnweb.main.js"/>
             <h:outputScript name="learnweb/js/layout.js"/>
