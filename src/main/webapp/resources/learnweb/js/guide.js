@@ -1,5 +1,5 @@
 /* global Shepherd */
-/* global guideBits, guideSteps, guideDismissBtn, guideGotchaBtn */
+/* global guideBits, guideSteps */
 /* global commandGuideStepComplete */
 
 const tour = new Shepherd.Tour({
@@ -13,14 +13,14 @@ const tour = new Shepherd.Tour({
     scrollTo: { behavior: 'smooth', block: 'center' },
     buttons: [
       {
-        text: guideDismissBtn,
+        text: PrimeFaces.getLocaleLabel('guideDismiss'),
         secondary: true,
         action() {
           this.cancel();
         },
       },
       {
-        text: guideGotchaBtn,
+        text: PrimeFaces.getLocaleLabel('guideGotcha'),
         action() {
           this.next();
         },
