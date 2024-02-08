@@ -114,7 +114,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
         return timelineModel;
     }
 
-    private static class FixedBarChart extends BarChart {
+    private static final class FixedBarChart extends BarChart {
         @Override
         public boolean isDrawable() {
             return true;

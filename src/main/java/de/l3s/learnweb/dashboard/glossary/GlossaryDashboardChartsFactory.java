@@ -91,7 +91,7 @@ final class GlossaryDashboardChartsFactory {
             .toJson();
     }
 
-    private static class FixedPieChart extends PieChart {
+    private static final class FixedPieChart extends PieChart {
         @Override
         public boolean isDrawable() {
             return true;
