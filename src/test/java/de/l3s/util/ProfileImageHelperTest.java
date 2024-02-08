@@ -31,13 +31,13 @@ class ProfileImageHelperTest {
 
     @Test
     void getProfilePicture() {
-        assertEquals("#514A9D", ProfileImageHelper.getColorForProfilePicture("Hello"));
+        assertEquals("rgba(81,74,157,1.000)", ProfileImageHelper.getColorForProfilePicture("Hello"));
     }
 
     @Test
     void getColorForProfilePicture() {
-        assertEquals("#8f3b4f", ProfileImageHelper.getColorForProfilePicture("Hello World"));
-        assertEquals("#4a505d", ProfileImageHelper.getColorForProfilePicture("HW"));
+        assertEquals("rgba(143,59,79,1.000)", ProfileImageHelper.getColorForProfilePicture("Hello World"));
+        assertEquals("rgba(74,80,93,1.000)", ProfileImageHelper.getColorForProfilePicture("HW"));
     }
 
     @Test
