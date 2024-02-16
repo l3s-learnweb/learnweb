@@ -58,6 +58,7 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
 
             SelectItemGroup choiceGroup = new SelectItemGroup("Choice types");
             choiceGroup.setSelectItems(Stream.of(
+                SurveyQuestion.QuestionType.ONE_BUTTON,
                 SurveyQuestion.QuestionType.ONE_RADIO,
                 SurveyQuestion.QuestionType.MANY_CHECKBOX,
                 SurveyQuestion.QuestionType.ONE_MENU,

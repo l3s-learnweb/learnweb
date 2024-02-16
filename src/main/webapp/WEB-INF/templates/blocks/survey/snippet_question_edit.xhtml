@@ -78,7 +78,7 @@
         </div>
     </ui:fragment>
 
-    <ui:fragment rendered="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE' or question.type eq 'MULTIPLE_MENU' or question.type eq 'ONE_RADIO' or question.type eq 'MANY_CHECKBOX'}">
+    <ui:fragment rendered="#{question.type.options}">
         <div class="d-flex flex-column">
             <p:outputLabel for="@next" value="#{msg['options']}:" styleClass="fw-bold"/>
             <ui:repeat value="#{question.options}" var="answer">

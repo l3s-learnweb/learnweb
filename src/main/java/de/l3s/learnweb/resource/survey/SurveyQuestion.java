@@ -16,7 +16,8 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         INPUT_TEXT(false, false), // options define the valid length (first entry = min length, second entry = max length)
         INPUT_TEXTAREA(false, false), // options define the valid length (first entry = min length, second entry = max length)
 
-        ONE_RADIO(false, true), // Multiple choice
+        ONE_BUTTON(false, true), // Select
+        ONE_RADIO(false, true), // Radio
         ONE_MENU(false, true), // Dropdown
         ONE_MENU_EDITABLE(false, true), // Dropdown with free text input
         MANY_CHECKBOX(false, true, true), // Checkboxes
@@ -151,8 +152,8 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         this.options = options;
     }
 
-    public List<SurveyQuestionOption> getActualAnswers() {
-        return options.stream().filter(answer -> !answer.isDeleted()).toList();
+    public List<SurveyQuestionOption> getActiveOptions() {
+        return options.stream().filter(option -> !option.isDeleted()).toList();
     }
 
     @Override

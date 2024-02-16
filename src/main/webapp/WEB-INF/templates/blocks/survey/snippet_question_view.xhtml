@@ -36,30 +36,35 @@
         <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
     </p:inputTextarea>
 
+    <p:selectOneButton styleClass="mt-2" rendered="#{question.type eq 'ONE_BUTTON'}" readonly="#{readOnly}"
+                       required="#{question.required}" value="#{response.answers[question.id]}">
+        <f:selectItems value="#{question.activeOptions}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:selectOneButton>
+
+    <p:selectOneRadio styleClass="mt-2" rendered="#{question.type eq 'ONE_RADIO'}" readonly="#{readOnly}"
+                      required="#{question.required}" value="#{response.answers[question.id]}" layout="responsive" columns="1">
+        <f:selectItems value="#{question.activeOptions}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:selectOneRadio>
+
     <p:selectOneMenu styleClass="mt-2" rendered="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}" readonly="#{readOnly}"
                      required="#{question.required}" value="#{response.answers[question.id]}" editable="#{question.type eq 'ONE_MENU_EDITABLE'}">
-        <f:selectItems value="#{question.actualAnswers}"/>
+        <f:selectItems value="#{question.activeOptions}"/>
         <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
     </p:selectOneMenu>
 
     <p:selectCheckboxMenu styleClass="mt-2" rendered="#{question.type eq 'MULTIPLE_MENU'}" readonly="#{readOnly}"
                           required="#{question.required}" value="#{response.multipleAnswers[question.id]}"
                           filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
-        <f:selectItems value="#{question.actualAnswers}"/>
+        <f:selectItems value="#{question.activeOptions}"/>
         <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
     </p:selectCheckboxMenu>
-
-    <p:selectOneRadio styleClass="mt-2" rendered="#{question.type eq 'ONE_RADIO'}" readonly="#{readOnly}"
-                      required="#{question.required}" value="#{response.answers[question.id]}" layout="responsive" columns="1"
-                      filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
-        <f:selectItems value="#{question.actualAnswers}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
-    </p:selectOneRadio>
 
     <p:selectManyCheckbox styleClass="mt-2" rendered="#{question.type eq 'MANY_CHECKBOX'}" readonly="#{readOnly}"
                           required="#{question.required}" value="#{response.multipleAnswers[question.id]}" layout="responsive" columns="1"
                           filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
-        <f:selectItems value="#{question.actualAnswers}"/>
+        <f:selectItems value="#{question.activeOptions}"/>
         <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
     </p:selectManyCheckbox>
 </ui:fragment>
