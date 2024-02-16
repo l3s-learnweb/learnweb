@@ -133,7 +133,7 @@ public class SurveyPage implements HasId, Deletable, Serializable {
             if (getId() == 0) {
                 questions = new ArrayList<>();
             } else {
-                questions = Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByResourceId(getResourceId(), getId());
+                questions = new ArrayList<>(Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByResourceId(getResourceId(), getId()));
             }
         }
         return questions;

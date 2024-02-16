@@ -161,7 +161,7 @@ public class SurveyResource extends Resource {
                 return new ArrayList<>();
             }
 
-            pages = Learnweb.dao().getSurveyDao().findPagesAndVariantsByResourceId(getId());
+            pages = new ArrayList<>(Learnweb.dao().getSurveyDao().findPagesAndVariantsByResourceId(getId()));
         }
         return pages;
     }
