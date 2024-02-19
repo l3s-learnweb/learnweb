@@ -79,8 +79,8 @@
             <h:form id="chat" styleClass="col-6 col-md-9 col-xl-6 mx-auto" style="max-width: 800px;">
                 <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
 
-                    <ui:repeat value="#{searchChatBean.messages}" var="message">
-                        <ui:fragment rendered="#{message.role == 'system' and userBean.moderator}">
+                    <ui:repeat value="#{searchChatBean.messages}" var="message" varStatus="status">
+                        <ui:fragment rendered="#{message.role == 'system' and userBean.moderator}"> <!-- System message -->
                             <div class="mb-5 d-flex align-items-start p-4 bg-warning-subtle border rounded border-warning">
                                 <i class="mt-2 fas fa-wand-magic-sparkles text-warning fs-3 me-3"></i>
                                 <div class="me-3 w-100">
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
                         </ui:fragment>
-                        <ui:fragment rendered="#{message.role == 'assistant'}">
+                        <ui:fragment rendered="#{message.role == 'assistant'}"> <!-- AI Reply -->
                             <div class="mb-5 d-flex">
                                 <div class="d-flex flex-column align-items-center" style="width:2rem">
                                 <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle"
@@ -111,10 +111,12 @@
                                                      rendered="#{not empty searchChatBean.feedbackResponseSurveyId}"/>
                                     <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe multiple turns response"
                                                      rendered="#{not empty searchChatBean.feedbackResponseSurveyId}"/>
+                                    <p:commandButton icon="fas fa-repeat" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
+                                                     action="#{searchChatBean.retry}" immediate="true" update="@form"/>
                                 </div>
                             </div>
                         </ui:fragment>
-                        <ui:fragment rendered="#{message.role == 'user'}">
+                        <ui:fragment rendered="#{message.role == 'user'}"> <!-- User Prompt -->
                             <div class="mb-5 d-flex flex-row-reverse">
                                 <div class="d-flex flex-column align-items-center" style="width:2rem">
                                     <p:avatar label="${userBean.user.initials}" shape="circle" dynamicColor="true" saturation="50" lightness="50">
@@ -141,7 +143,7 @@
                         <div class="mb-5 d-flex flex-column text-center text-secondary">
                             <p>Hi there, I’m Learnweb Assistant, your creative and helpful collaborator.<br/>
                                 I have limitations and I wont't be always right, but I'll try to do my best.</p>
-                            <p>Send me a message to get started</p>
+                            <p>Send me a message to get started.</p>
                         </div>
                     </ui:fragment>
 
@@ -162,8 +164,7 @@
 
                     <div class="d-flex justify-content-start">
                         <p:commandButton id="search_chat_send" value="Send message" action="#{searchChatBean.sendMessage}" update="@form"
-                                         process="search_chat_message">
-                        </p:commandButton>
+                                         process="search_chat_message"/>
                     </div>
                 </h:panelGroup>
             </h:form>

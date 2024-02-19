@@ -68,6 +68,11 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
         newChat = true;
     }
 
+    public void retry() throws InterwebException {
+        conversation.getMessages().removeLast();
+        interweb.chatComplete(conversation);
+    }
+
     public void sendMessage() throws InterwebException {
         conversation.addMessage(message, Message.Role.user);
         message = null;
