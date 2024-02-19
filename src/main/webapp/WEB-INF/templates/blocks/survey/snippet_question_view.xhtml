@@ -8,6 +8,7 @@
 <!--@elvariable id="question" type="de.l3s.learnweb.resource.survey.SurveyQuestion"-->
 <!--@elvariable id="response" type="de.l3s.learnweb.resource.survey.SurveyResponse"-->
 <!--@elvariable id="readOnly" type="java.lang.Boolean"-->
+<!--@elvariable id="bean" type="de.l3s.learnweb.resource.survey.SurveyAnswerHandler"-->
 
 <ui:fragment rendered="#{question.type eq 'FULLWIDTH_HEADER'}">
     <h3 class="mb-0" faces:rendered="#{not empty question.question}">
@@ -24,49 +25,49 @@
         <h:outputText value="${question.description}" escape="false"/>
     </div>
 
-    <p:inputText styleClass="mt-2" rendered="#{question.type eq 'INPUT_TEXT'}" placeholder="#{msg['survey.answer_your_answer']}" readonly="#{readOnly}"
-                 required="#{question.required}" value="#{response.answers[question.id]}">
-        <f:validateLength minimum="#{question.minLength}" maximum="#{question.maxLength}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    <p:inputText styleClass="mt-2" rendered="#{question.type eq 'INPUT_TEXT'}" placeholder="#{msg['survey.answer_text_placeholder']}" readonly="#{readOnly}"
+                 required="#{question.required}" value="#{response.answers[question.id]}" maxlength="#{question.maxLength}">
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:inputText>
 
-    <p:inputTextarea styleClass="mt-2" rendered="#{question.type eq 'INPUT_TEXTAREA'}" placeholder="#{msg['survey.answer_your_answer']}" readonly="#{readOnly}"
-                     required="#{question.required}" value="#{response.answers[question.id]}" rows="4" >
-        <f:validateLength minimum="#{question.minLength}" maximum="#{question.maxLength}" />
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    <p:inputTextarea styleClass="mt-2" rendered="#{question.type eq 'INPUT_TEXTAREA'}" placeholder="#{empty question.placeholder ? msg['survey.answer_text_placeholder'] : question.placeholder}" readonly="#{readOnly}"
+                     required="#{question.required}" value="#{response.answers[question.id]}" rows="3" maxlength="#{question.maxLength}">
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:inputTextarea>
 
     <p:selectOneButton styleClass="mt-2" rendered="#{question.type eq 'ONE_BUTTON'}" readonly="#{readOnly}"
                        required="#{question.required}" value="#{response.answers[question.id]}">
         <f:selectItems value="#{question.activeOptions}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneButton>
 
     <p:selectOneRadio styleClass="mt-2" rendered="#{question.type eq 'ONE_RADIO'}" readonly="#{readOnly}"
                       required="#{question.required}" value="#{response.answers[question.id]}" layout="responsive" columns="1">
         <f:selectItems value="#{question.activeOptions}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneRadio>
 
     <p:selectOneMenu styleClass="mt-2" rendered="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}" readonly="#{readOnly}"
                      required="#{question.required}" value="#{response.answers[question.id]}" editable="#{question.type eq 'ONE_MENU_EDITABLE'}">
+        <f:selectItem itemLabel="#{msg['survey.answer_select_placeholder']}"  itemValue="#{null}" noSelectionOption="true"/>
         <f:selectItems value="#{question.activeOptions}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneMenu>
 
-    <p:selectCheckboxMenu styleClass="mt-2" rendered="#{question.type eq 'MULTIPLE_MENU'}" readonly="#{readOnly}"
-                          required="#{question.required}" value="#{response.multipleAnswers[question.id]}"
-                          filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
+    <p:selectCheckboxMenu styleClass="mt-2" rendered="#{question.type eq 'MULTIPLE_MENU'}" readonly="#{readOnly}" required="#{question.required}"
+                          value="#{response.multipleAnswers[question.id]}" emptyLabel="#{msg['survey.answer_select_placeholder']}"
+                          filter="#{question.options.size() gt 5}" filterMatchMode="startsWith" multiple="true">
         <f:selectItems value="#{question.activeOptions}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectCheckboxMenu>
 
     <p:selectManyCheckbox styleClass="mt-2" rendered="#{question.type eq 'MANY_CHECKBOX'}" readonly="#{readOnly}"
-                          required="#{question.required}" value="#{response.multipleAnswers[question.id]}" layout="responsive" columns="1"
-                          filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
+                          required="#{question.required}" value="#{response.multipleAnswers[question.id]}" layout="pageDirection">
         <f:selectItems value="#{question.activeOptions}"/>
-        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+        <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectManyCheckbox>
+
+    <p:message for="@previous"/>
 </ui:fragment>
 
 </ui:composition>

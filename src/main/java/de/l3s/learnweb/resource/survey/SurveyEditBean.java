@@ -60,9 +60,9 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
             choiceGroup.setSelectItems(Stream.of(
                 SurveyQuestion.QuestionType.ONE_BUTTON,
                 SurveyQuestion.QuestionType.ONE_RADIO,
-                SurveyQuestion.QuestionType.MANY_CHECKBOX,
                 SurveyQuestion.QuestionType.ONE_MENU,
                 SurveyQuestion.QuestionType.ONE_MENU_EDITABLE,
+                SurveyQuestion.QuestionType.MANY_CHECKBOX,
                 SurveyQuestion.QuestionType.MULTIPLE_MENU
             ).map(q -> new SelectItem(q.name(), msg.getString("question_type." + q.name()), msg.getString("question_type.desc_" + q.name()))).toArray(SelectItem[]::new));
             questionTypes.add(choiceGroup);
@@ -95,14 +95,14 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
     }
 
     public void onAddQuestion(SurveyPage page) {
-        SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.INPUT_TEXT, resource.getId());
+        SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.INPUT_TEXT);
         question.setOrder(page.getQuestions().size());
         question.setPageId(page.getId());
         page.getQuestions().add(question);
     }
 
     public void onAddHeader(SurveyPage page) {
-        SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.FULLWIDTH_HEADER, resource.getId());
+        SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.FULLWIDTH_HEADER);
         question.setOrder(page.getQuestions().size());
         question.setPageId(page.getId());
         page.getQuestions().add(question);
@@ -110,8 +110,9 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
 
     public void onAddPage() {
         List<SurveyPage> pages = resource.getPages();
-        SurveyPage page = new SurveyPage(resource.getId());
+        SurveyPage page = new SurveyPage();
         page.setOrder(pages.size());
+        page.setResourceId(resource.getId());
         surveyDao.savePage(page);
         pages.add(page);
     }

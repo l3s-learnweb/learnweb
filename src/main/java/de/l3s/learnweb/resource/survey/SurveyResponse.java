@@ -26,6 +26,7 @@ public class SurveyResponse implements Serializable, HasId {
 
     private int id;
     private final int resourceId;
+    private int resourceId;
     private int userId;
     private boolean submitted; // has the user submitted the survey finally
     private LocalDateTime createdAt;
@@ -35,10 +36,6 @@ public class SurveyResponse implements Serializable, HasId {
     // cache
     private transient User user;
     private transient SurveyResource resource;
-
-    public SurveyResponse(int resourceId) {
-        this.resourceId = resourceId;
-    }
 
     @Override
     public int getId() {
@@ -51,6 +48,10 @@ public class SurveyResponse implements Serializable, HasId {
 
     public int getResourceId() {
         return resourceId;
+    }
+
+    public void setResourceId(final int resourceId) {
+        this.resourceId = resourceId;
     }
 
     public SurveyResource getResource() {

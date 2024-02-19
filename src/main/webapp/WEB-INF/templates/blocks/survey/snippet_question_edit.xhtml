@@ -16,6 +16,14 @@
     <p:message for="@previous"/>
 </div>
 
+<div class="field" faces:rendered="#{question.type eq 'INPUT_TEXT' or question.type eq 'INPUT_TEXTAREA'}">
+    <p:outputLabel for="@next" value="#{msg['survey.mod_placeholder_text']}:" styleClass="fw-bold"/>
+    <p:inputTextarea value="#{question.placeholder}" rows="1">
+        <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+    </p:inputTextarea>
+    <p:message for="@previous"/>
+</div>
+
 <div class="field">
     <p:outputLabel for="@next" value="#{msg['survey.mod_description_text']}:" styleClass="fw-bold"/>
     <p:textEditor value="#{question.description}" allowBlocks="false">
@@ -59,14 +67,6 @@
 <p:outputPanel id="options" styleClass="mb-3" rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
     <ui:fragment rendered="#{fn:startsWith(question.type,'INPUT_')}">
         <div class="row">
-            <div class="col">
-                <p:tooltip for="@next:@next" value="#{msg['survey.mod_min_length_tooltip']}"/>
-                <p:outputLabel for="@next" value="#{msg['survey.mod_min_length']}:" styleClass="fw-bold"/>
-                <p:inputNumber value="#{question.minLength}" decimalPlaces="0" leadingZero="deny" minValue="0" maxValue="6000" required="true">
-                    <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
-                </p:inputNumber>
-                <p:message for="@previous"/>
-            </div>
             <div class="col">
                 <p:tooltip for="@next:@next" value="#{msg['survey.mod_max_length_tooltip']}"/>
                 <p:outputLabel for="@next" value="#{msg['survey.mod_max_length']}:" styleClass="fw-bold"/>

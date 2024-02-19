@@ -66,7 +66,6 @@ class SurveyDaoTest {
         assertFalse(before.isEmpty());
         SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.MANY_CHECKBOX);
         question.setId(11);
-        question.setResourceId(10);
         question.setPageId(1);
         question.setDeleted(false);
         question.setOrder(8);
@@ -92,15 +91,16 @@ class SurveyDaoTest {
 
     @Test
     void saveResponse() {
-        SurveyResponse surveyResponse = new SurveyResponse(10);
-        surveyResponse.setUserId(3);
-        surveyResponse.setSubmitted(true);
-        surveyDao.saveResponse(surveyResponse);
+        SurveyResponse response = new SurveyResponse();
+        response.setResourceId(10);
+        response.setUserId(3);
+        response.setSubmitted(true);
+        surveyDao.saveResponse(response);
 
         Optional<SurveyResource> surveyResource = surveyDao.findResourceById(10);
         assertTrue(surveyResource.isPresent());
 
-        SurveyResponse retrieved = surveyDao.findResponseById(surveyResponse.getId());
+        SurveyResponse retrieved = surveyDao.findResponseById(response.getId());
         assertEquals(3, retrieved.getUserId());
     }
 }

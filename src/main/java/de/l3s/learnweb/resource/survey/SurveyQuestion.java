@@ -61,14 +61,14 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     }
 
     private int id;
-    private int resourceId;
     private int pageId;
     private boolean deleted = false;
     private int order;
     private QuestionType type;
-    private String question; // question on the website, is replaced by a translated term if available
-    private String description; // an explanation, displayed as tooltip
-    private boolean required = false;
+    private String question; // question on the website, it's replaced by a translated term if available
+    private String description; // an explanation, displayed as tooltip or after the question
+    private String placeholder; // a placeholder for input fields
+    private boolean required = true;
     private Integer minLength;
     private Integer maxLength;
 
@@ -76,6 +76,7 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
 
     public SurveyQuestion(QuestionType type) {
         this.type = type;
+
         // set default length limits for text input fields
         if (type == QuestionType.INPUT_TEXT || type == QuestionType.INPUT_TEXTAREA) {
             minLength = 0;
@@ -83,18 +84,12 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         }
     }
 
-    public SurveyQuestion(QuestionType type, int resourceId) {
-        this(type);
-
-        this.resourceId = resourceId;
-    }
-
     public SurveyQuestion(SurveyQuestion question) {
         this.id = 0;
-        this.resourceId = 0;
         this.pageId = question.pageId;
         this.question = question.question;
         this.description = question.description;
+        this.placeholder = question.placeholder;
         this.required = question.required;
         this.deleted = question.deleted;
         this.order = question.order;
@@ -136,6 +131,14 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         this.description = description;
     }
 
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(final String placeholder) {
+        this.placeholder = placeholder;
+    }
+
     public boolean isRequired() {
         return required;
     }
@@ -163,14 +166,6 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
 
     void setId(int id) {
         this.id = id;
-    }
-
-    public int getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(final int resourceId) {
-        this.resourceId = resourceId;
     }
 
     public int getPageId() {

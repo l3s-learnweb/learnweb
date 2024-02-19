@@ -18,20 +18,19 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     private int resourceId;
     private boolean deleted = false;
     private int order;
-    private String title; // question on the website, is replaced by a translated term if available
-    private String description; // an explanation, displayed as tooltip
+    private String title;
+    private String description;
     private boolean sampling = false;
     private ArrayList<SurveyPageVariant> variants = new ArrayList<>();
 
     private transient List<SurveyQuestion> questions;
 
-    public SurveyPage(int resourceId) {
-        this.resourceId = resourceId;
+    public SurveyPage() {
     }
 
     public SurveyPage(SurveyPage other) {
         this.id = 0;
-        this.resourceId = 0;
+        this.resourceId = other.resourceId;
         this.title = other.title;
         this.description = other.description;
         this.sampling = other.sampling;
@@ -133,7 +132,7 @@ public class SurveyPage implements HasId, Deletable, Serializable {
             if (getId() == 0) {
                 questions = new ArrayList<>();
             } else {
-                questions = new ArrayList<>(Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByResourceId(getResourceId(), getId()));
+                questions = new ArrayList<>(Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByPageId(getId()));
             }
         }
         return questions;
