@@ -62,13 +62,13 @@
 
     <div class="bg-body">
         <div class="row px-3 py-5 px-md-4 px-lg-5">
-            <h:form id="history" styleClass="col-6 col-md-3" style="max-width: 300px;">
+            <h:form id="history" styleClass="col-4 col-lg-3" style="max-width: 300px;">
                 <p:commandButton styleClass="mb-3 ui-button-info" value="Start new chat" action="#{searchChatBean.newChat}" update=":chat :history" process="@this"/>
 
                 <ui:repeat value="#{searchChatBean.conversations}" var="conv">
                     <p:commandLink styleClass="search-chat-history" title="Select '#{conv.title}' conversation"
-                                   action="#{searchChatBean.switchConversation(conv)}" update=":chat" process="@this">
-                        <p:card>
+                                   action="#{searchChatBean.switchConversation(conv)}" update=":chat @form" process="@this">
+                        <p:card styleClass="#{searchChatBean.conversation.id eq conv.id ? 'bg-light' : ''}">
                             <h6 class="mb-0">#{conv.title}</h6>
                             <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"/>
                         </p:card>
@@ -76,7 +76,7 @@
                 </ui:repeat>
             </h:form>
 
-            <h:form id="chat" styleClass="col-6 col-md-9 col-xl-6 mx-auto" style="max-width: 800px;">
+            <h:form id="chat" styleClass="col-8 col-lg-6 mx-auto" style="max-width: 800px;">
                 <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
 
                     <ui:repeat value="#{searchChatBean.messages}" var="message" varStatus="status">
