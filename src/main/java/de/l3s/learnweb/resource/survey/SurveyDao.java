@@ -205,6 +205,16 @@ public interface SurveyDao extends SqlObject, Serializable {
         return select.map(this::findAnswersByResponse).orElse(null);
     }
 
+    /**
+     * Returns all answers a user has given for a particular message.
+     */
+    default SurveyResponse findResponseByMessageId(final int messageId) {
+        Optional<SurveyResponse> select = getHandle().select("SELECT * FROM lw_survey_response WHERE message_id = ? LIMIT 1", messageId)
+            .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class).findOne();
+
+        return select.map(this::findAnswersByResponse).orElse(null);
+    }
+
     default SurveyResponse findResponseById(final int responseId) {
         SurveyResponse response = responseCache.get(responseId);
         if (response == null) {
@@ -261,8 +271,8 @@ public interface SurveyDao extends SqlObject, Serializable {
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("response_id", SqlHelper.toNullable(response.getId()));
-        params.put("resource_id", response.getResourceId());
         params.put("resource_id", SqlHelper.toNullable(response.getResourceId()));
+        params.put("message_id", SqlHelper.toNullable(response.getMessageId()));
         params.put("user_id", SqlHelper.toNullable(response.getUserId()));
         params.put("submitted", response.isSubmitted());
         params.put("created_at", response.getCreatedAt());
@@ -361,9 +371,9 @@ public interface SurveyDao extends SqlObject, Serializable {
             SurveyResponse response = responseCache.get(rs.getInt("response_id"));
 
             if (response == null) {
-                response = new SurveyResponse(rs.getInt("resource_id"));
                 response = new SurveyResponse();
                 response.setResourceId(rs.getInt("resource_id"));
+                response.setMessageId(rs.getInt("message_id"));
                 response.setId(rs.getInt("response_id"));
                 response.setUserId(rs.getInt("user_id"));
                 response.setSubmitted(rs.getBoolean("submitted"));

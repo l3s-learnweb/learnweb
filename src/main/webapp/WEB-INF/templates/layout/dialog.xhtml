@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      lang="#{userBean.localeCode}" style="height: inherit">
+
+<!--@elvariable id="page_title" type="java.lang.String"-->
+
+<f:view locale="#{userBean.locale}" contentType="text/html">
+    <ui:insert name="metadata"/>
+
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="robots" content="noindex,nofollow"/>
+        <base href="#{request.contextPath}/lw/"/>
+
+        <title><h:outputText value="#{page_title}"/></title>
+        <h:outputStylesheet name="bundle/learnweb.main.css"/>
+    </h:head>
+
+    <h:body styleClass="layout-body template-dialog bg-white px-4 p-1">
+        <ui:insert name="content"/>
+    </h:body>
+</f:view>
+</html>

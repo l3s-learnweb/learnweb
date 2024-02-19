@@ -25,8 +25,8 @@ public class SurveyResponse implements Serializable, HasId {
     private static final String escapedSeparator = "|I|";
 
     private int id;
-    private final int resourceId;
     private int resourceId;
+    private int messageId;
     private int userId;
     private boolean submitted; // has the user submitted the survey finally
     private LocalDateTime createdAt;
@@ -52,6 +52,14 @@ public class SurveyResponse implements Serializable, HasId {
 
     public void setResourceId(final int resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public int getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(final int messageId) {
+        this.messageId = messageId;
     }
 
     public SurveyResource getResource() {

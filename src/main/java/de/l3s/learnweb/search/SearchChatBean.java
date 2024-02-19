@@ -4,7 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
@@ -12,6 +14,8 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.primefaces.PrimeFaces;
+import org.primefaces.model.DialogFrameworkOptions;
 
 import de.l3s.interweb.client.Interweb;
 import de.l3s.interweb.client.InterwebException;
@@ -38,6 +42,9 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     private Interweb interweb;
     private transient Conversation conversation;
     private transient List<Conversation> conversations;
+
+    private transient Integer feedbackPromptSurveyId;
+    private transient Integer feedbackResponseSurveyId;
 
     public void onLoad() throws InterwebException {
         BeanAssert.authorized(isLoggedIn());
@@ -117,5 +124,48 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
 
     public boolean isNewChat() {
         return newChat;
+    }
+
+    public Integer getFeedbackPromptSurveyId() {
+        return feedbackPromptSurveyId;
+    }
+
+    public void setFeedbackPromptSurveyId(final Integer feedbackPromptSurveyId) {
+        this.feedbackPromptSurveyId = feedbackPromptSurveyId;
+    }
+
+    public Integer getFeedbackResponseSurveyId() {
+        return feedbackResponseSurveyId;
+    }
+
+    public void setFeedbackResponseSurveyId(final Integer feedbackResponseSurveyId) {
+        this.feedbackResponseSurveyId = feedbackResponseSurveyId;
+    }
+
+    public static DialogFrameworkOptions.Builder defaultBuilder() {
+        return DialogFrameworkOptions.builder()
+            .modal(true)
+            .fitViewport(true)
+            .responsive(true)
+            .resizable(false)
+            .resizeObserver(true)
+            .resizeObserverCenter(true)
+            .closable(true)
+            .closeOnEscape(true)
+            .draggable(false)
+            .width("660px")
+            .contentWidth("100%");
+    }
+
+    public static DialogFrameworkOptions defaultOptions() {
+        return defaultBuilder().build();
+    }
+
+    public void showFeedback(Message message) {
+        Map<String, List<String>> params = new HashMap<>();
+        params.put("survey_id", List.of(String.valueOf(message.getRole() == Message.Role.user ? feedbackPromptSurveyId : feedbackResponseSurveyId)));
+        params.put("message_id", List.of(String.valueOf(message.getId())));
+
+        PrimeFaces.current().dialog().openDynamic("/dialogs/chat-feedback", defaultOptions(), params);
     }
 }
