@@ -75,7 +75,7 @@
 						</h:form>
 					</div>
 					<div class="border border-dark my-2 p-2">
-						<strong>#{msg['ted_transcript.owner_of_transcript']}: </strong><h:outputText value="#{tedTranscriptBean.tedResource.user.username}"/><br/>
+						<strong>#{msg['ted_transcript.owner_of_transcript']}: </strong><h:outputText value="#{tedTranscriptBean.tedResource.user.displayName}"/><br/>
 						<strong>#{msg.note}:</strong> <h:outputText value="#{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
 						<h:outputText value="#{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" styleClass="text-danger"/>
 						<h:outputText value="#{msg.transcript_note}" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}"/>

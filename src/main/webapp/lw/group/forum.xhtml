@@ -71,7 +71,7 @@
 				<h:outputText value="#{topic.views}"/>
 			</p:column>
 
-			<p:column headerText="#{msg['forum.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
+			<p:column headerText="#{msg['forum.author']}" styleClass="text-center" sortBy="#{topic.user.displayName}">
 				<lw:user user="#{topic.user}"/>
 			</p:column>
 

@@ -113,7 +113,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     public void quotePost(ForumPost post) {
         dialogPost = new ForumPost();
-        String username = post.getUser() != null ? post.getUser().getUsername() : "Anonymous"; // can happen for old imported posts
+        String username = post.getUser() != null ? post.getUser().getDisplayName() : "Anonymous"; // can happen for old imported posts
         String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;");
         dialogPost.setText("<blockquote><strong>" + username + ":</strong>" + newStr + "</blockquote></br>");
     }

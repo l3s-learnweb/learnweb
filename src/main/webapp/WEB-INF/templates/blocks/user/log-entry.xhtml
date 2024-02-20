@@ -15,7 +15,7 @@
 	<h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
 
 	<p:avatar label="${logEntry.user.initials}" styleClass="mt-1 me-3 align-self-start" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-		<h:graphicImage value="#{logEntry.user.imageUrl}" alt="#{logEntry.user.fullName}" rendered="#{not empty logEntry.user.imageUrl}"/>
+		<h:graphicImage value="#{logEntry.user.imageUrl}" alt="#{logEntry.user.displayName}" rendered="#{not empty logEntry.user.imageUrl}"/>
 	</p:avatar>
 
 	<div class="overflow-hidden">

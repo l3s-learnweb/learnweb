@@ -20,7 +20,7 @@
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 
-	<lw:breadcrumb-item title="#{userDetailBean.selectedUser.username}"/>
+	<lw:breadcrumb-item title="#{userDetailBean.selectedUser.displayName}"/>
 </ui:define>
 
 <ui:define name="center_layout">
@@ -29,7 +29,7 @@
 			<p:panel>
                 <f:facet name="header">
                     <div class="d-flex m-0">
-                        <div class="me-auto">#{userDetailBean.selectedUser.username}</div>
+                        <div class="me-auto">#{userDetailBean.selectedUser.displayName}</div>
                         <p:linkButton href="myhome/profile.jsf?user_id=#{userDetailBean.selectedUser.id}" value="#{msg.edit}" styleClass="ui-button-warning"
                                 rendered="#{userDetailBean.selectedUser eq userBean.user or userBean.moderator}" />
                     </div>
@@ -39,13 +39,13 @@
 				<div class="row" faces:rendered="#{not userDetailBean.pageHidden}">
 					<div class="col-auto">
 						<p:avatar label="${userDetailBean.selectedUser.initials}" size="large" styleClass="mt-2" dynamicColor="true" saturation="50" lightness="50">
-							<h:graphicImage value="#{userDetailBean.selectedUser.imageUrl}" alt="#{userDetailBean.selectedUser.fullName}" rendered="#{not empty userDetailBean.selectedUser.imageUrl}"/>
+							<h:graphicImage value="#{userDetailBean.selectedUser.imageUrl}" alt="#{userDetailBean.selectedUser.displayName}" rendered="#{not empty userDetailBean.selectedUser.imageUrl}"/>
 						</p:avatar>
 					</div>
 					<div class="col">
 						<p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
 							<h:outputText value="#{msg.username}:"/>
-							<h:outputText value="#{userDetailBean.selectedUser.username}"/>
+							<h:outputText value="#{userDetailBean.selectedUser.displayName}"/>
 
 							<h:outputText value="#{msg.email_address}:" rendered="#{not empty userDetailBean.selectedUser.email}"/>
 							<lw:encryptEmail email="#{userDetailBean.selectedUser.email}" rendered="#{not empty userDetailBean.selectedUser.email}"/>
@@ -71,7 +71,7 @@
 				</div>
 			</p:panel>
 
-			<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.selectedUser.username}"
+			<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.selectedUser.displayName}"
 					 rendered="#{not empty userDetailBean.selectedUser.groups}">
 				<ul class="list-unstyled">
 					<ui:repeat var="g" value="#{userDetailBean.selectedUser.groups}">

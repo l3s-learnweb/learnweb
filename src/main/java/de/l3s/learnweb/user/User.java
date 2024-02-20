@@ -266,10 +266,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public String getUsername() {
-        if (getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
-            return "Anonymous";
-        }
-
         return username;
     }
 
@@ -277,17 +273,16 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.username = StringUtils.trim(username);
     }
 
-    /**
-     * TODO: getUsername can be renamed to getDisplayName and getRealUsername to getUsername
-     * getUsername() may return "Anonymous" for some organisation.
-     * This method will always return the real username
-     */
-    public String getRealUsername() {
-        return username;
-    }
+    public String getDisplayName() {
+        if (getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
+            return "Anonymous";
+        }
 
-    public void setRealUsername(String username) {
-        setUsername(username);
+        if (StringUtils.isNotBlank(fullName)) {
+            return fullName;
+        }
+
+        return username;
     }
 
     /**
@@ -410,7 +405,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
             String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
                 "email=" + StringHelper.urlEncode(getEmail()) + "&token=" + tokenId + ":" + token;
 
-            Mail mail = MailFactory.buildConfirmEmail(getRealUsername(), confirmEmailUrl).build(getLocale());
+            Mail mail = MailFactory.buildConfirmEmail(getUsername(), confirmEmailUrl).build(getLocale());
             mail.setRecipient(getEmail());
             mail.send();
             return true;
@@ -437,7 +432,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public String getInitials() {
-        return ProfileImageHelper.getInitialsForProfilePicture(StringUtils.firstNonBlank(fullName, username));
+        return ProfileImageHelper.getInitialsForProfilePicture(getDisplayName());
     }
 
     /**
@@ -545,7 +540,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     @Override
     public String toString() {
-        return "[userId: " + getId() + ", name: " + getRealUsername() + ", email: " + getEmail() + "]";
+        return "[userId: " + getId() + ", name: " + getUsername() + ", email: " + getEmail() + "]";
     }
 
     public int getForumPostCount() {

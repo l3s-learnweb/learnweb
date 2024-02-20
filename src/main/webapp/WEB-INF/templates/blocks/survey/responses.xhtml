@@ -20,7 +20,7 @@
 
 			<p:column headerText="#{msg.username}">
 				<h:outputLink id="print_user" value="survey/answer.jsf">
-					<h:outputText value="#{result.user.username} "/>
+					<h:outputText value="#{result.user.displayName} "/>
 					<f:param name="resource_id" value="#{res.id}"/>
 					<f:param name="user_id" value="#{result.userId}"/>
 				</h:outputLink>

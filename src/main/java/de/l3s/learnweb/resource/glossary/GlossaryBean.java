@@ -435,7 +435,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
             if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
                 // create image from username
-                Image watermark = Image.fromText(glossaryResource.getUser().getUsername());
+                Image watermark = Image.fromText(glossaryResource.getUser().getDisplayName());
                 InputStream is = watermark.getInputStream();
                 int pictureIdx = wb.addPicture(IOUtils.toByteArray(is), Workbook.PICTURE_TYPE_PNG);
                 is.close();

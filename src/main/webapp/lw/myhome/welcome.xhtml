@@ -29,11 +29,11 @@
 
                 <div class="d-flex align-items-center">
                     <p:avatar label="${userBean.user.initials}" styleClass="me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.fullName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.displayName}" rendered="#{not empty userBean.user.imageUrl}"/>
                     </p:avatar>
                     <div>
                         <p class="mb-0">
-                            <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
+                            <h:outputText value="#{msg.greeting} #{userBean.user.displayName},"/><br/>
                             <h:outputFormat value="#{msg.homepageTitle}"><f:param value="#{config.appName}"/></h:outputFormat>
                         </p>
                     </div>
@@ -98,7 +98,7 @@
                     <ui:repeat var="message" value="#{welcomeBean.receivedMessages}" varStatus="status">
                         <div class="d-flex #{status.first ? '' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
                             <p:avatar label="${message.senderUser.initials}" styleClass="me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-                                <h:graphicImage value="#{message.senderUser.imageUrl}" alt="#{message.senderUser.fullName}" rendered="#{not empty message.senderUser.imageUrl}"/>
+                                <h:graphicImage value="#{message.senderUser.imageUrl}" alt="#{message.senderUser.displayName}" rendered="#{not empty message.senderUser.imageUrl}"/>
                             </p:avatar>
 
                             <div class="text-break">
@@ -111,7 +111,7 @@
                                 </div>
                                 <span class="small fw-light">
                                     <h:outputText value="#{msg.from_user} "/>
-                                    <h:outputText value="#{message.senderUser.username} " styleClass="fw-bold"/>
+                                    <h:outputText value="#{message.senderUser.displayName} " styleClass="fw-bold"/>
                                     <h:outputText value="#{msg.on_date} " styleClass="fw-light"/>
                                     <h:outputText value="#{message.createdAt}">
                                         <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>

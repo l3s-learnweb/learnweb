@@ -60,10 +60,10 @@
 
                 <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline" width="130">
                     <lw:user user="#{post.user}">
-                        <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.username}"/>
+                        <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.displayName}"/>
 
                         <p:avatar label="${post.user.initials}" size="large" dynamicColor="true" saturation="50" lightness="50">
-                            <h:graphicImage value="#{post.user.imageUrl}" alt="#{post.user.fullName}" rendered="#{not empty post.user.imageUrl}"/>
+                            <h:graphicImage value="#{post.user.imageUrl}" alt="#{post.user.displayName}" rendered="#{not empty post.user.imageUrl}"/>
                         </p:avatar>
                     </lw:user>
 
@@ -108,7 +108,7 @@
                                     <h:outputFormat value="#{msg['forum.post_edited_state']}">
                                         <f:param value="#{post.editCount}"/>
                                         <f:param value="#{post.updatedAt}"/>
-                                        <f:param value="#{post.editUser.username}"/>
+                                        <f:param value="#{post.editUser.displayName}"/>
                                         <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                     </h:outputFormat>
                                 </div>

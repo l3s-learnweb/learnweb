@@ -55,9 +55,9 @@
                     <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip"/>
                 </ui:fragment>
 
-                <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
+                <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.displayName}">
                     <p:outputLabel id="collector-fullname" class="fas fa-user-plus mb-1"/>
-                    <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip"/>
+                    <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.displayName}" position="right" hideEffect="clip"/>
                 </ui:fragment>
             </div>
 

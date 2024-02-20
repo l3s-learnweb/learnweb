@@ -198,7 +198,7 @@ public final class ExportManager {
             row.appendChild(new Td().appendText(resource.getType().name()));
             row.appendChild(new Td().appendText(resource.getGroup() != null ? resource.getGroup().getTitle() : ""));
             row.appendChild(new Td().appendText(resource.getPrettyPath() != null ? resource.getPrettyPath() : ""));
-            row.appendChild(new Td().appendText(resource.getUser().getRealUsername()));
+            row.appendChild(new Td().appendText(resource.getUser().getUsername()));
             tbody.appendChild(row);
         }
 

@@ -111,7 +111,7 @@ public class LogEntry implements Serializable {
         if (getUser() == null || getUser().isDeleted()) {
             return "<b>Deleted user</b>";
         }
-        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
+        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getDisplayName() + "</a>";
     }
 
     private String getCommentText(int commentId, ResourceBundle bundle) {

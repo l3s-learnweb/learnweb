@@ -4,7 +4,7 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:f="jakarta.faces.core"
 				xmlns:lw="http://l3s.de/learnweb">
-	
+
 <ui:param name="pageTitle" value="#{msg.your_information}"/>
 
 <ui:define name="breadcrumb">
@@ -19,7 +19,7 @@
 			<div class="ui-panel ui-widget ui-widget-content ui-corner-all">
 				<div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
 					<span class="ui-panel-title">
-						<h:outputText value="#{msg.greeting}, #{userBean.user.username}"/>
+						<h:outputText value="#{msg.greeting}, #{userBean.user.displayName}"/>
 					</span>
 				</div>
 				<div class="ui-panel-content ui-widget-content">

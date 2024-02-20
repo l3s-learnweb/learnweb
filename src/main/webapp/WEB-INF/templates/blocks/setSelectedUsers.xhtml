@@ -20,7 +20,7 @@
                     <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
                     <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 
-                    <f:selectItems value="#{cbean.allUsers}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}#{empty user.fullName? '':' ('.concat(user.fullName).concat(')')}"/>
+                    <f:selectItems value="#{cbean.allUsers}" var="user" itemValue="#{user.id}" itemLabel="#{user.displayName}#{empty user.fullName ? '' : ' ('.concat(user.username).concat(')')}"/>
                 </p:selectCheckboxMenu>
 
                 <p:selectCheckboxMenu id="selectedGroupsIds" value="#{cbean.selectedGroupsIds}" label="#{msg.groupsTitle}"

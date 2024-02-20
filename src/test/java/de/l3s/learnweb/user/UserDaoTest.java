@@ -199,7 +199,6 @@ class UserDaoTest {
     @Test
     void save() {
         User user = new User();
-        user.setRealUsername("thecapac");
         user.setUsername("thecapac");
         user.setOrganisationId(2);
         user.setHashing("PBKDF2");

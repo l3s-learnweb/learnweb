@@ -120,13 +120,13 @@
                             <div class="mb-5 d-flex flex-row-reverse">
                                 <div class="d-flex flex-column align-items-center" style="width:2rem">
                                     <p:avatar label="${userBean.user.initials}" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-                                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.fullName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.displayName}" rendered="#{not empty userBean.user.imageUrl}"/>
                                     </p:avatar>
                                     <div class="h-100 bg-primary" style="width: 2px; min-height: 4rem"></div>
                                 </div>
                                 <div class="me-4 bg-body-secondary shadow rounded p-3 flex-fill">
                                     <div class="mb-3">
-                                        <span class="fw-medium d-inline-block me-3">#{userBean.user.fullName}</span>
+                                        <span class="fw-medium d-inline-block me-3">#{userBean.user.displayName}</span>
                                         <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
                                                     rendered="#{not empty message.created}"/>
                                     </div>

@@ -39,7 +39,7 @@
                             <div class="col-md-8">
                                 <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.username}:"/>
-                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}"
+                                    <p:inputText id="username" value="#{profileBean.selectedUser.username}" validator="#{profileBean.validateUsername}"
                                                  label="#{msg.username}" required="true">
                                         <f:validateLength minimum="2" maximum="50"></f:validateLength>
                                     </p:inputText>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-4">
                                 <p:avatar label="${profileBean.selectedUser.initials}" styleClass="d-flex m-auto" size="large" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-                                    <h:graphicImage value="#{profileBean.selectedUser.imageUrl}" alt="#{profileBean.selectedUser.fullName}" rendered="#{not empty profileBean.selectedUser.imageUrl}"/>
+                                    <h:graphicImage value="#{profileBean.selectedUser.imageUrl}" alt="#{profileBean.selectedUser.displayName}" rendered="#{not empty profileBean.selectedUser.imageUrl}"/>
                                 </p:avatar>
 
                                 <div class="field mt-2 text-center">

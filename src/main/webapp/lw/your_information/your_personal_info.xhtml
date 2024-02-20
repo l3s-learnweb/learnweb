@@ -26,7 +26,7 @@
                     <h:graphicImage library="images" name="universitaet_panorama.jpg" alt="profile background picture"></h:graphicImage>
 
                     <p:avatar label="${userBean.user.initials}" size="large" styleClass="profile-avatar" dynamicColor="true" saturation="50" lightness="50">
-                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.fullName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.displayName}" rendered="#{not empty userBean.user.imageUrl}"/>
                     </p:avatar>
 
                     <span class="profile-name"><h:outputText value="#{of:coalesce(userBean.user.fullName, 'N/D')}"/></span>

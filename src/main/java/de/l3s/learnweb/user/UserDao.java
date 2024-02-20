@@ -120,7 +120,7 @@ public interface UserDao extends SqlObject, Serializable {
         user.setPassword(null);
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
         // alter username so that it is unlikely to cause conflicts with other usernames
-        user.setUsername(user.getRealUsername() + " (Deleted) " + user.getId() + " - " + ThreadLocalRandom.current().nextInt(1, 100));
+        user.setUsername(user.getUsername() + " (Deleted) " + user.getId() + " - " + ThreadLocalRandom.current().nextInt(1, 100));
         save(user);
 
         cache.remove(user.getId());
@@ -141,14 +141,14 @@ public interface UserDao extends SqlObject, Serializable {
 
     default void save(User user) {
         // verify that the given obj is valid; added only attributes that had already caused problems in the past
-        Objects.requireNonNull(user.getRealUsername());
+        Objects.requireNonNull(user.getUsername());
 
         if (user.getCreatedAt() == null) {
             user.setCreatedAt(SqlHelper.now());
         }
 
         // for new users double check that the username is free. If not the existing user will be overwritten
-        if (user.getId() == 0 && findByUsername(user.getRealUsername()).isPresent()) {
+        if (user.getId() == 0 && findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Username is already taken");
         }
 

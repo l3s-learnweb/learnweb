@@ -76,7 +76,7 @@ public class LearnwebUser extends UIComponentBase {
                     this.encodeChildren(context);
                 }
             } else {
-                writer.write(user.getUsername());
+                writer.write(user.getDisplayName());
             }
             writer.endElement("a");
         }

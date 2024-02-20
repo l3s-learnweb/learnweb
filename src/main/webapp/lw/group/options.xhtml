@@ -71,7 +71,7 @@
                             </div>
                             <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.leader}:"/>
-                                <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
+                                <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.displayName}">
                                     <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
                                 </p:link>
                                 <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2"
@@ -225,7 +225,7 @@
 
                     <div class="field">
                         <p:outputLabel for="@next" value="#{msg.leader}:" styleClass="h5"/>
-                        <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
+                        <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.displayName}">
                             <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
                         </p:link>
                     </div>
@@ -291,7 +291,7 @@
     <p:dialog widgetVar="changeLeader" header="#{msg.change_leader}" modal="true" styleClass="overflow-hidden">
         <h:form>
             <p:selectOneMenu id="edit_group_leader" value="#{groupOptionsBean.editedGroupLeaderId}" styleClass="mb-3 w-100" immediate="true" required="true">
-                <f:selectItems value="#{groupOptionsBean.group.members}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
+                <f:selectItems value="#{groupOptionsBean.group.members}" var="user" itemValue="#{user.id}" itemLabel="#{user.displayName}"/>
             </p:selectOneMenu>
             <div class="d-flex justify-content-end">
                 <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" process="@form" oncomplete="PF('changeLeader').hide()"

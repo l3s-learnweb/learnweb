@@ -66,8 +66,8 @@
                                 #{msg.data}
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{ts.user.username}">
-                                <a href="#{request.contextPath}/lw/dashboard/tracker.jsf?userId=#{ts.userId}">#{ts.user.username}</a>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{ts.user.displayName}">
+                                <a href="#{request.contextPath}/lw/dashboard/tracker.jsf?userId=#{ts.userId}">#{ts.user.displayName}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="#{msg.total_events}" sortBy="#{ts.totalEvents}" sortable="true">
                                 #{ts.totalEvents}

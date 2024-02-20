@@ -39,8 +39,8 @@
                 <h:outputText value="#{group.description}" escape="false"/>
             </p:column>
 
-            <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" styleClass="dd-sm-none">
-                <h:outputText value="#{group.leader.username}"/>
+            <p:column headerText="#{msg.leader}" sortBy="#{group.leader.displayName}" styleClass="dd-sm-none">
+                <h:outputText value="#{group.leader.displayName}"/>
             </p:column>
 
             <p:column headerText="#{msg.course}" sortBy="#{group.course.title}" styleClass="dd-xs-none">

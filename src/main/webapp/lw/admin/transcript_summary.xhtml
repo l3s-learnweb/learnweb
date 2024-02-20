@@ -69,8 +69,8 @@
 
 			<f:facet name="header">#{msg.transcript_logs}</f:facet>
 
-			<p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-				<h:outputText value="#{log.user.username}"/>
+			<p:column headerText="#{msg.username}" filterBy="#{log.user.displayName}" sortBy="#{log.user.displayName}">
+				<h:outputText value="#{log.user.displayName}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">

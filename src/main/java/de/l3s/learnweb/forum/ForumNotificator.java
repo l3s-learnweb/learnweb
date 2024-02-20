@@ -67,7 +67,7 @@ public class ForumNotificator implements Runnable, Serializable {
         List<ForumTopic> userTopics = topics.stream().filter(topic -> topic.getUserId() == user.getId()).toList();
         List<ForumTopic> otherTopics = topics.stream().filter(topic -> topic.getUserId() != user.getId()).toList();
 
-        Mail mail = MailFactory.buildForumNotificationEmail(user.getRealUsername(), userTopics, otherTopics, getHash(user)).build(user.getLocale());
+        Mail mail = MailFactory.buildForumNotificationEmail(user.getUsername(), userTopics, otherTopics, getHash(user)).build(user.getLocale());
         mail.setRecipient(user.getEmail());
         mail.send();
     }

@@ -15,14 +15,14 @@
         <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
             <p:commandLink onclick="return false;" styleClass="member-block">
                 <p:avatar label="${user.initials}" styleClass="ui-avatar-fluid" dynamicColor="true" saturation="50" lightness="50">
-                    <h:graphicImage value="#{user.imageUrl}" alt="#{user.fullName}" rendered="#{not empty user.imageUrl}"/>
+                    <h:graphicImage value="#{user.imageUrl}" alt="#{user.displayName}" rendered="#{not empty user.imageUrl}"/>
                 </p:avatar>
 
                 <ui:fragment rendered="#{not empty user.credits}">
                     <div class="member-star"></div>
                 </ui:fragment>
 
-                <div class="member-username text-center text-truncate p-1">#{user.username}</div>
+                <div class="member-username text-center text-truncate p-1">#{user.displayName}</div>
             </p:commandLink>
         </li>
 

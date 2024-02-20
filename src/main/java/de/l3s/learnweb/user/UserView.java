@@ -72,10 +72,6 @@ public final class UserView implements Serializable {
         return user.getUsername();
     }
 
-    public String getRealUsername() {
-        return user.getRealUsername();
-    }
-
     public String getEmail() {
         return user.getEmail();
     }

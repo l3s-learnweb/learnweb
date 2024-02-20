@@ -85,7 +85,7 @@ public class UserBean implements Serializable {
             session.setAttribute("Locale", locale);
             if (getUser() != null) {
                 session.setAttribute("UserId", getUser().getId());
-                session.setAttribute("UserName", getUser().getRealUsername());
+                session.setAttribute("UserName", getUser().getUsername());
             }
         }
     }

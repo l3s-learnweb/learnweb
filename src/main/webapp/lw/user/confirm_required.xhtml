@@ -19,7 +19,7 @@
 
     <p:panel header="#{msg.email_validation}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
         <h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
-            <f:param value="#{confirmRequiredBean.user.realUsername}"/>
+            <f:param value="#{confirmRequiredBean.user.username}"/>
             <f:param value="#{confirmRequiredBean.user.email}"/>
         </h:outputFormat>
 

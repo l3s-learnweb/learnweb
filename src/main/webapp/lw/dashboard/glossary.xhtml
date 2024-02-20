@@ -133,8 +133,8 @@
                                 </h:outputLink>
                             </p:column>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.user}" sortBy="#{glossary.user.username}">
-                                <h:outputText value="#{glossary.user.username}"/>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.user}" sortBy="#{glossary.user.displayName}">
+                                <h:outputText value="#{glossary.user.displayName}"/>
                             </p:column>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.location}">
@@ -180,9 +180,9 @@
                                 </div>
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
-                                      filterBy="#{gfs.user.username}" filterMatchMode="contains">
-                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.username}</a>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.displayName}" filterable="true"
+                                      filterBy="#{gfs.user.displayName}" filterMatchMode="contains">
+                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.displayName}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
                                 #{gfs.entries}
@@ -259,9 +259,9 @@
                                 </div>
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.username}" filterable="true"
-                                      filterBy="#{gds.user.username}" filterMatchMode="contains">
-                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.username}</a>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.displayName}" filterable="true"
+                                      filterBy="#{gds.user.displayName}" filterMatchMode="contains">
+                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.displayName}</a>
                             </p:column>
                             <p:column headerText="#{msg['glossary.definition']}" sortBy="#{gds.description}" sortable="true"
                                       filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">

@@ -205,7 +205,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String newName = ((String) value).trim();
-        if (getSelectedUser().getRealUsername().equals(newName)) { // username not changed
+        if (getSelectedUser().getUsername().equals(newName)) { // username not changed
             return;
         }
 
@@ -276,7 +276,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         String password = (String) value;
 
         // returns the same user, if the password is correct
-        Optional<User> checkUser = userDao.findByUsernameAndPassword(user.getRealUsername(), password);
+        Optional<User> checkUser = userDao.findByUsernameAndPassword(user.getUsername(), password);
 
         if (checkUser.isEmpty() || !user.equals(checkUser.get())) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "password_incorrect"));
