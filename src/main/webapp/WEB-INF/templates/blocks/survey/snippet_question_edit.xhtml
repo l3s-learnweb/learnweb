@@ -11,7 +11,7 @@
 <div class="field">
     <p:outputLabel for="@next" value="#{question.type eq 'FULLWIDTH_HEADER' ? msg['survey.mod_header_text'] : msg['survey.mod_question_text']}:" styleClass="fw-bold"/>
     <p:inputTextarea value="#{question.question}" required="#{question.type ne 'FULLWIDTH_HEADER'}" rows="1">
-        <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+        <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
     </p:inputTextarea>
     <p:message for="@previous"/>
 </div>
@@ -19,7 +19,7 @@
 <div class="field" faces:rendered="#{question.type eq 'INPUT_TEXT' or question.type eq 'INPUT_TEXTAREA'}">
     <p:outputLabel for="@next" value="#{msg['survey.mod_placeholder_text']}:" styleClass="fw-bold"/>
     <p:inputTextarea value="#{question.placeholder}" rows="1">
-        <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+        <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
     </p:inputTextarea>
     <p:message for="@previous"/>
 </div>
@@ -27,7 +27,7 @@
 <div class="field">
     <p:outputLabel for="@next" value="#{msg['survey.mod_description_text']}:" styleClass="fw-bold"/>
     <p:textEditor value="#{question.description}" allowBlocks="false">
-        <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+        <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
         <f:facet name="toolbar">
             <span class="ql-formats">
                 <button class="ql-bold"></button>
@@ -50,8 +50,8 @@
     <p:outputPanel styleClass="col d-flex flex-column">
         <p:outputLabel for="@next" value="#{msg['survey.mod_question_type']}:" styleClass="fw-bold"/>
         <p:selectOneMenu value="#{question.type}">
-            <f:selectItems value="#{surveyEditBean.questionTypes}"/>
-            <p:ajax event="change" update="options" process="@this options" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+            <f:selectItems value="#{surveyPageEditBean.questionTypes}"/>
+            <p:ajax event="change" update="options" process="@this options" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
         </p:selectOneMenu>
     </p:outputPanel>
 
@@ -59,7 +59,7 @@
     <p:outputPanel styleClass="col d-flex align-items-center">
         <p:outputLabel for="@next" value="#{msg['survey.mod_required']}:" styleClass="fw-bold me-2"/>
         <p:toggleSwitch value="#{question.required}">
-            <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+            <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
         </p:toggleSwitch>
     </p:outputPanel>
 </div>
@@ -71,7 +71,7 @@
                 <p:tooltip for="@next:@next" value="#{msg['survey.mod_max_length_tooltip']}"/>
                 <p:outputLabel for="@next" value="#{msg['survey.mod_max_length']}:" styleClass="fw-bold"/>
                 <p:inputNumber value="#{question.maxLength}" decimalPlaces="0" leadingZero="deny" minValue="0" maxValue="6000" required="true">
-                    <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+                    <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
                 </p:inputNumber>
                 <p:message for="@previous"/>
             </div>
@@ -88,18 +88,18 @@
                     </ui:fragment>
 
                     <p:inputText value="#{answer.value}" placeholder="#{msg['survey.mod_option']}">
-                        <p:ajax event="change" listener="#{surveyEditBean.onQuestionOptionChange(question, answer)}"/>
+                        <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionOptionChange(question, answer)}"/>
                     </p:inputText>
 
                     <p:tooltip for="@next" value="#{msg['survey.mod_delete_option']}"/>
                     <p:commandButton styleClass="rounded-button ui-button-flat ui-button-secondary align-self-center" icon="fas fa-minus"
-                                     action="#{surveyEditBean.onQuestionOptionDelete(question, answer)}" update="@form:options" process="@this"/>
+                                     action="#{surveyPageEditBean.onQuestionOptionDelete(question, answer)}" update="@form:options" process="@this"/>
                 </h:panelGroup>
             </ui:repeat>
 
             <p:tooltip for="@next" value="#{msg['survey.mod_add_answer']}"/>
             <p:commandButton styleClass="rounded-button ui-button-flat ui-button-secondary align-self-center" icon="fas fa-plus"
-                             action="#{surveyEditBean.onQuestionOptionAdd(question)}" update="@form:options" process="@this"/>
+                             action="#{surveyPageEditBean.onQuestionOptionAdd(question)}" update="@form:options" process="@this"/>
         </div>
     </ui:fragment>
 </p:outputPanel>

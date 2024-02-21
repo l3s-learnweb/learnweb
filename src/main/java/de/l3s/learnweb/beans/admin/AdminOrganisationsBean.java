@@ -41,7 +41,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     }
 
     public void onCreateOrganisation() {
-        if (organisationDao.findByTitle(newOrganisationTitle).isPresent()) {
+        if (organisationDao.countByTitle(newOrganisationTitle) > 0) {
             addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
             return;
         }

@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="jakarta.faces.html"
+				xmlns:f="jakarta.faces.core"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="page" type="de.l3s.learnweb.resource.survey.SurveyPage"-->
+
+<div class="flex-grow-1 p-2">
+    <h:form id="page${page.id}_edit_form">
+        <div class="field">
+            <p:outputLabel for="@next" value="#{msg['survey.mod_header_text']}:" styleClass="fw-bold"/>
+            <p:inputTextarea value="#{page.title}" rows="1">
+                <p:ajax event="change" listener="#{surveyPageEditBean.onPageChange(page)}"/>
+            </p:inputTextarea>
+            <p:message for="@previous"/>
+        </div>
+
+        <div class="field">
+            <p:outputLabel for="@next" value="#{msg['survey.mod_description_text']}:" styleClass="fw-bold"/>
+            <p:textEditor value="#{page.description}" allowBlocks="false">
+                <p:ajax event="change" listener="#{surveyPageEditBean.onPageChange(page)}"/>
+                <f:facet name="toolbar">
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"/>
+                        <button class="ql-image"/>
+                        <button class="ql-video"/>
+                        <button class="ql-formula"/>
+                    </span>
+                </f:facet>
+            </p:textEditor>
+            <p:message for="@previous"/>
+        </div>
+    </h:form>
+
+    <h:panelGroup id="questions${page.id}" layout="block">
+        <ui:repeat value="#{page.questions}" var="question" varStatus="questionStatus">
+            <h:form id="question_edit_form" styleClass="survey-question bg-body-secondary mb-3 d-flex flex-nowrap" rendered="#{!question.deleted}">
+                <div class="d-flex flex-column justify-content-center bg-primary">
+                    <p:commandButton id="a" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!questionStatus.first}"
+                                     actionListener="#{surveyPageEditBean.onMoveQuestion(page, question, -1)}" update="@parent:@parent:@parent" process="@this"/>
+                    <p:commandButton id="b" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!questionStatus.last}"
+                                     action="#{surveyPageEditBean.onMoveQuestion(page, question, 1)}" update="@parent:@parent:@parent" process="@this"/>
+                </div>
+
+                <div class="flex-grow-1 p-3">
+                    <div class="mb-3 ui-fluid">
+                        <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_edit.xhtml">
+                            <ui:param name="question" value="#{question}"/>
+                        </ui:decorate>
+                    </div>
+                    <div class="d-flex flex-nowrap justify-content-end">
+                        <p:commandButton value="#{msg['delete']}" actionListener="#{surveyPageEditBean.onDeleteQuestion(page, question)}" immediate="true" id="c" update="@parent:@parent:@parent" styleClass="ui-button-danger ui-button-flat">
+                            <p:confirm message="#{msg['survey.mod_delete_question_confirmation']}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+            </h:form>
+        </ui:repeat>
+    </h:panelGroup>
+
+    <div class="d-flex flex-nowrap">
+        <p:commandButton form="page${page.id}_edit_form" action="#{surveyPageEditBean.onAddQuestion(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_question']}"
+                         process="@this" immediate="true" update="@parent:questions${page.id}"/>
+        <p:commandButton form="page${page.id}_edit_form" action="#{surveyPageEditBean.onAddHeader(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
+                         process="@this" immediate="true" update="@parent:questions${page.id}"/>
+    </div>
+</div>
+
+</ui:composition>

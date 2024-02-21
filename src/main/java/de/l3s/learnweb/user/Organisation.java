@@ -77,6 +77,7 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
     private int bannerImageFileId;
     private String trackerApiKey;
     private ArrayList<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
+    private OrganisationSettings settings;
 
     public Organisation(int id) {
         this.id = id;
@@ -423,6 +424,14 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
         } else {
             this.glossaryLanguages = glossaryLanguages;
         }
+    }
+
+    public OrganisationSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(final OrganisationSettings settings) {
+        this.settings = settings;
     }
 
     /**

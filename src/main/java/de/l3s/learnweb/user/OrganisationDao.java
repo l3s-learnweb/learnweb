@@ -5,12 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.PreparedBatch;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
-import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
@@ -20,27 +21,69 @@ import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
 
-@RegisterRowMapper(OrganisationDao.OrganisationMapper.class)
 public interface OrganisationDao extends SqlObject, Serializable {
     ICache<Organisation> cache = new Cache<>(10000);
 
     default Optional<Organisation> findById(int organisationId) {
         return Optional.ofNullable(cache.get(organisationId))
-            .or(() -> getHandle().select("SELECT * FROM lw_organisation WHERE organisation_id = ?", organisationId).mapTo(Organisation.class).findOne());
+            .or(() -> getHandle().select("SELECT * FROM lw_organisation WHERE organisation_id = ?", organisationId)
+                .registerRowMapper(new OrganisationMapper())
+                .mapTo(Organisation.class)
+                .map(organisation -> {
+                    organisation.setSettings(loadSettings(organisationId));
+                    return organisation;
+            }).findOne());
     }
 
     default Organisation findByIdOrElseThrow(int organisationId) {
         return findById(organisationId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_group_description"));
     }
 
-    @SqlQuery("SELECT * FROM lw_organisation ORDER BY title")
-    List<Organisation> findAll();
+    default List<Organisation> findAll() {
+        return getHandle().select("SELECT * FROM lw_organisation ORDER BY title")
+            .registerRowMapper(new OrganisationMapper())
+            .mapTo(Organisation.class)
+            .map(organisation -> {
+                if (organisation.getSettings() == null) {
+                    organisation.setSettings(loadSettings(organisation.getId()));
+                }
+                return organisation;
+            }).list();
+    }
 
-    @SqlQuery("SELECT * FROM lw_organisation WHERE title = ?")
-    Optional<Organisation> findByTitle(String title);
+    @SqlQuery("SELECT COUNT(*) FROM lw_organisation WHERE title = ?")
+    int countByTitle(String title);
 
     @SqlQuery("SELECT DISTINCT r.author FROM lw_course c JOIN lw_group g USING(course_id) JOIN lw_resource r ON r.group_id = g.group_id WHERE r.author IS NOT NULL AND c.organisation_id = ?")
     List<String> findAuthors(int organisationId);
+
+    default OrganisationSettings loadSettings(int organisationId) {
+        return getHandle().select("SELECT setting_key, setting_value FROM lw_organisation_settings WHERE organisation_id = ?", organisationId)
+            .reduceResultSet(new OrganisationSettings(), (settings, rs, ctx) -> {
+                Settings key = Settings.valueOf(rs.getString("setting_key"));
+                String value = rs.getString("setting_value");
+
+                if (key.getType() == Integer.class) {
+                    settings.setValue(key, Integer.parseInt(value));
+                } else if (key.getType() == Boolean.class) {
+                    settings.setValue(key, Boolean.parseBoolean(value));
+                } else {
+                    settings.setValue(key, value);
+                }
+                return settings;
+            });
+    }
+
+    default void saveSettings(int organisationId, OrganisationSettings settings) {
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_organisation_settings (organisation_id, setting_key, setting_value) VALUES (?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+
+        for (Map.Entry<Settings, Object> entry : settings.getValues()) {
+            batch.bind(0, organisationId).bind(1, entry.getKey().name()).bind(2, entry.getValue().toString()).add();
+        }
+
+        batch.execute();
+    }
 
     default void save(Organisation organisation) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -63,6 +106,8 @@ public interface OrganisationDao extends SqlObject, Serializable {
 
         Optional<Integer> organisationId = SqlHelper.handleSave(getHandle(), "lw_organisation", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
+
+        saveSettings(organisationId.orElse(organisation.getId()), organisation.getSettings());
 
         if (organisationId.isPresent() && organisationId.get() != 0) {
             organisation.setId(organisationId.get());

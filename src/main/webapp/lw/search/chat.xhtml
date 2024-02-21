@@ -107,10 +107,9 @@
                                                     styleClass="text-secondary small" rendered="#{not empty message.created}"/>
                                     </div>
                                     <lw:outputMarkdown value="#{message.content}" styleClass="mb-3"/>
-                                    <p:commandButton icon="fas fa-clipboard" styleClass="ui-button-flat ui-button-plain" title="Describe single turn response"
-                                                     rendered="#{not empty searchChatBean.feedbackResponseSurveyId}"/>
-                                    <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe multiple turns response"
-                                                     rendered="#{not empty searchChatBean.feedbackResponseSurveyId}"/>
+                                    <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe single turn response"
+                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     rendered="#{not empty searchChatBean.responseSurveyId}"/>
                                     <p:commandButton icon="fas fa-repeat" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
                                                      action="#{searchChatBean.retry}" immediate="true" update="@form"/>
                                 </div>
@@ -131,9 +130,9 @@
                                                     rendered="#{not empty message.created}"/>
                                     </div>
                                     <div class="mb-3">#{message.content}</div>
-                                    <p:commandButton icon="fas fa-clipboard-user" styleClass="ui-button-flat ui-button-plain" title="Describe prompt"
+                                    <p:commandButton icon="fas fa-clipboard" styleClass="ui-button-flat ui-button-plain" title="Describe prompt"
                                                      action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
-                                                     rendered="#{not empty searchChatBean.feedbackPromptSurveyId}"/>
+                                                     rendered="#{not empty searchChatBean.promptSurveyId}"/>
                                 </div>
                             </div>
                         </ui:fragment>

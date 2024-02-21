@@ -12,8 +12,6 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DialogFrameworkOptions;
 
@@ -23,13 +21,13 @@ import de.l3s.interweb.core.completion.Conversation;
 import de.l3s.interweb.core.completion.Message;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.user.Settings;
 
 @Named
 @ViewScoped
 public class SearchChatBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -5707201029228079572L;
-    private static final Logger log = LogManager.getLogger(SearchChatBean.class);
 
     // query params
     private String query = "";
@@ -43,13 +41,15 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     private transient Conversation conversation;
     private transient List<Conversation> conversations;
 
-    private transient Integer feedbackPromptSurveyId;
-    private transient Integer feedbackResponseSurveyId;
+    private transient Integer promptSurveyId;
+    private transient Integer responseSurveyId;
 
     public void onLoad() throws InterwebException {
         BeanAssert.authorized(isLoggedIn());
         BeanAssert.hasPermission(getUser().isModerator() || getUserBean().isSearchChatEnabled());
         interweb = getLearnweb().getInterweb();
+        promptSurveyId = getUser().getOrganisation().getSettings().getIntValue(Settings.chat_feedback_prompt_survey_page_id);
+        responseSurveyId = getUser().getOrganisation().getSettings().getIntValue(Settings.chat_feedback_response_survey_page_id);
 
         newChat();
         if (StringUtils.isNotBlank(query)) {
@@ -131,20 +131,12 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
         return newChat;
     }
 
-    public Integer getFeedbackPromptSurveyId() {
-        return feedbackPromptSurveyId;
+    public Integer getPromptSurveyId() {
+        return promptSurveyId;
     }
 
-    public void setFeedbackPromptSurveyId(final Integer feedbackPromptSurveyId) {
-        this.feedbackPromptSurveyId = feedbackPromptSurveyId;
-    }
-
-    public Integer getFeedbackResponseSurveyId() {
-        return feedbackResponseSurveyId;
-    }
-
-    public void setFeedbackResponseSurveyId(final Integer feedbackResponseSurveyId) {
-        this.feedbackResponseSurveyId = feedbackResponseSurveyId;
+    public Integer getResponseSurveyId() {
+        return responseSurveyId;
     }
 
     public static DialogFrameworkOptions.Builder defaultBuilder() {
@@ -168,7 +160,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
 
     public void showFeedback(Message message) {
         Map<String, List<String>> params = new HashMap<>();
-        params.put("survey_id", List.of(String.valueOf(message.getRole() == Message.Role.user ? feedbackPromptSurveyId : feedbackResponseSurveyId)));
+        params.put("survey_id", List.of(String.valueOf(message.getRole() == Message.Role.user ? promptSurveyId : responseSurveyId)));
         params.put("message_id", List.of(String.valueOf(message.getId())));
 
         PrimeFaces.current().dialog().openDynamic("/dialogs/chat-feedback", defaultOptions(), params);
