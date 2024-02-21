@@ -67,35 +67,27 @@ final class GlossaryDashboardChartsFactory {
             .toJson();
     }
 
-    public static String createUsersSourcesChart(Map<String, Integer> glossarySourcesWithCounters) {
+    public static String createUsersSourcesChart(Map<String, Integer> sourceUsages) {
         List<Integer> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        if (glossarySourcesWithCounters.isEmpty()) {
+        if (sourceUsages.isEmpty()) {
             labels.add("");
             values.add(0);
         } else {
-            for (Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet()) {
-
+            for (Map.Entry<String, Integer> source : sourceUsages.entrySet()) {
                 labels.add(source.getKey());
                 values.add(source.getValue());
             }
         }
 
-        return new FixedPieChart()
+        return new PieChart()
             .setData(new PieData()
                 .setLabels(labels)
                 .addDataset(new PieDataset()
                     .setDataUnchecked(values)
                     .setBackgroundColor(ColorHelper.getColorList(20))))
             .toJson();
-    }
-
-    private static final class FixedPieChart extends PieChart {
-        @Override
-        public boolean isDrawable() {
-            return true;
-        }
     }
 
     public static String createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate) {

@@ -31,7 +31,10 @@ import software.xdev.chartjs.model.data.BarData;
 import software.xdev.chartjs.model.datapoint.XYDataPoint;
 import software.xdev.chartjs.model.dataset.BarDataset;
 import software.xdev.chartjs.model.options.BarOptions;
+import software.xdev.chartjs.model.options.Legend;
 import software.xdev.chartjs.model.options.Plugins;
+import software.xdev.chartjs.model.options.Title;
+import software.xdev.chartjs.model.options.Tooltip;
 
 @Named
 @ViewScoped
@@ -62,7 +65,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
             try {
                 final ArchiveUrlManager manager = Beans.getInstance(ArchiveUrlManager.class);
                 Boolean response = manager.addResourceToArchive(resource);
-                if (response) {
+                if (Boolean.TRUE.equals(response)) {
                     addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
                 } else {
                     addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
@@ -93,7 +96,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
 
     public String getArchiveTimelineModel() {
         if (timelineModel == null) {
-            timelineModel = new FixedBarChart()
+            timelineModel = new BarChart()
                 .setData(new BarData()
                     .addDataset(new BarDataset()
                         .setLabel(getLocaleMessage("archive.timeline_series_name"))
@@ -101,24 +104,17 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
                         .setBackgroundColor(new Color(74, 163, 130))))
                 .setOptions(new BarOptions()
                     .setPlugins(new Plugins()
-                        .setTitle(new software.xdev.chartjs.model.options.Title()
+                        .setTitle(new Title()
                             .setDisplay(true)
                             .setText(getLocaleMessage("archive.timeline_click_zoom")))
-                        .setTooltip(new software.xdev.chartjs.model.options.Tooltip()
+                        .setTooltip(new Tooltip()
                             .setMode("index"))
-                        .setLegend(new software.xdev.chartjs.model.options.Legend()
+                        .setLegend(new Legend()
                             .setDisplay(false))))
-                .toJson();
+                .toJsonNative();
         }
 
         return timelineModel;
-    }
-
-    private static final class FixedBarChart extends BarChart {
-        @Override
-        public boolean isDrawable() {
-            return true;
-        }
     }
 
     private ArrayList<XYDataPoint> getTimelineData() {
