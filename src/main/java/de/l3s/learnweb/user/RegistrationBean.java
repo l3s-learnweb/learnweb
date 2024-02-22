@@ -195,7 +195,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (user.getEmail() != null) {
             try {
-                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.md5(user.getEmail()));
+                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.sha256(user.getEmail()));
 
                 if (gravatar != null) {
                     File file = new File(File.FileType.PROFILE_PICTURE, gravatar.getLeft(), gravatar.getMiddle());

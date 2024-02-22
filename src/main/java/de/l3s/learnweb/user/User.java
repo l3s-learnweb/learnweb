@@ -38,7 +38,6 @@ import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
-import de.l3s.util.HashHelper;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.ProfileImageHelper;
 import de.l3s.util.StringHelper;
@@ -497,7 +496,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public boolean validatePassword(String password) {
         if (hashing == PasswordHashing.MD5) {
-            return this.password.equals(HashHelper.md5(password));
+            throw new IllegalStateException("MD5 hashing is not supported anymore");
         } else if (hashing == PasswordHashing.PBKDF2) {
             return PBKDF2.validatePassword(password, this.password);
         }

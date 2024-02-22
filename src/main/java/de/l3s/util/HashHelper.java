@@ -13,23 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 public final class HashHelper {
 
     /**
-     * Don't use it! :/
-     *
-     * @return 32 characters string
-     */
-    public static String md5(String value) {
-        try {
-            if (StringUtils.isNotEmpty(value)) {
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                byte[] bytes = md.digest(value.getBytes(StandardCharsets.UTF_8));
-                return String.format("%032x", new BigInteger(1, bytes));
-            }
-        } catch (NoSuchAlgorithmException ignore) {
-        }
-        return null;
-    }
-
-    /**
      * @return 64 characters string
      */
     public static String sha256(String value) {

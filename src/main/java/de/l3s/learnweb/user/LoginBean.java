@@ -107,7 +107,13 @@ public class LoginBean extends ApplicationBean implements Serializable {
         BeanAssert.hasPermission(!requestManager.isBanned(username), "username_banned");
 
         // USER AUTHORIZATION HAPPENS HERE
-        final Optional<User> userOptional = userDao.findByUsernameAndPassword(username, password);
+        Optional<User> userOptional;
+        try {
+            userOptional = userDao.findByUsernameAndPassword(username, password);
+        } catch (IllegalStateException e) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "Your password used to be hashed with an old algorithm. Please reset your password.");
+            return "/lw/user/password.xhtml?faces-redirect=true";
+        }
 
         if (userOptional.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
@@ -167,7 +173,6 @@ public class LoginBean extends ApplicationBean implements Serializable {
     public static String loginUser(ApplicationBean bean, User user) {
         UserBean userBean = bean.getUserBean();
         userBean.setUser(user); // logs the user in
-        // addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
         user.updateLoginDate(); // the last login date has to be updated before we log a new login event
 

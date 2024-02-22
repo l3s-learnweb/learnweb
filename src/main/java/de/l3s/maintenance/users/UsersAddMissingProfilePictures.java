@@ -3,6 +3,7 @@ package de.l3s.maintenance.users;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 
@@ -39,7 +40,7 @@ public class UsersAddMissingProfilePictures extends MaintenanceTask {
             if (user.getImageFileId() == 0 && user.getEmail() != null) {
                 log.debug("Update user: {}", user);
 
-                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.md5(user.getEmail()));
+                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.sha512(user.getEmail()));
 
                 if (gravatar != null) {
                     File file = new File(File.FileType.PROFILE_PICTURE, gravatar.getLeft(), gravatar.getMiddle());
@@ -58,8 +59,8 @@ public class UsersAddMissingProfilePictures extends MaintenanceTask {
     private void deleteMissingAvatars() {
         List<User> users = userDao.findAll();
         for (User user : users) {
-            File file = fileDao.findById(user.getImageFileId(), true).get();
-            if (null != file && !file.isExists()) {
+            Optional<File> file = fileDao.findById(user.getImageFileId(), true);
+            if (file.isPresent() && !file.get().isExists()) {
                 log.debug("Image file {} of user {} doesn't exist", file, user);
                 /*
                 fileDao.deleteHard(file);
