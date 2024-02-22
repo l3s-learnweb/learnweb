@@ -32,7 +32,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 .map(organisation -> {
                     organisation.setSettings(loadSettings(organisationId));
                     return organisation;
-            }).findOne());
+                }).findOne());
     }
 
     default Organisation findByIdOrElseThrow(int organisationId) {
