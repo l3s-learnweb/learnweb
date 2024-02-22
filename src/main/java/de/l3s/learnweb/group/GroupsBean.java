@@ -19,8 +19,6 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.Course;
-import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -35,7 +33,6 @@ public class GroupsBean extends ApplicationBean implements Serializable {
     private transient Group selectedGroup;
 
     private transient Group newGroup;
-    private transient List<Course> editAbleCourses; // courses to which the user can add groups to
 
     @Inject
     private GroupDao groupDao;
@@ -48,8 +45,6 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         joinAbleGroups = groupDao.findJoinAble(getUser());
         myGroups = user.getGroups();
         newGroup = new Group();
-
-        editAbleCourses = user.getCourses().stream().filter(course -> !course.getOption(Option.Groups_Only_moderators_can_create_groups)).toList();
     }
 
     public void joinGroup() {
@@ -162,9 +157,5 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
     public void setSelectedGroup(Group selectedGroup) {
         this.selectedGroup = selectedGroup;
-    }
-
-    public List<Course> getEditAbleCourses() {
-        return editAbleCourses;
     }
 }
