@@ -106,7 +106,7 @@
 				<h:panelGroup id="relevance" layout="block">
 					<p:rating id="star" value="#{resourceDetailBean.ratingValues['star']}" cancel="false" immediate="true"
 							  readonly="${not empty resourceDetailBean.ratingValues['star'] or not res.canAnnotateResource(userBean.user)}">
-						<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update=":relevance"/>
+						<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="@parent"/>
 					</p:rating>
 
 					<h:outputText value="#{res.getRatingAvg('star')}">

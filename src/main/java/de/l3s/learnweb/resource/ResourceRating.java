@@ -11,7 +11,7 @@ public class ResourceRating implements Serializable {
     private final String type;
     private final HashMap<Integer, Integer> userRates = new HashMap<>();
 
-    private transient float average = -1.0f;
+    private transient float average = Float.NaN;
 
     public ResourceRating(String type) {
         this.type = type;
@@ -42,7 +42,7 @@ public class ResourceRating implements Serializable {
     }
 
     public float average() {
-        if (average < 0) {
+        if (Float.isNaN(average) && !userRates.isEmpty()) {
             int sum = 0;
             for (Integer rating : userRates.values()) {
                 sum += rating;
