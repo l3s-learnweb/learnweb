@@ -3,6 +3,8 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,14 +77,33 @@ public interface OrganisationDao extends SqlObject, Serializable {
     }
 
     default void saveSettings(int organisationId, OrganisationSettings settings) {
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_organisation_settings (organisation_id, setting_key, setting_value) VALUES (?, ?, ?) "
-            + "ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+        final EnumMap<Settings, String> updated = new EnumMap<>(Settings.class);
+        final EnumSet<Settings> deleted = EnumSet.noneOf(Settings.class);
 
         for (Map.Entry<Settings, Object> entry : settings.getValues()) {
-            batch.bind(0, organisationId).bind(1, entry.getKey().name()).bind(2, entry.getValue().toString()).add();
+            if (entry.getValue() == null) {
+                deleted.add(entry.getKey());
+            } else {
+                updated.put(entry.getKey(), entry.getValue().toString());
+            }
         }
 
-        batch.execute();
+        if (!updated.isEmpty()) {
+            PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_organisation_settings (organisation_id, setting_key, setting_value) VALUES (?, ?, ?) "
+                + "ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+            for (Map.Entry<Settings, String> entry : updated.entrySet()) {
+                batch.bind(0, organisationId).bind(1, entry.getKey().name()).bind(2, entry.getValue()).add();
+            }
+            batch.execute();
+        }
+
+        if (!deleted.isEmpty()) {
+            PreparedBatch batch = getHandle().prepareBatch("DELETE FROM lw_organisation_settings WHERE organisation_id = ? AND setting_key = ?");
+            for (Settings entry : deleted) {
+                batch.bind(0, organisationId).bind(1, entry.name()).add();
+            }
+            batch.execute();
+        }
     }
 
     default void save(Organisation organisation) {
