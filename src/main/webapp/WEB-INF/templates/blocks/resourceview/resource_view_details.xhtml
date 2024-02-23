@@ -13,7 +13,7 @@
 <div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
 	<h5 class="mb-0">#{msg.info}</h5>
 	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
-					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
+					 action="#{resourceDetailBean.editResource}" immediate="true" update="resourceDetails" form="resourceViewForm"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
 					 rendered="#{userBean.editingAllowed and resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 </div>
@@ -122,11 +122,11 @@
 			<dd class="col-sm-8">
 				<h:panelGrid id="reliability" columns="4">
 					<h:outputText value="+${res.getRating('thumb').countRates(1)}"/>
-					<p:commandLink action="#{resourceDetailBean.onThumbUp}" update=":reliability" ariaLabel="Rate thump up" process="@this">
+					<p:commandLink action="#{resourceDetailBean.onThumbUp}" update="@parent" ariaLabel="Rate thump up" process="@this">
 						<i class="fas fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 					</p:commandLink>
 
-					<p:commandLink action="#{resourceDetailBean.onThumbDown}" update=":reliability" ariaLabel="Rate thump down" process="@this">
+					<p:commandLink action="#{resourceDetailBean.onThumbDown}" update="@parent" ariaLabel="Rate thump down" process="@this">
 						<i class="fas fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 					</p:commandLink>
 					<h:outputText value="-${res.getRating('thumb').countRates(-1)}"/>
@@ -295,7 +295,7 @@
 						<f:param name="query" value="#{tag.name}"/>
 					</p:linkButton>
 					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="ui-button-secondary rounded-0"
-									 update=":tags_list" process="@this"
+									 update="tags_list" process="@this"
 									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 									 rendered="#{res.canEditResource(userBean.user)}"/>
 				</li>
@@ -310,9 +310,8 @@
 		</div>
 
 		<div class="ps-1">
-			<p:commandButton id="tag_text_btn" action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
-							 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-			</p:commandButton>
+			<p:commandButton id="tag_text_btn" action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process="tag_text_input"
+							 update="tag_text_input tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
 		</div>
 	</h:panelGroup>
 </h:panelGroup>
@@ -328,9 +327,8 @@
 		</div>
 
 		<div class="d-flex justify-content-end">
-			<p:commandButton id="comment_text_btn" value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update=":comments_list :comment_text_input"
-							 process=":comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-			</p:commandButton>
+			<p:commandButton id="comment_text_btn" value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update="comments_list comment_text_input"
+							 process="comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
 		</div>
 	</h:panelGroup>
 	<h:panelGroup layout="block" id="comments_list">
@@ -354,7 +352,7 @@
 					<h:panelGroup id="editCommentControls" styleClass="small" layout="block" rendered="#{resourceDetailBean.canEditComment(comment)}">
 						<p:commandLink id="editComment" value="#{msg.edit}" styleClass="text-success me-2" onclick="startEditComment(this);return false;"/>
 						<p:commandLink id="deleteComment" value="#{msg.delete}" styleClass="text-danger" ajax="true" action="#{resourceDetailBean.onDeleteComment(comment)}"
-									   update=":comments_list" process="@this" onstart="PF('detailsOverlay').show();"
+									   update="comments_list" process="@this" onstart="PF('detailsOverlay').show();"
 									   oncomplete="PF('detailsOverlay').hide();">
 							<p:confirm message="#{msg.delete_message_comments}"/>
 						</p:commandLink>
