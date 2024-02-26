@@ -21,7 +21,7 @@
         <maven.dependency.imageio.version>3.10.1</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.45.0</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>10.8.1</maven.dependency.flyway.version>
-        <maven.dependency.log4j.version>2.22.1</maven.dependency.log4j.version>
+        <maven.dependency.log4j.version>2.23.0</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>7.4.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.10.0</maven.dependency.mockito.version>
