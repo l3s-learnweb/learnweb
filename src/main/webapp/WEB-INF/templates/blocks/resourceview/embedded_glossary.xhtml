@@ -204,7 +204,7 @@
             <div faces:id="edit_pictures" class="col-12 col-md-6">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5>Pictures</h5>
-                    <p:fileUpload listener="#{glossaryBean.handleFileUpload}" mode="simple" skinSimple="true" multiple="true" auto="true" update=":edit_pictures"/>
+                    <p:fileUpload listener="#{glossaryBean.handleFileUpload}" mode="simple" skinSimple="true" multiple="true" auto="true" update="@parent"/>
                 </div>
 
                 <p:carousel value="#{glossaryBean.formEntry.pictures}" var="pic" rendered="#{not empty glossaryBean.formEntry.pictures}"
@@ -212,7 +212,7 @@
                     <div class="d-flex flex-column align-items-center">
                         <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-50 rounded" alt="entry picture"/>
 
-                        <p:commandLink action="#{glossaryBean.handleDeletePicture(pic)}" title="#{msg.delete}" update=":edit_pictures" process="@this">
+                        <p:commandLink action="#{glossaryBean.handleDeletePicture(pic)}" title="#{msg.delete}" update="edit_pictures" process="@this">
                             <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                         </p:commandLink>
                     </div>
