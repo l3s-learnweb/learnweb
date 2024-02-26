@@ -73,14 +73,14 @@
         <h:form id="create_group_form">
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" label="#{msg.title}"/>
+                <p:inputText value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}"/>
                 <p:message for="@previous"/>
             </div>
 
             <ui:fragment rendered="#{not empty userBean.user.courses}">
                 <div class="field">
                     <p:outputLabel for="@next" value="#{msg.course}:"/>
-                    <p:selectOneMenu value="#{groupsBean.newGroup.courseId}" required="true" label="#{msg.course}">
+                    <p:selectOneMenu value="#{groupsBean.newGroup.courseId}" required="true">
                         <f:selectItems value="#{userBean.user.courses}" var="c" itemLabel="#{c.title}" itemValue="#{c.id}"/>
                     </p:selectOneMenu>
                     <p:message for="@previous"/>
@@ -89,7 +89,7 @@
 
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.description}:"/>
-                <p:textEditor widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" label="#{msg.description}" height="200px">
+                <p:textEditor widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" height="200px">
                     <f:facet name="toolbar">
                         <span class="ql-formats">
                             <button class="ql-bold"></button>

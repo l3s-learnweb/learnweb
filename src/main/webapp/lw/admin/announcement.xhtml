@@ -32,14 +32,13 @@
 		<p:panel>
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
-				<p:inputText value="#{adminAnnouncementBean.announcement.title}" label="#{msg.title}"/>
+				<p:inputText value="#{adminAnnouncementBean.announcement.title}"/>
 				<p:message for="@previous"/>
 			</div>
 
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.date}:"/>
-				<p:datePicker value="#{adminAnnouncementBean.announcement.createdAt}" label="#{msg.date}"
-							  pattern="dd.MM.yyyy" showIcon="true"/>
+				<p:datePicker value="#{adminAnnouncementBean.announcement.createdAt}" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 

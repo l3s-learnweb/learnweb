@@ -42,7 +42,7 @@
 		<h:form id="registerForm" rendered="#{not userBean.loggedIn}" prependId="false">
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.username}:"/>
-				<p:inputText value="#{registrationBean.username}" label="#{msg.username}" required="true" validator="#{registrationBean.validateUsername}">
+				<p:inputText value="#{registrationBean.username}" required="true" validator="#{registrationBean.validateUsername}">
                     <p:ajax update="@next" />
                 </p:inputText>
 				<p:message for="@previous"/>
@@ -50,7 +50,7 @@
 
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.password}:"/>
-				<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" feedback="true"
+				<p:password id="password" value="#{registrationBean.password}" autocomplete="false" feedback="true"
 							match="repeated_password" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
 							goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}" />
 				<p:message for="@previous"/>
@@ -58,25 +58,25 @@
 
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.confirm_password}:"/>
-				<p:password id="repeated_password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.confirm_password}"/>
+				<p:password id="repeated_password" value="#{registrationBean.password}" autocomplete="false"/>
 				<p:message for="@previous"/>
 			</div>
 
 			<h:panelGroup class="field mw-r25" rendered="#{registrationBean.affiliationRequired}">
 				<p:outputLabel for="@next" value="#{msg.university}"/>
-				<p:inputText value="#{registrationBean.affiliation}" label="#{msg.university}" required="true"/>
+				<p:inputText value="#{registrationBean.affiliation}" required="true"/>
 				<p:message for="@previous"/>
 			</h:panelGroup>
 
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.email_address}:"/>
-				<p:inputText value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" validator="emailValidator"/>
+				<p:inputText value="#{registrationBean.email}" required="#{registrationBean.mailRequired}" validator="emailValidator"/>
 				<p:message for="@previous"/>
 			</div>
 
 			<h:panelGroup class="field mw-r25" rendered="#{registrationBean.studentIdRequired}">
-				<p:outputLabel for="@next" value="#{msg.student_id}"/>
-				<p:inputText value="#{registrationBean.studentId}" label="#{msg.student_id}:"/>
+				<p:outputLabel for="@next" value="#{msg.student_id}:"/>
+				<p:inputText value="#{registrationBean.studentId}"/>
 				<p:message for="@previous"/>
 			</h:panelGroup>
 

@@ -142,7 +142,7 @@
             <ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">
                 <div class="field">
                     <p:outputLabel for="@next" value="#{msg.category}:"/>
-                    <p:selectOneMenu id="post_category" value="#{forumTopicBean.dialogPost.category}" editable="true" label="#{msg.category}"
+                    <p:selectOneMenu id="post_category" value="#{forumTopicBean.dialogPost.category}" editable="true"
                                      required="#{forumTopicBean.group.restrictionForumCategoryRequired}">
                         <f:selectItems value="#{forumTopicBean.categories}"/>
                     </p:selectOneMenu>
