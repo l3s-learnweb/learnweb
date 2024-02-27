@@ -50,7 +50,6 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js'},
                 {from: 'node_modules/shepherd.js/dist/js/shepherd.min.js'},
-                {from: 'node_modules/justifiedGallery/dist/js/jquery.justifiedGallery.min.js'},
             ],
         }),
     ],

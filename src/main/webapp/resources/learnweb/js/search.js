@@ -102,14 +102,17 @@ function loadNextPage() {
 
 // noinspection JSUnusedGlobalSymbols
 function displayNextPage(xhr, status) {
-  const totalResults = $('#searchResults .search-item');
-  const newResults = $('#searchResultsNext .search-item');
+  const currentWrapper = $(PrimeFaces.escapeClientId('search_results:current'));
+  const nextWrapper = $(PrimeFaces.escapeClientId('search_results:next'));
+
+  const currentResults = $('.search-item', currentWrapper);
+  const newResults = $('.search-item', nextWrapper);
   $('#search_loading_more_results').hide();
 
   if (newResults.length === 0 || status !== 'success') {
     if (status !== 'success') console.error('Error on requesting more resources:', status);
 
-    if (totalResults.length > 0) {
+    if (currentResults.length > 0) {
       $('#search_no_more_results').show();
     } else {
       $('#search_nothing_found').show();
@@ -119,8 +122,8 @@ function displayNextPage(xhr, status) {
     return;
   }
 
-  // copy from #searchResultsNext to #searchResults
-  $('#searchResultsNext > *').appendTo('#searchResults');
+  // copy from #next to #current
+  currentWrapper.append(newResults);
 
   prepareNewResources();
   testIfResultsFillPage();
@@ -135,7 +138,7 @@ $(() => {
   });
 
   // To keep track of resource click in the web search or resources_list view
-  $(document).on('mouseup', '#searchResults .search-item', (e) => {
+  $(document).on('mouseup', PrimeFaces.escapeClientId('search_results:current .search-item'), (e) => {
     const tempResourceId = $(e.currentTarget).attr('id').substring(9);
     commandOnResourceClick([{ name: 'resourceId', value: tempResourceId }]);
   });

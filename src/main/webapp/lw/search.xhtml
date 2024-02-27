@@ -24,8 +24,8 @@
     <h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
     <h:outputScript name="learnweb/js/search.js" target="body"/>
 
-    <h:form class="d-none">
-        <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":searchResultsNext" immediate="true"
+    <h:form class="d-none" id="search_commands">
+        <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":search_results:next" immediate="true"
                          onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
         <p:remoteCommand name="commandOnResourceClick" actionListener="${searchBean.commandOnResourceClick}" immediate="true" async="true"/>
         <p:remoteCommand name="commandGetResourceDetails" actionListener="${searchBean.commandGetResourceDetails}" immediate="true"
@@ -178,15 +178,15 @@
             const userId = '#{userBean.user.id}';
         </h:outputScript>
 
-        <h:form prependId="false">
-            <div id="searchResults" class="p-2 search-#{searchBean.view} guide-search-results">
+        <h:form id="search_results">
+            <div faces:id="current" class="p-2 search-#{searchBean.view} guide-search-results">
                 <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                     <ui:param name="view" value="#{searchBean.view}"/>
                     <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 </ui:decorate>
             </div>
 
-            <h:panelGroup id="searchResultsNext" layout="block" styleClass="d-none">
+            <h:panelGroup id="next" layout="block" styleClass="d-none">
                 <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                     <ui:param name="view" value="#{searchBean.view}"/>
                     <ui:param name="resources" value="#{searchBean.nextPage}"/>
