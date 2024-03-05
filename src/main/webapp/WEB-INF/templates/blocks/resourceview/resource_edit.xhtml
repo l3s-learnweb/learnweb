@@ -54,14 +54,14 @@
     <p:defaultCommand target="saveResourceButton"/>
     <div class="me-auto">
         <p:commandButton styleClass="ui-button-warning" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
-                         update=":resourceDetails" immediate="true" rendered="#{userBean.admin}"
+                         update="resourceDetails" immediate="true" rendered="#{userBean.admin}"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
     </div>
     <div>
         <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" action="#{resourceDetailBean.cancelEdit}"
-                         update=":resourceDetails" immediate="true"
+                         update="resourceDetails" immediate="true"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
-        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceDetails" process="@form"
+        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update="resourceDetails" process="@form"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
     </div>
 </div>
