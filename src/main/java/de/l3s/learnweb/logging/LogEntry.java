@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -22,7 +21,6 @@ import de.l3s.util.StringHelper;
 public class LogEntry implements Serializable {
     @Serial
     private static final long serialVersionUID = -4239479233091966928L;
-    //private static final Logger log = LogManager.getLogger(LogEntry.class);
 
     private final int userId;
     private final Action action;
@@ -35,7 +33,7 @@ public class LogEntry implements Serializable {
     private transient Optional<Resource> resource;
     private transient User user;
     private transient Group group;
-    private Map<Locale, String> descriptions; // stores a description of this entry for different locales
+    private HashMap<Locale, String> descriptions; // stores a description of this entry for different locales
 
     public LogEntry(int userId, Action action, LocalDateTime date, String params, int groupId, int targetId) {
         this.userId = userId;
@@ -113,7 +111,7 @@ public class LogEntry implements Serializable {
         if (getUser() == null || getUser().isDeleted()) {
             return "<b>Deleted user</b>";
         }
-        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
+        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getDisplayName() + "</a>";
     }
 
     private String getCommentText(int commentId, ResourceBundle bundle) {

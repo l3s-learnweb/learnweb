@@ -15,7 +15,7 @@ import de.l3s.learnweb.resource.search.solrClient.ResourceDocument;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.maintenance.MaintenanceTask;
 
-public class ReindexResources extends MaintenanceTask {
+public final class ReindexResources extends MaintenanceTask {
 
     private final ResourceDao resourceDao;
     private final SolrClient solrClient;

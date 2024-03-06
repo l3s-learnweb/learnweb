@@ -226,8 +226,8 @@ public class DownloadServlet extends HttpServlet {
             } else if (ranges.size() == 1) {
                 // Return single part of file.
                 response.setContentType(contentType);
-                response.setHeader("Content-Range", "bytes " + ranges.get(0).start + "-" + ranges.get(0).end + "/" + ranges.get(0).total);
-                response.setHeader("Content-Length", String.valueOf(ranges.get(0).length));
+                response.setHeader("Content-Range", "bytes " + ranges.getFirst().start + "-" + ranges.getFirst().end + "/" + ranges.getFirst().total);
+                response.setHeader("Content-Length", String.valueOf(ranges.getFirst().length));
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
             } else {
                 // Return multiple parts of file.
@@ -253,7 +253,7 @@ public class DownloadServlet extends HttpServlet {
                 copyFullRange(input, output);
             } else if (ranges.size() == 1) {
                 // Copy single part range.
-                copyPartRange(input, output, ranges.get(0).start, ranges.get(0).length);
+                copyPartRange(input, output, ranges.getFirst().start, ranges.getFirst().length);
             } else {
                 // Copy multi part range.
                 for (Range r : ranges) {

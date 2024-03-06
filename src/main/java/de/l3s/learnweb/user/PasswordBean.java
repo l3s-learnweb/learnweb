@@ -3,7 +3,9 @@ package de.l3s.learnweb.user;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
@@ -24,16 +26,22 @@ import de.l3s.util.HashHelper;
 public class PasswordBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 2237249691336567548L;
-    //private static final Logger log = LogManager.getLogger(PasswordBean.class);
 
-    private String email;
+    private String identifier; // email or username
 
     @Inject
     private TokenDao tokenDao;
 
-    public void onGetPassword() {
+    public void submit() {
         try {
-            List<User> users = tokenDao.getUserDao().findByEmail(email);
+            List<User> users = new ArrayList<>();
+            if (identifier != null && identifier.contains("@")) {
+                List<User> foundUsers = tokenDao.getUserDao().findByEmail(identifier);
+                users.addAll(foundUsers);
+            } else if (identifier != null) {
+                Optional<User> foundUser = tokenDao.getUserDao().findByUsername(identifier);
+                foundUser.ifPresent(users::add);
+            }
 
             String url = config().getServerUrl() + "/lw/user/change_password.jsf?token=";
             for (User user : users) {
@@ -41,8 +49,8 @@ public class PasswordBean extends ApplicationBean implements Serializable {
                 int tokenId = tokenDao.insert(user.getId(), Token.TokenType.PASSWORD_RESET, HashHelper.sha256(token), LocalDateTime.now().plusDays(1));
                 String link = url + tokenId + ":" + token;
 
-                Mail mail = MailFactory.buildPasswordChangeEmail(user.getRealUsername(), link).build(user.getLocale());
-                mail.setRecipient(this.email);
+                Mail mail = MailFactory.buildPasswordChangeEmail(user.getUsername(), link).build(user.getLocale());
+                mail.setRecipient(this.identifier);
                 mail.send();
             }
 
@@ -52,11 +60,11 @@ public class PasswordBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public String getEmail() {
-        return email;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

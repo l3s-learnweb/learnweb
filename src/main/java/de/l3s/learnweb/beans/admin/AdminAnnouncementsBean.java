@@ -19,9 +19,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class AdminAnnouncementsBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -5638619427036990427L;
-    // private static final Logger log = LogManager.getLogger(AdminAnnouncementsBean.class);
 
-    private List<Announcement> announcements;
+    private transient List<Announcement> announcements;
 
     @Inject
     private AnnouncementDao announcementDao;
@@ -39,7 +38,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
 
     public void onSave(Announcement announcement) {
         announcementDao.save(announcement);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public List<Announcement> getAnnouncements() {

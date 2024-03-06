@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class ProfileImageHelperTest {
 
     @Test
-    @Disabled("Remote host terminated the handshake on GitLab :(")
+    @Disabled("Remote HTTP requests should be disabled on CI")
     void getGravatarAvatar() {
         ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar("205e460b479e2e5b48aec07710c08d50");
 
@@ -22,7 +22,7 @@ class ProfileImageHelperTest {
     }
 
     @Test
-    @Disabled("Remote host terminated the handshake on GitLab :(")
+    @Disabled("Remote HTTP requests should be disabled on CI")
     void getGravatarAvatarMissing() {
         ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar("00000000000000000000000000000000");
 
@@ -31,13 +31,13 @@ class ProfileImageHelperTest {
 
     @Test
     void getProfilePicture() {
-        assertEquals("#514A9D", ProfileImageHelper.getColorForProfilePicture("Hello"));
+        assertEquals("rgba(81,74,157,1.000)", ProfileImageHelper.getColorForProfilePicture("Hello"));
     }
 
     @Test
     void getColorForProfilePicture() {
-        assertEquals("#8f3b4f", ProfileImageHelper.getColorForProfilePicture("Hello World"));
-        assertEquals("#4a505d", ProfileImageHelper.getColorForProfilePicture("HW"));
+        assertEquals("rgba(143,59,79,1.000)", ProfileImageHelper.getColorForProfilePicture("Hello World"));
+        assertEquals("rgba(74,80,93,1.000)", ProfileImageHelper.getColorForProfilePicture("HW"));
     }
 
     @Test

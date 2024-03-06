@@ -13,7 +13,7 @@ public class HistoryInfo {
         this.history = history;
 
         if (history != null && !history.isEmpty()) {
-            this.currentVersion = history.get(history.size() - 1).getVersion();
+            this.currentVersion = history.getLast().getVersion();
         } else {
             this.currentVersion = 0;
         }

@@ -102,7 +102,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 randomPool.add(courseDao.findByIdOrElseThrow(1630));
 
                 Collections.shuffle(randomPool);
-                course = randomPool.get(0);
+                course = randomPool.getFirst();
             }
         } else {
             List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
@@ -110,7 +110,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 throw BeanAssert.NOT_FOUND.get();
             }
 
-            course = publicCourses.get(0);
+            course = publicCourses.getFirst();
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning", config().getAppName());
         }
 
@@ -195,7 +195,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (user.getEmail() != null) {
             try {
-                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.md5(user.getEmail()));
+                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.sha256(user.getEmail()));
 
                 if (gravatar != null) {
                     File file = new File(File.FileType.PROFILE_PICTURE, gravatar.getLeft(), gravatar.getMiddle());
@@ -347,6 +347,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public void setTimeZone(final String preferredTimeZone) {
-        this.timeZone = preferredTimeZone.replaceAll("\"", "");
+        this.timeZone = preferredTimeZone.replace("\"", "");
     }
 }

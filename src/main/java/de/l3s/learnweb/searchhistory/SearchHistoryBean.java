@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.event.AjaxBehaviorEvent;
@@ -38,7 +37,6 @@ import de.l3s.learnweb.user.UserDao;
 public class SearchHistoryBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -7682314831788865416L;
-    //private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
 
     private int selectedUserId;
     private int selectedGroupId;
@@ -197,7 +195,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
                 return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.query(), finalQuery));
 
-            }).collect(Collectors.toList());
+            }).toList();
         }
     }
 

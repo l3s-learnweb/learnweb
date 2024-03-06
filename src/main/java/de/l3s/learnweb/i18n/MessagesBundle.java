@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
-public class MessagesBundle extends ResourceBundle {
+public final class MessagesBundle extends ResourceBundle {
     private static final Logger log = LogManager.getLogger(MessagesBundle.class);
     private static final ResourceBundle.Control control = new DynamicControl();
     private static final ConcurrentHashMap<Locale, ResourceBundle> cache = new ConcurrentHashMap<>();

@@ -1,4 +1,3 @@
-/* global Pickr */
 /* global commandSaveLog, commandSubmitResource, commandSaveResource, commandSetSynonyms */
 /* global noteId:writable, readOnly */
 
@@ -6,7 +5,6 @@
 let isEditAnnotation = false;
 let selectedNodeId;
 let tags = {};
-const deleteSelectionText = document.getElementById('delete_selection').innerHTML;
 
 function saveTranscriptAction(word, annotation, action) {
   commandSaveLog([
@@ -42,7 +40,7 @@ $(() => {
     $(document).on('click', '.tran-note', (e) => {
       const $this = $(e.currentTarget);
       // eslint-disable-next-line no-alert
-      if (window.confirm(`${deleteSelectionText}(${this.text()})?`)) {
+      if (window.confirm(`${PrimeFaces.getLocaleLabel('transcriptDeleteSelection')} (${this.text()})?`)) {
         saveTranscriptAction($this.text(), $this.attr('data-title'), 'deselection');
         delete tags[$this.attr('id')];
         updateTagList();
@@ -92,8 +90,6 @@ $(() => {
   $('.transcript-container').on('mouseleave', () => {
     deleteSelection();
   });
-
-  if (!readOnly) initializeJQueryContextMenu();
 
   // initializeResizableDiv();
   $('#selectable').selectable({
@@ -153,95 +149,50 @@ function updateTagList() {
   });
 }
 
-function initializeJQueryContextMenu() {
-  const $contextmenuItems = $(document.getElementById('contextmenu_items'));
-  // check if container is selectable
-  if (!$contextmenuItems) return;
+let activeNote = null;
 
-  $.contextMenu({
-    selector: '.tran-note',
-    build() {
-      const items = {};
-      $('li', $contextmenuItems).each((i, el) => {
-        const name = el.textContent;
-        const { action } = el.dataset;
-        items[name.toLowerCase()] = {
-          name,
-          action,
-          icon: el.dataset.icon,
-          className: el.dataset.class,
-          disabled() {
-            if (this.attr('data-title') && action === 'add-annotation') return true;
-            if (!this.attr('data-title') && (action === 'edit-annotation' || action === 'delete-annotation')) return true;
-            return this.attr('data-content') && action === 'add-wordnet-definition';
-          },
-        };
-      });
-      return {
-        callback(itemKey, opt) {
-          const item = opt.items[itemKey];
-          doAction(item, this);
-        },
-        items,
-      };
-    },
-  });
+function shouldHideMenuItem(item, note) {
+  switch (item.dataset.action) {
+    case 'add':
+      return note.dataset.title;
+    case 'edit':
+    case 'clear':
+      return !note.dataset.title;
+    case 'define':
+      return note.dataset.content;
+    default:
+      return false;
+  }
 }
 
-const pickrConfig = {
-  theme: 'nano',
-  lockOpacity: true,
-  useAsButton: true,
-  defaultRepresentation: 'HEX',
-
-  swatches: [
-    '#000000', '#434343', '#666666', '#b7b7b7', '#cccccc', '#efefef', '#ffffff',
-    '#ff0000', '#ff9900', '#ffff00', '#00ff00', '#0000ff', '#9900ff', '#ff00ff',
-    '#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#cfe2f3', '#d9d2e9', '#ead1dc',
-    '#ea9999', '#f9cb9c', '#ffe599', '#b6d7a8', '#9fc5e8', '#b4a7d6', '#d5a6bd',
-    '#e06666', '#f6b26b', '#ffd966', '#93c47d', '#6fa8dc', '#8e7cc3', '#c27ba0',
-    '#cc0000', '#e69138', '#f1c232', '#6aa84f', '#3d85c6', '#674ea7', '#a64d79',
-    '#990000', '#b45f06', '#bf9000', '#38761d', '#0b5394', '#351c75', '#741b47',
-    '#660000', '#783f04', '#7f6000', '#274e13', '#073763', '#20124d', '#4c1130',
-  ],
-
-  components: {
-    interaction: {
-      input: true,
-    },
-  },
-};
-
-function openColorPicker(elId, el) {
-  const background = el.css('background-color') || '#ffff00';
-  el.css('background-color', background);
-
-  const pickr = new Pickr({
-    default: background,
-    el: el[0],
-    ...pickrConfig,
-  }).show();
-
-  pickr.on('change', (color) => {
-    el.css('background-color', color.toHEXA().toString());
-  }).on('hide', () => {
-    pickr.destroyAndRemove();
+function beforeShowTranscriptMenu(menu, note) {
+  menu.links.each((i, el) => {
+    el.parentNode.classList.toggle('collapse', shouldHideMenuItem(el, note));
   });
+  activeNote = note;
 }
 
-function doAction(action, item) {
-  switch (action.action) {
-    case 'add-annotation':
+function onColorSelected(ext) {
+  const item = $(activeNote);
+  item.css('background-color', ext.params[0].value);
+}
+
+function doTranscriptAction(menuItem) {
+  const { action } = menuItem.dataset;
+  const item = $(activeNote);
+
+  switch (action) {
+    case 'add':
       selectedNodeId = item.attr('id');
       PF('userinput_dialog').show();
       break;
-    case 'edit-annotation':
+    case 'edit':
       selectedNodeId = item.attr('id');
       $('#text').val(item.attr('data-title'));
       isEditAnnotation = true;
       PF('userinput_dialog').show();
       break;
-    case 'delete-annotation':
+    case 'clear':
       selectedNodeId = item.attr('id');
       saveTranscriptAction(item.text(), item.attr('data-title'), 'delete annotation');
       item.removeAttr('data-title');
@@ -252,13 +203,13 @@ function doAction(action, item) {
       delete tags[selectedNodeId];
       updateTagList();
       break;
-    case 'add-wordnet-definition':
+    case 'define':
       selectedNodeId = item.attr('id');
       commandSetSynonyms([{ name: 'word', value: item.text() }]);
       break;
-    case 'delete-selection':
+    case 'delete':
       // eslint-disable-next-line no-alert
-      if (window.confirm(`${deleteSelectionText}(${item.text()})?`)) {
+      if (window.confirm(`${PrimeFaces.getLocaleLabel('transcriptDeleteSelection')} (${item.text()})?`)) {
         saveTranscriptAction(item.text(), item.attr('data-title'), 'deselection');
         delete tags[item.attr('id')];
         updateTagList();
@@ -266,17 +217,9 @@ function doAction(action, item) {
         item.remove();
       }
       break;
-    case 'colorpicker':
-      selectedNodeId = item.attr('id');
-      openColorPicker(selectedNodeId, item);
-      break;
     default:
       console.error('Unimplemented or unsupported action: ', action);
   }
-}
-
-function disableJQueryContextMenu() {
-  $('.tran-note').contextMenu(false);
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -295,11 +238,12 @@ function setSynonyms(xhr, status, args) {
   }
 }
 
-function getNextNode(node) {
+function getNextNode(node, end) {
   if (node.firstChild) return node.firstChild;
   while (node) {
     if (node.nextSibling) return node.nextSibling;
     node = node.parentNode;
+    if (node === end) return node;
   }
   return undefined;
 }
@@ -319,7 +263,7 @@ function getNodesInRange(range) {
   nodes.reverse();
 
   // walk children and siblings from start until end is found
-  for (node = start; node; node = getNextNode(node)) {
+  for (node = start; node; node = getNextNode(node, end)) {
     if (node.nodeType === 1 && node.tagName.toLowerCase() === 'span') nodes.push(node);
     if (node === end) break;
   }
@@ -466,7 +410,7 @@ function saveEditing() {
 }
 
 function submitTranscript() {
-  disableJQueryContextMenu();
+  PF('transcriptMenu').destroy();
   const update = document.getElementById('ted_transcript').innerHTML;
   commandSubmitResource([{ name: 'transcript', value: update }]);
 }

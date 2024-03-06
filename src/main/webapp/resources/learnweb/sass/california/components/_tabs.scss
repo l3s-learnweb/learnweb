@@ -1,8 +1,14 @@
 body {
   .ui-tabs {
+    /* Makes background transparent */
     &.ui-tabs-plaid {
       .ui-tabs-nav {
         background: none;
+
+        li.ui-tabs-header {
+          background: none;
+          border-color: transparent;
+        }
 
         &::before {
           content: none;
@@ -21,20 +27,7 @@ body {
       }
     }
 
-    &.ui-tabs-top {
-      > .ui-tabs-nav li.ui-tabs-header {
-        border: var(--border-width) var(--border-style) var(--border-color);
-        border-top: 3px solid var(--tertiary-bg);
-        border-bottom: 0;
-
-        &.ui-state-active {
-          border-color: var(--border-color);
-          border-top-color: $primaryColor;
-          margin-bottom: calc(var(--border-width) * -1);
-        }
-      }
-    }
-
+    /* Makes tabs stretches to full width */
     &.ui-tabs-fluid {
       ul.ui-tabs-nav {
         display: flex;

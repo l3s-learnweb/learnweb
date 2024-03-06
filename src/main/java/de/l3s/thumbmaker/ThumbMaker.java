@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,9 +35,10 @@ public class ThumbMaker implements Serializable {
         final URI requestUri = URI.create(this.serverUrl + endpoint);
         final String requestBody = GSON.toJson(object);
 
-        log.debug("Preparing request {} : {}", requestUri.toString(), requestBody);
+        log.debug("Preparing request {} : {}", requestUri, requestBody);
         return HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .header("Content-type", "application/json")
+            .timeout(Duration.ofSeconds(60))
             .uri(requestUri).build();
     }
 
@@ -54,8 +56,12 @@ public class ThumbMaker implements Serializable {
             ErrorResponse errorResponse = GSON.fromJson(new InputStreamReader(response.body(), StandardCharsets.UTF_8), ErrorResponse.class);
             log.error("Request failed: {} {}; {}", errorResponse.statusCode, errorResponse.error, errorResponse.message);
             throw new IllegalStateException("ThumbMaker request failed: " + errorResponse.error);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             log.fatal("An error occurred during ThumbMaker request {}", request, e);
+            return null;
+        } catch (InterruptedException e) {
+            log.fatal("A ThumbMaker request was interrupted {}", request, e);
+            Thread.currentThread().interrupt();
             return null;
         }
     }

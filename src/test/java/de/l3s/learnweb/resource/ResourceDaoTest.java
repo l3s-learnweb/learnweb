@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +34,7 @@ class ResourceDaoTest {
     @Test
     void findAll() {
         Stream<Resource> resources = resourceDao.findAll();
-        assertEquals(10, resources.count());
+        assertEquals(11, resources.count());
     }
 
     @Test
@@ -95,7 +96,7 @@ class ResourceDaoTest {
 
     @Test
     void countUndeleted() {
-        assertEquals(10, resourceDao.countUndeleted());
+        assertEquals(11, resourceDao.countUndeleted());
     }
 
     @Test
@@ -119,41 +120,26 @@ class ResourceDaoTest {
 
     @Test
     void findResourceRating() {
-        Optional<Integer> rating = resourceDao.findResourceRating(4, 2);
+        Optional<Integer> rating = resourceDao.findRating(4, 2, "star");
         assertTrue(rating.isPresent());
         assertEquals(3, rating.get());
     }
 
     @Test
     void insertResourceRating() {
-        Optional<Integer> rating = resourceDao.findResourceRating(4, 1);
-        assertTrue(rating.isEmpty());
-
-        resourceDao.insertResourceRating(4, 1, 5);
-
-        Optional<Integer> newRating = resourceDao.findResourceRating(4, 1);
-        assertTrue(newRating.isPresent());
-        assertEquals(5, newRating.get());
-    }
-
-    @Test
-    void insertThumbRate() {
-        Optional<Resource> resource = resourceDao.findById(1);
-        assertTrue(resource.isPresent());
         Optional<User> user = userDao.findById(1);
         assertTrue(user.isPresent());
-        resourceDao.insertThumbRate(resource.get(), user.get(), 1);
-    }
-
-    @Test
-    void findThumbRate() {
-        Optional<Resource> resource = resourceDao.findById(1);
+        Optional<Resource> resource = resourceDao.findById(4);
         assertTrue(resource.isPresent());
-        Optional<User> user = userDao.findById(5);
-        assertTrue(user.isPresent());
-        Optional<Integer> value = resourceDao.findThumbRate(resource.get(), user.get());
-        assertTrue(value.isPresent());
-        assertEquals(1, value.get());
+
+        HashMap<String, ResourceRating> ratings = resourceDao.findRatings(resource.get());
+        assertEquals(3, ratings.get("star").total());
+        assertNull(ratings.get("star").getRate(user.get().getId()));
+        resourceDao.insertRating(resource.get(), user.get(), "star", 5);
+
+        HashMap<String, ResourceRating> newRatings = resourceDao.findRatings(resource.get());
+        assertEquals(4, newRatings.get("star").total());
+        assertEquals(5, newRatings.get("star").getRate(user.get().getId()));
     }
 
     @Test

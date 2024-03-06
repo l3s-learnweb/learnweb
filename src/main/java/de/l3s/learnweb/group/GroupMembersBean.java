@@ -21,7 +21,6 @@ import de.l3s.learnweb.user.User;
 public class GroupMembersBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -235626744365943867L;
-    //private static final Logger log = LogManager.getLogger(GroupMembersBean.class);
 
     private enum MembersView {
         grid,
@@ -30,10 +29,9 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
 
     private int groupId;
     private Group group;
-
     private MembersView view = MembersView.grid;
-    private List<User> members;
 
+    private transient List<User> members;
     private transient Map<Integer, Integer> postCounts;
     private transient Map<Integer, Integer> resourceCounts;
 

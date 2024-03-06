@@ -2,8 +2,9 @@ package de.l3s.learnweb.resource.glossary;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -60,18 +61,22 @@ class GlossaryDaoTest {
     void findByOwnerIds() {
         List<GlossaryResource> retrieved = glossaryDao.findByOwnerIds(Arrays.asList(1, 4));
         assertEquals(1, retrieved.size());
-        assertEquals("Glossary res", retrieved.get(0).getTitle());
-        assertEquals(9, retrieved.get(0).getId());
+        assertEquals("Glossary res", retrieved.getFirst().getTitle());
+        assertEquals(9, retrieved.getFirst().getId());
     }
 
     @Test
     void save() {
         GlossaryResource glossary = new GlossaryResource();
-        Locale aLocale = new Locale.Builder().setLanguage("fr").build();
         glossary.setUserId(10);
-        glossary.setAllowedLanguages(Collections.singletonList(aLocale));
+        ArrayList<Locale> allowedLanguages = new ArrayList<>();
+        allowedLanguages.add(Locale.of("fr"));
+        glossary.setAllowedLanguages(allowedLanguages);
         glossary.setDeleted(false);
-        glossary.setEntries(Arrays.asList(glossaryEntryDao.findById(1).get(), glossaryEntryDao.findById(2).get()));
+        LinkedList<GlossaryEntry> entries = new LinkedList<>();
+        entries.add(glossaryEntryDao.findById(1).get());
+        entries.add(glossaryEntryDao.findById(2).get());
+        glossary.setEntries(entries);
         glossary.setDescription("desc");
         glossary.setTitle("title");
         glossary.setId(11);

@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
 import jakarta.mail.MessagingException;
@@ -65,10 +64,10 @@ public class ForumNotificator implements Runnable, Serializable {
     }
 
     private void sendMailWithNewTopics(User user, List<ForumTopic> topics) throws MessagingException {
-        List<ForumTopic> userTopics = topics.stream().filter(topic -> topic.getUserId() == user.getId()).collect(Collectors.toList());
-        List<ForumTopic> otherTopics = topics.stream().filter(topic -> topic.getUserId() != user.getId()).collect(Collectors.toList());
+        List<ForumTopic> userTopics = topics.stream().filter(topic -> topic.getUserId() == user.getId()).toList();
+        List<ForumTopic> otherTopics = topics.stream().filter(topic -> topic.getUserId() != user.getId()).toList();
 
-        Mail mail = MailFactory.buildForumNotificationEmail(user.getRealUsername(), userTopics, otherTopics, getHash(user)).build(user.getLocale());
+        Mail mail = MailFactory.buildForumNotificationEmail(user.getUsername(), userTopics, otherTopics, getHash(user)).build(user.getLocale());
         mail.setRecipient(user.getEmail());
         mail.send();
     }

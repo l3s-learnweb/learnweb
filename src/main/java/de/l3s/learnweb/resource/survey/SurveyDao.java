@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +17,7 @@ import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.Resource;
@@ -44,7 +44,7 @@ public interface SurveyDao extends SqlObject, Serializable {
 
     default List<SurveyResource> findByUserId(int userId) {
         return getResourceDao().findByOwnerIdsAndType(Collections.singleton(userId), ResourceType.survey)
-            .stream().map(this::convertToSurveyResource).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+            .stream().map(this::convertToSurveyResource).filter(Optional::isPresent).map(Optional::get).toList();
     }
 
     default Optional<SurveyResource> convertToSurveyResource(Resource resource) {
@@ -73,33 +73,40 @@ public interface SurveyDao extends SqlObject, Serializable {
     Optional<SurveyQuestion> findQuestionById(int questionId);
 
     @RegisterRowMapper(SurveyQuestionMapper.class)
-    @SqlQuery("SELECT * FROM lw_survey_question WHERE resource_id = ? and deleted = 0 ORDER BY `order`")
+    @SqlQuery("SELECT q.* FROM lw_survey_question q INNER JOIN lw_survey_page p USING (page_id) WHERE p.resource_id = ? and q.deleted = 0 ORDER BY p.`order`, q.`order`")
     List<SurveyQuestion> findQuestionsByResourceId(int resourceId);
 
     @RegisterRowMapper(SurveyQuestionMapper.class)
-    @SqlQuery("SELECT * FROM lw_survey_question WHERE resource_id = ? and page_id = ? and deleted = 0 ORDER BY `order`")
-    List<SurveyQuestion> findQuestionsByResourceIdAndPageId(int resourceId, int pageId);
+    @SqlQuery("SELECT * FROM lw_survey_question WHERE page_id = ? and deleted = 0 ORDER BY `order`")
+    List<SurveyQuestion> findQuestionsByPageId(int pageId);
 
     @RegisterRowMapper(SurveyPageMapper.class)
     @SqlQuery("SELECT * FROM lw_survey_page WHERE resource_id = ? and deleted = 0 ORDER BY `order`")
     List<SurveyPage> findPagesByResourceId(int resourceId);
 
+    @RegisterRowMapper(SurveyPageMapper.class)
+    @SqlQuery("SELECT * FROM lw_survey_page WHERE page_id = ? and deleted = 0")
+    Optional<SurveyPage> findPageById(int resourceId);
+
+    @SqlUpdate("DELETE FROM lw_survey_response_answer WHERE response_id = ?")
+    void deleteAnswersByResponseId(int responseId);
+
     default List<SurveyPage> findPagesAndVariantsByResourceId(int resourceId) {
         return findPagesByResourceId(resourceId).stream()
             .peek(page -> page.getVariants().addAll(findVariantsByPageId(page.getId())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     default List<SurveyQuestion> findQuestionsAndOptionsByResourceId(int resourceId) {
         return findQuestionsByResourceId(resourceId).stream()
             .peek(question -> question.getOptions().addAll(findOptionsByQuestionId(question.getId())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
-    default List<SurveyQuestion> findQuestionsAndOptionsByResourceId(int resourceId, int pageId) {
-        return findQuestionsByResourceIdAndPageId(resourceId, pageId).stream()
+    default List<SurveyQuestion> findQuestionsAndOptionsByPageId(int pageId) {
+        return findQuestionsByPageId(pageId).stream()
             .peek(question -> question.getOptions().addAll(findOptionsByQuestionId(question.getId())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
@@ -118,7 +125,6 @@ public interface SurveyDao extends SqlObject, Serializable {
      */
     default void saveQuestions(SurveyPage page) {
         for (SurveyQuestion question : page.getQuestions()) {
-            question.setResourceId(page.getResourceId()); // need to update id in case survey has just been created
             question.setPageId(page.getId());
             saveQuestion(question);
         }
@@ -126,8 +132,8 @@ public interface SurveyDao extends SqlObject, Serializable {
 
     default void savePage(SurveyPage page) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("resource_id", page.getResourceId());
         params.put("page_id", SqlHelper.toNullable(page.getId()));
+        params.put("resource_id", SqlHelper.toNullable(page.getResourceId()));
         params.put("deleted", page.isDeleted());
         params.put("order", page.getOrder());
         params.put("title", SqlHelper.toNullable(page.getTitle()));
@@ -144,14 +150,14 @@ public interface SurveyDao extends SqlObject, Serializable {
 
     default void saveQuestion(SurveyQuestion question) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("resource_id", question.getResourceId());
         params.put("question_id", SqlHelper.toNullable(question.getId()));
         params.put("page_id", SqlHelper.toNullable(question.getPageId()));
         params.put("deleted", question.isDeleted());
         params.put("order", question.getOrder());
         params.put("question_type", question.getType());
         params.put("question", StringUtils.defaultString(question.getQuestion()));
-        params.put("description", question.getDescription());
+        params.put("description", SqlHelper.toNullable(question.getDescription()));
+        params.put("placeholder", SqlHelper.toNullable(question.getPlaceholder()));
         params.put("required", question.isRequired());
         params.put("min_length", question.getMinLength());
         params.put("max_length", question.getMaxLength());
@@ -199,6 +205,16 @@ public interface SurveyDao extends SqlObject, Serializable {
         return select.map(this::findAnswersByResponse).orElse(null);
     }
 
+    /**
+     * Returns all answers a user has given for a particular message.
+     */
+    default SurveyResponse findResponseByMessageId(final int messageId) {
+        Optional<SurveyResponse> select = getHandle().select("SELECT * FROM lw_survey_response WHERE message_id = ? LIMIT 1", messageId)
+            .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class).findOne();
+
+        return select.map(this::findAnswersByResponse).orElse(null);
+    }
+
     default SurveyResponse findResponseById(final int responseId) {
         SurveyResponse response = responseCache.get(responseId);
         if (response == null) {
@@ -215,19 +231,19 @@ public interface SurveyDao extends SqlObject, Serializable {
     default List<SurveyResponse> findResponsesByResourceId(final int resourceId) {
         return getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ?", resourceId)
             .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
-            .map(this::findAnswersByResponse).collect(Collectors.toList());
+            .map(this::findAnswersByResponse).list();
     }
 
     default List<SurveyResponse> findSubmittedResponsesByResourceId(final int resourceId) {
         return getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ? AND submitted = 1", resourceId)
             .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
-            .map(this::findAnswersByResponse).collect(Collectors.toList());
+            .map(this::findAnswersByResponse).list();
     }
 
     default List<SurveyResponse> findResponsesByUserId(final int resourceId) {
         return getHandle().select("SELECT * FROM lw_survey_response WHERE user_id = ?", resourceId)
             .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
-            .map(this::findAnswersByResponse).collect(Collectors.toList());
+            .map(this::findAnswersByResponse).list();
     }
 
     default SurveyResponse findAnswersByResponse(final SurveyResponse response) {
@@ -255,7 +271,8 @@ public interface SurveyDao extends SqlObject, Serializable {
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("response_id", SqlHelper.toNullable(response.getId()));
-        params.put("resource_id", response.getResourceId());
+        params.put("resource_id", SqlHelper.toNullable(response.getResourceId()));
+        params.put("message_id", SqlHelper.toNullable(response.getMessageId()));
         params.put("user_id", SqlHelper.toNullable(response.getUserId()));
         params.put("submitted", response.isSubmitted());
         params.put("created_at", response.getCreatedAt());
@@ -297,8 +314,9 @@ public interface SurveyDao extends SqlObject, Serializable {
     class SurveyPageMapper implements RowMapper<SurveyPage> {
         @Override
         public SurveyPage map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SurveyPage page = new SurveyPage(rs.getInt("resource_id"));
+            SurveyPage page = new SurveyPage();
             page.setId(rs.getInt("page_id"));
+            page.setResourceId(rs.getInt("resource_id"));
             page.setDeleted(rs.getBoolean("deleted"));
             page.setOrder(rs.getInt("order"));
             page.setTitle(rs.getString("title"));
@@ -321,13 +339,14 @@ public interface SurveyDao extends SqlObject, Serializable {
     class SurveyQuestionMapper implements RowMapper<SurveyQuestion> {
         @Override
         public SurveyQuestion map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.valueOf(rs.getString("question_type")), rs.getInt("resource_id"));
+            SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.valueOf(rs.getString("question_type")));
             question.setId(rs.getInt("question_id"));
             question.setPageId(rs.getInt("page_id"));
             question.setDeleted(rs.getBoolean("deleted"));
             question.setOrder(rs.getInt("order"));
             question.setQuestion(rs.getString("question"));
             question.setDescription(rs.getString("description"));
+            question.setPlaceholder(rs.getString("placeholder"));
             question.setRequired(rs.getBoolean("required"));
             question.setMinLength(SqlHelper.toNullable(rs.getInt("min_length")));
             question.setMaxLength(SqlHelper.toNullable(rs.getInt("max_length")));
@@ -338,8 +357,9 @@ public interface SurveyDao extends SqlObject, Serializable {
     class SurveyQuestionOptionMapper implements RowMapper<SurveyQuestionOption> {
         @Override
         public SurveyQuestionOption map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SurveyQuestionOption answer = new SurveyQuestionOption(rs.getInt("question_id"));
+            SurveyQuestionOption answer = new SurveyQuestionOption();
             answer.setId(rs.getInt("option_id"));
+            answer.setQuestionId(rs.getInt("question_id"));
             answer.setDeleted(rs.getBoolean("deleted"));
             answer.setValue(rs.getString("value"));
             return answer;
@@ -352,7 +372,9 @@ public interface SurveyDao extends SqlObject, Serializable {
             SurveyResponse response = responseCache.get(rs.getInt("response_id"));
 
             if (response == null) {
-                response = new SurveyResponse(rs.getInt("resource_id"));
+                response = new SurveyResponse();
+                response.setResourceId(rs.getInt("resource_id"));
+                response.setMessageId(rs.getInt("message_id"));
                 response.setId(rs.getInt("response_id"));
                 response.setUserId(rs.getInt("user_id"));
                 response.setSubmitted(rs.getBoolean("submitted"));

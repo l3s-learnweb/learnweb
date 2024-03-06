@@ -98,7 +98,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private String view = "float"; // float, grid or list
 
     private int counter = 0;
-    private List<GroupedResources> resourcesGroupedBySource;
+    private transient List<GroupedResources> resourcesGroupedBySource;
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
     private List<String> recommendations;

@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,7 +32,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
-import de.l3s.learnweb.user.Course;
+import de.l3s.util.LocaleUtils;
 import de.l3s.util.NlpHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -38,7 +41,7 @@ import de.l3s.util.bean.BeanHelper;
 public class TedTranscriptBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -1803725556672379697L;
-    //private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
+    private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
 
     private static final Pattern SPACES = Pattern.compile("\\s+");
 
@@ -56,7 +59,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     private int resourceId;
     private String locale;
-    private List<SelectItem> languageList;
+    private LinkedList<SelectItem> languageList;
 
     @Inject
     private TedTranscriptDao tedTranscriptDao;
@@ -99,7 +102,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             }
 
         } else {
-            transcriptLanguage = "en";
+            transcriptLanguage = Locale.ENGLISH.getLanguage();
             setTranscript();
         }
 
@@ -143,7 +146,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         tedTranscriptDao.saveTranscriptLog(transcriptLog);
 
         getUser().clearCaches();
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     /**
@@ -237,11 +240,20 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
         if (languageList == null) {
             languageList = new LinkedList<>();
-            Map<String, String> langList = tedTranscriptDao.findLanguages(videoResourceId);
+            List<String> langList = tedTranscriptDao.findLanguagesByResourceId(videoResourceId);
             if (langList.isEmpty()) {
-                languageList.add(new SelectItem("NA", "No Transcripts Available"));
+                languageList.add(new SelectItem(null, "No Transcripts Available"));
             } else {
-                languageList.addAll(BeanHelper.getLanguagesAsSelectItems(langList.values().toArray(new String[0]), getBundle()));
+                ArrayList<Locale> locales = new ArrayList<>();
+                try {
+                    for (String lang : langList) {
+                        locales.add(LocaleUtils.toLocale(lang));
+                    }
+                } catch (IllegalArgumentException e) {
+                    log.error("Error while converting language code to locale", e);
+                }
+
+                languageList.addAll(BeanHelper.getLocalesAsSelectItems(locales, getLocale()));
             }
         }
         return languageList;
@@ -257,10 +269,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
-    }
-
-    public List<Course> getCourses() {
-        return getUser().getCourses();
     }
 
     public String getSummaryTextS() {

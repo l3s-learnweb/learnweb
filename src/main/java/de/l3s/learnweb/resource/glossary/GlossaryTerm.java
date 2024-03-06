@@ -28,7 +28,7 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     private int lastChangedByUserId;
     @Size(max = 100)
     private String term;
-    private List<String> uses;
+    private ArrayList<String> uses;
     @Size(max = 200)
     private String pronounciation;
     @Size(max = 100)
@@ -52,22 +52,23 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     }
 
     public GlossaryTerm(GlossaryTerm oldTerm) {
-        setOriginalTermId(oldTerm.id);
-        setDeleted(oldTerm.deleted);
-        setEntryId(oldTerm.entryId);
-        setUserId(oldTerm.userId);
-        setTerm(oldTerm.term);
-        setLastChangedByUserId(oldTerm.lastChangedByUserId);
-        setPronounciation(oldTerm.pronounciation);
-        setAcronym(oldTerm.acronym);
-        setSource(oldTerm.source);
-        setPhraseology(oldTerm.phraseology);
-        setLanguage(oldTerm.language);
-        setTermPasted(oldTerm.termPasted);
-        setPronounciationPasted(oldTerm.pronounciationPasted);
-        setAcronymPasted(oldTerm.acronymPasted);
-        setPhraseologyPasted(oldTerm.phraseologyPasted);
-        setUses(new ArrayList<>(oldTerm.uses));
+        this.id = 0;
+        this.originalTermId = oldTerm.id;
+        this.deleted = oldTerm.deleted;
+        this.entryId = oldTerm.entryId;
+        this.userId = oldTerm.userId;
+        this.lastChangedByUserId = oldTerm.lastChangedByUserId;
+        this.term = oldTerm.term;
+        this.pronounciation = oldTerm.pronounciation;
+        this.acronym = oldTerm.acronym;
+        this.source = oldTerm.source;
+        this.phraseology = oldTerm.phraseology;
+        this.language = oldTerm.language;
+        this.termPasted = oldTerm.termPasted;
+        this.pronounciationPasted = oldTerm.pronounciationPasted;
+        this.acronymPasted = oldTerm.acronymPasted;
+        this.phraseologyPasted = oldTerm.phraseologyPasted;
+        this.uses = new ArrayList<>(oldTerm.uses);
     }
 
     /**
@@ -112,7 +113,7 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
 
     public void setUses(List<String> uses) {
         Objects.requireNonNull(uses);
-        this.uses = uses.stream().map(String::trim).collect(Collectors.toList());
+        this.uses = uses.stream().map(String::trim).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String getPronounciation() {

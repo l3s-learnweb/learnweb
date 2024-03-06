@@ -12,8 +12,8 @@ import de.l3s.util.UrlHelper;
 public class UrlValidator extends AbstractValidator<Object> {
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        if (value instanceof String) {
-            String url = ((String) value).trim();
+        if (value instanceof String str) {
+            String url = str.trim();
 
             if (UrlHelper.validateUrl(url) == null) {
                 throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, "invalid_url"));

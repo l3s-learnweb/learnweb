@@ -3,22 +3,6 @@
 <!-- Configuration file for UrlRewriteFilter https://github.com/paultuckey/urlrewritefilter/ -->
 <!-- Documentation https://cdn.rawgit.com/paultuckey/urlrewritefilter/master/src/doc/manual/4.0/index.html -->
 <urlrewrite use-query-string="true">
-    <!-- Redirects from one instance to another -->
-    <rule>
-        <from>/v3/(.*)</from>
-        <to type="permanent-redirect" last="true">/$1</to>
-    </rule>
-    <rule>
-        <name>The Yell documentation still contains links to /new</name>
-        <from>/new/(.*)</from>
-        <to type="permanent-redirect" last="true">/$1</to>
-    </rule>
-    <rule>
-        <name>Redirect ArchiveWeb users to archived v2 instance</name>
-        <condition name="host">archiveweb.l3s.uni-hannover.de</condition>
-        <from>^/(.*)</from>
-        <to type="permanent-redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>
-    </rule>
     <rule>
         <name>Redirect to /lw/</name>
         <from>^/$</from>
@@ -35,28 +19,7 @@
         <from>(?:/lw)?/wizard=(.*)</from>
         <to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
     </rule>
-    <rule>
-        <from>/archive/(.*)</from>
-        <to type="redirect" last="true">http://alexandria-project.eu/archivesearch/$1</to>
-    </rule>
     <!-- Redirects from old pages to new ones -->
-    <rule>
-        <from>/templates/resources/survey.jsf(.*)</from>
-        <to type="permanent-redirect">%{context-path}/lw/survey/survey.jsf$1</to>
-    </rule>
-    <rule>
-        <from>/lw/survey/surveyResult.jsf(.*)</from>
-        <to type="permanent-redirect">%{context-path}/lw/survey/results.jsf$1</to>
-    </rule>
-    <rule>
-        <from>/lw/showGlossary.jsf(.*)</from>
-        <to type="permanent-redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
-    </rule>
-    <rule>
-        <name>A forum_post.jsf page was renamed on 25.06.2020</name>
-        <from>/lw/group/forum_post.jsf(.*)</from>
-        <to type="permanent-redirect">%{context-path}/lw/group/forum_topic.jsf$1</to>
-    </rule>
     <rule>
         <name>The resource preview page is now separate page, the rule added on 17.07.2020</name>
         <from>/lw/group/resources.jsf?(.*)resource_id=([\d]+)(.*)</from>

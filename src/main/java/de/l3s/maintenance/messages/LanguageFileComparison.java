@@ -10,7 +10,6 @@ import de.l3s.util.MessagesHelper;
 
 /**
  * Uses the list of corrected translations provided by Marco to check which translations were not yet checked.
- *
  * The returned list represents translation keys which were not checked.
  *
  * @author Philipp Kemkes
@@ -46,11 +45,6 @@ public class LanguageFileComparison extends MaintenanceTask {
 
             log.debug("unchecked keys:");
             for (Object key : baseMessages.keySet()) {
-                String keyStr = (String) key;
-                if (keyStr.startsWith("ArchiveSearch.") || keyStr.startsWith("language_")) {
-                    continue;
-                }
-
                 log.debug(key);
             }
         }

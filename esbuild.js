@@ -14,7 +14,7 @@ const copyPlugin = ({copyOnce, targets}) => ({
             }
 
             for (const {from, to} of targets) {
-                const dest = to ? to : path.basename(from);
+                const dest = to || path.basename(from);
                 fs.cpSync(from, path.join(build.initialOptions.outdir, dest), {
                     recursive: true,
                     force: true,
@@ -37,7 +37,7 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
         sassPlugin({
             precompile(source) {
                 // Replace relative paths to images with relative to the output directory (../images)
-                return source.replace(/(url\(['"]?)(..?\/)+images\/([^'")]+['"]?\))/g, `$1../images/$3`)
+                return source.replace(/(url\(['"]?)(\.{1,2}\/)+images\/([^'")]+['"]?\))/g, `$1../images/$3`)
             },
         }),
         copyPlugin({
@@ -46,14 +46,9 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
                 {from: 'node_modules/@fortawesome/fontawesome-free/webfonts'},
                 {from: 'node_modules/video.js/dist/video-js.min.css'},
                 {from: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', to: 'video-js.min.js'},
-                {from: 'node_modules/highcharts/highcharts.js'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js'},
-                {from: 'node_modules/jquery-contextmenu/dist/jquery.contextMenu.min.js'},
                 {from: 'node_modules/shepherd.js/dist/js/shepherd.min.js'},
-                {from: 'node_modules/@simonwep/pickr/dist/pickr.min.js'},
-                {from: 'node_modules/@simonwep/pickr/dist/themes/nano.min.css', to: 'pickr.min.css'},
-                {from: 'node_modules/justifiedGallery/dist/js/jquery.justifiedGallery.min.js'},
             ],
         }),
     ],

@@ -1,6 +1,7 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
+                xmlns:faces="jakarta.faces"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="jakarta.faces.facelets">
 
@@ -23,8 +24,8 @@
     <h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
     <h:outputScript name="learnweb/js/search.js" target="body"/>
 
-    <h:form class="d-none" prependId="false">
-        <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":searchResultsNext" immediate="true"
+    <h:form class="d-none" id="search_commands">
+        <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":search_results:next" immediate="true"
                          onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
         <p:remoteCommand name="commandOnResourceClick" actionListener="${searchBean.commandOnResourceClick}" immediate="true" async="true"/>
         <p:remoteCommand name="commandGetResourceDetails" actionListener="${searchBean.commandGetResourceDetails}" immediate="true"
@@ -51,7 +52,7 @@
             <li class="filter #{searchBean.searchMode =='image' ? 'active':''}">
                 <h:link outcome="search">
                     <span class="filter-title">
-                        <span class="text-truncate">#{msg.Images}</span>
+                        <span class="text-truncate">#{msg.images}</span>
                     </span>
                     <f:param name="action" value="image"/>
                     <f:param name="query" value="#{searchBean.query}"/>
@@ -60,9 +61,17 @@
             <li class="filter #{searchBean.searchMode =='video' ? 'active':''}">
                 <h:link outcome="search">
                      <span class="filter-title">
-                        <span class="text-truncate">#{msg.Videos}</span>
+                        <span class="text-truncate">#{msg.videos}</span>
                     </span>
                     <f:param name="action" value="video"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
+            </li>
+            <li class="filter" faces:rendered="#{userBean.searchChatEnabled}">
+                <h:link outcome="search/chat">
+                     <span class="filter-title">
+                        <span class="text-truncate">#{msg.chat}</span>
+                    </span>
                     <f:param name="query" value="#{searchBean.query}"/>
                 </h:link>
             </li>
@@ -173,15 +182,15 @@
             const userId = '#{userBean.user.id}';
         </h:outputScript>
 
-        <h:form prependId="false">
-            <div id="searchResults" class="p-2 search-#{searchBean.view} guide-search-results">
+        <h:form id="search_results">
+            <div faces:id="current" class="p-2 search-#{searchBean.view} guide-search-results">
                 <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                     <ui:param name="view" value="#{searchBean.view}"/>
                     <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 </ui:decorate>
             </div>
 
-            <h:panelGroup id="searchResultsNext" layout="block" styleClass="d-none">
+            <h:panelGroup id="next" layout="block" styleClass="d-none">
                 <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                     <ui:param name="view" value="#{searchBean.view}"/>
                     <ui:param name="resources" value="#{searchBean.nextPage}"/>
@@ -230,7 +239,7 @@
                 <div class="text-end mt-3">
                     <p:defaultCommand target="addSelectedResourceButton"/>
                     <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('copyResourceDialog').hide()"/>
-                    <p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
+                    <p:commandButton id="addSelectedResourceButton" styleClass="guide-search-resource-save" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
                                      widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="if(!args.validationFailed){PF('copyResourceDialog').hide()}"/>
                 </div>
             </h:form>

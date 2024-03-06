@@ -8,7 +8,6 @@ import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
@@ -66,8 +65,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     private boolean studentIdRequired = false;
     private boolean mailRequired = false;
     private boolean anonymizeUsername;
-    private List<GroupUser> userGroups;
 
+    private transient List<GroupUser> userGroups;
     private transient List<SelectItem> timeZoneIds; // A list of all available time zone ids
 
     @Inject
@@ -163,7 +162,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         dbpediaSpotlightService.storeEntities(getSessionId(), selectedUser,  recognisedEntities);
 
         log(Action.changing_profile, 0, selectedUser.getId());
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void onChangePassword() {
@@ -216,7 +215,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String newName = ((String) value).trim();
-        if (getSelectedUser().getRealUsername().equals(newName)) { // username not changed
+        if (getSelectedUser().getUsername().equals(newName)) { // username not changed
             return;
         }
 
@@ -287,7 +286,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         String password = (String) value;
 
         // returns the same user, if the password is correct
-        Optional<User> checkUser = userDao.findByUsernameAndPassword(user.getRealUsername(), password);
+        Optional<User> checkUser = userDao.findByUsernameAndPassword(user.getUsername(), password);
 
         if (checkUser.isEmpty() || !user.equals(checkUser.get())) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "password_incorrect"));
@@ -339,12 +338,12 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             groupDao.updateNotificationFrequency(groupUser.getNotificationFrequency(), groupUser.getGroupId(), selectedUser.getId());
         }
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void onSaveNotificationFrequency(GroupUser group, int userId) {
         groupDao.updateNotificationFrequency(group.getNotificationFrequency(), group.getGroupId(), userId);
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public Theme[] getAvailableThemes() {
@@ -361,7 +360,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
             timeZoneIds = ZoneId.getAvailableZoneIds().stream().filter(id -> !StringUtils.startsWithAny(id, "Etc/", "SystemV/", "PST8PDT", "GMT")).sorted()
                 .map(id -> new SelectItem(ZoneId.of(id), id.replace("_", " ") + " (" + ZoneId.of(id).getDisplayName(TextStyle.FULL_STANDALONE, locale) + ")"))
-                .collect(Collectors.toList());
+                .toList();
         }
         return timeZoneIds;
     }

@@ -59,12 +59,12 @@ body {
       }
     }
 
-    .ui-steps-item:not(.ui-state-highlight){
+    .ui-steps-item:not(.ui-state-highlight) {
       opacity: .65;
     }
 
     &:before {
-      content:' ';
+      content: ' ';
       border-top: $menuBorder;
       width: 100%;
       top: 50%;

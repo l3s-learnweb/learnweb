@@ -15,8 +15,8 @@ public class EmailValidator extends AbstractValidator<Object> {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        if (value instanceof String) {
-            String email = ((String) value).trim().toLowerCase();
+        if (value instanceof String strValue) {
+            String email = strValue.trim().toLowerCase();
 
             if (StringUtils.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it")) {
                 String message;

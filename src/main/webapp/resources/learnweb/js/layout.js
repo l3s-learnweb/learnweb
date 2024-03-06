@@ -58,6 +58,8 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     });
 
     this.menuButton.off('click').on('click', (e) => {
+      this.sidebarMenuClick = true;
+
       if (this.isDesktop()) {
         this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
         if (this.wrapper.hasClass('layout-wrapper-sidebar-inactive')) {

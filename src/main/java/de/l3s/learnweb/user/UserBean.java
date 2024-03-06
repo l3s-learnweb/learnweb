@@ -40,6 +40,7 @@ import de.l3s.learnweb.searchhistory.PKGraph;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -93,7 +94,7 @@ public class UserBean implements Serializable {
             session.setAttribute("Locale", locale);
             if (getUser() != null) {
                 session.setAttribute("UserId", getUser().getId());
-                session.setAttribute("UserName", getUser().getRealUsername());
+                session.setAttribute("UserName", getUser().getUsername());
             }
         }
     }
@@ -209,7 +210,6 @@ public class UserBean implements Serializable {
 
     public String setLocaleCode(String localeCode) {
         setSidebarMenuModel(null);
-        //log.debug("set locale " + localeCode);
         locale = getLocaleByLocaleCode(localeCode);
 
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -224,16 +224,16 @@ public class UserBean implements Serializable {
         String languageVariant = getActiveOrganisation().map(Organisation::getLanguageVariant).orElse("");
 
         return switch (localeCode) {
-            case "de" -> new Locale("de", "DE", languageVariant);
-            case "en" -> new Locale("en", "UK", languageVariant);
-            case "it" -> new Locale("it", "IT", languageVariant);
-            case "pt" -> new Locale("pt", "BR", languageVariant);
-            case "es" -> new Locale("es", "ES", languageVariant);
-            case "uk" -> new Locale("uk", "UA", languageVariant);
-            case "xx" -> new Locale("xx"); // only for translation editors
+            case "de" -> Locale.of("de", "DE", languageVariant);
+            case "en" -> Locale.of("en", "UK", languageVariant);
+            case "it" -> Locale.of("it", "IT", languageVariant);
+            case "pt" -> Locale.of("pt", "BR", languageVariant);
+            case "es" -> Locale.of("es", "ES", languageVariant);
+            case "uk" -> Locale.of("uk", "UA", languageVariant);
+            case "xx" -> Locale.of("xx"); // only for translation editors
             default -> {
                 log.error("Unsupported language: {}", localeCode);
-                yield new Locale("en", "UK");
+                yield Locale.of("en", "UK");
             }
         };
     }
@@ -380,8 +380,8 @@ public class UserBean implements Serializable {
                 .addElement(DefaultMenuItem.builder().value(msg.getString("statistics")).icon("fas fa-chart-line").url("admin/statistics.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("transcript")).icon("fas fa-language").url("admin/transcript.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("glossary_dashboard")).icon("fas fa-chart-bar").url("dashboard/glossary.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("Activity.dashboard")).icon("fas fa-chart-line").url("dashboard/activity.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("Tracker.dashboard")).icon("fas fa-mouse-pointer").url("dashboard/tracker.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("activity.dashboard")).icon("fas fa-chart-line").url("dashboard/activity.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("dashboard.tracker")).icon("fas fa-mouse-pointer").url("dashboard/tracker.jsf").build())
                 .build();
             model.getElements().add(moderatorSubmenu);
         }
@@ -504,6 +504,10 @@ public class UserBean implements Serializable {
         return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Logging_disabled)).orElse(true);
     }
 
+    public boolean isSearchChatEnabled() {
+        return getActiveOrganisation().map(o -> o.getOption(Option.Search_Chat_enabled)).orElse(false);
+    }
+
     public boolean isTrackingEnabled() {
         if (StringUtils.isEmpty(getTrackerApiKey())) {
             return false;
@@ -513,6 +517,10 @@ public class UserBean implements Serializable {
 
     public boolean isLanguageSwitchEnabled() {
         return !getActiveOrganisation().map(o -> o.getOption(Option.Users_Hide_language_switch)).orElse(false);
+    }
+
+    public List<Locale> getSupportedLocales() {
+        return BeanHelper.getSupportedLocales();
     }
 
     public boolean isHideSidebarMenu() {

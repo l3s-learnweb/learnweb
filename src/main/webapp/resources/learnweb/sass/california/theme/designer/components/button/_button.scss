@@ -137,7 +137,7 @@ body {
         top: 50%;
         left: 50%;
         margin-top: divide(-1 * $iconSize, 2);
-        margin-left:  divide(-1 * $iconSize, 2);
+        margin-left: divide(-1 * $iconSize, 2);
       }
     }
 
@@ -155,7 +155,7 @@ body {
     }
 
     .ui-icon-triangle-1-s {
-      @include icon_override("\e902");
+      @include icon-override("\e902");
     }
   }
 
@@ -296,7 +296,7 @@ body {
   .ui-button.ui-button-success,
   .ui-splitbutton.ui-button-success > .ui-button,
   .ui-menubutton.ui-button-success > .ui-button {
-    background:$successButtonBg;
+    background: $successButtonBg;
     color: $successButtonTextColor;
     border: $successButtonBorder;
 
@@ -370,7 +370,7 @@ body {
     }
 
     &.ui-state-active {
-      background:$warningButtonActiveBg;
+      background: $warningButtonActiveBg;
       color: $warningButtonTextActiveColor;
       border-color: $warningButtonActiveBorderColor;
     }
@@ -430,7 +430,7 @@ body {
     }
 
     &.ui-state-active {
-      background:$helpButtonActiveBg;
+      background: $helpButtonActiveBg;
       color: $helpButtonTextActiveColor;
       border-color: $helpButtonActiveBorderColor;
     }
@@ -490,7 +490,7 @@ body {
     }
 
     &.ui-state-active {
-      background:$infoButtonActiveBg;
+      background: $infoButtonActiveBg;
       color: $infoButtonTextActiveColor;
       border-color: $infoButtonActiveBorderColor;
     }

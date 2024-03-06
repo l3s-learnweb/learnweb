@@ -85,6 +85,7 @@ public class ConfigProvider implements Serializable {
         this(true);
     }
 
+    @SuppressWarnings("this-escape")
     public ConfigProvider(final boolean servlet) {
         loadProperties();
         loadEnvironmentVariables();
@@ -118,6 +119,7 @@ public class ConfigProvider implements Serializable {
             Sentry.init(options -> {
                 options.setDsn(properties.getProperty("sentry_dsn"));
                 options.setEnvironment(getEnvironment());
+                options.addInAppInclude("de.l3s");
                 if (!isDevelopment()) {
                     options.setRelease("learnweb@" + getVersion());
                 }

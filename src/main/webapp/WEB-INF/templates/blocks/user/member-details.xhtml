@@ -11,14 +11,14 @@
 <div class="d-flex member-details">
 	<div class="pt-1">
 		<p:avatar label="${user.initials}" size="large" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-			<h:graphicImage value="#{user.imageUrl}" alt="#{user.fullName}" rendered="#{not empty user.imageUrl}"/>
+			<h:graphicImage value="#{user.imageUrl}" alt="#{user.displayName}" rendered="#{not empty user.imageUrl}"/>
 		</p:avatar>
 	</div>
 
 	<div class="ps-3 flex-grow-1 overflow-auto">
 		<div class="d-flex">
 			<div class="flex-fill">
-				<h5>#{user.username}</h5>
+				<h5>#{user.displayName}</h5>
 			</div>
 
 			<h:panelGroup styleClass="text-end" layout="block" rendered="#{userBean.user.canModerateUser(user)}">

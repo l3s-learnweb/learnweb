@@ -39,9 +39,10 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(AdminCourseBean.class);
 
     private Course course;
-    private List<OptionWrapperGroup> optionGroups;
+    private LinkedList<OptionWrapperGroup> optionGroups;
     private int courseId;
-    private List<Organisation> organisations;
+
+    private transient List<Organisation> organisations;
 
     @Inject
     private OrganisationDao organisationDao;
@@ -66,7 +67,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
 
         // many string operations to display the options in a proper way
         optionGroups = new LinkedList<>();
-        List<OptionWrapper> options = new LinkedList<>();
+        LinkedList<OptionWrapper> options = new LinkedList<>();
         String oldOptionGroupName = null;
 
         Option[] optionsEnum = Option.values();
@@ -100,7 +101,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         }
 
         courseDao.save(course);
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public List<OptionWrapperGroup> getOptionGroups() {
@@ -181,9 +182,9 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         @Serial
         private static final long serialVersionUID = -2323320446956640229L;
         private final String title;
-        private final List<OptionWrapper> options;
+        private final LinkedList<OptionWrapper> options;
 
-        public OptionWrapperGroup(String title, List<OptionWrapper> options) {
+        public OptionWrapperGroup(String title, LinkedList<OptionWrapper> options) {
             this.title = title;
             this.options = options;
         }

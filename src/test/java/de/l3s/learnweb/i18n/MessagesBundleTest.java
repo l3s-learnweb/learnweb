@@ -14,37 +14,37 @@ class MessagesBundleTest {
 
     @Test
     void getString() {
-        MessagesBundle bundleEn = new MessagesBundle(new Locale("en", "US", ""));
+        MessagesBundle bundleEn = new MessagesBundle(Locale.of("en", "US", ""));
         assertEquals("Welcome to Learnweb", bundleEn.format("homepageTitle", "Learnweb"));
 
         // not existing language, fallback to default
-        MessagesBundle bundleYY = new MessagesBundle(new Locale("yy"));
+        MessagesBundle bundleYY = new MessagesBundle(Locale.of("yy"));
         assertEquals("Welcome to Learnweb", bundleYY.format("homepageTitle", "Learnweb"));
 
-        MessagesBundle bundleDe = new MessagesBundle(new Locale("de"));
+        MessagesBundle bundleDe = new MessagesBundle(Locale.of("de"));
         assertEquals("Willkommen bei Learnweb", bundleDe.format("homepageTitle", "Learnweb"));
 
-        MessagesBundle bundlePt = new MessagesBundle(new Locale("pt"));
+        MessagesBundle bundlePt = new MessagesBundle(Locale.of("pt"));
         assertEquals("Bem-vindo ao Learnweb", bundlePt.format("homepageTitle", "Learnweb"));
     }
 
     @Test
     void testLanguageVariants() {
-        assertEquals("Hallo", new MessagesBundle(new Locale("de")).format("greeting"));
-        assertEquals("Hallo", new MessagesBundle(new Locale("de", "AT")).format("greeting"));
-        assertEquals("Hallo", new MessagesBundle(new Locale("de", "DE")).format("greeting"));
-        assertEquals("Hallo", new MessagesBundle(new Locale("de", "DE")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(Locale.of("de")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(Locale.of("de", "AT")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(Locale.of("de", "DE")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(Locale.of("de", "DE")).format("greeting"));
     }
 
     @Test
     void userGenderTest() {
-        ResourceBundle bundleEn = new MessagesBundle(new Locale("en", "US", ""));
+        ResourceBundle bundleEn = new MessagesBundle(Locale.of("en", "US", ""));
         assertEquals("Unassigned", bundleEn.getString("user.gender.UNASSIGNED"));
         assertEquals("Male", bundleEn.getString("user.gender.MALE"));
         assertEquals("Female", bundleEn.getString("user.gender.FEMALE"));
         assertEquals("Other", bundleEn.getString("user.gender.OTHER"));
 
-        ResourceBundle bundleDe = new MessagesBundle(new Locale("de"));
+        ResourceBundle bundleDe = new MessagesBundle(Locale.of("de"));
         assertEquals("Nicht ausgewählt", bundleDe.getString("user.gender.UNASSIGNED"));
         assertEquals("Männlich", bundleDe.getString("user.gender.MALE"));
         assertEquals("Weiblich", bundleDe.getString("user.gender.FEMALE"));
@@ -53,15 +53,15 @@ class MessagesBundleTest {
 
     @Test
     void shouldNotThrownOnUnknownKey() {
-        ResourceBundle bundleEn = new MessagesBundle(new Locale("en"));
+        ResourceBundle bundleEn = new MessagesBundle(Locale.of("en"));
         assertEquals("not_existing_key", bundleEn.getString("not_existing_key"));
     }
 
     @Test
     void sizeShouldBeEqual() {
-        MessagesBundle bundle = new MessagesBundle(new Locale("en"));
-        MessagesBundle bundleDe = new MessagesBundle(new Locale("de"));
-        MessagesBundle bundlePt = new MessagesBundle(new Locale("pt", "BR"));
+        MessagesBundle bundle = new MessagesBundle(Locale.of("en"));
+        MessagesBundle bundleDe = new MessagesBundle(Locale.of("de"));
+        MessagesBundle bundlePt = new MessagesBundle(Locale.of("pt", "BR"));
         assertEquals(bundle.keySet().size(), bundleDe.keySet().size());
         assertEquals(bundle.keySet().size(), bundlePt.keySet().size());
     }
@@ -73,11 +73,11 @@ class MessagesBundleTest {
         // No cache: Elapsed time: 48281 ms, 46665 ms, 46623 ms
 
         // warmup, initial load, should be cached
-        MessagesBundle bundle = new MessagesBundle(new Locale("de", "DE"));
+        MessagesBundle bundle = new MessagesBundle(Locale.of("de", "DE"));
 
         long start = System.nanoTime();
         for (int i = 0; i < 100_000; i++) {
-            bundle = new MessagesBundle(new Locale("de", "DE")); // yes, the idea is to load the bundle on every step
+            bundle = new MessagesBundle(Locale.of("de", "DE")); // yes, the idea is to load the bundle on every step
             assertEquals("Hallo", bundle.getString("greeting"));
         }
         long elapsed = System.nanoTime() - start;

@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 import jakarta.faces.application.FacesMessage;
@@ -48,8 +49,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     private boolean editResource = false;
 
     private Resource resource;
+    private HashMap<String, Integer> ratingValues;
+    private int embeddedTab = 0;
     private ViewAction viewAction = ViewAction.viewResource;
-    private List<LogEntry> logs;
+
+    private transient List<LogEntry> logs;
 
     @Inject
     private ResourceDao resourceDao;
@@ -71,6 +75,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
         log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
 
+        embeddedTab = resource.getDefaultTab().ordinal();
         if (editResource) {
             editResource();
         }
@@ -116,6 +121,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         this.resource = resource;
     }
 
+    public int getEmbeddedTab() {
+        return embeddedTab;
+    }
+
+    public void setEmbeddedTab(final int embeddedTab) {
+        this.embeddedTab = embeddedTab;
+    }
+
     public ViewAction getViewAction() {
         return viewAction;
     }
@@ -142,7 +155,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         resource.save();
 
         log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
 
         resource.unlockResource(getUser());
         viewAction = ViewAction.viewResource;
@@ -166,7 +179,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.edit_interrupted");
 
             viewAction = ViewAction.viewResource;
-            PrimeFaces.current().ajax().update(":resourceViewForm");
+            PrimeFaces.current().ajax().update(":resource_view");
         }
     }
 
@@ -263,7 +276,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void onEditComment(Comment comment) {
         commentDao.save(comment);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void onDeleteComment(Comment comment) {
@@ -320,35 +333,41 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         this.newComment = newComment;
     }
 
-    public boolean isStarRatedByUser() {
-        if (getUser() == null || null == resource) {
-            return false;
+    public HashMap<String, Integer> getRatingValues() {
+        if (null == ratingValues) {
+            ratingValues = new HashMap<>();
+            resource.getRatings().forEach((key, value) -> ratingValues.put(key, value.getRate(getUser().getId())));
         }
-
-        return resource.isRatedByUser(getUser().getId());
+        return ratingValues;
     }
 
-    public boolean isThumbRatedByUser() {
-        if (getUser() == null || null == resource) {
-            return false;
-        }
-
-        return resource.isThumbRatedByUser(getUser());
+    public void onThumbUp() {
+        handleRate("thumb", 1);
     }
 
-    public void handleRate(RateEvent<Integer> rateEvent) {
+    public void onThumbDown() {
+        handleRate("thumb", -1);
+    }
+
+    public void handleRate(RateEvent<Object> rateEvent) {
+        String ratingType = rateEvent.getComponent().getId();
+        int ratingValue = Integer.parseInt((String) rateEvent.getRating());
+        handleRate(ratingType, ratingValue);
+    }
+
+    public void handleRate(String ratingType, int ratingValue) {
         if (null == getUser()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
             return;
         }
 
         try {
-            if (isStarRatedByUser()) {
+            if (resource.isRated(getUser().getId(), ratingType)) {
                 addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
                 return;
             }
 
-            resource.rate(rateEvent.getRating(), getUser());
+            resource.rate(getUser(), ratingType, ratingValue);
         } catch (Exception e) {
             addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
             log.error("error while rating", e);
@@ -358,38 +377,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         log(Action.rating_resource, resource.getGroupId(), resource.getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
-    }
-
-    private void handleThumbRating(int direction) {
-        if (null == getUser()) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-            return;
-        }
-
-        try {
-            if (isThumbRatedByUser()) {
-                addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
-                return;
-            }
-
-            resource.thumbRate(getUser(), direction);
-        } catch (Exception e) {
-            addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
-            log.error("error while rating", e);
-            return;
-        }
-
-        log(Action.thumb_rating_resource, resource.getGroupId(), resource.getId());
-
-        addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
-    }
-
-    public void onThumbUp() {
-        handleThumbRating(1);
-    }
-
-    public void onThumbDown() {
-        handleThumbRating(-1);
     }
 
     public List<LogEntry> getLogs() {

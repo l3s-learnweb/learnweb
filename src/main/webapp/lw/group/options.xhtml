@@ -71,7 +71,7 @@
                             </div>
                             <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.leader}:"/>
-                                <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
+                                <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.displayName}">
                                     <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
                                 </p:link>
                                 <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2"
@@ -121,14 +121,14 @@
                         </div>
 
                         <div class="field">
-                            <p:outputLabel for="@next" value="#{msg['Limit_number_of_members']}:" styleClass="h5"/>
+                            <p:outputLabel for="@next" value="#{msg['limit_number_of_members']}:" styleClass="h5"/>
                             <p:selectBooleanButton value="#{groupOptionsBean.group.memberCountLimited}" style="max-width: 5rem;" styleClass="d-block"
                                                    onLabel="#{msg.yes}" offLabel="#{msg.no}" onIcon="fas fa-check" offIcon="fas fa-xmark">
                                 <p:ajax update="member_limit_input"/>
                             </p:selectBooleanButton>
                             <h:panelGroup id="member_limit_input">
                                 <ui:fragment rendered="#{groupOptionsBean.group.memberCountLimited}">
-                                    #{msg.How_many_users_can_join_the_group}:
+                                    #{msg.how_many_users_can_join_the_group}:
                                     <p:inputNumber value="#{groupOptionsBean.group.maxMemberCount}" style="max-width: 5rem;" styleClass="d-block"
                                                    minValue="#{groupOptionsBean.group.memberCount}" maxValue="10000" decimalPlaces="0" thousandSeparator=""/>
                                 </ui:fragment>
@@ -174,7 +174,7 @@
 
                         <ui:fragment rendered="#{groupOptionsBean.group.restrictionForumCategoryEnabled}">
                             <div class="field">
-                                <p:outputLabel for="@next" value="#{msg['Miscellaneous']}" styleClass="h5"/>
+                                <p:outputLabel for="@next" value="#{msg['miscellaneous']}" styleClass="h5"/>
                                 <p:selectBooleanCheckbox id="restriction_mandatory_forum_category"
                                                          value="#{groupOptionsBean.group.restrictionForumCategoryRequired}"
                                                          itemLabel="#{msg['policy.forum_category']}"/>
@@ -198,7 +198,7 @@
                     </div>
 
                     <div class="field">
-                        <p:outputLabel for="@next" value="#{msg['Limit_number_of_members']}:" styleClass="h5"/>
+                        <p:outputLabel for="@next" value="#{msg['limit_number_of_members']}:" styleClass="h5"/>
                         <h:outputText value="#{groupOptionsBean.group.maxMemberCount}" rendered="#{groupOptionsBean.group.maxMemberCount ge 0}"/>
                         <h:outputText value="-" rendered="#{groupOptionsBean.group.maxMemberCount lt 0}"/>
                     </div>
@@ -225,7 +225,7 @@
 
                     <div class="field">
                         <p:outputLabel for="@next" value="#{msg.leader}:" styleClass="h5"/>
-                        <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
+                        <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.displayName}">
                             <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
                         </p:link>
                     </div>
@@ -268,7 +268,7 @@
                 </h:form>
             </p:panel>
 
-            <p:panel header="#{msg['Miscellaneous']}">
+            <p:panel header="#{msg['miscellaneous']}">
                 <h:form id="group_delete_form" styleClass="d-flex justify-content-between">
                     <p:commandButton value="#{msg.delete_group}"
                                      rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}"
@@ -291,7 +291,7 @@
     <p:dialog widgetVar="changeLeader" header="#{msg.change_leader}" modal="true" styleClass="overflow-hidden">
         <h:form>
             <p:selectOneMenu id="edit_group_leader" value="#{groupOptionsBean.editedGroupLeaderId}" styleClass="mb-3 w-100" immediate="true" required="true">
-                <f:selectItems value="#{groupOptionsBean.group.members}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
+                <f:selectItems value="#{groupOptionsBean.group.members}" var="user" itemValue="#{user.id}" itemLabel="#{user.displayName}"/>
             </p:selectOneMenu>
             <div class="d-flex justify-content-end">
                 <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" process="@form" oncomplete="PF('changeLeader').hide()"

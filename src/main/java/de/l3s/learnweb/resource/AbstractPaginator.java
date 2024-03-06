@@ -117,9 +117,6 @@ public abstract class AbstractPaginator implements Serializable {
         if (totalResults == Integer.MIN_VALUE) {
             throw new IllegalStateException("Call getPageIndex() first");
         }
-        if (totalResults == 0) {
-            return true;
-        }
-        return false;
+        return totalResults == 0;
     }
 }

@@ -16,7 +16,6 @@ import de.l3s.learnweb.user.Organisation.Option;
 @Named
 @RequestScoped
 public class UserDetailBean extends ApplicationBean {
-    //private static final Logger log = LogManager.getLogger(UserDetailBean.class);
 
     private static final EnumSet<Action> USER_ACTIONS = EnumSet.of(Action.register, Action.adding_resource, Action.commenting_resource, Action.edit_resource,
         Action.deleting_resource, Action.group_changing_description, Action.group_changing_leader, Action.group_changing_restriction,

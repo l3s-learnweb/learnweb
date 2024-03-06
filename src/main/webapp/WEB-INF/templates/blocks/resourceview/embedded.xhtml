@@ -16,7 +16,7 @@
         </ui:decorate>
     </c:when>
 
-    <c:when test="${res.type eq 'video' and !userBean.videoPreviewEnabled}">
+    <c:when test="${res.type eq 'video' and res.service ne 'desktop' and !userBean.videoPreviewEnabled}">
         <div class="bg-dark text-white text-center align-self-center p-4 px-5 m-3">
             <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
         </div>
@@ -51,7 +51,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'website'}">
-        <p:tabView styleClass="res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
+        <p:tabView styleClass="ui-tabs-plaid res-embedded-tabs" activeIndex="#{resourceDetailBean.embeddedTab}" dynamic="true">
             <p:tab title="${msg['resource.tab.SCREENSHOT']}">
                 <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
             </p:tab>

@@ -1,8 +1,10 @@
 package de.l3s.learnweb.resource;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import jakarta.faces.model.SelectItem;
 
@@ -18,18 +20,14 @@ import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.bean.BeanHelper;
 
 /**
- * This class provides auto completion for selected resource metadata fields of the yell course.
+ * This class provides autocompletion for selected resource metadata fields of the yell course.
  * It is not a real bean
  *
  * @author Philipp Kemkes
  */
 public class ResourceMetaDataBean {
     private static final Logger log = LogManager.getLogger(ResourceMetaDataBean.class);
-    private static final String[] LANGUAGES = {"af", "am", "ar", "arq", "as", "ast", "az", "be", "bg", "bi", "bn", "bo", "bs", "ca", "ceb", "cs", "da",
-        "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fil", "fr", "fr-ca", "ga", "gl", "gu", "ha", "he", "hi", "hr", "ht", "hu", "hup", "hy",
-        "id", "inh", "is", "it", "ja", "ka", "kk", "km", "kn", "ko", "ku", "ky", "la", "lb", "level", "lo", "lt", "ltg", "lv", "mg", "mk", "ml", "mn",
-        "mr", "ms", "mt", "my", "nb", "ne", "nl", "nn", "oc", "pl", "pt", "pt-br", "ro", "ru", "rup", "sh", "si", "sk", "sl", "so", "sq", "sr", "srp",
-        "sv", "sw", "szl", "ta", "te", "tg", "th", "tl", "tr", "tt", "ug", "uk", "ur", "uz", "vi", "zh", "zh-cn", "zh-tw"};
+    private static final List<Locale> LANGUAGES = Arrays.stream(Locale.getISOLanguages()).map(Locale::of).toList();
 
     private static final HashMap<String, List<SelectItem>> languageLists = new HashMap<>();
     private static final HashMap<Integer, List<String>> authorLists = new HashMap<>(); // quick and very dirt implementation
@@ -44,7 +42,7 @@ public class ResourceMetaDataBean {
 
         if (null == languageList) {
             synchronized (languageLists) {
-                languageList = BeanHelper.getLanguagesAsSelectItems(LANGUAGES, bundle);
+                languageList = BeanHelper.getLocalesAsSelectItems(LANGUAGES, bundle.getLocale());
                 languageLists.put(bundle.getLocale().getLanguage(), languageList);
             }
         }

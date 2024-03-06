@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard.activity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -7,45 +8,43 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.map.LinkedMap;
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.line.LineChartDataSet;
-import org.primefaces.model.charts.line.LineChartModel;
 
 import de.l3s.util.ColorHelper;
+import software.xdev.chartjs.model.charts.LineChart;
+import software.xdev.chartjs.model.color.Color;
+import software.xdev.chartjs.model.data.LineData;
+import software.xdev.chartjs.model.dataset.LineDataset;
+import software.xdev.chartjs.model.options.elements.Fill;
 
 public final class ActivityDashboardChartsFactory {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static LineChartModel createActivitiesChart(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {
-        LineChartModel model = new LineChartModel();
-        ChartData chartData = new ChartData();
-        List<String> colors = ColorHelper.getColorList(data.size());
+    public static String createActivitiesChart(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {
+        LineData chartData = new LineData();
+
+        List<Color> colors = ColorHelper.getColorList(data.size());
 
         for (ActivityGraphData activityData : data) {
-            LineChartDataSet dataSet = new LineChartDataSet();
-
-            List<Object> values = new ArrayList<>();
+            List<BigDecimal> values = new ArrayList<>();
             List<String> labels = new ArrayList<>();
-
-            dataSet.setData(values);
-            dataSet.setFill(false);
-            dataSet.setBorderColor(colors.get(0));
-            colors.remove(0);
-            dataSet.setLabel(activityData.getName());
-            dataSet.setTension(0.1);
 
             for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
                 String dateKey = DATE_FORMAT.format(date);
                 labels.add(dateKey);
-                values.add(activityData.getActionsPerDay().getOrDefault(dateKey, 0));
+                values.add(BigDecimal.valueOf(activityData.getActionsPerDay().getOrDefault(dateKey, 0)));
             }
 
-            chartData.addChartDataSet(dataSet);
+            chartData.addDataset(new LineDataset()
+                .setData(values)
+                .setFill(new Fill<>(false))
+                .setBorderColor(colors.getFirst())
+                .setLabel(activityData.getName())
+                .setLineTension(0.1f));
+            colors.removeFirst();
             chartData.setLabels(labels);
         }
 
-        model.setData(chartData);
-        return model;
+        return new LineChart().setData(chartData).toJson();
     }
 
     public static List<Map<String, Object>> createActivitiesTable(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {

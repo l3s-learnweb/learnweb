@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.model.SelectItem;
@@ -42,7 +41,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private int organisationId;
     private Organisation organisation;
     private LinkedList<OptionWrapperGroup> optionGroups;
-    private List<SelectItem> availableGlossaryLanguages;
+    private transient List<SelectItem> availableGlossaryLanguages;
 
     @Inject
     private FileDao fileDao;
@@ -92,9 +91,8 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     /**
      * @return list of supported languages (codes) of this Learnweb instance
      */
-    public List<String> getSupportedLanguages() {
-        List<Locale> locales = BeanHelper.getSupportedLocales();
-        return locales.stream().map(Locale::getLanguage).distinct().collect(Collectors.toList());
+    public List<Locale> getSupportedLocales() {
+        return BeanHelper.getSupportedLocales();
     }
 
     /**
@@ -102,7 +100,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
      */
     public List<String> getSupportedLanguageVariants() {
         List<Locale> locales = BeanHelper.getSupportedLocales();
-        return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
+        return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().toList();
     }
 
     public void onSave() {
@@ -113,7 +111,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         }
 
         organisationDao.save(organisation);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public Organisation getSelectedOrganisation() {
@@ -153,10 +151,10 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public List<SelectItem> getAvailableGlossaryLanguages() {
         if (null == availableGlossaryLanguages) {
-            List<Locale> glossaryLanguages = Arrays.asList(new Locale("ar"), new Locale("de"), new Locale("el"),
-                new Locale("en"), new Locale("es"), new Locale("fr"), new Locale("it"), new Locale("nl"),
-                new Locale("pt"), new Locale("ru"), new Locale("sv"), new Locale("zh"));
-            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getBundle());
+            List<Locale> glossaryLanguages = Arrays.asList(Locale.of("ar"), Locale.of("de"), Locale.of("el"),
+                Locale.of("en"), Locale.of("es"), Locale.of("fr"), Locale.of("it"), Locale.of("nl"),
+                Locale.of("pt"), Locale.of("ru"), Locale.of("sv"), Locale.of("zh"));
+            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getLocale());
         }
         return availableGlossaryLanguages;
     }

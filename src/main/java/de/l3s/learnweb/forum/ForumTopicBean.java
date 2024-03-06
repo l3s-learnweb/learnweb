@@ -22,18 +22,17 @@ import de.l3s.learnweb.user.User;
 public class ForumTopicBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 6077135964610986190L;
-    // private static final Logger log = LogManager.getLogger(ForumTopicBean.class);
 
     // params
     private int topicId;
 
     private Group group;
     private ForumTopic topic;
-    private List<ForumPost> posts;
     private ForumPost dialogPost = new ForumPost();
 
     // used only by breadcrumbs
-    private List<ForumTopic> topics;
+    private transient List<ForumTopic> topics;
+    private transient List<ForumPost> posts;
 
     @Inject
     private GroupDao groupDao;
@@ -83,7 +82,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
             dialogPost.getUser().incForumPostCount();
             log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
         } else {
-            addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+            addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         }
 
         dialogPost = new ForumPost();
@@ -114,7 +113,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     public void quotePost(ForumPost post) {
         dialogPost = new ForumPost();
-        String username = post.getUser() != null ? post.getUser().getUsername() : "Anonymous"; // can happen for old imported posts
+        String username = post.getUser() != null ? post.getUser().getDisplayName() : "Anonymous"; // can happen for old imported posts
         String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;");
         dialogPost.setText("<blockquote><strong>" + username + ":</strong>" + newStr + "</blockquote></br>");
     }

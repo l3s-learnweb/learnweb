@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Inject;
 
+import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.Handle;
 import org.omnifaces.cdi.Eager;
 
@@ -84,6 +85,7 @@ public final class Learnweb {
      */
     @PreDestroy
     public void destroy() {
+        LogManager.getLogger(Learnweb.class).info("Learnweb is shutting down...");
         daoProvider.destroy();
     }
 

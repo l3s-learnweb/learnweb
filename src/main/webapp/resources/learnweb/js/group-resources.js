@@ -129,66 +129,33 @@ class SelectResource {
 /** @type {SelectResource} */
 const selected = new SelectResource();
 
-/**
- * Context Menu for resources
- * Do not require to re-create when resources updated
- */
-function createContextMenu() {
-  const $contextmenuItems = $(document.getElementById('contextmenu_items'));
-  // check if container is selectable
-  if (!$contextmenuItems) return;
-
-  $.contextMenu({
-    selector: '.res-container,.res-item',
-    // trigger: 'none',
-    build($trigger) {
-      let triggerType;
-      if (!$trigger.hasClass('res-item')) {
-        triggerType = 'container';
-        selected.unselectAll(); // clicked on a container, unselect all items
-      } else {
-        // if clicked by an item which is not selected, then reset selection and select only the item
-        if (selected.indexOf($trigger.data('itemtype'), $trigger.data('itemid')) === -1) {
-          selected.selectOnly($trigger);
-        }
-        triggerType = selected.getSelectedType();
-      }
-
-      const items = {};
-      $('li', $contextmenuItems).each((i, el) => {
-        const itemMenuTypes = el.dataset.type.split('|');
-        if (itemMenuTypes.includes(triggerType)) {
-          if ($trigger.data(el.dataset.per) === true) {
-            const name = el.textContent;
-
-            items[name.toLowerCase()] = {
-              name,
-              icon: el.dataset.icon,
-              action: el.dataset.action,
-            };
-          }
-        }
-      });
-
-      return {
-        callback(itemKey, opt) {
-          const item = opt.items[itemKey];
-          doAction(item.action);
-        },
-        items,
-      };
-    },
-  });
-
-  if (PF('learnweb').isTouchDevice()) {
-    // only on mobile
-    $(document).on('click', '.res-item .res-bl-menu', (e) => {
-      const resItem = $(e.currentTarget).parents('.res-item');
-      resItem.contextMenu({ x: e.pageX, y: e.pageY });
-
-      return false;
-    });
+function shouldShowMenuItem(el, triggerType, trigger) {
+  const itemTypes = el.dataset.type.split('|');
+  if (itemTypes.includes(triggerType)) {
+    const itemCheck = el.dataset.check;
+    return !itemCheck || trigger.data(itemCheck);
   }
+
+  return false;
+}
+
+function beforeShowResourceMenu(menu, trigger) {
+  let triggerType;
+  const $resItem = $(trigger).closest('.res-item');
+  if ($resItem.length > 0) {
+    // if clicked by an item which is not selected, then reset selection and select only the item
+    if (selected.indexOf($resItem.data('itemtype'), $resItem.data('itemid')) === -1) {
+      selected.selectOnly($resItem);
+    }
+    triggerType = selected.getSelectedType();
+  } else {
+    triggerType = 'container';
+    selected.unselectAll(); // clicked on a container, unselect all items
+  }
+
+  menu.links.each((i, el) => {
+    el.parentNode.classList.toggle('collapse', !shouldShowMenuItem(el, triggerType, $resItem));
+  });
 }
 
 function isFileDrag(e) {
@@ -367,7 +334,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
     greedy: true,
     drop() {
       const destFolderId = this.dataset.itemid;
-      doAction('move', null, destFolderId);
+      doResourceAction('move', null, destFolderId);
     },
   });
 
@@ -379,7 +346,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
       greedy: true,
       drop() {
         const destFolderId = this.dataset.folderid;
-        doAction('move', null, destFolderId);
+        doResourceAction('move', null, destFolderId);
       },
     });
   }
@@ -417,7 +384,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
       greedy: true,
       drop() {
         const destFolderId = this.dataset.datakey;
-        doAction('move', null, destFolderId);
+        doResourceAction('move', null, destFolderId);
       },
     });
   }
@@ -452,18 +419,18 @@ window.addEventListener('popstate', (e) => {
   }
 }, false);
 
-function doAction(action, extraAttr1, extraAttr2) {
+function doResourceAction(action, targetGroupId, targetFolderId) {
   switch (action) {
     case 'create-folder':
       $('#res_toolbar\\:menu_create_folder').trigger('click');
       break;
-    case 'upload-file':
+    case 'create-file':
       $('#res_toolbar\\:menu_upload_file').trigger('click');
       break;
-    case 'add-website':
+    case 'create-url':
       $('#res_toolbar\\:menu_upload_url').trigger('click');
       break;
-    case 'open-folder': {
+    case 'open': {
       const last = selected.getItem(selected.size() - 1);
       if (selected.size() > 0) {
         openFolder(last.id);
@@ -472,7 +439,7 @@ function doAction(action, extraAttr1, extraAttr2) {
       }
       break;
     }
-    case 'add-tag':
+    case 'tag':
       if (selected.size() > 0) {
         createConfirmDialog('addTag', () => {
           const $tagInput = document.getElementById('modal_tag_name');
@@ -502,10 +469,10 @@ function doAction(action, extraAttr1, extraAttr2) {
       }
       break;
     case 'move':
-      if (extraAttr1 || extraAttr2) {
+      if (targetGroupId || targetFolderId) {
         commandBatchUpdateResources([
           { name: 'action', value: 'move' },
-          { name: 'destination', value: JSON.stringify({ groupId: extraAttr1, folderId: extraAttr2 }) },
+          { name: 'destination', value: JSON.stringify({ groupId: targetGroupId, folderId: targetFolderId }) },
           { name: 'items', value: JSON.stringify(selected) },
         ]);
       } else if (selected.size() > 0) {

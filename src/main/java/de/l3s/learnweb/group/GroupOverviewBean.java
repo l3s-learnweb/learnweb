@@ -41,14 +41,14 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     private int groupId;
     private Group group;
 
-    private boolean showAllMembers = false;
-    private List<User> members;
+    private transient boolean showAllMembers = false;
+    private transient List<User> members;
 
-    private String summaryTitle;
-    private SummaryOverview groupSummary;
+    private transient String summaryTitle;
+    private transient SummaryOverview groupSummary;
 
-    private boolean showAllLogs = false;
-    private List<LogEntry> logMessages;
+    private transient boolean showAllLogs = false;
+    private transient List<LogEntry> logMessages;
 
     @Inject
     private GroupDao groupDao;
@@ -153,12 +153,10 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
                         summary.getAddedResources().add(logEntry);
                     }
                     break;
-                case forum_topic_added:
-                case forum_post_added:
+                case forum_topic_added, forum_post_added:
                     summary.getForumsInfo().add(logEntry);
                     break;
-                case group_joining:
-                case group_leaving:
+                case group_joining, group_leaving:
                     summary.getMembersInfo().add(logEntry);
                     break;
                 case changing_office_resource:
@@ -210,9 +208,6 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
         if (user == null) {
             return false;
         }
-        if (user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames)) {
-            return true;
-        }
-        return false;
+        return user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames);
     }
 }

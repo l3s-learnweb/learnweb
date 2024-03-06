@@ -21,7 +21,6 @@ import de.l3s.util.HashHelper;
 @Named
 @ViewScoped
 public class PasswordChangeBean extends ApplicationBean implements Serializable {
-    //private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
     @Serial
     private static final long serialVersionUID = 2237249691332567548L;
 

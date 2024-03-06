@@ -92,7 +92,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
         List<GlossaryEntry> data = glossaryResource.getEntries().stream()
             .filter(allPredicates.stream().reduce(x -> true, Predicate::and))
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()); // we can't use .toList() because it produces unmodifiable list
 
         if (filterBy.get("globalFilter") != null) {
             highlightText(data, filterBy.get("globalFilter").getFilterValue().toString());

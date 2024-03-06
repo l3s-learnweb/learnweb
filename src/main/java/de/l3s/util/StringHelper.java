@@ -1,8 +1,7 @@
 package de.l3s.util;
 
 import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -98,9 +97,9 @@ public final class StringHelper {
         }
 
         try {
-            URL uri = new URL(url);
+            URI uri = URI.create(url);
             return uri.getHost();
-        } catch (MalformedURLException e) {
+        } catch (IllegalArgumentException e) {
             log.error("Can't get domain for url: {}", url, e);
             return null;
         }
@@ -112,7 +111,7 @@ public final class StringHelper {
             .collect(Collectors.joining(","));
     }
 
-    public static List<Locale> splitLocales(String input) {
+    public static ArrayList<Locale> splitLocales(String input) {
         ArrayList<Locale> locales = new ArrayList<>();
 
         if (StringUtils.isEmpty(input)) {

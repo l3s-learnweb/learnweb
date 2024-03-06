@@ -113,15 +113,10 @@ public class ResourcePreviewMaker implements Serializable {
             case video:
                 processVideo(resource);
                 break;
-            case pdf:
-            case document:
-            case presentation:
-            case spreadsheet:
+            case pdf, document, presentation, spreadsheet:
                 processDocument(resource, resource.getFile(FileType.MAIN).getAbsoluteUrl());
                 break;
-            case text:
-            case audio:
-            case file:
+            case text, audio, file:
                 break;
             default:
                 log.error("Can't create thumbnail. Don't know how to handle resource {}, type {}", resource.getId(), resource.getType());

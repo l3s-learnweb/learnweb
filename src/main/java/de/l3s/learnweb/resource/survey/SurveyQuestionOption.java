@@ -18,8 +18,11 @@ public class SurveyQuestionOption implements HasId, Deletable, Serializable {
     private boolean deleted;
     private String value;
 
-    public SurveyQuestionOption(int questionId) {
-        this.questionId = questionId;
+    public SurveyQuestionOption() {
+    }
+
+    public SurveyQuestionOption(String value) {
+        this.value = value;
     }
 
     @Override

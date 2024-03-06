@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.ted;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -69,7 +68,7 @@ public class TedCrawlerSimple implements Runnable {
      */
     public void extractTranscript(int tedId, int resourceId, String language) {
         try {
-            InputStream inputStream = new URL("https://www.ted.com/talks/" + tedId + "/transcript.json?language=" + language).openStream();
+            InputStream inputStream = UrlHelper.getInputStream("https://www.ted.com/talks/" + tedId + "/transcript.json?language=" + language);
             String transcriptJSONStr = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             JsonObject transcriptJsonObj = JsonParser.parseString(transcriptJSONStr).getAsJsonObject();
             JsonArray paragraphs = transcriptJsonObj.get("paragraphs").getAsJsonArray();
@@ -100,7 +99,7 @@ public class TedCrawlerSimple implements Runnable {
     public void start() {
         try {
             String tedTalksURLPrefix = "http://www.ted.com/talks?";
-            Document doc = Jsoup.parse(new URL(tedTalksURLPrefix + "page=1"), 10000);
+            Document doc = Jsoup.connect(tedTalksURLPrefix + "page=1").timeout(10000).get();
 
             Element lastBrowsingPageEl = doc.select("a.pagination__item").last();
             String lastPage = lastBrowsingPageEl.text();
@@ -120,7 +119,7 @@ public class TedCrawlerSimple implements Runnable {
      */
     public void visitTedTalksPage(String tedTalksPageUrl) {
         try {
-            Document doc = Jsoup.parse(new URL(tedTalksPageUrl), 10000);
+            Document doc = Jsoup.connect(tedTalksPageUrl).timeout(10000).get();
 
             Elements tedTalkURLs = doc.select("div.talk-link div.media__message a");
             for (Element tedTalkUrlEl : tedTalkURLs) {
@@ -161,7 +160,7 @@ public class TedCrawlerSimple implements Runnable {
                 retries--;
 
                 response = Jsoup.connect(url).timeout(10000).execute();
-                return response.parse(); // Jsoup.parse(new URL(url), 10000);
+                return response.parse();
             } catch (IOException e) {
                 if (response != null) {
                     log.warn("Error while fetching ted talks page: {}; response: {}, {}", url, response.statusCode(), response.statusMessage(), e);

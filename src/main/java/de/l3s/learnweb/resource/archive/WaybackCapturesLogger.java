@@ -131,7 +131,7 @@ public class WaybackCapturesLogger {
                 waybackUrlDao.insertCapture(urlId.get(), timestamps);
                 log.debug("Logged the wayback captures in the database for: {}", resource.getUrl());
             }
-            resource.addArchiveUrl(null);
+            resource.setArchiveUrls(null);
             return null;
         }
     }

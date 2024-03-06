@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
@@ -86,7 +86,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource WHERE group_id = ? AND url = ? AND deleted = 0 LIMIT 1")
     Optional<Resource> findByGroupIdAndUrl(int groupId, String url);
 
-    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_rating USING (resource_id) WHERE user_id = ? AND deleted = 0")
+    @SqlQuery("SELECT * FROM lw_resource WHERE resource_id IN (SELECT DISTINCT resource_id FROM lw_resource_rating r WHERE r.user_id = ?) AND deleted = 0")
     List<Resource> findRatedByUsedId(int userId);
 
     @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?")
@@ -112,28 +112,20 @@ public interface ResourceDao extends SqlObject, Serializable {
     /**
      * @return a rate given to the resource by the user.
      */
-    @SqlQuery("SELECT rating FROM lw_resource_rating WHERE resource_id = ? AND user_id = ?")
-    Optional<Integer> findResourceRating(int resourceId, int userId);
+    @SqlQuery("SELECT rating FROM lw_resource_rating WHERE resource_id = ? AND user_id = ? AND type = ?")
+    Optional<Integer> findRating(int resourceId, int userId, String ratingType);
 
-    default void insertResourceRating(int resourceId, int userId, int value) {
-        getHandle().execute("INSERT INTO lw_resource_rating (resource_id, user_id, rating) VALUES(?, ?, ?)", resourceId, userId, value);
-        getHandle().execute("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?", value, resourceId);
+    default HashMap<String, ResourceRating> findRatings(Resource resource) {
+        return getHandle().select("SELECT `user_id`, `type`, `rating` FROM lw_resource_rating WHERE resource_id = ?", resource.getId())
+            .reduceRows(new HashMap<>(), (map, rowView) -> {
+                ResourceRating rating = map.computeIfAbsent(rowView.getColumn("type", String.class), ResourceRating::new);
+                rating.addRate(rowView.getColumn("user_id", Integer.class), rowView.getColumn("rating", Integer.class));
+                return map;
+            });
     }
 
-    @SqlQuery("SELECT direction FROM lw_resource_thumb WHERE resource_id = ? AND user_id = ?")
-    Optional<Integer> findThumbRate(Resource resource, User user);
-
-    @SqlUpdate("INSERT INTO lw_resource_thumb (resource_id ,user_id ,direction) VALUES (?, ?, ?)")
-    void insertThumbRate(Resource resource, User user, int direction);
-
-    /**
-     * @return number of total thumb ups (left) and thumb downs (right).
-     */
-    default Optional<ImmutablePair<Integer, Integer>> findThumbRatings(Resource resource) {
-        return getHandle()
-            .select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM lw_resource_thumb WHERE resource_id = ?", resource)
-            .map((rs, ctx) -> new ImmutablePair<>(rs.getInt(1), rs.getInt(2))).findOne();
-    }
+    @SqlUpdate("INSERT INTO lw_resource_rating (resource_id, user_id, type, rating) VALUES(?, ?, ?, ?) ON DUPLICATE KEY UPDATE rating = VALUES(rating)")
+    void insertRating(Resource resource, User user, String ratingType, int value);
 
     @SqlUpdate("INSERT INTO lw_resource_tag (resource_id, user_id, tag_id) VALUES (?, ?, ?)")
     void insertTag(Resource resource, User user, Tag tag);
@@ -159,8 +151,6 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("type", resource.getType().name());
         params.put("format", SqlHelper.toNullable(resource.getFormat()));
         params.put("owner_user_id", SqlHelper.toNullable(resource.getUserId()));
-        params.put("rating", resource.getRatingSum());
-        params.put("rate_number", resource.getRateNumber());
         params.put("query", SqlHelper.toNullable(resource.getQuery()));
         params.put("max_image_url", SqlHelper.toNullable(resource.getMaxImageUrl()));
         params.put("original_resource_id", SqlHelper.toNullable(resource.getOriginalResourceId()));
@@ -242,8 +232,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setPolicyView(Resource.PolicyView.valueOf(rs.getString("policy_view")));
                 resource.setAuthor(rs.getString("author"));
                 resource.setUserId(rs.getInt("owner_user_id"));
-                resource.setRatingSum(rs.getInt("rating"));
-                resource.setRateNumber(rs.getInt("rate_number"));
                 resource.setMaxImageUrl(rs.getString("max_image_url"));
                 resource.setQuery(rs.getString("query"));
                 resource.setOriginalResourceId(rs.getInt("original_resource_id"));

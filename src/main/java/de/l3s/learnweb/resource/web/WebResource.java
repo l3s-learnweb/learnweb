@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -22,7 +22,7 @@ public class WebResource extends Resource {
     private static final long serialVersionUID = 8066627820924157401L;
     private static final Logger log = LogManager.getLogger(WebResource.class);
 
-    private transient LinkedList<ArchiveUrl> archiveUrls; // To store the archived URLs
+    private transient LinkedHashSet<ArchiveUrl> archiveUrls; // To store the archived URLs
 
     public WebResource() {
         this(ResourceType.website, ResourceService.internet);
@@ -33,15 +33,13 @@ public class WebResource extends Resource {
     }
 
     public WebResource(ResourceType type, ResourceService service) {
-        setStorageType(StorageType.WEB);
-        setType(type);
-        setService(service);
+        super(StorageType.WEB, type, service);
     }
 
     protected WebResource(final WebResource other) {
         super(other);
 
-        setArchiveUrls(new LinkedList<>(other.getArchiveUrls()));
+        this.archiveUrls = new LinkedHashSet<>(other.getArchiveUrls());
     }
 
     @Override
@@ -72,16 +70,16 @@ public class WebResource extends Resource {
         return this;
     }
 
-    public LinkedList<ArchiveUrl> getArchiveUrls() {
+    public LinkedHashSet<ArchiveUrl> getArchiveUrls() {
         if (archiveUrls == null && getId() != 0) {
-            archiveUrls = new LinkedList<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(getId()));
+            archiveUrls = new LinkedHashSet<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(getId()));
             archiveUrls.addAll(Learnweb.dao().getWaybackUrlDao().findByUrl(getUrl()));
         }
 
         return archiveUrls;
     }
 
-    public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls) {
+    public void setArchiveUrls(LinkedHashSet<ArchiveUrl> archiveUrls) {
         this.archiveUrls = archiveUrls;
     }
 
@@ -95,10 +93,6 @@ public class WebResource extends Resource {
             versions.get(year).add(url);
         }
         return versions;
-    }
-
-    public void addArchiveUrl(ArchiveUrl archiveUrl) {
-        archiveUrls = null;
     }
 
     public boolean isArchived() {

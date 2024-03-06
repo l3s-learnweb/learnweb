@@ -30,7 +30,7 @@
                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                         </ui:fragment>
                         <ui:fragment rendered="#{userBean.loggedIn}">
-                            <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
+                            <h:outputText value="#{msg.greeting} #{userBean.user.displayName},"/><br/>
                             <h:outputText value="#{msg.you_are_already_logged_in}" styleClass="fw-bold"/><br/>
 
                             <p:linkButton href="#{userBean.bannerLink}" value="#{msg.return_to_welcome_page}" styleClass="mt-3"/>

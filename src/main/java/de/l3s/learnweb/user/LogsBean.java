@@ -20,7 +20,6 @@ import de.l3s.learnweb.logging.LogEntry;
 public class LogsBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 42220709533639671L;
-    //private static final Logger log = LogManager.getLogger(LogsBean.class);
 
     private static final EnumSet<Action> AVAILABLE_ACTIONS;
 
@@ -38,11 +37,12 @@ public class LogsBean extends ApplicationBean implements Serializable {
 
     private int userId;
     private User selectedUser;
-    private List<LogEntry> logEntries;
+    private EnumSet<Action> selectedActions = AVAILABLE_ACTIONS; // TODO implement client side selector
+
+    private transient List<LogEntry> logEntries;
 
     @Inject
     private UserDao userDao;
-    private EnumSet<Action> selectedActions = AVAILABLE_ACTIONS; // TODO implement client side selector
 
     public void onLoad() {
         User loggedInUser = getUser();

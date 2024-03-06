@@ -21,8 +21,8 @@ public class SolrPaginator extends AbstractPaginator {
     private final SolrSearch search;
     private int searchLogId;
 
-    private List<FacetField> facetFieldsResults;
-    private Map<String, Integer> facetQueriesResults;
+    private transient List<FacetField> facetFieldsResults;
+    private transient Map<String, Integer> facetQueriesResults;
 
     public SolrPaginator(SolrSearch search, final boolean collectSearchHistory) {
         super(search.getResultsPerPage());
@@ -31,7 +31,7 @@ public class SolrPaginator extends AbstractPaginator {
 
         if (collectSearchHistory && search.getFilterGroupIds().size() == 1 && search.getQuery() != null && !"*".equals(search.getQuery())) {
             this.searchLogId = Learnweb.dao().getSearchHistoryDao().insertGroupQuery(
-                search.getFilterGroupIds().get(0),
+                search.getFilterGroupIds().getFirst(),
                 search.getQuery(),
                 null,
                 search.getFilterLanguage(),

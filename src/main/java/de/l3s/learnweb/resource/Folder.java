@@ -192,6 +192,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     @Override
     public void setUser(User user) {
         this.userId = user.getId();
+        this.user = user;
     }
 
     public List<Resource> getResources() {

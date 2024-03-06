@@ -23,10 +23,9 @@ import de.l3s.learnweb.user.User;
 public class YourMessagesBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 9183874194970002045L;
-    //private static final Logger log = LogManager.getLogger(YourMessagesBean.class);
 
-    private List<Message> receivedMessages;
-    private List<Message> sentMessages;
+    private transient List<Message> receivedMessages;
+    private transient List<Message> sentMessages;
 
     @Inject
     private MessageDao messageDao;

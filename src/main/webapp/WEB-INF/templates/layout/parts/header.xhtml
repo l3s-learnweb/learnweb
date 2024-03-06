@@ -44,7 +44,7 @@
                     <li class="nav-item">
                         <h:outputLink value="#" id="userDropdown" styleClass="nav-link nav-link-profile guide-link-profile" ariaLabel="Profile" onclick="return false;">
                             <p:avatar label="${userBean.user.initials}" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-                                <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.fullName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                                <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.displayName}" rendered="#{not empty userBean.user.imageUrl}"/>
                             </p:avatar>
                         </h:outputLink>
 

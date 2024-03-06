@@ -39,8 +39,8 @@
                             <div class="col-md-8">
                                 <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.username}:"/>
-                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}"
-                                                 label="#{msg.username}" required="true">
+                                    <p:inputText id="username" value="#{profileBean.selectedUser.username}" validator="#{profileBean.validateUsername}"
+                                                 required="true">
                                         <f:validateLength minimum="2" maximum="50"></f:validateLength>
                                     </p:inputText>
                                     <p:message for="@previous"/>
@@ -48,21 +48,19 @@
 
                                 <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.full_name}:"/>
-                                    <p:inputText id="userfullname" value="#{profileBean.selectedUser.fullName}" label="#{msg.full_name}:"
-                                                 disabled="#{profileBean.editingDisabled}"/>
+                                    <p:inputText id="userfullname" value="#{profileBean.selectedUser.fullName}" disabled="#{profileBean.editingDisabled}"/>
                                     <p:message for="@previous"/>
                                 </div>
 
                                 <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.email_address}:"/>
-                                    <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:"
-                                                 required="#{profileBean.mailRequired}" validator="emailValidator"/>
+                                    <p:inputText id="useremail" value="#{profileBean.email}" validator="emailValidator" required="#{profileBean.mailRequired}"/>
                                     <p:message for="@previous"/>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <p:avatar label="${profileBean.selectedUser.initials}" styleClass="d-flex m-auto" size="large" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-                                    <h:graphicImage value="#{profileBean.selectedUser.imageUrl}" alt="#{profileBean.selectedUser.fullName}" rendered="#{not empty profileBean.selectedUser.imageUrl}"/>
+                                    <h:graphicImage value="#{profileBean.selectedUser.imageUrl}" alt="#{profileBean.selectedUser.displayName}" rendered="#{not empty profileBean.selectedUser.imageUrl}"/>
                                 </p:avatar>
 
                                 <div class="field mt-2 text-center">
@@ -86,14 +84,14 @@
 
                             <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.student_id}:"/>
-                                <p:inputText id="studentId" value="#{profileBean.selectedUser.studentId}" label="#{msg.student_id}:"
+                                <p:inputText id="studentId" value="#{profileBean.selectedUser.studentId}"
                                              required="#{profileBean.studentIdRequired}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.studentIdRequired}">
                                 <p:outputLabel value="#{msg.consent}:"/>
-                                <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.selectedUser.acceptTermsAndConditions}" label="#{msg.consent}"
+                                <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.selectedUser.acceptTermsAndConditions}"
                                                          itemLabel="I've given consent to use my data for the project" validator="#{profileBean.validateConsent}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>

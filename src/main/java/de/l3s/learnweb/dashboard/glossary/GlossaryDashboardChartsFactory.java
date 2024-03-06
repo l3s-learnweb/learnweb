@@ -1,35 +1,37 @@
 package de.l3s.learnweb.dashboard.glossary;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.bar.BarChartDataSet;
-import org.primefaces.model.charts.bar.BarChartModel;
-import org.primefaces.model.charts.line.LineChartDataSet;
-import org.primefaces.model.charts.line.LineChartModel;
-import org.primefaces.model.charts.pie.PieChartDataSet;
-import org.primefaces.model.charts.pie.PieChartModel;
 
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.ColorHelper;
 import de.l3s.util.MapHelper;
+import software.xdev.chartjs.model.charts.BarChart;
+import software.xdev.chartjs.model.charts.LineChart;
+import software.xdev.chartjs.model.charts.PieChart;
+import software.xdev.chartjs.model.color.Color;
+import software.xdev.chartjs.model.data.BarData;
+import software.xdev.chartjs.model.data.LineData;
+import software.xdev.chartjs.model.data.PieData;
+import software.xdev.chartjs.model.dataset.BarDataset;
+import software.xdev.chartjs.model.dataset.LineDataset;
+import software.xdev.chartjs.model.dataset.PieDataset;
+import software.xdev.chartjs.model.options.elements.Fill;
 
 final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap) {
-        BarChartModel model = new BarChartModel();
-
+    public static String createActivityTypesChart(final Map<Integer, Integer> actionsMap) {
         Action[] actionTypes = Action.values();
 
         int search = 0;
@@ -55,182 +57,129 @@ final class GlossaryDashboardChartsFactory {
             }
         }
 
-        BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel("Interactions");
-        barDataSet.setData(Arrays.asList(glossary, search, system, resource));
-        barDataSet.setBackgroundColor(ColorHelper.getColorList(4));
-
-        ChartData data = new ChartData();
-        data.setLabels(Arrays.asList("Glossary", "Search", "System", "Resources"));
-        data.addChartDataSet(barDataSet);
-        model.setData(data);
-        return model;
+        return new BarChart()
+            .setData(new BarData()
+                .setLabels(Arrays.asList("Glossary", "Search", "System", "Resources"))
+                .addDataset(new BarDataset()
+                    .setLabel("Interactions")
+                    .setData(glossary, search, system, resource)
+                    .setBackgroundColor(ColorHelper.getColorList(4))))
+            .toJson();
     }
 
-    public static PieChartModel createUsersSourcesChart(Map<String, Integer> glossarySourcesWithCounters) {
-        PieChartModel model = new PieChartModel();
-
-        ChartData data = new ChartData();
-        PieChartDataSet dataSet = new PieChartDataSet();
-
-        List<Number> values = new ArrayList<>();
+    public static String createUsersSourcesChart(Map<String, Integer> sourceUsages) {
+        List<Integer> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        if (glossarySourcesWithCounters.isEmpty()) {
+        if (sourceUsages.isEmpty()) {
             labels.add("");
             values.add(0);
         } else {
-            for (Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet()) {
-
+            for (Map.Entry<String, Integer> source : sourceUsages.entrySet()) {
                 labels.add(source.getKey());
                 values.add(source.getValue());
             }
         }
 
-        dataSet.setData(values);
-        data.setLabels(labels);
-        data.addChartDataSet(dataSet);
-        dataSet.setBackgroundColor(ColorHelper.getColorList(20));
-
-        model.setData(data);
-        return model;
+        return new PieChart()
+            .setData(new PieData()
+                .setLabels(labels)
+                .addDataset(new PieDataset()
+                    .setDataUnchecked(values)
+                    .setBackgroundColor(ColorHelper.getColorList(20))))
+            .toJson();
     }
 
-    public static LineChartModel createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate) {
-        LineChartModel model = new LineChartModel();
-        ChartData data = new ChartData();
-        LineChartDataSet dataSet = new LineChartDataSet();
-
-        List<Object> values = new ArrayList<>();
+    public static String createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate) {
+        List<BigDecimal> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
-
-        dataSet.setData(values);
-        dataSet.setFill(false);
-        dataSet.setBorderColor("rgb(75, 192, 192)");
-        dataSet.setLabel("interactions");
-        dataSet.setTension(0.1);
 
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             String dateKey = DATE_FORMAT.format(date);
             labels.add(dateKey);
-            values.add(actionsCountPerDay.getOrDefault(dateKey, 0));
+            values.add(BigDecimal.valueOf(actionsCountPerDay.getOrDefault(dateKey, 0)));
         }
 
-        data.addChartDataSet(dataSet);
-        data.setLabels(labels);
-
-        model.setData(data);
-        return model;
+        return new LineChart()
+            .setData(new LineData()
+                .setLabels(labels)
+                .addDataset(new LineDataset()
+                    .setLabel("Interactions")
+                    .setLineTension(0.1f)
+                    .setFill(new Fill<>(false))
+                    .setData(values)
+                    .setBackgroundColor(new Color(75, 192, 192))))
+            .toJson();
     }
 
-    public static BarChartModel createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser) {
-        BarChartModel model = new BarChartModel();
-        ChartData data = new ChartData();
-
+    public static String createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser) {
         List<String> labels = new ArrayList<>();
 
-        BarChartDataSet concepts = new BarChartDataSet();
-        concepts.setLabel("Concepts");
-
-        List<Number> conceptsData = new ArrayList<>();
+        List<BigDecimal> conceptsData = new ArrayList<>();
         if (glossaryConceptsCountPerUser.isEmpty()) {
-            conceptsData.add(0);
+            conceptsData.add(BigDecimal.ZERO);
             labels.add("");
         } else {
             for (String key : glossaryConceptsCountPerUser.keySet()) {
                 labels.add(key);
-                conceptsData.add(glossaryConceptsCountPerUser.getOrDefault(key, 0));
+                conceptsData.add(BigDecimal.valueOf(glossaryConceptsCountPerUser.getOrDefault(key, 0)));
             }
         }
-        concepts.setData(conceptsData);
-        concepts.setBackgroundColor(ColorHelper.getColorList(10));
 
-        BarChartDataSet terms = new BarChartDataSet();
-        terms.setLabel("Terms");
-
-        List<Number> termsData = new ArrayList<>();
+        List<BigDecimal> termsData = new ArrayList<>();
         if (glossaryTermsCountPerUser.isEmpty()) {
-            conceptsData.add(0);
+            termsData.add(BigDecimal.ZERO);
         } else {
             for (String key : glossaryTermsCountPerUser.keySet()) {
-                conceptsData.add(glossaryTermsCountPerUser.getOrDefault(key, 0));
+                termsData.add(BigDecimal.valueOf(glossaryTermsCountPerUser.getOrDefault(key, 0)));
             }
         }
-        terms.setData(termsData);
-        terms.setBackgroundColor(ColorHelper.getColorList(10));
 
-        data.setLabels(labels);
-        data.addChartDataSet(terms);
-        data.addChartDataSet(concepts);
-
-        model.setData(data);
-
-        return model;
+        return new BarChart()
+            .setData(new BarData()
+                .setLabels(labels)
+                .addDataset(new BarDataset()
+                    .setLabel("Concepts")
+                    .setData(conceptsData)
+                    .setBackgroundColor(ColorHelper.getColorList(10)))
+                .addDataset(new BarDataset()
+                    .setLabel("Terms")
+                    .setData(termsData)
+                    .setBackgroundColor(ColorHelper.getColorList(10))))
+            .toJson();
     }
 
-    public static BarChartModel createProxySourcesChart(Map<String, Integer> proxySourcesWithCounters) {
-        BarChartModel model = new BarChartModel();
-        ChartData data = new ChartData();
-
-        BarChartDataSet barDataSet = new BarChartDataSet();
-
-        List<Number> values = new ArrayList<>();
+    public static String createProxySourcesChart(Map<String, Integer> proxySourcesWithCounters) {
         List<String> labels = new ArrayList<>();
+        List<BigDecimal> values = new ArrayList<>();
 
         if (proxySourcesWithCounters.isEmpty()) {
             labels.add("");
-            values.add(0);
+            values.add(BigDecimal.ZERO);
         } else {
             for (Map.Entry<String, Integer> e : MapHelper.sortByValue(proxySourcesWithCounters).entrySet()) {
                 labels.add(e.getKey());
-                values.add(e.getValue());
+                values.add(BigDecimal.valueOf(e.getValue()));
             }
         }
 
-        barDataSet.setData(values);
-        data.setLabels(labels);
-
-        data.addChartDataSet(barDataSet);
-
-        model.setData(data);
-        return model;
+        return new BarChart()
+            .setData(new BarData()
+                .setLabels(labels)
+                .addDataset(new BarDataset().setData(values)))
+            .toJson();
     }
 
-    public static BarChartModel createUserFieldsChart(List<GlossaryUserTermsSummary> glossaryFieldSummeryPerUser) {
-        BarChartModel model = new BarChartModel();
-        ChartData data = new ChartData();
+    public static String createUserFieldsChart(List<GlossaryUserTermsSummary> summary) {
+        GlossaryUserTermsSummary gfs = summary.getFirst();
 
-        BarChartDataSet pronounciation = new BarChartDataSet();
-        pronounciation.setLabel("pronounciation");
-
-        BarChartDataSet acronym = new BarChartDataSet();
-        acronym.setLabel("acronym");
-
-        BarChartDataSet phraseology = new BarChartDataSet();
-        phraseology.setLabel("phraseology");
-
-        BarChartDataSet uses = new BarChartDataSet();
-        uses.setLabel("uses");
-
-        BarChartDataSet source = new BarChartDataSet();
-        source.setLabel("source");
-
-        if (!glossaryFieldSummeryPerUser.isEmpty()) {
-            GlossaryUserTermsSummary gfs = glossaryFieldSummeryPerUser.get(0);
-            pronounciation.setData(Collections.singletonList(gfs.getPronounciation()));
-            acronym.setData(Collections.singletonList(gfs.getAcronym()));
-            phraseology.setData(Collections.singletonList(gfs.getPhraseology()));
-            uses.setData(Collections.singletonList(gfs.getUses()));
-            source.setData(Collections.singletonList(gfs.getSource()));
-        }
-
-        data.addChartDataSet(pronounciation);
-        data.addChartDataSet(acronym);
-        data.addChartDataSet(phraseology);
-        data.addChartDataSet(uses);
-        data.addChartDataSet(source);
-        model.setData(data);
-
-        return model;
+        return new BarChart()
+            .setData(new BarData()
+                .addDataset(new BarDataset().setLabel("Pronounciation").setData(gfs.getPronounciation()))
+                .addDataset(new BarDataset().setLabel("Acronym").setData(gfs.getAcronym()))
+                .addDataset(new BarDataset().setLabel("Phraseology").setData(gfs.getPhraseology()))
+                .addDataset(new BarDataset().setLabel("Uses").setData(gfs.getUses()))
+                .addDataset(new BarDataset().setLabel("Source").setData(gfs.getSource()))
+            ).toJson();
     }
 }

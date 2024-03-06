@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.faces.model.SelectItem;
 
@@ -34,7 +33,7 @@ public class MetadataField implements Serializable {
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
     private MetadataType type; // represents primefaces input types
-    private List<String> options = new LinkedList<>(); // default options for some input types like OneMenu
+    private LinkedList<String> options = new LinkedList<>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
 
@@ -73,11 +72,11 @@ public class MetadataField implements Serializable {
         this.type = type;
     }
 
-    public List<String> getOptions() {
+    public LinkedList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(List<String> options) {
+    public void setOptions(LinkedList<String> options) {
         this.options = options;
     }
 
@@ -93,7 +92,7 @@ public class MetadataField implements Serializable {
         if (StringUtils.isEmpty(query)) {
             return getOptions();
         }
-        return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).collect(Collectors.toList());
+        return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).toList();
     }
 
     public boolean isModeratorOnly() {

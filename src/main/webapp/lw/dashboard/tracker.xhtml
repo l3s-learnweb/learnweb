@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg['Tracker.dashboard']}"/>
+<ui:param name="pageTitle" value="#{msg['dashboard.tracker']}"/>
 
 <ui:define name="metadata">
     <f:metadata>
@@ -23,7 +23,7 @@
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="dashboard/tracker.jsf" title="#{msg['Tracker.dashboard']}">
+    <lw:breadcrumb-item link="dashboard/tracker.jsf" title="#{msg['dashboard.tracker']}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
     </lw:breadcrumb-item>
 </ui:define>
@@ -42,7 +42,7 @@
                     <h:form>
                        <p:dataTable value="#{trackerDashboardBean.proxySources}" var="pll" styleClass="my-2" emptyMessage="#{msg.no_data}">
                             <f:facet name="header">
-                                #{msg['Glossary.proxy_sources_list']}
+                                #{msg['glossary.proxy_sources_list']}
                             </f:facet>
 
                             <p:column headerText="#{msg.website}">
@@ -66,8 +66,8 @@
                                 #{msg.data}
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{ts.user.username}">
-                                <a href="#{request.contextPath}/lw/dashboard/tracker.jsf?userId=#{ts.userId}">#{ts.user.username}</a>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{ts.user.displayName}">
+                                <a href="#{request.contextPath}/lw/dashboard/tracker.jsf?userId=#{ts.userId}">#{ts.user.displayName}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="#{msg.total_events}" sortBy="#{ts.totalEvents}" sortable="true">
                                 #{ts.totalEvents}

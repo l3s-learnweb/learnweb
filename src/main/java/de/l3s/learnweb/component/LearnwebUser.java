@@ -18,7 +18,8 @@ import de.l3s.learnweb.user.User;
 public class LearnwebUser extends UIComponentBase {
     private static final Logger log = LogManager.getLogger(LearnwebUser.class);
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component.LearnwebUser";
-    public User user;
+
+    private User user;
 
     @Override
     public String getFamily() {
@@ -75,7 +76,7 @@ public class LearnwebUser extends UIComponentBase {
                     this.encodeChildren(context);
                 }
             } else {
-                writer.write(user.getUsername());
+                writer.write(user.getDisplayName());
             }
             writer.endElement("a");
         }

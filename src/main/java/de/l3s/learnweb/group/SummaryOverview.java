@@ -14,11 +14,11 @@ public class SummaryOverview implements Serializable {
     @Serial
     private static final long serialVersionUID = 2180957883352434028L;
 
-    private final List<LogEntry> addedResources = new LinkedList<>();
-    private final List<LogEntry> deletedResources = new LinkedList<>();
-    private final List<LogEntry> forumsInfo = new LinkedList<>();
-    private final List<LogEntry> membersInfo = new LinkedList<>();
-    private final Map<Resource, List<LogEntry>> updatedResources = new HashMap<>();
+    private final LinkedList<LogEntry> addedResources = new LinkedList<>();
+    private final LinkedList<LogEntry> deletedResources = new LinkedList<>();
+    private final LinkedList<LogEntry> forumsInfo = new LinkedList<>();
+    private final LinkedList<LogEntry> membersInfo = new LinkedList<>();
+    private final HashMap<Resource, List<LogEntry>> updatedResources = new HashMap<>();
 
     public List<LogEntry> getAddedResources() {
         return addedResources;

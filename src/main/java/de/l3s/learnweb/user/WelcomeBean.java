@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
@@ -54,15 +53,14 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     );
 
     private String organisationWelcomeMessage;
-
-    // TODO @kemkes: this separation is useless, all log entries are already included in the general logs; It needs to be discussed what we shall show here
-    private List<LogEntry> newsForums;
-    private List<LogEntry> newsResources;
-    private List<LogEntry> newsGeneral;
-    private List<Message> receivedMessages;
     private boolean hideNewsPanel; // true when there is nothing to show in the news tabs
 
-    private List<Course> coursesWithWelcomeMessage;
+    // TODO @kemkes: this separation is useless, all log entries are already included in the general logs; It needs to be discussed what we shall show here
+    private transient List<LogEntry> newsForums;
+    private transient List<LogEntry> newsResources;
+    private transient List<LogEntry> newsGeneral;
+    private transient List<Message> receivedMessages;
+    private transient List<Course> coursesWithWelcomeMessage;
 
     @Inject
     private MessageDao messageDao;
@@ -91,7 +89,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         // retrieve all the users courses whose welcome message isn't blank
         coursesWithWelcomeMessage = user.getCourses().stream()
             .filter(course -> !StringHelper.isBlankDisregardingHTML(course.getWelcomeMessage()))
-            .collect(Collectors.toList());
+            .toList();
 
     }
 

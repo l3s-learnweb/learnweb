@@ -37,20 +37,19 @@
         <h:form id="contact-form">
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.username}:"/>
-                <p:inputText id="register_username" value="#{contactBean.name}" label="#{msg.name}" disabled="#{userBean.loggedIn}" />
+                <p:inputText id="register_username" value="#{contactBean.name}" disabled="#{userBean.loggedIn}" />
                 <p:message for="@previous"/>
             </div>
 
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.email_address}:"/>
-                <p:inputText id="register_email" value="#{contactBean.email}" label="#{msg.email_address}" required="true" type="email" validator="emailValidator"/>
+                <p:inputText id="register_email" value="#{contactBean.email}" required="true" type="email" validator="emailValidator"/>
                 <p:message for="@previous"/>
             </div>
 
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.message}:"/>
-                <p:inputTextarea id="register_description" value="#{contactBean.message}" label="#{msg.description}"
-                                 required="true" placeholder="#{msg.message}" rows="4" cols="50"/>
+                <p:inputTextarea id="register_description" value="#{contactBean.message}" required="true" placeholder="#{msg.message}" rows="4" cols="50"/>
                 <p:message for="@previous"/>
             </div>
 

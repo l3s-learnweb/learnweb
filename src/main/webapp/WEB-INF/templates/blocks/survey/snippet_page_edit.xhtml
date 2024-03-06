@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="jakarta.faces.html"
+				xmlns:f="jakarta.faces.core"
+				xmlns:ui="jakarta.faces.facelets"
+                xmlns:faces="jakarta.faces"
+				xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="page" type="de.l3s.learnweb.resource.survey.SurveyPage"-->
+<!--@elvariable id="pageStatus" type="org.apache.myfaces.view.facelets.component.RepeatStatus"-->
+
+<f:subview id="p${page.id}">
+<div class="d-flex flex-column justify-content-center bg-info" style="width: 3rem;" faces:rendered="#{not empty pageStatus}">
+    <p:commandButton form="page_edit" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
+                     actionListener="#{surveyEditBean.onMovePage(page, -1)}" update="pages" process="@this" immediate="true"/>
+    <p:commandButton form="page_edit" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
+                     action="#{surveyEditBean.onMovePage(page, 1)}" update="pages" process="@this" immediate="true"/>
+</div>
+
+<div class="flex-grow-1 p-2">
+    <h:form id="page_edit">
+        <div class="field">
+            <p:outputLabel for="@next" value="#{msg['survey.mod_header_text']}:" styleClass="fw-bold"/>
+            <p:inputTextarea value="#{page.title}" rows="1">
+                <p:ajax event="change" listener="#{surveyPageEditBean.onPageChange(page)}"/>
+            </p:inputTextarea>
+            <p:message for="@previous"/>
+        </div>
+
+        <div class="field">
+            <p:outputLabel for="@next" value="#{msg['survey.mod_description_text']}:" styleClass="fw-bold"/>
+            <p:textEditor value="#{page.description}" allowBlocks="false">
+                <p:ajax event="change" listener="#{surveyPageEditBean.onPageChange(page)}"/>
+                <f:facet name="toolbar">
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"/>
+                        <button class="ql-image"/>
+                        <button class="ql-video"/>
+                        <button class="ql-formula"/>
+                    </span>
+                </f:facet>
+            </p:textEditor>
+            <p:message for="@previous"/>
+        </div>
+    </h:form>
+
+    <h:panelGroup id="questions" layout="block">
+        <ui:repeat id="qi" value="#{page.questions}" var="question" varStatus="questionStatus">
+            <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_edit.xhtml">
+                <ui:param name="page" value="#{page}"/>
+                <ui:param name="question" value="#{question}"/>
+                <ui:param name="questionStatus" value="#{questionStatus}"/>
+            </ui:decorate>
+        </ui:repeat>
+    </h:panelGroup>
+
+    <div class="d-flex flex-nowrap">
+        <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_question']}"
+                         action="#{surveyPageEditBean.onAddQuestion(page)}" process="@this" immediate="true" update="questions"/>
+        <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
+                         action="#{surveyPageEditBean.onAddHeader(page)}" process="@this" immediate="true" update="questions"/>
+        <p:commandButton form="page_edit" styleClass="ms-auto ui-button-danger ui-button-flat" value="#{msg['survey.mod_delete_page']}"
+                         action="#{surveyEditBean.onDeletePage(page)}" process="@this" immediate="true" update="pages" rendered="#{not empty pageStatus}"/>
+    </div>
+</div>
+</f:subview>
+
+</ui:composition>

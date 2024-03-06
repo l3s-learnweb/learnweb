@@ -17,13 +17,13 @@ import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 public class TrackerDashboardBean extends CommonDashboardUserBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 3640317272542005280L;
-    //private static final Logger log = LogManager.getLogger(TrackerDashboardBean.class);
 
     private static final int TRACKER_CLIENT_ID = 2;
 
     private TrackerDao trackerDao;
-    private Map<String, Integer> proxySources;
-    private List<TrackerUserActivity> statistics;
+
+    private transient Map<String, Integer> proxySources;
+    private transient List<TrackerUserActivity> statistics;
 
     @Override
     public void onLoad() {

@@ -7,8 +7,6 @@
 
 <h:outputScript>
     const guideBits = "#{userBean.guideStepsCompleted}";
-    const guideDismissBtn = '#{msg['guide.dismiss']}';
-    const guideGotchaBtn = '#{msg['guide.gotcha']}';
 </h:outputScript>
 
 <h:outputScript rendered="#{userBean.user.organisationId != 1604}">
@@ -74,7 +72,7 @@
         {
             id: 33,
             page: 'myhome/welcome.jsf',
-            text: 'Unter „Meine Ressourcen“ findest Du später Deine gespeicherten YouTube-Videos für die Bewertung wieder. Diese kannst Du durch Doppelklicken öffnen.',
+            text: 'Unter „Meine Ressourcen“ findest Du später Deine gespeicherten YouTube-Videos für die Bewertung wieder.',
             attachTo: { element: '.guide-my-resources', on: 'right' }
         },
         {
@@ -102,15 +100,21 @@
             attachTo: { element: '.fancybox-caption .guide-search-open-link', on: 'left' }
         },
         {
+            id: 42,
+            page: 'search.jsf',
+            text: 'Zum Speichern des Videos in „Meine Ressourcen“ klicke hier auf „Speichern“. Danach kannst du den Browser-Tab schließen und mit Deiner Recherche fortfahren.',
+            attachTo: { element: '.guide-search-resource-save', on: 'right' }
+        },
+        {
             id: 38,
             page: 'myhome/resources.jsf',
-            text: 'Zum Speichern des Videos in „My resources“ klicke hier auf „Add Resource“. Danach du kannst den Browser-Tab schließen und mit Deiner Recherche fortfahren.',
+            text: 'Zum Speichern des Videos in „Meine Ressourcen“ klicke hier auf „Ressource hinzufügen“. Danach kannst du den Browser-Tab schließen und mit Deiner Recherche fortfahren.',
             attachTo: { element: '.guide-create-resource-save', on: 'right' }
         },
         {
             id: 39,
             page: 'resource.jsf',
-            text: 'Beginne nun mit Deiner Bewertung der Glaubwürdigkeit des Videoinhalts.',
+            text: 'Beginne nun mit Deiner Bewertung des Videos und vergebe oberhalb einen tag, der die im Video gezeigte Einstellung zum Klimawandel wiedergibt.',
             attachTo: { element: '.guide-resource-rating', on: 'right' }
         },
         {

@@ -13,7 +13,7 @@
 <div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
 	<h5 class="mb-0">#{msg.info}</h5>
 	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
-					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
+					 action="#{resourceDetailBean.editResource}" immediate="true" update="resourceDetails" form="resource_view"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
 					 rendered="#{userBean.editingAllowed and resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 </div>
@@ -41,53 +41,98 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{userBean.user.organisationId == 1604}">
-		<dt class="col-sm-4">Beziehung zum Klimawandel:</dt>
+	<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="${userBean.user.organisationId == 1604}">
+		<dt class="col-sm-4">Einstellung zum Klimawandel im Video:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relation" layout="block">
 				<p:selectOneButton value="#{res.metadataWrapper['someclics_relation']}">
 					<p:ajax listener="#{res.save}" />
 
 					<f:selectItem itemLabel="Akzeptanz" itemValue="acceptance"/>
-					<f:selectItem itemLabel="Denial" itemValue="denial"/>
-					<f:selectItem itemLabel="Beide" itemValue="both"/>
+					<f:selectItem itemLabel="Leugnung" itemValue="denial"/>
+					<f:selectItem itemLabel="Beides" itemValue="both"/>
 				</p:selectOneButton>
 			</h:panelGroup>
 		</dd>
-	</ui:fragment>
 
-	<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="#{userBean.starRatingEnabled}">
-		<dt class="col-sm-4">#{userBean.user.organisationId == 1604 ? msg.credibility : msg.relevance}:</dt>
-		<dd class="col-sm-8">
-			<h:panelGroup id="relevance" layout="block">
-				<p:rating value="#{res.starRatingRounded}" cancel="false" immediate="true"
-						  disabled="${res.isRatedByUser(userBean.user.id) or not res.canAnnotateResource(userBean.user)}">
-					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update=":relevance"/>
-				</p:rating>
-
-				<h:outputText value="#{res.starRating}">
-					<f:convertNumber maxFractionDigits="1" minFractionDigits="1"/>
-				</h:outputText>
-				(<h:outputFormat value="#{msg.votes}"><f:param value="#{res.rateNumber}"/></h:outputFormat>)
-			</h:panelGroup>
+        <dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind fachlich plausibel:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_plausible" value="#{resourceDetailBean.ratingValues['star_plausible']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
+		</dd>
+		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind glaubwürdig:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_credibility" value="#{resourceDetailBean.ratingValues['star_credibility']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
+		</dd>
+		<dt class="col-12">Die Informationen im Kontext Klimawandel sind logisch dargestellt:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_logical" value="#{resourceDetailBean.ratingValues['star_logical']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
+		</dd>
+		<dt class="col-12">Die dargestellten Informationen im Kontext Klimawandel sind mit verlässlichen Quellen/Daten belegt:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_reliable" value="#{resourceDetailBean.ratingValues['star_reliable']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
+		</dd>
+		<dt class="col-12">Die Informationsquelle des Videos ist vertrauenswürdig:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_complete" value="#{resourceDetailBean.ratingValues['star_trustworthy']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
+		</dd>
+		<dt class="col-12">Das Video ist verständlich dargestellt:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_trustworthy" value="#{resourceDetailBean.ratingValues['star_easy']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
+		</dd>
+		<dt class="col-12">Das Video ist neutral dargestellt:</dt>
+		<dd class="col-12 mt-1 mt-2">
+			<p:rating id="star_easy" value="#{resourceDetailBean.ratingValues['star_neutrall']}" cancel="false" immediate="true">
+				<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"/>
+			</p:rating>
 		</dd>
 	</h:panelGroup>
 
-	<ui:fragment rendered="#{userBean.thumbRatingEnabled}">
-		<dt class="col-sm-4">#{msg.reliability}:</dt>
-		<dd class="col-sm-8">
-			<h:panelGrid id="reliability" columns="4">
-				<h:outputText value="+#{res.thumbUp}"/>
-				<p:commandLink action="#{resourceDetailBean.onThumbUp}" update=":reliability" ariaLabel="Rate thump up" process="@this">
-					<i class="fas fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
-				</p:commandLink>
+	<ui:fragment rendered="${userBean.user.organisationId != 1604}">
+		<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="#{userBean.starRatingEnabled}">
+			<dt class="col-sm-4">${msg.relevance}:</dt>
+			<dd class="col-sm-8">
+				<h:panelGroup id="relevance" layout="block">
+					<p:rating id="star" value="#{resourceDetailBean.ratingValues['star']}" cancel="false" immediate="true"
+							  readonly="${not empty resourceDetailBean.ratingValues['star'] or not res.canAnnotateResource(userBean.user)}">
+						<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="@parent"/>
+					</p:rating>
 
-				<p:commandLink action="#{resourceDetailBean.onThumbDown}" update=":reliability" ariaLabel="Rate thump down" process="@this">
-					<i class="fas fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
-				</p:commandLink>
-				<h:outputText value="-#{res.thumbDown}"/>
-			</h:panelGrid>
-		</dd>
+					<h:outputText value="#{res.getRatingAvg('star')}">
+						<f:convertNumber maxFractionDigits="1" minFractionDigits="1"/>
+					</h:outputText>
+					(<h:outputFormat value="${msg.votes}"><f:param value="#{res.getRatingVotes('star')}"/></h:outputFormat>)
+				</h:panelGroup>
+			</dd>
+		</h:panelGroup>
+
+		<ui:fragment rendered="#{userBean.thumbRatingEnabled}">
+			<dt class="col-sm-4">#{msg.reliability}:</dt>
+			<dd class="col-sm-8">
+				<h:panelGrid id="reliability" columns="4">
+					<h:outputText value="+${res.getRating('thumb').countRates(1)}"/>
+					<p:commandLink action="#{resourceDetailBean.onThumbUp}" update="@parent" ariaLabel="Rate thump up" process="@this">
+						<i class="fas fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
+					</p:commandLink>
+
+					<p:commandLink action="#{resourceDetailBean.onThumbDown}" update="@parent" ariaLabel="Rate thump down" process="@this">
+						<i class="fas fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
+					</p:commandLink>
+					<h:outputText value="-${res.getRating('thumb').countRates(-1)}"/>
+				</h:panelGrid>
+			</dd>
+		</ui:fragment>
 	</ui:fragment>
 
 	<ui:fragment rendered="#{not empty res.author}">
@@ -103,7 +148,7 @@
 			<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.service.label}"/></a>
 
 			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
-							 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block"
+							 icon="fas fas fa-camera-retro" value="#{msg['archive.now']}" styleClass="d-block"
 							 rendered="#{res.type eq 'website'}"/>
 		</dd>
 	</ui:fragment>
@@ -250,7 +295,7 @@
 						<f:param name="query" value="#{tag.name}"/>
 					</p:linkButton>
 					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="ui-button-secondary rounded-0"
-									 update=":tags_list" process="@this"
+									 update="tags_list" process="@this"
 									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 									 rendered="#{res.canEditResource(userBean.user)}"/>
 				</li>
@@ -265,9 +310,8 @@
 		</div>
 
 		<div class="ps-1">
-			<p:commandButton id="tag_text_btn" action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
-							 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-			</p:commandButton>
+			<p:commandButton id="tag_text_btn" action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process="tag_text_input"
+							 update="tag_text_input tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
 		</div>
 	</h:panelGroup>
 </h:panelGroup>
@@ -283,16 +327,15 @@
 		</div>
 
 		<div class="d-flex justify-content-end">
-			<p:commandButton id="comment_text_btn" value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update=":comments_list :comment_text_input"
-							 process=":comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-			</p:commandButton>
+			<p:commandButton id="comment_text_btn" value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update="comments_list comment_text_input"
+							 process="comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
 		</div>
 	</h:panelGroup>
 	<h:panelGroup layout="block" id="comments_list">
 		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
 			<div class="d-flex comment-entry p-2 #{!status.last ? 'mb-2' : ''}">
 				<p:avatar label="${comment.user.initials}" styleClass="mt-1 me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
-					<h:graphicImage value="#{comment.user.imageUrl}" alt="#{comment.user.fullName}" rendered="#{not empty comment.user.imageUrl}"/>
+					<h:graphicImage value="#{comment.user.imageUrl}" alt="#{comment.user.displayName}" rendered="#{not empty comment.user.imageUrl}"/>
 				</p:avatar>
 
 				<div class="comment-details flex-grow-1">
@@ -309,7 +352,7 @@
 					<h:panelGroup id="editCommentControls" styleClass="small" layout="block" rendered="#{resourceDetailBean.canEditComment(comment)}">
 						<p:commandLink id="editComment" value="#{msg.edit}" styleClass="text-success me-2" onclick="startEditComment(this);return false;"/>
 						<p:commandLink id="deleteComment" value="#{msg.delete}" styleClass="text-danger" ajax="true" action="#{resourceDetailBean.onDeleteComment(comment)}"
-									   update=":comments_list" process="@this" onstart="PF('detailsOverlay').show();"
+									   update="comments_list" process="@this" onstart="PF('detailsOverlay').show();"
 									   oncomplete="PF('detailsOverlay').hide();">
 							<p:confirm message="#{msg.delete_message_comments}"/>
 						</p:commandLink>

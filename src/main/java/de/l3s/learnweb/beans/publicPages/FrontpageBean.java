@@ -23,9 +23,9 @@ public class FrontpageBean extends ApplicationBean implements Serializable {
     private static final int MAX_ANNOUNCEMENTS = 5; // maximal number of announcements that will be shown
 
     // TODO: add some kind of cache
-    private List<Announcement> announcements;
-    private List<Course> publicCourses;
-    private List<Course> specificCourses;
+    private transient List<Announcement> announcements;
+    private transient List<Course> publicCourses;
+    private transient List<Course> specificCourses;
 
     @Inject
     private AnnouncementDao announcementDao;

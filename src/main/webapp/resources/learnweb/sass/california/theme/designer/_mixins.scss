@@ -29,195 +29,195 @@
 //};
 
 @mixin action-icon {
-    width: $actionIconWidth;
-    height: $actionIconHeight;
-    background: $actionIconBg;
-    color: $actionIconColor;
-    transition: $transition;
-    border-radius: $actionIconBorderRadius;
-    border: $actionIconBorder;
-    text-align: center;
-    line-height: $actionIconHeight !important;
-    padding: 0;
-    user-select: none;
+  width: $actionIconWidth;
+  height: $actionIconHeight;
+  background: $actionIconBg;
+  color: $actionIconColor;
+  transition: $transition;
+  border-radius: $actionIconBorderRadius;
+  border: $actionIconBorder;
+  text-align: center;
+  line-height: $actionIconHeight !important;
+  padding: 0;
+  user-select: none;
 
-    &:hover {
-        background: $actionIconHoverBg;
-        color: $actionIconHoverColor;
-        border-color: $actionIconHoverBorderColor;
-    }
+  &:hover {
+    background: $actionIconHoverBg;
+    color: $actionIconHoverColor;
+    border-color: $actionIconHoverBorderColor;
+  }
 
-    &:focus {
-        @include focused();
-    }
+  &:focus {
+    @include focused();
+  }
 }
 
 @mixin secondary-button() {
-    background: $secondaryButtonBg;
-    color: $secondaryButtonTextColor;
-    border: $secondaryButtonBorder;
+  background: $secondaryButtonBg;
+  color: $secondaryButtonTextColor;
+  border: $secondaryButtonBorder;
 
-    &.ui-state-hover, &:not(:disabled):hover {
-        background: $secondaryButtonHoverBg;
-        border-color: $secondaryButtonHoverBorderColor;
-        color: $secondaryButtonTextHoverColor;
+  &.ui-state-hover, &:not(:disabled):hover {
+    background: $secondaryButtonHoverBg;
+    border-color: $secondaryButtonHoverBorderColor;
+    color: $secondaryButtonTextHoverColor;
+  }
+
+  &.ui-state-focus {
+    box-shadow: $secondaryButtonFocusShadow;
+  }
+
+  &.ui-state-active, &:active {
+    background: $secondaryButtonActiveBg;
+    border-color: $secondaryButtonActiveBorderColor;
+    color: $secondaryButtonTextActiveColor;
+  }
+
+  &.ui-button-outlined {
+    background-color: transparent;
+    color: $secondaryButtonBg;
+    border: $outlinedButtonBorder;
+
+    &:enabled:hover {
+      background: rgba($secondaryButtonBg, $textButtonHoverBgOpacity);
+      color: $secondaryButtonBg;
+      border: $outlinedButtonBorder;
     }
 
-    &.ui-state-focus {
-        box-shadow: $secondaryButtonFocusShadow;
+    &:enabled:active {
+      background: rgba($secondaryButtonBg, $textButtonActiveBgOpacity);
+      color: $secondaryButtonBg;
+      border: $outlinedButtonBorder;
+    }
+  }
+
+  &.ui-button-flat {
+    background-color: transparent;
+    color: $secondaryButtonBg;
+    border-color: transparent;
+
+    &:enabled:hover {
+      background: rgba($secondaryButtonBg, $textButtonHoverBgOpacity);
+      border-color: transparent;
+      color: $secondaryButtonBg;
     }
 
-    &.ui-state-active, &:active {
-        background: $secondaryButtonActiveBg;
-        border-color: $secondaryButtonActiveBorderColor;
-        color: $secondaryButtonTextActiveColor;
+    &:enabled:active {
+      background: rgba($secondaryButtonBg, $textButtonActiveBgOpacity);
+      border-color: transparent;
+      color: $secondaryButtonBg;
     }
-
-    &.ui-button-outlined {
-        background-color: transparent;
-        color: $secondaryButtonBg;
-        border: $outlinedButtonBorder;
-
-        &:enabled:hover {
-            background: rgba($secondaryButtonBg, $textButtonHoverBgOpacity);
-            color: $secondaryButtonBg;
-            border: $outlinedButtonBorder;
-        }
-
-        &:enabled:active {
-            background: rgba($secondaryButtonBg, $textButtonActiveBgOpacity);
-            color: $secondaryButtonBg;
-            border: $outlinedButtonBorder;
-        }
-    }
-
-    &.ui-button-flat {
-        background-color: transparent;
-        color: $secondaryButtonBg;
-        border-color: transparent;
-
-        &:enabled:hover {
-            background: rgba($secondaryButtonBg, $textButtonHoverBgOpacity);
-            border-color: transparent;
-            color: $secondaryButtonBg;
-        }
-
-        &:enabled:active {
-            background: rgba($secondaryButtonBg, $textButtonActiveBgOpacity);
-            border-color: transparent;
-            color: $secondaryButtonBg;
-        }
-    }
+  }
 }
 
 @mixin border-radius-right($val) {
-    border-top-right-radius: $val;
-    border-bottom-right-radius: $val;
+  border-top-right-radius: $val;
+  border-bottom-right-radius: $val;
 }
 
 @mixin border-radius-left($val) {
-    border-top-left-radius: $val;
-    border-bottom-left-radius: $val;
+  border-top-left-radius: $val;
+  border-bottom-left-radius: $val;
 }
 
 @mixin border-radius-top($val) {
-    border-top-left-radius: $val;
-    border-top-right-radius: $val;
+  border-top-left-radius: $val;
+  border-top-right-radius: $val;
 }
 
 @mixin border-radius-bottom($val) {
-    border-bottom-left-radius: $val;
-    border-bottom-right-radius: $val;
+  border-bottom-left-radius: $val;
+  border-bottom-right-radius: $val;
 }
 
 @mixin focused() {
-	outline: $focusOutline;
-    outline-offset: $focusOutlineOffset;
-    box-shadow: $focusShadow;
+  outline: $focusOutline;
+  outline-offset: $focusOutlineOffset;
+  box-shadow: $focusShadow;
 }
 
 @mixin focused-inset() {
-	outline: $focusOutline;
-    outline-offset: $focusOutlineOffset;
-    box-shadow: inset $focusShadow;
+  outline: $focusOutline;
+  outline-offset: $focusOutlineOffset;
+  box-shadow: inset $focusShadow;
 }
 
 @mixin focused-input() {
-    border-color: $inputFocusBorderColor;
-    outline: 0 none;
-    box-shadow: $inputFocusShadow;
+  border-color: $inputFocusBorderColor;
+  outline: 0 none;
+  box-shadow: $inputFocusShadow;
 }
 
 @mixin focused-listitem() {
-    outline: $focusOutline;
-    outline-offset: $focusOutlineOffset;
-    box-shadow: $inputListItemFocusShadow;
+  outline: $focusOutline;
+  outline-offset: $focusOutlineOffset;
+  box-shadow: $inputListItemFocusShadow;
 }
 
 @mixin invalid-input() {
-	border-color: $inputErrorBorderColor;
+  border-color: $inputErrorBorderColor;
 }
 
 @mixin flex() {
-    //display: -ms-flexbox;
-    display: flex;
+  //display: -ms-flexbox;
+  display: flex;
 }
 
 @mixin flex-wrap($value) {
-    //-ms-flex-wrap: $value;
-    flex-wrap: $value;
+  //-ms-flex-wrap: $value;
+  flex-wrap: $value;
 }
 
 @mixin flex-direction-row() {
-    //-ms-flex-direction: row;
-    flex-direction: row;
+  //-ms-flex-direction: row;
+  flex-direction: row;
 }
 
 @mixin flex-direction-column() {
-    //-ms-flex-direction: column;
-    flex-direction: column;
+  //-ms-flex-direction: column;
+  flex-direction: column;
 }
 
 @mixin flex-justify-center() {
-    //-ms-flex-pack: center;
-    justify-content: center;
+  //-ms-flex-pack: center;
+  justify-content: center;
 }
 
 @mixin flex-justify-between() {
-    //-ms-flex-pack: justify;
-    justify-content: space-between;
+  //-ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 @mixin flex-align-center() {
-    //-ms-flex-align: center;
-    align-items: center;
+  //-ms-flex-align: center;
+  align-items: center;
 }
 
 @mixin flex-align-start() {
-    //-ms-flex-align: start;
-    align-items: flex-start;
+  //-ms-flex-align: start;
+  align-items: flex-start;
 }
 
 @mixin flex-align-end() {
-    //-ms-flex-align: end;
-    align-items: flex-end;
+  //-ms-flex-align: end;
+  align-items: flex-end;
 }
 
 @mixin flex-justify-start() {
-    //-ms-flex-pack: start;
-    justify-content: flex-start;
+  //-ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 @mixin flex-justify-end() {
-    //-ms-flex-pack: end;
-    justify-content: flex-end;
+  //-ms-flex-pack: end;
+  justify-content: flex-end;
 }
 
 @mixin placeholder {
-    //::-webkit-input-placeholder {@content}
-    //:-moz-placeholder           {@content; opacity: 1}
+  //::-webkit-input-placeholder {@content}
+  //:-moz-placeholder           {@content; opacity: 1}
     ::placeholder          {@content; opacity: 1}
-    //:-ms-input-placeholder      {@content}
+  //:-ms-input-placeholder      {@content}
 }
 
 @mixin scaledPadding($val, $scale) {

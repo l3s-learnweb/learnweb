@@ -129,8 +129,8 @@
                             <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                 <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}"/>
-                                <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
-                                               itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
+                                <f:selectItems value="#{adminOrganisationBean.supportedLocales}" var="locale"
+                                               itemLabel="${locale.getDisplayName(locale)}" itemValue="#{locale.language}"></f:selectItems>
                             </p:selectOneMenu>
                             <p:message for="@previous"/>
                         </div>
@@ -148,8 +148,7 @@
                         <div class="field">
                             <p:outputLabel for="@next" value="#{msg.glossary_languages}:"/>
                             <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true"
-                                                  requiredMessage="#{msg.mandatory_field}"
-                                                  label="#{msg.language}" multiple="true" converter="localeConverter">
+                                                  requiredMessage="#{msg.mandatory_field}" multiple="true" converter="localeConverter">
                                 <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
                             </p:selectCheckboxMenu>
                             <p:message for="@previous"/>

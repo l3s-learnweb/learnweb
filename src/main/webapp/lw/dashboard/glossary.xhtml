@@ -39,37 +39,37 @@
         <ui:fragment rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
             <div class="row">
                 <div class="col-6 col-md-3 pe-2">
-                    <p:panel header="#{msg['Glossary.total_concepts']}">
+                    <p:panel header="#{msg['glossary.total_concepts']}">
                         <f:facet name="actions">
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="#{msg['Glossary.concepts_description']}"/>
+                            <p:tooltip for="@previous" value="#{msg['glossary.concepts_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
                     </p:panel>
                 </div>
                 <div class="col-6 col-md-3 ps-2 px-md-2">
-                    <p:panel header="#{msg['Glossary.total_terms']}">
+                    <p:panel header="#{msg['glossary.total_terms']}">
                         <f:facet name="actions">
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="#{msg['Glossary.terms_description']}"/>
+                            <p:tooltip for="@previous" value="#{msg['glossary.terms_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
                     </p:panel>
                 </div>
                 <div class="col-6 col-md-3 pe-2 px-md-2">
-                    <p:panel header="#{msg['Glossary.total_sources']}">
+                    <p:panel header="#{msg['glossary.total_sources']}">
                         <f:facet name="actions">
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="#{msg['Glossary.sources_description']}"/>
+                            <p:tooltip for="@previous" value="#{msg['glossary.sources_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalSources}"/>
                     </p:panel>
                 </div>
                 <div class="col-6 col-md-3 ps-2">
-                    <p:panel header="#{msg['Glossary.ratio']}">
+                    <p:panel header="#{msg['glossary.ratio']}">
                         <f:facet name="actions">
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="#{msg['Glossary.ratio_description']}"/>
+                            <p:tooltip for="@previous" value="#{msg['glossary.ratio_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.termsToConcepts}"/>
                     </p:panel>
@@ -83,22 +83,20 @@
                         <p:panel id="chart_barModel" header="#{msg.activities}">
                             <f:facet name="actions">
                                 <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                                <p:tooltip for="@previous" value="#{msg['Glossary.activity_type_description']}" escape="false"/>
+                                <p:tooltip for="@previous" value="#{msg['glossary.activity_type_description']}" escape="false"/>
                             </f:facet>
-                            <p:barChart model="#{glossaryDashboardBean.usersActivityTypesChart}"/>
+                            <p:chart value="#{glossaryDashboardBean.usersActivityTypesChart}"/>
                         </p:panel>
                     </p:outputPanel>
                 </div>
                 <div class="col-md-6 ps-2">
-                    <p:outputPanel id="sourcePanel"
-                                   rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
-                        <p:panel id="chart_barModel_stSources" header="#{msg['Glossary.sources']}">
+                    <p:outputPanel id="sourcePanel" rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
+                        <p:panel id="chart_barModel_stSources" header="#{msg['glossary.sources']}">
                             <f:facet name="actions">
                                 <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                                <p:tooltip for="@previous"
-                                           value="#{msg['Glossary.sources_panel_description']}"/>
+                                <p:tooltip for="@previous" value="#{msg['glossary.sources_panel_description']}"/>
                             </f:facet>
-                            <p:pieChart model="#{glossaryDashboardBean.usersSourcesChart}"/>
+                            <p:chart value="#{glossaryDashboardBean.usersSourcesChart}"/>
                         </p:panel>
                     </p:outputPanel>
                 </div>
@@ -106,12 +104,12 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <p:panel id="glossary" header="#{msg['Glossary.glossary']}">
+                    <p:panel id="glossary" header="#{msg['glossary.glossary']}">
                         <f:facet name="actions">
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="#{msg['Glossary.glossary_description']}"/>
+                            <p:tooltip for="@previous" value="#{msg['glossary.glossary_description']}"/>
                         </f:facet>
-                        <p:barChart model="#{glossaryDashboardBean.usersGlossaryChart}"/>
+                        <p:chart value="#{glossaryDashboardBean.usersGlossaryChart}"/>
                     </p:panel>
                 </div>
                 <div class="col-md-8 mb-3">
@@ -121,10 +119,10 @@
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
                             <f:facet name="header">
                                 <div class="d-flex">
-                                    <div class="me-auto">#{msg['Glossary.location']}</div>
+                                    <div class="me-auto">#{msg['glossary.location']}</div>
                                     <div>
                                         <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                                        <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
+                                        <p:tooltip for="@previous" value="#{msg['glossary.location_description']}"/>
                                     </div>
                                 </div>
                             </f:facet>
@@ -135,8 +133,8 @@
                                 </h:outputLink>
                             </p:column>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.user}" sortBy="#{glossary.user.username}">
-                                <h:outputText value="#{glossary.user.username}"/>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.user}" sortBy="#{glossary.user.displayName}">
+                                <h:outputText value="#{glossary.user.displayName}"/>
                             </p:column>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.location}">
@@ -159,9 +157,9 @@
                     <p:panel id="chart_plot_01" header="#{msg.interactions}">
                         <f:facet name="actions">
                             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="#{msg['Glossary.interactions_description']}"/>
+                            <p:tooltip for="@previous" value="#{msg['glossary.interactions_description']}"/>
                         </f:facet>
-                        <p:lineChart model="#{glossaryDashboardBean.interactionsChart}"/>
+                        <p:chart value="#{glossaryDashboardBean.interactionsChart}"/>
                     </p:panel>
                 </div>
             </div>
@@ -174,17 +172,17 @@
 
                             <f:facet name="header">
                                 <div class="d-flex">
-                                    <div class="me-auto">#{msg['Glossary.fields']}</div>
+                                    <div class="me-auto">#{msg['glossary.fields']}</div>
                                     <div>
                                         <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                                        <p:tooltip for="@previous" value="#{msg['Glossary.fields_description']}"/>
+                                        <p:tooltip for="@previous" value="#{msg['glossary.fields_description']}"/>
                                     </div>
                                 </div>
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
-                                      filterBy="#{gfs.user.username}" filterMatchMode="contains">
-                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.username}</a>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.displayName}" filterable="true"
+                                      filterBy="#{gfs.user.displayName}" filterMatchMode="contains">
+                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.displayName}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
                                 #{gfs.entries}
@@ -193,35 +191,35 @@
                                 #{gfs.terms}
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
-                                <f:facet name="header">#{msg['Glossary.pronounciation']}</f:facet>
+                                <f:facet name="header">#{msg['glossary.pronounciation']}</f:facet>
                                 <h:outputFormat value="#{msg.format_zero_or_number_with_pct}" escape="true">
                                     <f:param value="#{gfs.pronounciation}"/>
                                     <f:param value="#{(gfs.pronounciation / gfs.terms) * 100}"/>
                                 </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
-                                <f:facet name="header">#{msg['Glossary.acronym']}</f:facet>
+                                <f:facet name="header">#{msg['glossary.acronym']}</f:facet>
                                 <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
                                     <f:param value="#{gfs.acronym}"/>
                                     <f:param value="#{(gfs.acronym / gfs.terms) * 100}"/>
                                 </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
-                                <f:facet name="header">#{msg['Glossary.phraseology']}</f:facet>
+                                <f:facet name="header">#{msg['glossary.phraseology']}</f:facet>
                                 <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
                                     <f:param value="#{gfs.phraseology}"/>
                                     <f:param value="#{(gfs.phraseology / gfs.terms) * 100}"/>
                                 </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
-                                <f:facet name="header">#{msg['Glossary.use']}</f:facet>
+                                <f:facet name="header">#{msg['glossary.use']}</f:facet>
                                 <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
                                     <f:param value="#{gfs.uses}"/>
                                     <f:param value="#{(gfs.uses / gfs.terms) * 100}"/>
                                 </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.source/gfs.terms}" sortable="true">
-                                <f:facet name="header">#{msg['Glossary.sources']}</f:facet>
+                                <f:facet name="header">#{msg['glossary.sources']}</f:facet>
                                 <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
                                     <f:param value="#{gfs.source}"/>
                                     <f:param value="#{(gfs.source / gfs.terms) * 100}"/>
@@ -234,7 +232,7 @@
                                 </h:outputText>%
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                                <f:facet name="header">#{msg['Glossary.total_pasted']}</f:facet>
+                                <f:facet name="header">#{msg['glossary.total_pasted']}</f:facet>
                                 <h:outputText value="#{gfs.totalPastedPct*100}">
                                     <f:convertNumber maxFractionDigits="3" minFractionDigits="3"/>
                                 </h:outputText>%
@@ -253,19 +251,19 @@
 
                             <f:facet name="header">
                                 <div class="d-flex">
-                                    <div class="me-auto">#{msg['Glossary.Definitions']}</div>
+                                    <div class="me-auto">#{msg['glossary.definitions']}</div>
                                     <div>
                                         <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                                        <p:tooltip for="@previous" value="#{msg['Glossary.definitions_description']}"/>
+                                        <p:tooltip for="@previous" value="#{msg['glossary.definitions_description']}"/>
                                     </div>
                                 </div>
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.username}" filterable="true"
-                                      filterBy="#{gds.user.username}" filterMatchMode="contains">
-                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.username}</a>
+                            <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.displayName}" filterable="true"
+                                      filterBy="#{gds.user.displayName}" filterMatchMode="contains">
+                                <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.displayName}</a>
                             </p:column>
-                            <p:column headerText="Definition" sortBy="#{gds.description}" sortable="true"
+                            <p:column headerText="#{msg['glossary.definition']}" sortBy="#{gds.description}" sortable="true"
                                       filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">
                                 #{gds.description}
                             </p:column>

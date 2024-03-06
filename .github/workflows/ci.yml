@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  styles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint:scss --silent
+      - run: npm run lint:js --silent
+
+  java:
+    runs-on: ubuntu-latest
+    env:
+      MVN: mvn --batch-mode
+      GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+          server-id: github-l3s-learnweb
+
+      - name: Run Checkstyle check
+        run: $MVN checkstyle:check
+
+      - name: Run SpotBugs check
+        if: success() || failure()
+        run: $MVN compile spotbugs:check
+
+      - name: Run tests
+        if: success() || failure()
+        run: $MVN --show-version test

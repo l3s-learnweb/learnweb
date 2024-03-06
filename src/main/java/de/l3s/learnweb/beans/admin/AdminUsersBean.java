@@ -24,8 +24,9 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 155899638864937408L;
 
-    private List<UserView> userViews;
     private int courseId;
+
+    private transient List<UserView> userViews;
 
     @Inject
     private CourseDao courseDao;

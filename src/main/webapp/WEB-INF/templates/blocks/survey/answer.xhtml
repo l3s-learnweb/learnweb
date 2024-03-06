@@ -2,13 +2,12 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
 				xmlns:ui="jakarta.faces.facelets"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-				xmlns:jsf="http://xmlns.jcp.org/jsf"
+				xmlns:faces="jakarta.faces"
 				xmlns:p="http://primefaces.org/ui">
 
 <div class="bg-body p-3 min-h-100">
 	<h:form id="survey_form" styleClass="col col-md-10 col-xxl-6 mx-auto">
-		<p:messages id="messages" closable="false" globalOnly="true"/>
+		<p:messages id="messages" closable="false" globalOnly="true" rendered="#{not empty surveyAnswerBean.resource}"/>
 
 		<ui:fragment rendered="#{surveyAnswerBean.formEnabled}">
 			<div class="row mb-3 align-items-center">
@@ -16,7 +15,7 @@
 					Code: #{surveyAnswerBean.response.id}
 				</div>
 				<div class="col d-flex justify-content-end">
-					<p:commandButton value="#{msg.Print}" styleClass="ui-button-warning d-print-none" rendered="#{false}">
+					<p:commandButton value="#{msg.print}" styleClass="ui-button-warning d-print-none" rendered="#{false}">
 						<p:printer target="questions"/>
 					</p:commandButton>
 				</div>
@@ -24,50 +23,52 @@
 
 			<h:panelGroup id="page" layout="block">
 				<p:panel styleClass="mb-3 no-margin" rendered="#{not empty surveyAnswerBean.page.title or not empty surveyAnswerBean.page.description}">
-					<h3 jsf:rendered="#{not empty surveyAnswerBean.page.title}">
+					<h3 faces:rendered="#{not empty surveyAnswerBean.page.title}">
 						<h:outputText value="${surveyAnswerBean.page.title}"/>
 					</h3>
-					<div class="no-margin" jsf:rendered="#{not empty surveyAnswerBean.page.description and not surveyAnswerBean.page.sampling}">
+					<div class="no-margin" faces:rendered="#{not empty surveyAnswerBean.page.description and not surveyAnswerBean.page.sampling}">
 						<h:outputText value="${surveyAnswerBean.page.description}" escape="false"/>
 					</div>
-					<div class="no-margin" jsf:rendered="#{surveyAnswerBean.page.sampling}">
+					<div class="no-margin" faces:rendered="#{surveyAnswerBean.page.sampling}">
 						<h:outputText value="${surveyAnswerBean.page.getVariant(surveyAnswerBean.response.id).description}" escape="false"/>
 					</div>
 				</p:panel>
 
 				<h:panelGroup id="questions" layout="block">
-					<h:outputText value="#{msg['survey.empty']}" rendered="#{empty surveyAnswerBean.questions}"/>
+					<h:outputText value="#{msg['survey.empty']}" rendered="#{empty surveyAnswerBean.page.questions}"/>
 
-					<ui:fragment rendered="#{not empty surveyAnswerBean.questions}">
-						<ui:repeat var="question" value="#{surveyAnswerBean.questions}">
-							<p:panel styleClass="mb-3 no-margin">
-								<ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_view.xhtml">
-									<ui:param name="question" value="#{question}"/>
-									<ui:param name="response" value="#{surveyAnswerBean.response}"/>
-									<ui:param name="readOnly" value="#{false}"/>
-								</ui:decorate>
-							</p:panel>
-						</ui:repeat>
-					</ui:fragment>
-				</h:panelGroup>
+                    <ui:fragment rendered="#{not empty surveyAnswerBean.page.questions}">
+                        <ui:repeat var="question" value="#{surveyAnswerBean.page.questions}">
+                            <p:panel styleClass="mb-3 no-margin">
+                                <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_view.xhtml">
+                                    <ui:param name="question" value="#{question}"/>
+                                    <ui:param name="response" value="#{surveyAnswerBean.response}"/>
+                                    <ui:param name="readOnly" value="#{false}"/>
+                                    <ui:param name="bean" value="#{surveyAnswerBean}"/>
+                                </ui:decorate>
+                            </p:panel>
+                        </ui:repeat>
+                    </ui:fragment>
+                </h:panelGroup>
 
 				<div class="row align-items-center">
-					<div class="col-auto" jsf:rendered="#{surveyAnswerBean.totalPages gt 1}">
+					<div class="col-auto" faces:rendered="#{surveyAnswerBean.totalPages gt 1}">
 						<p:commandButton value="#{msg.back}" rendered="#{surveyAnswerBean.currentPage gt 1}"
 										 actionListener="#{surveyAnswerBean.changePage(-1)}" update="@form:page" immediate="true"/>
 						<p:commandButton value="#{msg.next_step}" rendered="#{surveyAnswerBean.currentPage lt surveyAnswerBean.totalPages}"
 										 actionListener="#{surveyAnswerBean.changePage(1)}" update="@form:page"/>
 					</div>
-					<div class="col" jsf:rendered="#{surveyAnswerBean.totalPages gt 1}">
-						<h:outputFormat value="#{msg['survey.page_progress']}">
+					<div class="col" faces:rendered="#{surveyAnswerBean.totalPages gt 1}">
+						<h:outputFormat value="#{msg['survey.answer_page_progress']}">
 							<f:param value="#{surveyAnswerBean.currentPage}"/>
 							<f:param value="#{surveyAnswerBean.totalPages}"/>
 						</h:outputFormat>
 						<p:progressBar value="#{surveyAnswerBean.currentPage / surveyAnswerBean.totalPages * 100}" displayOnly="true" style="height: 0.5rem;"/>
 					</div>
 					<div class="col d-flex justify-content-end">
+						<p:commandButton value="Discard changes" action="#{surveyAnswerBean.onDiscard}" ajax="true" immediate="true" update="@form" styleClass="ui-button-danger" rendered="#{userBean.admin}"/>
 						<p:commandButton value="#{msg.submit}" action="#{surveyAnswerBean.onSubmit}" ajax="true" update="@form" styleClass="ui-button-info" rendered="#{surveyAnswerBean.currentPage eq surveyAnswerBean.totalPages}">
-							<p:confirm message="#{msg['survey.submit_confirm']}"/>
+							<p:confirm message="#{msg['survey.answer_submit_confirmation']}"/>
 						</p:commandButton>
 					</div>
 				</div>
@@ -76,18 +77,8 @@
 
 		<ui:fragment rendered="#{not surveyAnswerBean.formEnabled}">
 			<p:panel styleClass="mb-3 no-margin">
-				<h3>Vielen Dank für Ihre Teilnahme.</h3>
+				<h:outputText value="#{msg['survey.answer_closed']}"/>
 			</p:panel>
-		</ui:fragment>
-
-		<ui:fragment rendered="#{false}">
-			<h:outputText value="#{msg['survey.cant_edit']}"/>
-
-			<h:outputLink value="survey/answer.jsf" rendered="#{false}">
-				<f:param name="resource_id" value="#{surveyAnswerBean.resource.id}"/>
-				<f:param name="user_id" value="#{userBean.user.id}"/>
-				<h:outputText value="#{msg['survey.View_answers']}"/>
-			</h:outputLink>
 		</ui:fragment>
 	</h:form>
 </div>

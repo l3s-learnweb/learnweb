@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -47,7 +46,6 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
-import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
@@ -119,21 +117,20 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     );
 
     private GlossaryResource glossaryResource;
-    private List<GlossaryTableView> tableItems;
 
     private GlossaryEntry formEntry;
-    private final List<SelectItem> availableTopicOne = new ArrayList<>();
-    private final List<SelectItem> availableTopicTwo = new ArrayList<>();
-    private final List<SelectItem> availableTopicThree = new ArrayList<>();
+    private final ArrayList<SelectItem> availableTopicOne = new ArrayList<>();
+    private final ArrayList<SelectItem> availableTopicTwo = new ArrayList<>();
+    private final ArrayList<SelectItem> availableTopicThree = new ArrayList<>();
 
     private boolean optionMandatoryDescription;
     private boolean optionImportEnabled;
 
-    private List<Locale> tableLanguageFilter;
+    private ArrayList<Locale> tableLanguageFilter;
 
-    private GlossaryParserResponse importResponse;
-    private LazyGlossaryTableView lazyTableItems;
-
+    private transient GlossaryParserResponse importResponse;
+    private transient LazyGlossaryTableView lazyTableItems;
+    private transient List<GlossaryTableView> tableItems;
     private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
 
     @Inject
@@ -218,7 +215,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
 
         if (!containsUndeletedTerms(formEntry)) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "glossary.entry_validation");
             return;
         }
 
@@ -228,7 +225,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
         glossaryResource.getEntries().add(formEntry);
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         onClearEntryForm();
     }
 
@@ -253,7 +250,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public void onDeleteTerm(GlossaryTerm term) {
         if (!containsUndeletedTerms(formEntry)) {
-            addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
+            addGrowl(FacesMessage.SEVERITY_INFO, "glossary.term_validation");
             return;
         }
 
@@ -292,7 +289,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             unusedLanguages = glossaryResource.getAllowedLanguages();
         }
 
-        newTerm.setLanguage(unusedLanguages.get(0));
+        newTerm.setLanguage(unusedLanguages.getFirst());
         formEntry.addTerm(newTerm);
 
         log(Action.glossary_term_add, glossaryResource, formEntry.getId());
@@ -364,10 +361,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     private Map<String, Locale> getLanguageMap() {
         HashMap<String, Locale> languageMap = new HashMap<>();
         for (Locale locale : BeanHelper.getSupportedLocales()) {
-            ResourceBundle bundle = MessagesBundle.of(locale);
-
             for (Locale glossaryLocale : glossaryResource.getAllowedLanguages()) {
-                languageMap.put(bundle.getString("language_" + glossaryLocale.getLanguage()), glossaryLocale);
+                languageMap.put(glossaryLocale.getDisplayLanguage(locale), glossaryLocale);
             }
         }
         return languageMap;
@@ -440,7 +435,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
             if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
                 // create image from username
-                Image watermark = Image.fromText(glossaryResource.getUser().getUsername());
+                Image watermark = Image.fromText(glossaryResource.getUser().getDisplayName());
                 InputStream is = watermark.getInputStream();
                 int pictureIdx = wb.addPicture(IOUtils.toByteArray(is), Workbook.PICTURE_TYPE_PNG);
                 is.close();
@@ -551,7 +546,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public List<SelectItem> getAllowedTermLanguages() {
         if (null == allowedTermLanguages) {
-            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getBundle());
+            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getLocale());
         }
         return allowedTermLanguages;
     }
@@ -564,11 +559,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         return importResponse;
     }
 
-    public List<Locale> getTableLanguageFilter() {
+    public ArrayList<Locale> getTableLanguageFilter() {
         return tableLanguageFilter;
     }
 
-    public void setTableLanguageFilter(List<Locale> tableLanguageFilter) {
+    public void setTableLanguageFilter(ArrayList<Locale> tableLanguageFilter) {
         this.tableLanguageFilter = tableLanguageFilter;
     }
 

@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -19,10 +18,11 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDetailBean;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
-public class SurveyAnswerBean extends ApplicationBean implements Serializable {
+public class SurveyAnswerBean extends ApplicationBean implements Serializable, SurveyAnswerHandler {
     @Serial
     private static final long serialVersionUID = -6217166153267996666L;
     private static final Logger log = LogManager.getLogger(SurveyAnswerBean.class);
@@ -49,7 +49,8 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable {
                 }
             }
 
-            SurveyResponse response = new SurveyResponse(k);
+            SurveyResponse response = new SurveyResponse();
+            response.setResourceId(k);
             if (isLoggedIn()) {
                 response.setUserId(getUser().getId());
             }
@@ -59,25 +60,36 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable {
 
         if (response.isSubmitted()) {
             formEnabled = false;
-            addMessage(FacesMessage.SEVERITY_WARN, "survey_already_submitted");
+            addMessage(FacesMessage.SEVERITY_WARN, "survey.answer_already_submitted");
         } else if (!resource.isValidDate()) {
             formEnabled = false;
-            addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error_between", resource.getOpenDate(), resource.getCloseDate());
+            addMessage(FacesMessage.SEVERITY_ERROR, "survey.answer_restricted_dates_between", BeanHelper.date(resource.getOpenDate()), BeanHelper.date(resource.getCloseDate()));
         } else if (!response.getAnswers().isEmpty()) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "survey.unfinished_form_loaded");
+            addGrowl(FacesMessage.SEVERITY_WARN, "survey.answer_unfinished_loaded");
         }
+    }
+
+    public void onDiscard() {
+        surveyDao.deleteAnswersByResponseId(response.getId());
+        response.getAnswers().clear();
+
+        response.setSubmitted(false);
+        surveyDao.saveResponse(response);
+
+        addMessage(FacesMessage.SEVERITY_INFO, "survey.answers_discarded");
+        formEnabled = true;
     }
 
     public void onSubmit() {
         if (response.isSubmitted()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "survey_already_submitted");
+            addMessage(FacesMessage.SEVERITY_ERROR, "survey.answer_already_submitted");
             log.error("Survey already submitted. Should not happen. User: {}; Survey: {}", getUser().getId(), resource.getId());
             return;
         }
 
         response.setSubmitted(true);
         surveyDao.saveResponse(response);
-        addMessage(FacesMessage.SEVERITY_INFO, "survey_submitted");
+        addMessage(FacesMessage.SEVERITY_INFO, "survey.answer_submitted");
         log(Action.survey_submit, resource.getGroupId(), resource.getId());
         formEnabled = false;
     }
@@ -96,14 +108,6 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable {
         }
 
         return resource.getPages().get(page - 1);
-    }
-
-    public List<SurveyQuestion> getQuestions() {
-        if (getPage() == null) {
-            return null;
-        }
-
-        return getPage().getQuestions();
     }
 
     public void changePage(int diff) {

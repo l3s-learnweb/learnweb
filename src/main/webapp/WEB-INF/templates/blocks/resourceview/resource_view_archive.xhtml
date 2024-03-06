@@ -8,10 +8,10 @@
 
 <ui:fragment rendered="${res.webResource and res.canEditResource(userBean.user)}">
 	<div>
-		<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="ui-button-secondary" value="#{msg['Archive.change_thumbnail']}"/>
+		<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="ui-button-secondary" value="#{msg['archive.change_thumbnail']}"/>
 
 		<p:commandButton id="archive_now_btn" process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
-						 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" update="archive_view_options"/>
+						 icon="fas fas fa-camera-retro" value="#{msg['archive.now']}" update="archive_view_options"/>
 	</div>
 
 	<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
@@ -64,13 +64,13 @@
 				<div class="row align-items-center mt-2">
 					<div class="col-md text-end">
 						<span>
-							<h:outputText value="#{msg['Archive.show_version']}: "/>
+							<h:outputText value="#{msg['archive.show_version']}: "/>
 							<h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
 								<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 							</h:outputText>
-							<p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ms-2 ui-button-warning"
+							<p:commandButton value="#{msg['archive.set_thumbnail']}" styleClass="ms-2 ui-button-warning"
 											 action="#{resourceDetailBean.setResourceThumbnail(res.lastArchivedObject.archiveUrl)}"
-											 onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
+											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
 						</span>
 					</div>
 				</div>
@@ -80,9 +80,7 @@
 </ui:fragment>
 
 <h:panelGroup id="archive_view_options" styleClass="col-sm-12" layout="block">
-	<div id="archive_timeline_view" class="my-2">
-		<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive_timeline.xhtml"/>
-	</div>
+    <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive_timeline.xhtml"/>
 
 	<hr/>
 

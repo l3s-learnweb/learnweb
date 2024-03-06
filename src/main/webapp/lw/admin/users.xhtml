@@ -58,17 +58,17 @@
                         <p:dataExporter type="csv" target="users_table" fileName="users"/>
                     </h:commandLink>
                 </h:panelGroup>
-            </f:facet>         
+            </f:facet>
 
             <p:column filterBy="#{userView.id}" filterMatchMode="exact" headerText="ID" sortBy="#{userView.id}" rendered="#{userBean.admin}">
                 <h:outputText value="#{userView.id}"/>
             </p:column>
 
-            <p:column filterBy="#{userView.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{userView.realUsername}">
-                <p:link outcome="/lw/myhome/profile" value="#{userView.realUsername}" id="username">
+            <p:column filterBy="#{userView.username}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{userView.username}">
+                <p:link outcome="/lw/myhome/profile" value="#{userView.username}" id="username">
                     <f:param name="user_id" value="#{userView.id}"/>
                 </p:link>
-                <p:tooltip for="@previous" value="#{userView.realUsername}" position="top"/>
+                <p:tooltip for="@previous" value="#{userView.username}" position="top"/>
             </p:column>
 
             <p:column headerText="#{msg.email_address}" sortBy="#{userView.email}" filterBy="#{userView.email}" filterMatchMode="contains">

@@ -207,6 +207,8 @@ public class DaoProvider {
                     DriverManager.deregisterDriver(driver);
                 }
             }
+
+            LogManager.getLogger(DaoProvider.class).info("DaoProvider has been destroyed");
         } catch (IOException | SQLException e) {
             throw new IllegalStateException(e);
         }

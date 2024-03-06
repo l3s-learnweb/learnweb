@@ -85,7 +85,7 @@
                             <h:outputText value="#{msg.created_by}: " styleClass="fw-bold"/>
                             <h:outputLink value="user/detail.jsf">
                                 <f:param name="user_id" value="#{groupOverviewBean.group.leader.id}"/>
-                                <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+                                <h:outputText value="#{groupOverviewBean.group.leader.displayName}"/>
                             </h:outputLink>
                         </p>
                     </div>

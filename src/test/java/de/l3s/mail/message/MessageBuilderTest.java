@@ -142,12 +142,12 @@ class MessageBuilderTest {
             New answers to your posts
 
             Group\tTitle\tLast activities
-            GroupTitle\tTopicTitle (https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1)\tMarch 1, 2021 at 12:00:00 AM UTC
+            GroupTitle\tTopicTitle (https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1)\tMarch 1, 2021, 12:00:00 AM UTC
 
             Other new posts
 
             Group\tTitle\tLast activities
-            GroupTitle\tTopicTitle (https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1)\tMarch 1, 2021 at 12:00:00 AM UTC
+            GroupTitle\tTopicTitle (https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1)\tMarch 1, 2021, 12:00:00 AM UTC
 
 
             * You can change how often we send you emails (https://learnweb.l3s.uni-hannover.de/lw/myhome/profile.jsf)
@@ -164,10 +164,10 @@ class MessageBuilderTest {
             + "on your groups forums:</p><h4>New answers to your posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th></tr><tr>"
             + "<td class = \"first-child\">GroupTitle</td><td class = \"second-child\">"
             + "<a href=\"https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1\">TopicTitle</a></td><td class = \"third-child\">"
-            + "March 1, 2021 at 12:00:00 AM UTC</td></tr></table><br/><h4>Other new posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th>"
+            + "March 1, 2021, 12:00:00 AM UTC</td></tr></table><br/><h4>Other new posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th>"
             + "</tr><tr><td class = \"first-child\">GroupTitle</td><td class = \"second-child\">"
             + "<a href=\"https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1\">TopicTitle</a></td><td class = \"third-child\">"
-            + "March 1, 2021 at 12:00:00 AM UTC</td></tr></table><br/><ul><li><a href=\"https://learnweb.l3s.uni-hannover.de/lw/myhome/profile.jsf\">"
+            + "March 1, 2021, 12:00:00 AM UTC</td></tr></table><br/><ul><li><a href=\"https://learnweb.l3s.uni-hannover.de/lw/myhome/profile.jsf\">"
             + "You can change how often we send you emails</a></li><li><a href=\"https://learnweb.l3s.uni-hannover.de/lw/user/unsubscribe.jsf?hash=12\">"
             + "Unsubscribe from all summary emails</a></li></ul><footer><hr/>Best regards,<br/>Learnweb Team</footer></body></html>", builder.buildHtmlText(msg));
     }

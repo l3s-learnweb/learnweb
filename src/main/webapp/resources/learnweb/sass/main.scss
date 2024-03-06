@@ -16,7 +16,6 @@
 
 // Styles from 3rd-part developers
 // WARNING! Some of them is modified, you can update them if you need to tune styles, but be careful and never change class names.
-@import 'vendor/contextmenu';
 @import 'vendor/justified-gallery';
 @import 'vendor/shepherd';
 
@@ -26,6 +25,7 @@
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
 @import 'components/autocomplete';
 @import 'components/breadcrumb';
+@import 'components/colorpicker';
 @import 'components/emoji';
 @import 'components/fancybox';
 @import 'components/groups';
@@ -33,7 +33,6 @@
 @import 'components/og-grid';
 @import 'components/resource-view';
 @import 'components/resources';
-@import 'components/responsive-calendar';
 @import 'components/search';
 @import 'components/search-history';
 @import 'components/transcript';

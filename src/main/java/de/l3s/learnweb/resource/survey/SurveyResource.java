@@ -35,12 +35,14 @@ public class SurveyResource extends Resource {
      */
     protected SurveyResource(SurveyResource other) {
         super(other);
-        setOpenDate(other.getOpenDate());
-        setCloseDate(other.getCloseDate());
-        setQuiz(other.isQuiz());
-        setSingleResponse(other.isSingleResponse());
-        setDisableAutosave(other.isDisableAutosave());
 
+        this.openDate = other.openDate;
+        this.closeDate = other.closeDate;
+        this.quiz = other.quiz;
+        this.singleResponse = other.singleResponse;
+        this.disableAutosave = other.disableAutosave;
+
+        this.pages = new ArrayList<>();
         for (SurveyPage page : other.getPages()) {
             pages.add(new SurveyPage(page));
         }
@@ -77,9 +79,13 @@ public class SurveyResource extends Resource {
     public Resource save() {
         if (openDate != null) {
             setMetadataValue("openDate", String.valueOf(openDate.toInstant(ZoneOffset.UTC).getEpochSecond()));
+        } else {
+            removeMetadataValue("openDate");
         }
         if (closeDate != null) {
             setMetadataValue("closeDate", String.valueOf(closeDate.toInstant(ZoneOffset.UTC).getEpochSecond()));
+        } else {
+            removeMetadataValue("closeDate");
         }
 
         setMetadataValueBoolean("quiz", quiz);
@@ -155,7 +161,7 @@ public class SurveyResource extends Resource {
                 return new ArrayList<>();
             }
 
-            pages = Learnweb.dao().getSurveyDao().findPagesAndVariantsByResourceId(getId());
+            pages = new ArrayList<>(Learnweb.dao().getSurveyDao().findPagesAndVariantsByResourceId(getId()));
         }
         return pages;
     }

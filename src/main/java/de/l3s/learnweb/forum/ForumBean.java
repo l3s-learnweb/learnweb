@@ -28,11 +28,10 @@ import de.l3s.learnweb.logging.Action;
 public class ForumBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 8303246537720508084L;
-    //private static final Logger log = LogManager.getLogger(ForumBean.class);
 
     private int groupId;
     private Group group;
-    private List<ForumTopic> topics;
+    private transient List<ForumTopic> topics;
 
     @NotBlank
     @Size(max = 100)
@@ -133,31 +132,31 @@ public class ForumBean extends ApplicationBean implements Serializable {
 
     protected static List<SelectItem> getCategoriesByCourse(int courseId, Locale locale) {
         ResourceBundle msg = MessagesBundle.of(locale);
-        SelectItemGroup g1 = new SelectItemGroup(msg.getString("Forum.cell.category.1"));
+        SelectItemGroup g1 = new SelectItemGroup(msg.getString("forum.field_category_1"));
         g1.setSelectItems(
-            new SelectItem("Forum.cell.category.1a", msg.getString("Forum.cell.category.1a")),
-            new SelectItem("Forum.cell.category.1b", msg.getString("Forum.cell.category.1b")),
-            new SelectItem("Forum.cell.category.1c", msg.getString("Forum.cell.category.1c")),
-            new SelectItem("Forum.cell.category.1d", msg.getString("Forum.cell.category.1d"))
+            new SelectItem("forum.field_category_1a", msg.getString("forum.field_category_1a")),
+            new SelectItem("forum.field_category_1b", msg.getString("forum.field_category_1b")),
+            new SelectItem("forum.field_category_1c", msg.getString("forum.field_category_1c")),
+            new SelectItem("forum.field_category_1d", msg.getString("forum.field_category_1d"))
         );
 
-        SelectItemGroup g2 = new SelectItemGroup(msg.getString("Forum.cell.category.2"));
+        SelectItemGroup g2 = new SelectItemGroup(msg.getString("forum.field_category_2"));
         g2.setSelectItems(
-            new SelectItem("Forum.cell.category.2a", msg.getString("Forum.cell.category.2a")),
-            new SelectItem("Forum.cell.category.2b", msg.getString("Forum.cell.category.2b")),
-            new SelectItem("Forum.cell.category.2c", msg.getString("Forum.cell.category.2c")),
-            new SelectItem("Forum.cell.category.2d", msg.getString("Forum.cell.category.2d")),
-            new SelectItem("Forum.cell.category.2e", msg.getString("Forum.cell.category.2e")),
-            new SelectItem("Forum.cell.category.2f", msg.getString("Forum.cell.category.2f")),
-            new SelectItem("Forum.cell.category.2g", msg.getString("Forum.cell.category.2g")),
-            new SelectItem("Forum.cell.category.2h", msg.getString("Forum.cell.category.2h"))
+            new SelectItem("forum.field_category_2a", msg.getString("forum.field_category_2a")),
+            new SelectItem("forum.field_category_2b", msg.getString("forum.field_category_2b")),
+            new SelectItem("forum.field_category_2c", msg.getString("forum.field_category_2c")),
+            new SelectItem("forum.field_category_2d", msg.getString("forum.field_category_2d")),
+            new SelectItem("forum.field_category_2e", msg.getString("forum.field_category_2e")),
+            new SelectItem("forum.field_category_2f", msg.getString("forum.field_category_2f")),
+            new SelectItem("forum.field_category_2g", msg.getString("forum.field_category_2g")),
+            new SelectItem("forum.field_category_2h", msg.getString("forum.field_category_2h"))
         );
 
-        SelectItemGroup g3 = new SelectItemGroup(msg.getString("Forum.cell.category.3"));
+        SelectItemGroup g3 = new SelectItemGroup(msg.getString("forum.field_category_3"));
         g3.setSelectItems(
-            new SelectItem("Forum.cell.category.3a", msg.getString("Forum.cell.category.3a")),
-            new SelectItem("Forum.cell.category.3b", msg.getString("Forum.cell.category.3b")),
-            new SelectItem("Forum.cell.category.3c", msg.getString("Forum.cell.category.3c"))
+            new SelectItem("forum.field_category_3a", msg.getString("forum.field_category_3a")),
+            new SelectItem("forum.field_category_3b", msg.getString("forum.field_category_3b")),
+            new SelectItem("forum.field_category_3c", msg.getString("forum.field_category_3c"))
         );
 
         return Arrays.asList(g1, g2, g3);

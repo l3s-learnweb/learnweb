@@ -34,7 +34,7 @@ public class ResourceDecorator implements Serializable {
     // used for search history
     private boolean clicked;
     private boolean saved;
-    private List<SearchAnnotation> annotations;
+    private transient List<SearchAnnotation> annotations;
 
     public ResourceDecorator(Resource resource) {
         this.resource = resource;
@@ -185,18 +185,6 @@ public class ResourceDecorator implements Serializable {
 
     public User getUser() {
         return resource.getUser();
-    }
-
-    public double getStarRating() {
-        return resource.getStarRating();
-    }
-
-    public int getRateNumber() {
-        return resource.getRateNumber();
-    }
-
-    public int getRatingSum() {
-        return resource.getRatingSum();
     }
 
     //getters for new variables for extended metadata (Chloe)

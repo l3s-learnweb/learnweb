@@ -1,0 +1,176 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{msg.searchTitle}"/>
+<ui:param name="helpText" value="#{msg.searchHelp}"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
+
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="query" value="#{searchChatBean.query}"/>
+        <f:viewAction action="#{searchChatBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:define name="center_layout">
+    <h:outputScript name="learnweb/js/search.js" target="body"/>
+
+    <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-body">
+        <ul class="res-filters">
+            <li class="filter">
+                <h:link outcome="/lw/search">
+                    <span class="filter-title">
+                        <span class="text-truncate">#{msg.web}</span>
+                    </span>
+                    <f:param name="action" value="text"/>
+                    <f:param name="query" value="#{searchChatBean.query}"/>
+                </h:link>
+            </li>
+            <li class="filter">
+                <h:link outcome="/lw/search">
+                    <span class="filter-title">
+                        <span class="text-truncate">#{msg.images}</span>
+                    </span>
+                    <f:param name="action" value="image"/>
+                    <f:param name="query" value="#{searchChatBean.query}"/>
+                </h:link>
+            </li>
+            <li class="filter">
+                <h:link outcome="/lw/search">
+                     <span class="filter-title">
+                        <span class="text-truncate">#{msg.videos}</span>
+                    </span>
+                    <f:param name="action" value="video"/>
+                    <f:param name="query" value="#{searchChatBean.query}"/>
+                </h:link>
+            </li>
+            <li class="filter active">
+                <h:link disabled="true">
+                     <span class="filter-title">
+                        <span class="text-truncate">#{msg.chat}</span>
+                    </span>
+                    <f:param name="query" value="#{searchChatBean.query}"/>
+                </h:link>
+            </li>
+        </ul>
+    </h:panelGroup>
+
+    <div class="bg-body">
+        <div class="row px-3 py-5 px-md-4 px-lg-5">
+            <h:form id="history" styleClass="col-4 col-lg-3" style="max-width: 300px;">
+                <p:commandButton styleClass="mb-3 ui-button-info" value="Start new chat" action="#{searchChatBean.newChat}" update=":chat :history" process="@this"/>
+
+                <ui:repeat value="#{searchChatBean.conversations}" var="conv">
+                    <p:commandLink styleClass="search-chat-history" title="Select '#{conv.title}' conversation"
+                                   action="#{searchChatBean.switchConversation(conv)}" update=":chat @form" process="@this">
+                        <p:card styleClass="#{searchChatBean.conversation.id eq conv.id ? 'bg-light' : ''}">
+                            <h6 class="mb-0">#{conv.title}</h6>
+                            <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"/>
+                        </p:card>
+                    </p:commandLink>
+                </ui:repeat>
+            </h:form>
+
+            <h:form id="chat" styleClass="col-8 col-lg-6 mx-auto" style="max-width: 800px;">
+                <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
+
+                    <ui:repeat value="#{searchChatBean.messages}" var="message" varStatus="status">
+                        <ui:fragment rendered="#{message.role == 'system' and userBean.moderator}"> <!-- System message -->
+                            <div class="mb-5 d-flex align-items-start p-4 bg-warning-subtle border rounded border-warning">
+                                <i class="mt-2 fas fa-wand-magic-sparkles text-warning fs-3 me-3"></i>
+                                <div class="me-3 w-100">
+                                    <div class="fw-medium fs-5 mb-2">System message</div>
+                                    <p:inplace editor="true" disabled="#{searchChatBean.messages.size() > 1}">
+                                        <p:inputText value="#{message.content}" required="true" label="Prompt"/>
+                                    </p:inplace>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{message.role == 'assistant'}"> <!-- AI Reply -->
+                            <div class="mb-5 d-flex">
+                                <div class="d-flex flex-column align-items-center" style="width:2rem">
+                                <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle"
+                                      style="min-width:2.5rem; min-height: 2.5rem">
+                                    <i class="fas fa-robot"></i>
+                                </span>
+                                    <div class="h-100 bg-secondary" style="width: 2px; min-height: 4rem"></div>
+                                </div>
+                                <div class="ms-4 bg-body-secondary shadow rounded p-3 flex-fill">
+                                    <div class="mb-3">
+                                        <span class="fw-medium d-inline-block me-3">Assistant</span>
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}"
+                                                    styleClass="text-secondary small" rendered="#{not empty message.created}"/>
+                                    </div>
+                                    <lw:outputMarkdown value="#{message.content}" styleClass="mb-3"/>
+                                    <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe response"
+                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     rendered="#{not empty searchChatBean.responseSurveyId}"/>
+                                    <p:commandButton icon="fas fa-repeat" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
+                                                     action="#{searchChatBean.retry}" immediate="true" update="@form"/>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{message.role == 'user'}"> <!-- User Prompt -->
+                            <div class="mb-5 d-flex flex-row-reverse">
+                                <div class="d-flex flex-column align-items-center" style="width:2rem">
+                                    <p:avatar label="${userBean.user.initials}" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+                                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.displayName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                                    </p:avatar>
+                                    <div class="h-100 bg-primary" style="width: 2px; min-height: 4rem"></div>
+                                </div>
+                                <div class="me-4 bg-body-secondary shadow rounded p-3 flex-fill">
+                                    <div class="mb-3">
+                                        <span class="fw-medium d-inline-block me-3">#{userBean.user.displayName}</span>
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
+                                                    rendered="#{not empty message.created}"/>
+                                    </div>
+                                    <div class="mb-3">#{message.content}</div>
+                                    <p:commandButton icon="fas fa-clipboard" styleClass="ui-button-flat ui-button-plain" title="Describe prompt"
+                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     rendered="#{not empty searchChatBean.promptSurveyId and status.index eq 1}"/>
+                                    <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe response"
+                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     rendered="#{not empty searchChatBean.responseSurveyId and status.index ne 1}"/>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                    </ui:repeat>
+
+                    <ui:fragment rendered="#{searchChatBean.messages.size() eq 1}">
+                        <div class="mb-5 d-flex flex-column text-center text-secondary">
+                            <p>Hi there, I’m Learnweb Assistant, your creative and helpful collaborator.<br/>
+                                I have limitations and I wont't be always right, but I'll try to do my best.</p>
+                            <p>Send me a message to get started.</p>
+                        </div>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{not searchChatBean.newChat and not empty searchChatBean.conversation.created}">
+                        <div class="d-flex flex-column text-center text-secondary">
+                            <p class="mb-0">You are viewing a chat history from #{of:formatDateWithTimezone(searchChatBean.conversation.created, 'yyyy-MM-dd HH:mm:ss', userBean.timeZone)}.</p>
+                            <p>You can continue the conversation any time.</p>
+                        </div>
+                    </ui:fragment>
+                </h:panelGroup>
+
+                <h:panelGroup id="search_chat_reply" styleClass="mb-2" layout="block">
+                    <div class="field mb-1">
+                        <p:inputTextarea id="search_chat_message" rows="3" value="#{searchChatBean.message}" placeholder="Enter a promt here"
+                                         required="true" styleClass="d-block"/>
+                        <p:message for="@previous"/>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <p:commandButton id="search_chat_send" value="Send message" action="#{searchChatBean.sendMessage}" update="@form"
+                                         process="search_chat_message"/>
+                    </div>
+                </h:panelGroup>
+            </h:form>
+        </div>
+    </div>
+</ui:define>
+</ui:composition>

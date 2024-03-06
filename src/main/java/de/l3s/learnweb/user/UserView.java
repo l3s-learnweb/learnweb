@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -25,7 +26,6 @@ public final class UserView implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5664039620488069850L;
-    //private static final Logger log = LogManager.getLogger(UserView.class);
 
     private final User user;
 
@@ -73,10 +73,6 @@ public final class UserView implements Serializable {
         return user.getUsername();
     }
 
-    public String getRealUsername() {
-        return user.getRealUsername();
-    }
-
     public String getEmail() {
         return user.getEmail();
     }
@@ -120,7 +116,7 @@ public final class UserView implements Serializable {
     public static List<UserView> of(List<User> users, Function<UserView, ?>... preloadFields) {
         Objects.requireNonNull(users);
 
-        List<UserView> userViews = users.stream().map(UserView::of).collect(Collectors.toList());
+        List<UserView> userViews = new ArrayList<>(users.stream().map(UserView::of).toList());
 
         if (preloadFields.length > 0 && !users.isEmpty()) { // preload specified fields
             ExecutorService executor = Executors.newSingleThreadExecutor();

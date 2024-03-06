@@ -41,20 +41,20 @@
 			<h:outputText value="#{msg.please_wait}"/>
 		</p:blockUI>
 
-		<p:dataTable id="forum_table" var="topic" value="#{forumBean.topics}" rows="20" emptyMessage="#{msg['ForumIndex.no_forum_topics']}"
+		<p:dataTable id="forum_table" var="topic" value="#{forumBean.topics}" rows="20" emptyMessage="#{msg['forum.no_forum_topics']}"
 					 paginator="true" paginatorPosition="bottom"
 					 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			<f:facet name="header">
 				<div class="d-flex">
 					<div class="me-auto">#{msg.forum}</div>
 					<div>
-						<p:commandButton value="#{msg['ForumIndex.new_topic']}" onclick="PF('newTopicDialog').show();"
+						<p:commandButton value="#{msg['forum.new_topic']}" onclick="PF('newTopicDialog').show();"
 										 styleClass="ui-button-warning ms-2" rendered="${forumBean.group.isMember(userBean.user)}"/>
 					</div>
 				</div>
 			</f:facet>
 
-			<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
+			<p:column headerText="#{msg['forum.topic']}" sortBy="#{topic.title}">
 				<h:link outcome="/lw/group/forum_topic.jsf?topic_id=#{topic.id}">
 					<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.updatedAt}">
 						<i class="fas fa-fw fa-envelope" aria-hidden="true"></i>
@@ -63,19 +63,19 @@
 				</h:link>
 			</p:column>
 
-			<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}">
+			<p:column headerText="#{msg['forum.replies']}" styleClass="text-center" sortBy="#{topic.replies}">
 				<h:outputText value="#{topic.replies}"/>
 			</p:column>
 
-			<p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}">
+			<p:column headerText="#{msg['forum.views']}" styleClass="text-center" sortBy="#{topic.views}">
 				<h:outputText value="#{topic.views}"/>
 			</p:column>
 
-			<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
+			<p:column headerText="#{msg['forum.author']}" styleClass="text-center" sortBy="#{topic.user.displayName}">
 				<lw:user user="#{topic.user}"/>
 			</p:column>
 
-			<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.updatedAt}">
+			<p:column headerText="#{msg['forum.lastMessage']}" styleClass="text-center" sortBy="#{topic.updatedAt}">
 				<h:outputText value="#{topic.updatedAt}" styleClass="d-block">
 					<f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 				</h:outputText>
@@ -91,11 +91,11 @@
 		</p:dataTable>
 	</h:form>
 
-	<p:dialog header="#{msg['ForumIndex.new_topic']}" widgetVar="newTopicDialog" rendered="${forumBean.group.isMember(userBean.user)}" modal="true"
+	<p:dialog header="#{msg['forum.new_topic']}" widgetVar="newTopicDialog" rendered="${forumBean.group.isMember(userBean.user)}" modal="true"
 			  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
 		<h:form id="new_topic_form">
 			<div class="field">
-				<p:outputLabel for="@next" value="#{msg['ForumIndex.topic']}:"/>
+				<p:outputLabel for="@next" value="#{msg['forum.topic']}:"/>
 				<p:inputText id="post_topic" value="#{forumBean.newTopicTitle}"/>
 				<p:message for="@previous"/>
 			</div>
@@ -112,7 +112,7 @@
 			</ui:fragment>
 
 			<div class="field">
-				<p:outputLabel for="@next" value="#{msg['PostShow.postContent']}:"/>
+				<p:outputLabel for="@next" value="#{msg['forum.post_content']}:"/>
 				<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumBean.newTopicText}" height="200px">
 					<f:facet name="toolbar">
 						<span class="ql-formats">

@@ -22,13 +22,12 @@ import de.l3s.learnweb.user.OrganisationDao;
 public class AdminOrganisationsBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -4815509777068370043L;
-    //private static final Logger log = LogManager.getLogger(AdminOrganisationsBean.class);
 
     @NotBlank
     @Size(min = 2, max = 50)
     private String newOrganisationTitle;
 
-    private List<Organisation> organisations;
+    private transient List<Organisation> organisations;
 
     @Inject
     private OrganisationDao organisationDao;
@@ -42,7 +41,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     }
 
     public void onCreateOrganisation() {
-        if (organisationDao.findByTitle(newOrganisationTitle).isPresent()) {
+        if (organisationDao.countByTitle(newOrganisationTitle) > 0) {
             addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
             return;
         }

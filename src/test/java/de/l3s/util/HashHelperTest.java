@@ -5,16 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class HashHelperTest {
-    private static final String TEST_VALUE = "randomemail@gmail.com";
-
-    @Test
-    void hashMd5() {
-        assertNull(HashHelper.sha512(null));
-        assertNull(HashHelper.sha512(""));
-
-        String hash = HashHelper.md5(TEST_VALUE);
-        assertEquals("eb2a7c5c436a9f861e510e8593875221", hash);
-    }
+    private static final String TEST_VALUE = "test value to hash";
 
     @Test
     void hash256() {
@@ -22,7 +13,7 @@ class HashHelperTest {
         assertNull(HashHelper.sha512(""));
 
         String hash = HashHelper.sha256(TEST_VALUE);
-        assertEquals("1581b7cd5f747ba382b4da5b9851b763596e1d5ba3fb6eca3831ed415db3aacb", hash);
+        assertEquals("12b263a565322a9bc7ae12a50100cb759caf620575c97c3d05188921625a142c", hash);
     }
 
     @Test
@@ -31,6 +22,6 @@ class HashHelperTest {
         assertNull(HashHelper.sha512(""));
 
         String hash = HashHelper.sha512(TEST_VALUE);
-        assertEquals("7ca8783b55fcd7845176ee7075a38faee3a9a97590a8fb1a39be5132f0008ccd1f810478cbe1bc1ee1df781c6e3cd6c28142bef551052499c43f325821cf5215", hash);
+        assertEquals("2f6c8b7bcfd764b3ee54b4e85e545b198f2557b8d4f00c5abf2dc431d8c45a1d2b4af1ad2f9137f2a718874b69f4468d2f3645f345d2ccf939e543cb4659187d", hash);
     }
 }

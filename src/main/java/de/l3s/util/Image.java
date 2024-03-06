@@ -284,7 +284,7 @@ public class Image {
     }
 
     /**
-     * Used for creating Watermarks in Glossary.
+     * Used for creating Watermarks in glossary.
      */
     public static Image fromText(final String text) {
         // create the font you wish to use

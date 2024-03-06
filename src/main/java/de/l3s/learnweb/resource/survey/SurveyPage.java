@@ -18,28 +18,33 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     private int resourceId;
     private boolean deleted = false;
     private int order;
-    private String title; // question on the website, is replaced by a translated term if available
-    private String description; // an explanation, displayed as tooltip
+    private String title;
+    private String description;
     private boolean sampling = false;
-    private List<SurveyPageVariant> variants = new ArrayList<>();
+    private ArrayList<SurveyPageVariant> variants = new ArrayList<>();
 
     private transient List<SurveyQuestion> questions;
 
-    public SurveyPage(int resourceId) {
-        setResourceId(resourceId);
+    public SurveyPage() {
     }
 
     public SurveyPage(SurveyPage other) {
-        setId(0);
-        setResourceId(0);
-        setTitle(other.title);
-        setDescription(other.description);
-        setSampling(other.sampling);
-        setDeleted(other.deleted);
-        setOrder(other.order);
+        this.id = 0;
+        this.resourceId = other.resourceId;
+        this.title = other.title;
+        this.description = other.description;
+        this.sampling = other.sampling;
+        this.deleted = other.deleted;
+        this.order = other.order;
 
+        this.variants = new ArrayList<>();
+        for (SurveyPageVariant variant : other.getVariants()) {
+            this.variants.add(new SurveyPageVariant(variant));
+        }
+
+        this.questions = new ArrayList<>();
         for (SurveyQuestion question : other.getQuestions()) {
-            questions.add(new SurveyQuestion(question));
+            this.questions.add(new SurveyQuestion(question));
         }
     }
 
@@ -80,11 +85,11 @@ public class SurveyPage implements HasId, Deletable, Serializable {
         this.sampling = sampling;
     }
 
-    public List<SurveyPageVariant> getVariants() {
+    public ArrayList<SurveyPageVariant> getVariants() {
         return variants;
     }
 
-    public void setVariants(final List<SurveyPageVariant> variants) {
+    public void setVariants(final ArrayList<SurveyPageVariant> variants) {
         this.variants = variants;
     }
 
@@ -125,10 +130,10 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     public List<SurveyQuestion> getQuestions() {
         if (null == questions) {
             if (getId() == 0) {
-                return new ArrayList<>();
+                questions = new ArrayList<>();
+            } else {
+                questions = new ArrayList<>(Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByPageId(getId()));
             }
-
-            questions = Learnweb.dao().getSurveyDao().findQuestionsAndOptionsByResourceId(getResourceId(), getId());
         }
         return questions;
     }

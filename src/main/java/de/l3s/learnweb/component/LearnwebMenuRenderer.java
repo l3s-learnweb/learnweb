@@ -19,7 +19,7 @@ import org.primefaces.component.menu.BaseMenuRenderer;
 import org.primefaces.component.menuitem.UIMenuItem;
 import org.primefaces.component.submenu.UISubmenu;
 import org.primefaces.context.PrimeRequestContext;
-import org.primefaces.expression.SearchExpressionFacade;
+import org.primefaces.expression.SearchExpressionUtils;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuItem;
 import org.primefaces.model.menu.Separator;
@@ -55,10 +55,8 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     }
 
     protected void encodeElements(FacesContext context, AbstractMenu menu, List<MenuElement> elements) throws IOException {
-        int size = elements.size();
-
-        for (int i = 0; i < size; i++) {
-            encodeElement(context, menu, elements.get(i));
+        for (MenuElement element : elements) {
+            encodeElement(context, menu, element);
         }
     }
 
@@ -322,7 +320,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
 
         builder.init()
             .source(clientId)
-            .form(SearchExpressionFacade.resolveClientId(context, component, source.getForm()))
+            .form(SearchExpressionUtils.resolveClientId(source.getForm(), component))
             .process(component, source.getProcess())
             .update(component, source.getUpdate())
             .async(source.isAsync())

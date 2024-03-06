@@ -35,7 +35,7 @@
                         <h:outputText styleClass="fas fa-save mb-1" value=""/>
                     </h:outputLink>
                     <p:tooltip for="archive" position="right" hideEffect="clip">
-                        <h:outputFormat value="#{msg['Archive.captured_between']}">
+                        <h:outputFormat value="#{msg['archive.captured_between']}">
                             <f:param value="${res.firstArchivedObject.timestamp}"/>
                             <f:param value="${res.lastArchivedObject.timestamp}"/>
                         </h:outputFormat>
@@ -55,9 +55,9 @@
                     <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip"/>
                 </ui:fragment>
 
-                <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
+                <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.displayName}">
                     <p:outputLabel id="collector-fullname" class="fas fa-user-plus mb-1"/>
-                    <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip"/>
+                    <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.displayName}" position="right" hideEffect="clip"/>
                 </ui:fragment>
             </div>
 

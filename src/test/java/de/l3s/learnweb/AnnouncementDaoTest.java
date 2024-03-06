@@ -55,7 +55,7 @@ class AnnouncementDaoTest {
         announcement.setTitle("Quisque porta volutpat erat");
         announcement.setText("Porro in enim nam quia quo dolores nulla.");
         announcementDao.save(announcement);
-        assertTrue(announcement.getId() != 0);
+        assertNotEquals(0, announcement.getId());
         assertNotNull(announcement.getCreatedAt());
 
         Optional<Announcement> retrieved = announcementDao.findById(announcement.getId());

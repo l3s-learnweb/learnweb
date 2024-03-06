@@ -87,8 +87,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     private transient List<Folder> folders;
     private transient List<Folder> breadcrumbs;
     private transient TreeNode<?> foldersTree;
-    private TreeNode<?> selectedTreeNode; // Selected node in the left Folder's panel
-    private String selectedElements;
+    private transient TreeNode<?> selectedTreeNode; // Selected node in the left Folder's panel
+    private transient String selectedElements;
 
     @Inject
     private GroupDao groupDao;
@@ -291,7 +291,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             breadcrumbs = new ArrayList<>();
             Folder folder = currentFolder;
             while (folder != null && folder.getId() != 0) {
-                breadcrumbs.add(0, folder);
+                breadcrumbs.addFirst(folder);
                 folder = folder.getParentFolder();
             }
         }

@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import jakarta.faces.model.SelectItem;
 import jakarta.servlet.ServletException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.omnifaces.util.Exceptions;
 import org.omnifaces.util.Faces;
 import org.primefaces.model.CheckboxTreeNode;
@@ -50,22 +51,13 @@ public final class BeanHelper {
     /**
      * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
      */
-    public static List<SelectItem> getLocalesAsSelectItems(List<Locale> locales, ResourceBundle bundle) {
+    public static List<SelectItem> getLocalesAsSelectItems(List<Locale> locales, Locale inLocale) {
         ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
 
         for (Locale locale : locales) {
-            selectItems.add(new SelectItem(locale, bundle.getString("language_" + locale.getLanguage())));
-        }
-        selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
-
-        return selectItems;
-    }
-
-    public static List<SelectItem> getLanguagesAsSelectItems(String[] languages, ResourceBundle bundle) {
-        ArrayList<SelectItem> selectItems = new ArrayList<>(languages.length);
-
-        for (String language : languages) {
-            selectItems.add(new SelectItem(language, bundle.getString("language_" + language)));
+            if (!locale.getDisplayLanguage(inLocale).isEmpty()) {
+                selectItems.add(new SelectItem(locale, StringUtils.capitalize(locale.getDisplayLanguage(inLocale))));
+            }
         }
         selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
 
@@ -92,7 +84,7 @@ public final class BeanHelper {
         return root;
     }
 
-    public static Collection<Integer> getSelectedUsers(final TreeNode<?>[] selectedNodes) {
+    public static TreeSet<Integer> getSelectedUsers(final TreeNode<?>[] selectedNodes) {
         // Set is used to make sure that every user gets the message only once
         TreeSet<Integer> selectedUsers = new TreeSet<>();
         if (selectedNodes != null) {
@@ -124,6 +116,10 @@ public final class BeanHelper {
     }
 
     public static Throwable unwrap(Throwable exception) {
+        if (exception == null) {
+            return null;
+        }
+
         return Exceptions.unwrap(exception, ServletException.class);
     }
 }

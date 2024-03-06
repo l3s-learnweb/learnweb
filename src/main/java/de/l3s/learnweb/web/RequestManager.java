@@ -54,17 +54,17 @@ public class RequestManager implements Serializable {
 
     private int suspiciousAlertsCounter = 0;
 
-    private final Set<String> safelist = new HashSet<>();
-    private final Map<String, Ban> banlist = new ConcurrentHashMap<>();
+    private final HashSet<String> safelist = new HashSet<>();
+    private final ConcurrentHashMap<String, Ban> banlist = new ConcurrentHashMap<>();
 
     // Basic maps/list
-    private final Queue<Request> requests = new ConcurrentLinkedQueue<>();
-    private final List<Request> suspiciousRequests = new ArrayList<>();
-    private final Map<String, Set<String>> logins = new ConcurrentHashMap<>();
-    private final Queue<LoginAttempt> attemptedLogins = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Request> requests = new ConcurrentLinkedQueue<>();
+    private final ArrayList<Request> suspiciousRequests = new ArrayList<>();
+    private final ConcurrentHashMap<String, Set<String>> logins = new ConcurrentHashMap<>();
+    private final ConcurrentLinkedQueue<LoginAttempt> attemptedLogins = new ConcurrentLinkedQueue<>();
 
     // Aggregated data info
-    private List<Request> aggregatedRequests = new ArrayList<>();
+    private ArrayList<Request> aggregatedRequests = new ArrayList<>();
     private LocalDateTime aggrRequestsUpdated = LocalDateTime.MIN;
 
     @Inject
@@ -258,7 +258,7 @@ public class RequestManager implements Serializable {
         List<LoginAttempt> list;
         list = attemptedLogins.stream()
             .filter(x -> x.getAddr().equals(ban.getAddr()) && x.getCreatedAt().isAfter(threshold))
-            .collect(Collectors.toList());
+            .toList();
 
         if (list.size() > BAN_THRESHOLD) {
             flagSuspicious(ban);

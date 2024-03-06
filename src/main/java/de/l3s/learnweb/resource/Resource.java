@@ -93,8 +93,6 @@ public class Resource extends AbstractResource implements Serializable {
     private int width;
     private int height;
     private String idAtService;
-    private int ratingSum;
-    private int rateNumber;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
     private String embeddedUrl; // stored in the database
@@ -109,14 +107,10 @@ public class Resource extends AbstractResource implements Serializable {
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
     private DefaultTab defaultTab = DefaultTab.SCREENSHOT;
 
-    // rating
-    private int thumbUp = -1;
-    private int thumbDown = -1;
-    private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
-    private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
-    private EnumMap<FileType, File> files; // type : file
-    private final HashSet<File> addedFiles = new HashSet<>(); // files that were added to the resource since last save
-    private final HashSet<File> deletedFiles = new HashSet<>(); // files that were deleted from the resource since last save
+    private transient HashMap<String, ResourceRating> ratings; // ratingType : rating
+    private transient EnumMap<FileType, File> files; // type : file
+    private final HashSet<File> addedFiles = new HashSet<>(); // files added to the resource since last save
+    private final HashSet<File> deletedFiles = new HashSet<>(); // files deleted from the resource since last save
 
     // caches
     private transient String thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
@@ -147,40 +141,45 @@ public class Resource extends AbstractResource implements Serializable {
      * Copy constructor.
      */
     protected Resource(Resource old) {
-        setGroupId(old.groupId);
-        setFolderId(old.folderId);
-        setTitle(old.title);
-        setDescription(old.description);
-        setUrl(old.url);
-        setStorageType(old.storageType);
-        setPolicyView(old.policyView);
-        setService(old.service);
-        setAuthor(old.author);
-        setType(old.type);
-        setFormat(old.format);
-        setUserId(old.ownerUserId);
-        setMaxImageUrl(old.maxImageUrl);
-        setQuery(old.query);
-        setEmbeddedUrl(old.embeddedUrl);
-        setDuration(old.duration);
-        setWidth(old.width);
-        setHeight(old.height);
-        setMachineDescription(old.machineDescription);
-        setTranscript(old.transcript);
-        setOnlineStatus(old.onlineStatus);
-        setIdAtService(old.idAtService);
-        setUpdatedAt(LocalDateTime.now());
-        setCreatedAt(LocalDateTime.now());
-        setDeleted(old.deleted);
-        setReadOnlyTranscript(old.readOnlyTranscript);
+        this.id = 0;
+        this.deleted = old.deleted;
+        this.groupId = old.groupId;
+        this.folderId = old.folderId;
+        this.ownerUserId = old.ownerUserId;
+        this.title = old.title;
+        this.description = old.description;
+        this.url = old.url;
+        this.storageType = old.storageType;
+        this.policyView = old.policyView;
+        this.service = old.service;
+        this.language = old.language;
+        this.author = old.author;
+        this.type = old.type;
+        this.format = old.format;
+        this.duration = old.duration;
+        this.width = old.width;
+        this.height = old.height;
+        this.idAtService = old.idAtService;
+        this.maxImageUrl = old.maxImageUrl;
+        this.query = old.query;
+        this.embeddedUrl = old.embeddedUrl;
+        this.embeddedCode = old.embeddedCode;
+        this.transcript = old.transcript;
+        this.readOnlyTranscript = old.readOnlyTranscript;
+        this.onlineStatus = old.onlineStatus;
+        this.machineDescription = old.machineDescription;
+        this.updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.defaultTab = old.defaultTab;
+
         // sets the originalResourceId to the id of the source resource
         if (old.originalResourceId == 0) {
-            setOriginalResourceId(old.id);
+            this.originalResourceId = old.id;
         } else {
-            setOriginalResourceId(old.originalResourceId);
+            this.originalResourceId = old.originalResourceId;
         }
 
-        setMetadata(new HashMap<>(old.getMetadata()));
+        this.metadata = new HashMap<>(old.getMetadata());
     }
 
     public Resource cloneResource() {
@@ -268,7 +267,7 @@ public class Resource extends AbstractResource implements Serializable {
         Learnweb.dao().getCommentDao().save(comment);
 
         getComments(); // make sure comments are loaded before adding a new one
-        comments.add(0, comment);
+        comments.addFirst(comment);
 
         Learnweb.getInstance().getSolrClient().reIndexResource(this);
         return comment;
@@ -447,36 +446,46 @@ public class Resource extends AbstractResource implements Serializable {
         this.format = format;
     }
 
-    public double getStarRating() {
-        return ratingSum == 0 ? 0.0 : (double) ratingSum / (double) rateNumber;
+    public Map<String, ResourceRating> getRatings() {
+        if (ratings == null && id != 0) {
+            ratings = Learnweb.dao().getResourceDao().findRatings(this);
+        }
+        return ratings;
     }
 
-    public int getStarRatingRounded() {
-        return ratingSum == 0 ? 0 : getRatingSum() / getRateNumber();
+    public ResourceRating getRating(String ratingType) {
+        return getRatings().computeIfAbsent(ratingType, ResourceRating::new);
     }
 
-    public void setStarRatingRounded(int value) {
-        // dummy method, is required by p:rating
+    public float getRatingAvg(String ratingType) {
+        return getRating(ratingType).average();
     }
 
-    public int getRateNumber() {
-        return rateNumber;
+    public int getRatingVotes(String ratingType) {
+        return getRating(ratingType).total();
     }
 
-    public void setRateNumber(int rateNumber) {
-        this.rateNumber = rateNumber;
+    public boolean isRated(int userId, String ratingType) {
+        if (getRatings().containsKey(ratingType)) {
+            return getRating(ratingType).isRated(userId);
+        }
+        return false;
     }
 
-    public int getRatingSum() {
-        return ratingSum;
+    public Integer getRateByUser(int userId, String ratingType) {
+        if (getRatings().containsKey(ratingType)) {
+            return getRating(ratingType).getRate(userId);
+        }
+        return null;
     }
 
-    public void setRatingSum(int rating) {
-        this.ratingSum = rating;
+    public void rate(User user, String ratingType, int value) {
+        Learnweb.dao().getResourceDao().insertRating(this, user, ratingType, value);
+        getRatings().computeIfAbsent(ratingType, ResourceRating::new).addRate(user.getId(), value);
     }
 
     /**
-     * @return Returns a comma separated list of tags
+     * @return a comma-separated list of tags
      */
     public String getTagsAsString() {
         return getTagsAsString(", ");
@@ -518,31 +527,6 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     /**
-     * Rate this resource.
-     *
-     * @param value the rating 1-5
-     * @param user the user who rates
-     */
-    public void rate(int value, User user) {
-        Learnweb.dao().getResourceDao().insertResourceRating(id, user.getId(), value);
-
-        rateNumber++;
-        ratingSum += value;
-
-        rateByUser.put(user.getId(), value);
-    }
-
-    public Integer getRateByUser(int userId) {
-        // get value from cache, or query database if absent
-        return rateByUser.computeIfAbsent(userId, key -> Learnweb.dao().getResourceDao().findResourceRating(id, key).orElse(null));
-    }
-
-    public boolean isRatedByUser(int userId) {
-        Integer value = getRateByUser(userId);
-        return value != null;
-    }
-
-    /**
      * Stores all made changes in the database and reindexes the resource at solr.
      */
     @Override
@@ -557,9 +541,9 @@ public class Resource extends AbstractResource implements Serializable {
             return;
         }
 
-        if (format.equals("text/html") || format.equals("application/xhtml+xml")) {
+        if (StringUtils.equalsAny(format, "text/html", "application/xhtml+xml")) {
             this.type = ResourceType.website;
-        } else if (format.startsWith("text/") || StringUtils.equalsAny(format, "application/json", "application/xml")) {
+        } else if (format.startsWith("text/") || StringUtils.equalsAny(format, "application/json", "application/xml", "application/sql")) {
             this.type = ResourceType.text;
         } else if (format.startsWith("image/")) {
             this.type = ResourceType.image;
@@ -584,64 +568,6 @@ public class Resource extends AbstractResource implements Serializable {
             log.error("Unknown type for format: {}; resourceId: {}", format, getId(), new Exception());
             this.type = ResourceType.file;
         }
-    }
-
-    public int getThumbUp() {
-        if (thumbUp < 0) {
-            Learnweb.dao().getResourceDao().findThumbRatings(this).ifPresent(pair -> {
-                setThumbUp(pair.left);
-                setThumbDown(pair.right);
-            });
-        }
-        return thumbUp;
-    }
-
-    public void setThumbUp(int thumbUp) {
-        this.thumbUp = thumbUp;
-    }
-
-    public int getThumbDown() {
-        if (thumbDown < 0) {
-            Learnweb.dao().getResourceDao().findThumbRatings(this).ifPresent(pair -> {
-                setThumbUp(pair.left);
-                setThumbDown(pair.right);
-            });
-        }
-        return thumbDown;
-    }
-
-    public void setThumbDown(int thumbDown) {
-        this.thumbDown = thumbDown;
-    }
-
-    public void thumbRate(User user, int direction) throws IllegalAccessError {
-        if (direction != 1 && direction != -1) {
-            throw new IllegalArgumentException("Illegal value [" + direction + "] for direction. Valid values are 1 and -1");
-        }
-
-        if (isThumbRatedByUser(user)) {
-            throw new IllegalAccessError("You have already rated this resource");
-        }
-
-        if (direction == 1) {
-            thumbUp++;
-        } else {
-            thumbDown++;
-        }
-
-        Learnweb.dao().getResourceDao().insertThumbRate(this, user, direction);
-
-        thumbRateByUser.put(user.getId(), direction);
-    }
-
-    public Integer getThumbRateByUser(User user) {
-        // get value from cache, or query database if absent
-        return thumbRateByUser.computeIfAbsent(user.getId(), key -> Learnweb.dao().getResourceDao().findThumbRate(this, user).orElse(null));
-    }
-
-    public boolean isThumbRatedByUser(User user) {
-        Integer value = getThumbRateByUser(user);
-        return value != null;
     }
 
     public String getUrl() {
@@ -1124,6 +1050,10 @@ public class Resource extends AbstractResource implements Serializable {
             };
         }
 
+        if (user.getOrganisationId() == 1604) {
+            return true; // allow all users to annotate any resources in SoMeCliCS organisation
+        }
+
         return false;
     }
 
@@ -1137,6 +1067,10 @@ public class Resource extends AbstractResource implements Serializable {
             return null;
         }
         return metadata.put(key, value.replace(METADATA_SEPARATOR, ','));
+    }
+
+    public String removeMetadataValue(String key) {
+        return metadata.remove(key);
     }
 
     public Set<String> getMetadataKeys() {
@@ -1267,9 +1201,9 @@ public class Resource extends AbstractResource implements Serializable {
     public static final class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable {
         @Serial
         private static final long serialVersionUID = 1514209886446380743L;
-        private final Map<String, String> wrappedMap;
+        private final MetadataMapWrapper wrappedMap;
 
-        private MetadataMultiValueMapWrapper(Map<String, String> wrappedMap) {
+        private MetadataMultiValueMapWrapper(MetadataMapWrapper wrappedMap) {
             this.wrappedMap = wrappedMap;
         }
 
@@ -1343,13 +1277,13 @@ public class Resource extends AbstractResource implements Serializable {
     public class MetadataMapWrapper implements Map<String, String>, Serializable {
         @Serial
         private static final long serialVersionUID = -7357288281713761896L;
-        private final Map<String, String> wrappedMap;
+        private final HashMap<String, String> wrappedMap;
 
-        public MetadataMapWrapper(Map<String, String> wrappedMap) {
+        public MetadataMapWrapper(HashMap<String, String> wrappedMap) {
             this.wrappedMap = wrappedMap;
         }
 
-        public Map<String, String> getWrappedMap() {
+        public HashMap<String, String> getWrappedMap() {
             return wrappedMap;
         }
 
@@ -1372,22 +1306,25 @@ public class Resource extends AbstractResource implements Serializable {
 
         @Override
         public String put(String key, String value) {
-            switch (key) {
-                case "title":
+            return switch (key) {
+                case "title" -> {
                     setTitle(value);
-                    return value;
-                case "author":
+                    yield value;
+                }
+                case "author" -> {
                     setAuthor(value);
-                    return value;
-                case "description":
+                    yield value;
+                }
+                case "description" -> {
                     setDescription(value);
-                    return value;
-                case "language":
+                    yield value;
+                }
+                case "language" -> {
                     setLanguage(value);
-                    return value;
-                default:
-                    return wrappedMap.put(key, value);
-            }
+                    yield value;
+                }
+                default -> wrappedMap.put(key, value);
+            };
         }
 
         @Override

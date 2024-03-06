@@ -1,6 +1,5 @@
 package de.l3s.maintenance.resources;
 
-import java.net.URL;
 import java.util.List;
 
 import de.l3s.learnweb.resource.Resource;
@@ -81,7 +80,7 @@ public class RegenerateThumbnails extends MaintenanceTask {
             return;
         }
 
-        getLearnweb().getResourcePreviewMaker().processImage(resource, new URL(url).openStream());
+        getLearnweb().getResourcePreviewMaker().processImage(resource, UrlHelper.getInputStream(url));
         resource.save();
     }
 

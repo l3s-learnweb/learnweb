@@ -105,10 +105,8 @@ public class BounceManager {
         //Return path is checked first, since in bounce messages those are usually empty or contain just "<>"
         String[] returnPaths = msg.getHeader("Return-Path");
 
-        if (returnPaths != null && returnPaths.length > 0) {
-            if (returnPaths[0].length() > 3) {
-                return false;
-            }
+        if (returnPaths != null && returnPaths.length > 0 && returnPaths[0].length() > 3) {
+            return false;
         }
 
         log.debug("BOUNCE: {} {}", msg.getSubject(), msg.getReceivedDate());

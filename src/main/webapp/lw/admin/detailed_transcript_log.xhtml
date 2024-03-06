@@ -66,16 +66,16 @@
 
 			<f:facet name="header">#{msg.transcript_logs}</f:facet>
 
-			<p:column headerText="#{msg.student}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-				<h:outputText value="#{log.user.username}"/>
+			<p:column headerText="#{msg.student}" filterBy="#{log.user.displayName}" sortBy="#{log.user.displayName}">
+				<h:outputText value="#{log.user.displayName}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
 				<h:outputText value="#{log.resource.title}"/>
 			</p:column>
 
-			<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.user.username}" sortBy="#{log.resource.user.username}">
-				<h:outputText value="#{log.resource.user.username}"/>
+			<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.user.displayName}" sortBy="#{log.resource.user.displayName}">
+				<h:outputText value="#{log.resource.user.displayName}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.word}">

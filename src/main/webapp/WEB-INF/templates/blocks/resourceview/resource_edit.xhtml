@@ -2,7 +2,8 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html"
                 xmlns:ui="jakarta.faces.facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
@@ -24,6 +25,22 @@
         </div>
     </ui:fragment>
 
+    <ui:fragment rendered="#{res.type eq 'survey'}">
+        <p:outputLabel for="@next" value="#{msg['survey.meta_open_date']}:"/>
+        <div class="fg-col">
+            <p:datePicker id="editDialogOpenDate" value="#{res.openDate}" pattern="dd.MM.yyyy" showIcon="true"/>
+            <p:message for="@previous"/>
+        </div>
+
+        <p:outputLabel for="@next" value="#{msg['survey.meta_close_date']}:"/>
+        <div class="fg-col">
+            <p:datePicker id="editDialogCloseDate" value="#{res.closeDate}" pattern="dd.MM.yyyy" showIcon="true"/>
+            <p:message for="@previous"/>
+            <o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
+                             message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
+        </div>
+    </ui:fragment>
+
     <p:outputLabel for="@next" value="#{msg['resource.policy_view']}:"/>
     <div class="fg-col">
         <p:selectOneRadio value="#{res.policyView}" layout="grid" columns="1">
@@ -37,14 +54,14 @@
     <p:defaultCommand target="saveResourceButton"/>
     <div class="me-auto">
         <p:commandButton styleClass="ui-button-warning" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
-                         update=":resourceDetails" immediate="true" rendered="#{userBean.admin}"
+                         update="resourceDetails" immediate="true" rendered="#{userBean.admin}"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
     </div>
     <div>
         <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" action="#{resourceDetailBean.cancelEdit}"
-                         update=":resourceDetails" immediate="true"
+                         update="resourceDetails" immediate="true"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
-        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceDetails" process="@form"
+        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update="resourceDetails" process="@form"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
     </div>
 </div>

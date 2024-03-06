@@ -28,7 +28,7 @@ class LogDaoTest {
     void findByGroupIdAndTargetId() {
         List<Integer> actions = Arrays.asList(7, 6, 35);
         List<LogEntry> retrieved = logDao.findByGroupIdAndTargetId(1, 1, actions);
-        assertEquals(4, retrieved.get(0).getUserId());
+        assertEquals(4, retrieved.getFirst().getUserId());
         assertEquals(4, retrieved.size());
     }
 
@@ -36,7 +36,7 @@ class LogDaoTest {
     void findAllByUserId() {
         List<LogEntry> retrieved = logDao.findAllByUserId(1);
         assertEquals(61, retrieved.size());
-        assertTrue(retrieved.get(0).getDate().isAfter(retrieved.get(60).getDate()));
+        assertTrue(retrieved.getFirst().getDate().isAfter(retrieved.get(60).getDate()));
     }
 
     @Test
@@ -44,7 +44,7 @@ class LogDaoTest {
         List<Integer> actions = Arrays.asList(7, 6, 29, 35);
         List<LogEntry> retrieved = logDao.findPublicByUserId(1, actions, 10);
         assertEquals(10, retrieved.size());
-        assertEquals("", retrieved.get(0).getParams());
+        assertEquals("", retrieved.getFirst().getParams());
     }
 
     @Test
@@ -52,7 +52,7 @@ class LogDaoTest {
         List<Integer> actions = Arrays.asList(7, 6, 29, 35);
         List<LogEntry> retrieved = logDao.findByGroupId(1, actions);
         assertEquals(19, retrieved.size());
-        assertTrue(retrieved.get(0).getDate().isAfter(retrieved.get(18).getDate()));
+        assertTrue(retrieved.getFirst().getDate().isAfter(retrieved.get(18).getDate()));
         retrieved.forEach(logEntry -> assertEquals(1, logEntry.getGroupId()));
     }
 

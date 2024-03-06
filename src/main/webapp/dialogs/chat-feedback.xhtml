@@ -1,0 +1,44 @@
+<ui:composition template="/WEB-INF/templates/layout/dialog.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:faces="jakarta.faces"
+                xmlns:p="http://primefaces.org/ui">
+
+<ui:param name="page_title" value="#{dfChatFeedback.survey.title}"/>
+
+<f:metadata>
+    <f:viewParam name="survey_id" value="#{dfChatFeedback.surveyId}" required="true"/>
+    <f:viewParam name="message_id" value="#{dfChatFeedback.messageId}" required="true"/>
+    <f:viewAction action="#{dfChatFeedback.onLoad}"/>
+</f:metadata>
+
+<ui:define name="content">
+    <h:form id="chat_feedback" styleClass="ui-fluid">
+        <div class="no-margin" faces:rendered="#{not empty dfChatFeedback.survey.description and not dfChatFeedback.survey.sampling}">
+            <h:outputText value="${dfChatFeedback.survey.description}" escape="false" styleClass="h3"/>
+        </div>
+        <div class="no-margin" faces:rendered="#{dfChatFeedback.survey.sampling}">
+            <h:outputText value="${dfChatFeedback.survey.getVariant(dfChatFeedback.response.id).description}" escape="false"/>
+        </div>
+
+        <h:panelGroup id="questions" layout="block">
+            <h:outputText value="#{msg['survey.empty']}" rendered="#{empty dfChatFeedback.survey.questions}"/>
+
+            <ui:fragment rendered="#{not empty dfChatFeedback.survey.questions}">
+                <ui:repeat var="question" value="#{dfChatFeedback.survey.questions}">
+                    <div class="mb-3 no-margin">
+                        <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_view.xhtml">
+                            <ui:param name="question" value="#{question}"/>
+                            <ui:param name="response" value="#{dfChatFeedback.response}"/>
+                            <ui:param name="readOnly" value="#{dfChatFeedback.readOnly}"/>
+                            <ui:param name="bean" value="#{dfChatFeedback}"/>
+                        </ui:decorate>
+                    </div>
+                </ui:repeat>
+            </ui:fragment>
+        </h:panelGroup>
+    </h:form>
+</ui:define>
+
+</ui:composition>

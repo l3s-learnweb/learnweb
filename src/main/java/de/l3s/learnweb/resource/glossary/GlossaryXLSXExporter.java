@@ -31,8 +31,6 @@ import de.l3s.learnweb.i18n.MessagesBundle;
  *
  */
 public final class GlossaryXLSXExporter {
-    //private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
-
     private final GlossaryResource glossaryResource;
     private final ResourceBundle bundle; // language of the exported header fields
 
@@ -117,7 +115,7 @@ public final class GlossaryXLSXExporter {
                 cell.setCellStyle(style);
 
                 cell = row.createCell(5);
-                cell.setCellValue(bundle.getString("language_" + term.getLanguage().toLanguageTag()));
+                cell.setCellValue(term.getLanguage().getDisplayLanguage(bundle.getLocale()));
                 cell.setCellStyle(style);
 
                 cell = row.createCell(6);

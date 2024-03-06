@@ -28,8 +28,8 @@
                 <h:outputText value="#{res.title}"/>
             </p:column>
 
-            <p:column headerText="#{msg.user}" styleClass="res-row-owner" sortBy="#{res.user.username}">
-                <h:outputText value="#{res.user.username}"/>
+            <p:column headerText="#{msg.user}" styleClass="res-row-owner" sortBy="#{res.user.displayName}">
+                <h:outputText value="#{res.user.displayName}"/>
             </p:column>
 
             <p:column headerText="#{msg.creation_date}" styleClass="res-row-date" sortBy="#{res.resource.createdAt}">

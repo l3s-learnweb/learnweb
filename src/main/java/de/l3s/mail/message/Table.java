@@ -51,7 +51,7 @@ public class Table extends Element {
         sb.append("<table").append(buildAttributes()).append(">");
         sb.append("<tr>");
         //Header
-        List<Element> titleRow = rows.get(0).getElements();
+        List<Element> titleRow = rows.getFirst().getElements();
         adjustClassSize(titleRowClass, titleRow);
         for (int i = 0; i < titleRow.size(); i++) {
             if (!titleRowClass.isEmpty() && (titleRowClass.get(i) != null && !titleRowClass.get(i).isEmpty())) {

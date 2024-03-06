@@ -89,7 +89,7 @@ public class SaverServlet extends HttpServlet {
 
     private void processCallback(CallbackData data, int resourceId, int fileId, String sessionId) throws IOException {
         // get the user who edited the document
-        int userId = data.getUsers().get(0);
+        int userId = data.getUsers().getFirst();
         User user = userDao.findByIdOrElseThrow(userId);
 
         if (fileId == 0) {

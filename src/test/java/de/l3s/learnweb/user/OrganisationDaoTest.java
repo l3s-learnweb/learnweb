@@ -51,10 +51,8 @@ class OrganisationDaoTest {
 
     @Test
     void findByTitle() {
-        Optional<Organisation> organisationOptional = organisationDao.findByTitle("Public");
-        assertFalse(organisationOptional.isEmpty());
-        assertEquals(1, organisationOptional.get().getId());
-        assertEquals("Public", organisationOptional.get().getTitle());
+        int organisations = organisationDao.countByTitle("Public");
+        assertEquals(1, organisations);
     }
 
     @Test

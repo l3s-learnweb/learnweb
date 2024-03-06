@@ -62,7 +62,7 @@ public class SolrSearch implements Serializable {
     private String filterLanguage = ""; // for example en_US
 
     // query
-    private List<Integer> filterGroupIds;
+    private ArrayList<Integer> filterGroupIds;
     private Integer filterFolderId;
     private boolean filterFolderIncludeChild = true;
 
@@ -79,9 +79,9 @@ public class SolrSearch implements Serializable {
     private int groupResultsLimit = DEFAULT_GROUP_RESULTS_LIMIT;
 
     // results
-    private long resultsFound;
-    private List<FacetField> resultsFacetFields;
-    private Map<String, Integer> resultsFacetQuery;
+    private transient long resultsFound;
+    private transient List<FacetField> resultsFacetFields;
+    private transient Map<String, Integer> resultsFacetQuery;
 
     public SolrSearch(String query, User user, boolean onlyOwned) {
         this.userId = user == null ? 0 : user.getId();
@@ -92,7 +92,7 @@ public class SolrSearch implements Serializable {
         if (!query.equals(newQuery)) {
             this.query = newQuery;
             if (user != null && user.getGroups() != null) {
-                this.filterGroupIds = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
+                this.filterGroupIds = user.getGroups().stream().map(Group::getId).collect(Collectors.toCollection(ArrayList::new));
             }
         }
     }
@@ -105,7 +105,7 @@ public class SolrSearch implements Serializable {
         return query;
     }
 
-    protected List<Integer> getFilterGroupIds() {
+    protected ArrayList<Integer> getFilterGroupIds() {
         return filterGroupIds;
     }
 
@@ -461,16 +461,16 @@ public class SolrSearch implements Serializable {
 
         decoratedResource.setRank(resRank);
         if (documentSnippets.get("title") != null) {
-            decoratedResource.setTitle(documentSnippets.get("title").get(0));
+            decoratedResource.setTitle(documentSnippets.get("title").getFirst());
         }
         if (documentSnippets.get("description") != null) {
-            snippet.append(documentSnippets.get("description").get(0));
+            snippet.append(documentSnippets.get("description").getFirst());
         }
         if (snippet.length() < 150 && documentSnippets.get("comments") != null) {
-            snippet.append(documentSnippets.get("comments").get(0));
+            snippet.append(documentSnippets.get("comments").getFirst());
         }
         if (snippet.length() < 150 && documentSnippets.get("machineDescription") != null) {
-            snippet.append(documentSnippets.get("machineDescription").get(0));
+            snippet.append(documentSnippets.get("machineDescription").getFirst());
         }
 
         // still no real snippet => use description

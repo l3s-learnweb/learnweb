@@ -30,7 +30,7 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.util.HasId;
 
-public class Organisation implements HasId, Serializable, Comparable<Organisation> {
+public final class Organisation implements HasId, Serializable, Comparable<Organisation> {
     @Serial
     private static final long serialVersionUID = -5187205229505825818L;
     private static final Logger log = LogManager.getLogger(Organisation.class);
@@ -54,6 +54,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Search_Disable_alternative_sources,
         Resource_Disallow_editing,
         Resource_Disable_video_preview,
+        Search_Chat_enabled,
         Search_Disable_recommendations,
         Search_Disable_related_searches,
     }
@@ -73,11 +74,12 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private String defaultLanguage; // the language which is used after the user logged in
     private String languageVariant; // optional variant that is added to the selected language
     private BitSet options = new BitSet(Option.values().length);
-    private List<MetadataField> metadataFields = new LinkedList<>();
+    private LinkedList<MetadataField> metadataFields = new LinkedList<>();
     private transient String bannerImageUrl;
     private int bannerImageFileId;
     private String trackerApiKey;
-    private List<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
+    private ArrayList<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
+    private OrganisationSettings settings = new OrganisationSettings();
 
     public Organisation(int id) {
         this.id = id;
@@ -135,11 +137,11 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.defaultLanguage = defaultLanguage;
     }
 
-    public List<MetadataField> getMetadataFields() {
+    public LinkedList<MetadataField> getMetadataFields() {
         return metadataFields;
     }
 
-    public void setMetadataFields(List<MetadataField> metadataFields) {
+    public void setMetadataFields(LinkedList<MetadataField> metadataFields) {
         this.metadataFields = metadataFields;
     }
 
@@ -410,20 +412,28 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.languageVariant = StringUtils.defaultString(languageVariant);
     }
 
-    public List<Locale> getGlossaryLanguages() {
+    public ArrayList<Locale> getGlossaryLanguages() {
         return glossaryLanguages;
     }
 
-    public void setGlossaryLanguages(List<Locale> glossaryLanguages) {
+    public void setGlossaryLanguages(ArrayList<Locale> glossaryLanguages) {
         if (CollectionUtils.isEmpty(glossaryLanguages)) { // Load default if not defined yet
             this.glossaryLanguages.clear();
-            this.glossaryLanguages.add(new Locale("de"));
-            this.glossaryLanguages.add(new Locale("it"));
-            this.glossaryLanguages.add(new Locale("nl"));
-            this.glossaryLanguages.add(new Locale("en"));
+            this.glossaryLanguages.add(Locale.of("de"));
+            this.glossaryLanguages.add(Locale.of("it"));
+            this.glossaryLanguages.add(Locale.of("nl"));
+            this.glossaryLanguages.add(Locale.of("en"));
         } else {
             this.glossaryLanguages = glossaryLanguages;
         }
+    }
+
+    public OrganisationSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(final OrganisationSettings settings) {
+        this.settings = settings;
     }
 
     /**

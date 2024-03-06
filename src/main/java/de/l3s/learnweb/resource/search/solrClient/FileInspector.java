@@ -118,8 +118,8 @@ public class FileInspector {
     @SuppressWarnings("unchecked")
     private static String metadata2String(Object obj) {
         List<String> descriptions = (List<String>) obj;
-        if (!descriptions.isEmpty() && !descriptions.get(0).isEmpty()) {
-            return descriptions.get(0);
+        if (!descriptions.isEmpty() && !descriptions.getFirst().isEmpty()) {
+            return descriptions.getFirst();
         }
 
         return null;

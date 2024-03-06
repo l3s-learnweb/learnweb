@@ -31,7 +31,7 @@ public class TitledRatingRenderer extends org.primefaces.component.rating.Rating
         styleClass = styleClass == null ? Rating.CONTAINER_CLASS : Rating.CONTAINER_CLASS + " " + styleClass;
 
         if (disabled) {
-            styleClass = styleClass + " ui-state-disabled";
+            styleClass += " ui-state-disabled";
         }
 
         writer.startElement("div", rating);

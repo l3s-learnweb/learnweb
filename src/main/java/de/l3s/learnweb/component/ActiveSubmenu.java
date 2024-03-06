@@ -4,9 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.faces.component.UIComponent;
 
@@ -33,8 +33,8 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
     private boolean includeViewParams;
     private String fragment;
     private boolean disableClientWindow;
-    private Map<String, List<String>> params;
-    private List<MenuElement> elements;
+    private HashMap<String, List<String>> params;
+    private ArrayList<MenuElement> elements;
 
     public ActiveSubmenu() {
         this.elements = new ArrayList<>();
@@ -121,11 +121,11 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
     }
 
     @Override
-    public List<MenuElement> getElements() {
+    public ArrayList<MenuElement> getElements() {
         return this.elements;
     }
 
-    public void setElements(List<MenuElement> elements) {
+    public void setElements(ArrayList<MenuElement> elements) {
         this.elements = elements;
     }
 
@@ -199,11 +199,11 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
     }
 
     @Override
-    public Map<String, List<String>> getParams() {
+    public HashMap<String, List<String>> getParams() {
         return params;
     }
 
-    public void setParams(final Map<String, List<String>> params) {
+    public void setParams(final HashMap<String, List<String>> params) {
         this.params = params;
     }
 
@@ -215,11 +215,7 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
                 this.params = new LinkedHashMap<>();
             }
 
-            if (!this.params.containsKey(key)) {
-                this.params.put(key, new ArrayList<>());
-            }
-
-            this.params.get(key).add(value.toString());
+            this.params.computeIfAbsent(key, k -> new ArrayList<>()).add(value.toString());
         }
     }
 
@@ -284,7 +280,7 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
             return this;
         }
 
-        public Builder elements(List<MenuElement> elements) {
+        public Builder elements(ArrayList<MenuElement> elements) {
             this.submenu.setElements(elements);
             return this;
         }
@@ -319,7 +315,7 @@ public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
             return this;
         }
 
-        public Builder params(Map<String, List<String>> params) {
+        public Builder params(HashMap<String, List<String>> params) {
             this.submenu.setParams(params);
             return this;
         }

@@ -69,7 +69,7 @@ public class DeleteOldUsers extends MaintenanceTask {
                     continue;
                 }
                 log.debug("Delete: {}; userId={}; registration={}; login={}; mail={}; {}",
-                    user.getRealUsername(), user.getId(), user.getCreatedAt(), lastLogin, user.getEmail(), user.isModerator());
+                    user.getUsername(), user.getId(), user.getCreatedAt(), lastLogin, user.getEmail(), user.isModerator());
 
                 userDao.deleteHard(user);
             }

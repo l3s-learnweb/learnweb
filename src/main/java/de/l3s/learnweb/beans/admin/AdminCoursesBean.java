@@ -34,7 +34,8 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(AdminCoursesBean.class);
 
     private Course newCourse = new Course();
-    private List<Course> courses;
+
+    private transient List<Course> courses;
 
     @Inject
     private CourseDao courseDao;

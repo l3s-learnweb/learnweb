@@ -1,65 +1,50 @@
 <ui:composition xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
+                xmlns:faces="jakarta.faces"
                 xmlns:p="http://primefaces.org/ui">
 
-    <h:outputScript name="bundle/highcharts.js" target="body"/>
-    <h:outputScript name="learnweb/js/modules/jquery.responsive-calendar.js" target="body"/>
-    <h:outputScript name="learnweb/js/archive-timeline.js" target="body"/>
-
     <h:outputScript>
-        const msgTimelineNumVersions = '#{msg.no_of_versions}';
-        const msgTimelineTitle = '#{msg["Archive.timeline_title"]}';
-        const msgTimelineSeriesName = '#{msg["Archive.timeline_series_name"]}';
-        const msgTimelineClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
-        const msgTimelineTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
-        const translatedMonthsNames = JSON.parse('#{webResourceBean.monthNames}');
-        const translatedShortMonthsNames = JSON.parse('#{webResourceBean.shortMonthNames}');
+        function chartExtender() {
+            // copy the config options into a variable
+            var options = $.extend(true, {}, this.cfg.config);
 
-        Highcharts.setOptions({
-            lang: {
-                months: translatedMonthsNames,
-                shortMonths: translatedShortMonthsNames,
-                resetZoom: '#{msg.resetZoom}',
-                resetZoomTitle: '#{msg.resetZoomTitle}'
-            }
-        });
+            options = {
+                options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: { tooltipFormat: 'MMMM yyyy', unit: 'month' },
+                            adapters: { date: { locale: '#{userBean.localeCode}' } },
+                        },
+                    },
+                    plugins: {
+                        zoom: {
+                            limits: { x: {min: 'original', max: 'original', minRange: 7 * 24 * 60 * 60 * 1000} },
+                            zoom: { wheel: { enabled: true }, drag: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
+                        }
+                    }
+                }
+            };
 
-        $(function() {
-            if (document.getElementById("archive_timeline_container") != null) {
-                loadTimeline(#{webResourceBean.archiveTimelineJsonData});
-                loadCalendar(#{webResourceBean.archiveCalendarJsonData});
-            }
-        });
+            // merge all options into the main chart options
+            $.extend(true, this.cfg.config, options);
+        };
     </h:outputScript>
 
-    <div class="box">
-        <div id="archive_timeline_container"></div>
-        <div id="archive_timeline_calendar" class="collapse">
-            <div class="responsive-calendar">
-                <div class="controls d-flex pb-2 mb-2 border-bottom">
-                    <a class="me-auto" data-go="prev">
-                        <h:outputText value="#{msg.previous_page}" styleClass="p-1 bg-primary border rounded-sm"/>
-                    </a>
-                    <h5 class="mb-0">
-                        <span id="year" data-head-year="data-head-year"></span>
-                        <span id="month" data-head-month="data-head-month"></span>
-                    </h5>
-                    <a class="ms-auto" data-go="next">
-                        <h:outputText value="#{msg.next_page}" styleClass="p-1 bg-primary border rounded-sm"/>
-                    </a>
-                </div>
-                <div class="day-headers">
-                    <ui:repeat var="day" value="${webResourceBean.shortWeekDays}">
-                        <h:outputText value="#{day}" styleClass="day header"/>
-                    </ui:repeat>
-                </div>
-                <div class="days" data-group="days">
-                    <!-- the place where days will be generated -->
-                </div>
-            </div>
-            <div class="text-end">
-                <h:outputLink onclick="return returnToTimeline();">#{msg.back_to_timeline_view}</h:outputLink>
+    <div faces:id="archive_visual" class="my-2">
+        <div id="archive_timeline_container" faces:rendered="#{empty webResourceBean.selectedDate}">
+            <p:chart widgetVar="archiveTimeline" value="#{webResourceBean.archiveTimelineModel}" extender="chartExtender">
+                <p:ajax event="itemSelect" listener="#{webResourceBean.timelineItemSelect}" update="archive_visual"/>
+            </p:chart>
+        </div>
+
+        <div id="archive_timeline_calendar" class="mt-3" faces:rendered="#{not empty webResourceBean.selectedDate}">
+            <p:schedule widgetVar="archiveCalendar" value="#{webResourceBean.archiveCalendarModel}" initialDate="#{webResourceBean.selectedDate}"
+                        rightHeaderTemplate="next" leftHeaderTemplate="prev">
+            </p:schedule>
+
+            <div class="mt-3 text-end">
+                <p:commandButton action="#{webResourceBean.backToTimeline}" value="#{msg.back_to_timeline_view}" process="@this" immediate="true" update="archive_visual"/>
             </div>
         </div>
     </div>

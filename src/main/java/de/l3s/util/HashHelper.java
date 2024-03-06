@@ -11,24 +11,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author Oleh Astappiev
  */
 public final class HashHelper {
-    // private static final Logger log = LogManager.getLogger(HashHelper.class);
-
-    /**
-     * Don't use it! :/
-     *
-     * @return 32 characters string
-     */
-    public static String md5(String value) {
-        try {
-            if (StringUtils.isNotEmpty(value)) {
-                MessageDigest md = MessageDigest.getInstance("MD5");
-                byte[] bytes = md.digest(value.getBytes(StandardCharsets.UTF_8));
-                return String.format("%032x", new BigInteger(1, bytes));
-            }
-        } catch (NoSuchAlgorithmException ignore) {
-        }
-        return null;
-    }
 
     /**
      * @return 64 characters string
