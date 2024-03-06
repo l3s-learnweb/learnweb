@@ -83,7 +83,7 @@ class SurveyDaoTest {
     void saveQuestionOption() {
         List<SurveyQuestionOption> before = surveyDao.findOptionsByQuestionId(1);
         assertTrue(before.isEmpty());
-        SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption(1);
+        SurveyQuestionOption surveyQuestionOption = new SurveyQuestionOption();
         surveyDao.saveQuestionOption(1, surveyQuestionOption);
         List<SurveyQuestionOption> retrieved = surveyDao.findOptionsByQuestionId(1);
         assertFalse(retrieved.isEmpty());

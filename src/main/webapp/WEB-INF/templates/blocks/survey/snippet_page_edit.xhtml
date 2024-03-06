@@ -51,35 +51,21 @@
 
     <h:panelGroup id="questions" layout="block">
         <ui:repeat id="qi" value="#{page.questions}" var="question" varStatus="questionStatus">
-            <h:form id="question_edit" styleClass="survey-question bg-body-secondary mb-3 d-flex flex-nowrap" rendered="#{!question.deleted}">
-                <div class="d-flex flex-column justify-content-center bg-primary">
-                    <p:commandButton id="a" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!questionStatus.first}"
-                                     actionListener="#{surveyPageEditBean.onMoveQuestion(page, question, -1)}" update="questions" process="@this"/>
-                    <p:commandButton id="b" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!questionStatus.last}"
-                                     action="#{surveyPageEditBean.onMoveQuestion(page, question, 1)}" update="questions" process="@this"/>
-                </div>
-
-                <div class="flex-grow-1 p-3">
-                    <div class="mb-3 ui-fluid">
-                        <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_edit.xhtml">
-                            <ui:param name="question" value="#{question}"/>
-                        </ui:decorate>
-                    </div>
-                    <div class="d-flex flex-nowrap justify-content-end">
-                        <p:commandButton value="#{msg['delete']}" actionListener="#{surveyPageEditBean.onDeleteQuestion(page, question)}" immediate="true" id="c" update="questions" styleClass="ui-button-danger ui-button-flat">
-                            <p:confirm message="#{msg['survey.mod_delete_question_confirmation']}"/>
-                        </p:commandButton>
-                    </div>
-                </div>
-            </h:form>
+            <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_edit.xhtml">
+                <ui:param name="page" value="#{page}"/>
+                <ui:param name="question" value="#{question}"/>
+                <ui:param name="questionStatus" value="#{questionStatus}"/>
+            </ui:decorate>
         </ui:repeat>
     </h:panelGroup>
 
     <div class="d-flex flex-nowrap">
-        <p:commandButton form="page_edit" action="#{surveyPageEditBean.onAddQuestion(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_question']}"
-                         process="@this" immediate="true" update="questions"/>
-        <p:commandButton form="page_edit" action="#{surveyPageEditBean.onAddHeader(page)}" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
-                         process="@this" immediate="true" update="questions"/>
+        <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_question']}"
+                         action="#{surveyPageEditBean.onAddQuestion(page)}" process="@this" immediate="true" update="questions"/>
+        <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
+                         action="#{surveyPageEditBean.onAddHeader(page)}" process="@this" immediate="true" update="questions"/>
+        <p:commandButton form="page_edit" styleClass="ms-auto ui-button-danger ui-button-flat" value="#{msg['survey.mod_delete_page']}"
+                         action="#{surveyEditBean.onDeletePage(page)}" process="@this" immediate="true" update="pages" rendered="#{not empty pageStatus}"/>
     </div>
 </div>
 </f:subview>

@@ -97,10 +97,9 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         this.maxLength = question.maxLength;
         this.type = question.type;
 
-        for (SurveyQuestionOption answer : question.getOptions()) {
-            answer.setId(0);
-            options.add(answer);
-        }
+        question.getOptions().stream()
+            .filter(option -> !option.isDeleted())
+            .forEach(option -> options.add(new SurveyQuestionOption(option.getValue())));
     }
 
     public QuestionType getType() {
@@ -111,7 +110,7 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         this.type = type;
 
         if (type.options && this.getOptions().isEmpty()) {
-            this.getOptions().add(new SurveyQuestionOption(id));
+            this.getOptions().add(new SurveyQuestionOption());
         }
     }
 

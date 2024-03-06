@@ -63,7 +63,7 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
     }
 
     public void onQuestionOptionAdd(SurveyQuestion question) {
-        question.getOptions().add(new SurveyQuestionOption(question.getId()));
+        question.getOptions().add(new SurveyQuestionOption());
     }
 
     public void onQuestionOptionChange(SurveyQuestion question, SurveyQuestionOption answer) {
@@ -108,5 +108,13 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
         question.setDeleted(true);
         surveyDao.saveQuestion(question);
         page.getQuestions().remove(question);
+    }
+
+    public void onDuplicateQuestion(SurveyPage page, SurveyQuestion question) {
+        SurveyQuestion duplicate = new SurveyQuestion(question);
+        duplicate.setOrder(page.getQuestions().size());
+        duplicate.setPageId(page.getId());
+        surveyDao.saveQuestion(duplicate);
+        page.getQuestions().add(duplicate);
     }
 }

@@ -357,8 +357,9 @@ public interface SurveyDao extends SqlObject, Serializable {
     class SurveyQuestionOptionMapper implements RowMapper<SurveyQuestionOption> {
         @Override
         public SurveyQuestionOption map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SurveyQuestionOption answer = new SurveyQuestionOption(rs.getInt("question_id"));
+            SurveyQuestionOption answer = new SurveyQuestionOption();
             answer.setId(rs.getInt("option_id"));
+            answer.setQuestionId(rs.getInt("question_id"));
             answer.setDeleted(rs.getBoolean("deleted"));
             answer.setValue(rs.getString("value"));
             return answer;
