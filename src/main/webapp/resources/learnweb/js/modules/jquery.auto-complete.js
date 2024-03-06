@@ -28,7 +28,7 @@
     return this.each(function () {
       const that = $(this);
       // sc = 'suggestions container'
-      that.sc = $(`<div class="autocomplete-suggestions ${o.menuClass}"></div>`);
+      that.sc = $('<div class="autocomplete-suggestions"></div>').addClass(o.menuClass);
       that.data('sc', that.sc).data('autocomplete', that.attr('autocomplete'));
       that.attr('autocomplete', 'off');
       that.cache = {};
