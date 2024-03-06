@@ -14,6 +14,7 @@ public class OrganisationSettings implements Serializable {
     private static final long serialVersionUID = -22791512601303567L;
     private static final Logger log = LogManager.getLogger(OrganisationSettings.class);
 
+    protected boolean fetched = false;
     private final EnumMap<Settings, Object> settings = new EnumMap<>(Settings.class);
 
     public Set<Map.Entry<Settings, Object>> getValues() {

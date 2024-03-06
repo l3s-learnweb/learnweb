@@ -46,7 +46,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
             .registerRowMapper(new OrganisationMapper())
             .mapTo(Organisation.class)
             .map(organisation -> {
-                if (organisation.getSettings() == null) {
+                if (!organisation.getSettings().fetched) {
                     organisation.setSettings(loadSettings(organisation.getId()));
                 }
                 return organisation;
@@ -72,6 +72,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 } else {
                     settings.setValue(key, value);
                 }
+                settings.fetched = true;
                 return settings;
             });
     }
