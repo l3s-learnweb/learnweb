@@ -13,7 +13,7 @@
 <div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
 	<h5 class="mb-0">#{msg.info}</h5>
 	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
-					 action="#{resourceDetailBean.editResource}" immediate="true" update="resourceDetails" form="resourceViewForm"
+					 action="#{resourceDetailBean.editResource}" immediate="true" update="resourceDetails" form="resource_view"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
 					 rendered="#{userBean.editingAllowed and resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 </div>

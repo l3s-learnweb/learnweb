@@ -10,24 +10,18 @@
 			<h:panelGroup id="pages" layout="block">
 				<h:outputText value="#{msg['survey.empty']}" rendered="#{empty surveyEditBean.pages}"/>
 
-				<ui:repeat value="#{surveyEditBean.pages}" var="page" varStatus="pageStatus">
+				<ui:repeat id="pi" value="#{surveyEditBean.pages}" var="page" varStatus="pageStatus">
 					<div class="survey-page bg-body-tertiary d-flex flex-nowrap mb-3">
-						<div class="d-flex flex-column justify-content-center bg-info" style="width: 3rem;">
-							<p:commandButton form="page${page.id}_edit_form" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
-											 actionListener="#{surveyEditBean.onMovePage(page, -1)}" update=":pages" process="@this" immediate="true"/>
-							<p:commandButton form="page${page.id}_edit_form" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
-											 action="#{surveyEditBean.onMovePage(page, 1)}" update=":pages" process="@this" immediate="true"/>
-						</div>
-
                         <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_page_edit.xhtml">
                             <ui:param name="page" value="#{page}"/>
+                            <ui:param name="pageStatus" value="#{pageStatus}"/>
                         </ui:decorate>
 					</div>
 				</ui:repeat>
 
 				<h:form id="survey_add" styleClass="d-flex flex-nowrap">
 					<p:commandButton action="#{surveyEditBean.onAddPage}" styleClass="ui-button-info ui-button-flat" value="#{msg['survey.mod_add_page']}"
-									 process="@this" immediate="true" update="@parent:@parent:@parent:pages"/>
+									 process="@this" immediate="true" update="@form:@parent"/>
 				</h:form>
 			</h:panelGroup>
 		</div>

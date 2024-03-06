@@ -6,7 +6,7 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<p:tabView dynamic="true" cache="true" prependId="false" styleClass="ui-tabs-plaid mb-0">
+<p:tabView id="res_view_tabs" dynamic="true" cache="true" styleClass="ui-tabs-plaid mb-0">
     <p:ajax event="tabChange" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
 
     <p:tab title="#{msg.details_right_pane}">
@@ -16,7 +16,7 @@
                     <ui:param name="res" value="#{res}"/>
                 </ui:decorate>
             </ui:fragment>
-    
+
             <ui:fragment rendered="#{resourceDetailBean.viewAction == 'editResource'}">
                 <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_edit.xhtml">
                     <ui:param name="res" value="#{res}"/>

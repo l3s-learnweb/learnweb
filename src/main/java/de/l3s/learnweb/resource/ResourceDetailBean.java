@@ -179,7 +179,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.edit_interrupted");
 
             viewAction = ViewAction.viewResource;
-            PrimeFaces.current().ajax().update(":resourceViewForm");
+            PrimeFaces.current().ajax().update(":resource_view");
         }
     }
 

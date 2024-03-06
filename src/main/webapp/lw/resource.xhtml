@@ -57,8 +57,8 @@
             </div>
             <div class="col-12 col-lg-4 col-xl-3 res-view-details #{not resourceDetailBean.aside ? 'collapse' : null}">
                 <div class="res-view-panel">
-                    <o:form id="resourceViewForm" prependId="false" styleClass="resource-details">
-                        <p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
+                    <o:form id="resource_view" styleClass="resource-details">
+                        <p:blockUI block="resource_view" widgetVar="detailsOverlay">
                             <h:outputText value="#{msg.please_wait}"/>
                         </p:blockUI>
 
