@@ -73,9 +73,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 rd.setSaved(rs.getInt("saved") > 0);
 
                 // quick fix to not show annotations for each result of same url
-                if (rd.getClicked()) {
-                    rd.setAnnotations(findAnnotationsByUserIdAndUrl(res.getUserId(), res.getUrl()));
-                }
+                // if (rd.getClicked()) {
+                //     rd.setAnnotations(findAnnotationsByUserIdAndUrl(res.getUserId(), res.getUrl()));
+                // }
                 return rd;
             }).list();
     }

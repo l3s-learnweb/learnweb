@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Suggested queries</title>
+
+    <h:outputStylesheet name="bundle/learnweb.main.css"/>
+    <style>
+        thead {
+            display: none;
+        }
+        body .ui-datatable .ui-datatable-data > tr > td {
+            padding: 0.75rem 1rem !important;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <h:form prependId="false">
+        <p:dataTable id="suggested_queries" var="query" value="#{suggestQueryDialog.queries}"
+                     selectionMode="single" selection="#{suggestQueryDialog.query}" rowKey="#{query.id}">
+            <p:ajax event="rowSelect" listener="#{suggestQueryDialog.onQuerySelect}" />
+
+            <p:column>
+                <h:outputText value="#{query.query}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</h:body>
+
+</html>

@@ -1,0 +1,399 @@
+@prefix : <urn:webprotege:ontology:1259d1c7-1dd0-498d-92c2-0f7d31fe8404#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://github.com/tibonto/pkg/> .
+
+
+<https://github.com/tibonto/pkg/> rdf:type owl:Ontology ;
+                                      owl:versionIRI <https://github.com/tibonto/pkg/0.1.0> ;
+                                      <http://purl.org/dc/elements/1.1/contributor> "Eleni Ilkou";  
+                                      <http://purl.org/dc/elements/1.1/creator> "Knowgraphs project" ;
+                                      <http://purl.org/dc/terms/publisher> "TIB – Leibniz Information Centre for Science and Technology, Hannover, Germany" ;
+                                      <http://purl.org/dc/terms/license> "CC-BY-SA 4.0" ;
+                                      <http://purl.org/dc/terms/created> "2021-04-19" ;
+                                      <http://purl.org/dc/terms/language> "en" ;
+                                      <http://purl.org/dc/elements/1.1/title> "PKG Ontology"@en ;
+                                      <http://purl.org/dc/elements/1.1/description> """PKG ontology describes a personalized knowledge graph for web search. The ontology is developed in OWL in Protege 5.0.0."""@en ;
+                                      <http://purl.org/dc/terms/abstract> "Web search engines thrive towards personalisation. At the same time, Personal Knowledge Graphs are gaining momentum as smaller graphs with user’s related data on top of larger Knowledge Graphs. The PKG ontology aims to model the constructive aspects of a personal knowledge graph in the backend of a web search application while addressing privacy and accessibility concerns and FAIR principles. This work presents an overview of the ontology description and discusses use cases."@en ;
+                                      owl:versionInfo "0.1.0 - first version"@en .
+
+#<urn:webprotege:ontology:1259d1c7-1dd0-498d-92c2-0f7d31fe8404> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.w3.org/2004/02/skos/core#definition
+<http://www.w3.org/2004/02/skos/core#definition> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/1999/02/22-rdf-syntax-ns#langString
+rdf:langString rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://github.com/tibonto/PKGonto/contains
+<https://github.com/tibonto/PKGonto/contains> rdf:type owl:ObjectProperty ;
+                                              rdfs:subPropertyOf owl:topObjectProperty ;
+                                              rdfs:domain <https://github.com/tibonto/PKGonto/SearchSession> ;
+                                              rdfs:range <https://github.com/tibonto/PKGonto/SearchQuery> ,
+                                                         <https://github.com/tibonto/PKGonto/SearchResult> ;
+                                              rdfs:label "contains"@en ;
+                                              <http://www.w3.org/2004/02/skos/core#definition> "The content of the search session"@en .
+
+
+###  https://github.com/tibonto/PKGonto/createsInputStream
+<https://github.com/tibonto/PKGonto/createsInputStream> rdf:type owl:ObjectProperty ;
+                                                        rdfs:subPropertyOf owl:topObjectProperty ;
+                                                        rdfs:domain <http://xmlns.com/foaf/spec/#term_Group> ,
+                                                                    <https://github.com/tibonto/PKGonto/SearchSession> ,
+                                                                    <https://github.com/tibonto/educor#UserProfile> ;
+                                                        rdfs:range <https://github.com/tibonto/PKGonto/InputStream> ;
+                                                        rdfs:label "createsInputStream"@en ;
+                                                        <http://www.w3.org/2004/02/skos/core#definition> "The different agents that are creating the input stream"@en .
+
+
+###  https://github.com/tibonto/PKGonto/dependsOn
+<https://github.com/tibonto/PKGonto/dependsOn> rdf:type owl:ObjectProperty ;
+                                               rdfs:subPropertyOf owl:topObjectProperty ;
+                                               rdfs:domain <https://github.com/tibonto/PKGonto/SharedObject> ;
+                                               rdfs:range <https://github.com/tibonto/PKGonto/InputStream> ,
+                                                          <https://github.com/tibonto/PKGonto/RecognizedEntities> ;
+                                               rdfs:label "dependsOn"@en ;
+                                               <http://www.w3.org/2004/02/skos/core#definition> "The parameters that the shared object depends on"@en .
+
+
+###  https://github.com/tibonto/PKGonto/generatesResult
+<https://github.com/tibonto/PKGonto/generatesResult> rdf:type owl:ObjectProperty ;
+                                                     rdfs:subPropertyOf owl:topObjectProperty ;
+                                                     rdfs:domain <https://github.com/tibonto/PKGonto/SearchQuery> ;
+                                                     rdfs:range <https://github.com/tibonto/PKGonto/SearchResult> ;
+                                                     rdfs:label "generatesResult"@en ;
+                                                     <http://www.w3.org/2004/02/skos/core#definition> "The web results generated by the search query"@en .
+
+
+###  https://github.com/tibonto/PKGonto/processes
+<https://github.com/tibonto/PKGonto/processes> rdf:type owl:ObjectProperty ;
+                                               rdfs:subPropertyOf owl:topObjectProperty ;
+                                               rdfs:domain <https://github.com/tibonto/PKGonto/RecognizedEntities> ;
+                                               rdfs:range <https://github.com/tibonto/PKGonto/InputStream> ;
+                                               rdfs:label "processes"@en ;
+                                               <http://www.w3.org/2004/02/skos/core#definition> "The input of the classifier, the item that is processing"@en .
+
+
+###  https://github.com/tibonto/educor#accessibility
+<https://github.com/tibonto/educor#accessibility> rdf:type owl:ObjectProperty ;
+                                                  rdfs:subPropertyOf owl:topObjectProperty ;
+                                                  rdfs:domain <http://xmlns.com/foaf/spec/#term_Group> ,
+                                                              <https://github.com/tibonto/PKGonto/SharedObject> ,
+                                                              <https://github.com/tibonto/educor#UserProfile> ;
+                                                  rdfs:range <https://github.com/tibonto/educor#Accessibility> ;
+                                                  rdfs:label "accessibility"@en ;
+                                                  <http://www.w3.org/2004/02/skos/core#definition> "The accessibility property"@en .
+
+
+###  https://github.com/tibonto/educor#generatesLogs
+<https://github.com/tibonto/educor#generatesLogs> rdf:type owl:ObjectProperty ;
+                                                  rdfs:subPropertyOf owl:topObjectProperty ;
+                                                  rdfs:domain <https://github.com/tibonto/educor#User> ;
+                                                  rdfs:range <https://github.com/tibonto/educor#UserLogs> ;
+                                                  rdfs:label "generatesLogs"@en ;
+                                                  rdfs:seeAlso <https://github.com/tibonto/educor#generatesLogs> ;
+                                                  <http://www.w3.org/2004/02/skos/core#definition> "The activity that generates logs"@en .
+
+
+###  https://github.com/tibonto/educor#hasProfile
+<https://github.com/tibonto/educor#hasProfile> rdf:type owl:ObjectProperty ;
+                                               rdfs:subPropertyOf owl:topObjectProperty ;
+                                               rdfs:domain <https://github.com/tibonto/educor#User> ;
+                                               rdfs:range <https://github.com/tibonto/educor#UserProfile> ;
+                                               rdfs:label "hasProfile"@en ;
+                                               rdfs:seeAlso <https://github.com/tibonto/educor#hasProfile> ;
+                                               <http://www.w3.org/2004/02/skos/core#definition> "The property that links to the profile of an agent"@en .
+
+
+###  https://schema.org/memberOf
+<https://schema.org/memberOf> rdf:type owl:ObjectProperty ;
+                              rdfs:subPropertyOf owl:topObjectProperty ;
+                              rdfs:domain <https://github.com/tibonto/educor#User> ;
+                              rdfs:range <http://xmlns.com/foaf/spec/#term_Group> ;
+                              rdfs:label "memberOf"@en ;
+                              <http://www.w3.org/2004/02/skos/core#definition> "A group to which this Person belongs."@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://github.com/tibonto/PKGonto/groupType
+<https://github.com/tibonto/PKGonto/groupType> rdf:type owl:DatatypeProperty ;
+                                               rdfs:subPropertyOf owl:topDataProperty ;
+                                               rdfs:domain <http://xmlns.com/foaf/spec/#term_Group> ;
+                                               rdfs:range xsd:string ;
+                                               rdfs:label "groupType"@en ;
+                                               <http://www.w3.org/2004/02/skos/core#definition> "The type of a group (ex. private, public)."@en .
+
+###  https://github.com/tibonto/PKGonto/surfaceForm
+<https://github.com/tibonto/PKGonto/surfaceForm> rdf:type owl:DatatypeProperty ;
+                                               rdfs:subPropertyOf owl:topDataProperty ;
+                                               rdfs:domain <https://github.com/tibonto/PKGonto/RecognizedEntities> ;
+                                               rdfs:range xsd:string ;
+                                               rdfs:label "surfaceForm"@en ;
+                                               <http://www.w3.org/2004/02/skos/core#definition> "The surface form of a word is the form of a word as it appears in the text. It represents the form in which the recognized entity was found."@en .
+
+###  https://github.com/tibonto/PKGonto/similarityScore
+<https://github.com/tibonto/PKGonto/similarityScore> rdf:type owl:DatatypeProperty ;
+                                               rdfs:subPropertyOf owl:topDataProperty ;
+                                               rdfs:domain <https://github.com/tibonto/PKGonto/RecognizedEntities> ;
+                                               rdfs:range xsd:string ;
+                                               rdfs:label "similarityScore"@en ;
+                                               <http://www.w3.org/2004/02/skos/core#definition> "The confidence score of the classifier for the given recognized entity."@en .
+
+###  https://github.com/tibonto/PKGonto/username
+<https://github.com/tibonto/PKGonto/username> rdf:type owl:DatatypeProperty ;
+                                              rdfs:subPropertyOf owl:topDataProperty ;
+                                              rdfs:domain <https://github.com/tibonto/educor#UserProfile> ;
+                                              rdfs:range xsd:string ;
+                                              rdfs:label "username"@en ;
+                                              <http://www.w3.org/2004/02/skos/core#definition> "The username"@en .
+
+
+###  https://schema.org/author
+<https://schema.org/author> rdf:type owl:DatatypeProperty ;
+                            rdfs:subPropertyOf owl:topDataProperty ;
+                            rdfs:domain <https://github.com/tibonto/PKGonto/InputStream> ,
+                                        <https://github.com/tibonto/PKGonto/RecognizedEntities> ,
+                                        <https://github.com/tibonto/PKGonto/SharedObject> ;
+                            rdfs:range xsd:string ;
+                            rdfs:label "author"@en ;
+                            <http://www.w3.org/2004/02/skos/core#definition> "The author of this content."@en .
+
+###  https://schema.org/text
+<https://schema.org/text> rdf:type owl:DatatypeProperty ;
+                            rdfs:subPropertyOf owl:topDataProperty ;
+                            rdfs:domain <https://github.com/tibonto/PKGonto/SearchResult> ;
+                            rdfs:range xsd:string ;
+                            rdfs:label "text"@en ;
+                            <http://www.w3.org/2004/02/skos/core#definition> "The textual content of this CreativeWork."@en .
+
+
+###  https://schema.org/dateCreated
+<https://schema.org/dateCreated> rdf:type owl:DatatypeProperty ;
+                                 rdfs:subPropertyOf owl:topDataProperty ;
+                                 rdfs:domain <http://xmlns.com/foaf/spec/#term_Group> ,
+                                             <https://github.com/tibonto/PKGonto/InputStream> ,
+                                             <https://github.com/tibonto/PKGonto/RecognizedEntities> ,
+                                             <https://github.com/tibonto/PKGonto/SearchQuery> ,
+                                             <https://github.com/tibonto/PKGonto/SearchResult> ,
+                                             <https://github.com/tibonto/PKGonto/SharedObject> ;
+                                 rdfs:range xsd:dateTimeStamp ;
+                                 rdfs:label "dateCreated"@en ;
+                                 <http://www.w3.org/2004/02/skos/core#definition> "The date on which the CreativeWork was created or the item was added to a DataFeed."@en .
+
+
+###  https://schema.org/description
+<https://schema.org/description> rdf:type owl:DatatypeProperty ;
+                                 rdfs:subPropertyOf owl:topDataProperty ;
+                                 rdfs:domain <http://xmlns.com/foaf/spec/#term_Group> ;
+                                 rdfs:range xsd:string ;
+                                 rdfs:label "description"@en ;
+                                 <http://www.w3.org/2004/02/skos/core#definition> "A description of the item."@en .
+
+
+###  https://schema.org/email
+<https://schema.org/email> rdf:type owl:DatatypeProperty ;
+                           rdfs:subPropertyOf owl:topDataProperty ;
+                           rdfs:domain <https://github.com/tibonto/educor#User> ;
+                           rdfs:range rdf:langString ;
+                           rdfs:label "email"@en ;
+                           <http://www.w3.org/2004/02/skos/core#definition> "An email"@en .
+
+
+###  https://schema.org/endTime
+<https://schema.org/endTime> rdf:type owl:DatatypeProperty ;
+                             rdfs:subPropertyOf owl:topDataProperty ;
+                             rdfs:domain <https://github.com/tibonto/PKGonto/SearchSession> ;
+                             rdfs:range xsd:dateTimeStamp ;
+                             rdfs:label "endTime"@en ;
+                             <http://www.w3.org/2004/02/skos/core#definition> "The endTime of the search session"@en .
+
+
+###  https://schema.org/headline
+<https://schema.org/headline> rdf:type owl:DatatypeProperty ;
+                              rdfs:subPropertyOf owl:topDataProperty ;
+                              rdfs:domain <https://schema.org/WebPage> ;
+                              rdfs:range xsd:string ;
+                              rdfs:label "headline"@en ;
+                              <http://www.w3.org/2004/02/skos/core#definition> "Headline of the article."@en .
+
+
+###  https://schema.org/identifier
+<https://schema.org/identifier> rdf:type owl:DatatypeProperty ;
+                                rdfs:subPropertyOf owl:topDataProperty ;
+                                rdfs:domain <https://github.com/tibonto/PKGonto/RecognizedEntities> ;
+                                rdfs:range xsd:anyURI ;
+                                rdfs:label "identifier"@en ;
+                                <http://www.w3.org/2004/02/skos/core#definition> "The URI of the recognized entity"@en .
+
+
+###  https://schema.org/keywords
+<https://schema.org/keywords> rdf:type owl:DatatypeProperty ;
+                              rdfs:subPropertyOf owl:topDataProperty ;
+                              rdfs:domain <https://schema.org/WebPage> ;
+                              rdfs:range xsd:string ;
+                              rdfs:label "keywords"@en ;
+                              <http://www.w3.org/2004/02/skos/core#definition> "Keywords or tags used to describe this content. Multiple entries in a keywords list are typically delimited by commas."@en .
+
+
+###  https://schema.org/name
+<https://schema.org/name> rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf owl:topDataProperty ;
+                          rdfs:domain <http://xmlns.com/foaf/spec/#term_Group> ,
+                                      <https://github.com/tibonto/educor#User> ;
+                          rdfs:range xsd:string ;
+                          rdfs:label "name"@en ;
+                          <http://www.w3.org/2004/02/skos/core#definition> "The name of an item"@en .
+
+
+###  https://schema.org/startTime
+<https://schema.org/startTime> rdf:type owl:DatatypeProperty ;
+                               rdfs:subPropertyOf owl:topDataProperty ;
+                               rdfs:domain <https://github.com/tibonto/PKGonto/SearchSession> ;
+                               rdfs:range xsd:dateTimeStamp ;
+                               rdfs:label "startTime"@en ;
+                               <http://www.w3.org/2004/02/skos/core#definition> "The startTime of the search session"@en .
+
+
+###  https://schema.org/text
+<https://schema.org/text> rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf owl:topDataProperty ;
+                          rdfs:domain <https://github.com/tibonto/PKGonto/InputStream> ,
+                                      <https://github.com/tibonto/PKGonto/RecognizedEntities> ,
+                                      <https://github.com/tibonto/PKGonto/SearchResult> ,
+                                      <https://github.com/tibonto/educor#Accessibility> ;
+                          rdfs:range rdf:langString ;
+                          rdfs:label "text"@en ;
+                          <http://www.w3.org/2004/02/skos/core#definition> "The textual content of this CreativeWork."@en .
+
+
+###  https://schema.org/title
+<https://schema.org/title> rdf:type owl:DatatypeProperty ;
+                           rdfs:domain <https://github.com/tibonto/PKGonto/SearchResult> ;
+                           rdfs:range xsd:string ;
+                           rdfs:label "title"@en ;
+                           <http://www.w3.org/2004/02/skos/core#definition> "The title of an item"@en .
+
+
+###  https://schema.org/url
+<https://schema.org/url> rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf owl:topDataProperty ;
+                         rdfs:domain <https://github.com/tibonto/PKGonto/SearchResult> ;
+                         rdfs:range xsd:anyURI ;
+                         rdfs:label "url"@en ;
+                         <http://www.w3.org/2004/02/skos/core#definition> "URL of the item."@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://xmlns.com/foaf/spec/#term_Group
+<http://xmlns.com/foaf/spec/#term_Group> rdf:type owl:Class ;
+                                         rdfs:label "Group"@en ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "A group a user is member of."@en .
+
+
+###  https://github.com/tibonto/PKGonto/InputStream
+<https://github.com/tibonto/PKGonto/InputStream> rdf:type owl:Class ;
+                                                 rdfs:label "InputStream"@en ;
+                                                 <http://www.w3.org/2004/02/skos/core#definition> "The input stream to the classifier"@en .
+
+
+###  https://github.com/tibonto/PKGonto/RecognizedEntities
+<https://github.com/tibonto/PKGonto/RecognizedEntities> rdf:type owl:Class ;
+                                                        rdfs:label "RecognizedEntities"@en ;
+                                                        <http://www.w3.org/2004/02/skos/core#definition> "The recognized entities from the classifier"@en .
+
+
+###  https://github.com/tibonto/PKGonto/SearchQuery
+<https://github.com/tibonto/PKGonto/SearchQuery> rdf:type owl:Class ;
+                                                 rdfs:label "SearchQuery"@en ;
+                                                 rdfs:seeAlso <https://schema.org/query> ;
+                                                 <http://www.w3.org/2004/02/skos/core#definition> "The search query the user is formulating during the web search"@en .
+
+
+###  https://github.com/tibonto/PKGonto/SearchResult
+<https://github.com/tibonto/PKGonto/SearchResult> rdf:type owl:Class ;
+                                                  rdfs:label "SearchResult"@en ;
+                                                  rdfs:seeAlso <https://schema.org/result> ;
+                                                  <http://www.w3.org/2004/02/skos/core#definition> "The result of the search query"@en .
+
+
+###  https://github.com/tibonto/PKGonto/SearchSession
+<https://github.com/tibonto/PKGonto/SearchSession> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <https://github.com/tibonto/educor#UserLogs> ;
+                                                   rdfs:label "SearchSession"@en ;
+                                                   rdfs:seeAlso <https://schema.org/SearchAction> ;
+                                                   <http://www.w3.org/2004/02/skos/core#definition> "A search activity from the beginning to the end"@en .
+
+
+###  https://github.com/tibonto/PKGonto/SharedObject
+<https://github.com/tibonto/PKGonto/SharedObject> rdf:type owl:Class ;
+                                                  rdfs:label "SharedObject"@en ;
+                                                  <http://www.w3.org/2004/02/skos/core#definition> "The object that is passed to the downstream application from the backend"@en .
+
+
+###  https://github.com/tibonto/PKGonto/Snippet
+<https://github.com/tibonto/PKGonto/Snippet> rdf:type owl:Class ;
+                                             rdfs:subClassOf <https://github.com/tibonto/PKGonto/SearchResult> ;
+                                             rdfs:label "Snippet"@en ;
+                                             <http://www.w3.org/2004/02/skos/core#definition> "A snippet of a webpage. It contains the title and a few lines of the webpage"@en .
+
+
+###  https://github.com/tibonto/educor#Accessibility
+<https://github.com/tibonto/educor#Accessibility> rdf:type owl:Class ;
+                                                  rdfs:label "Accessibility"@en ;
+                                                  rdfs:seeAlso <https://schema.org/accessibilitySummary> ;
+                                                  <http://www.w3.org/2004/02/skos/core#definition> "It describes the user access and content accessibility rights. It can be used as a plugin point to connect with other ontologies."@en .
+
+
+###  https://github.com/tibonto/educor#User
+<https://github.com/tibonto/educor#User> rdf:type owl:Class ;
+                                         rdfs:label "User"@en ;
+                                         rdfs:seeAlso <http://xmlns.com/foaf/0.1/Person> ,
+                                                      <https://github.com/tibonto/educor#User> ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "A user in the system. It represents the learner in this context, as in contract to the teacher, mentor, etc."@en .
+
+
+###  https://github.com/tibonto/educor#UserLogs
+<https://github.com/tibonto/educor#UserLogs> rdf:type owl:Class ;
+                                             rdfs:label "UserLogs"@en ;
+                                             rdfs:seeAlso <https://github.com/tibonto/educor#UserLogs> ;
+                                             <http://www.w3.org/2004/02/skos/core#definition> "The user's history activity in the system"@en .
+
+
+###  https://github.com/tibonto/educor#UserProfile
+<https://github.com/tibonto/educor#UserProfile> rdf:type owl:Class ;
+                                                rdfs:label "UserProfile"@en ;
+                                                rdfs:seeAlso <https://github.com/tibonto/educor#UserProfile> ;
+                                                <http://www.w3.org/2004/02/skos/core#definition> "The information related to the user profile"@en .
+
+
+###  https://schema.org/WebPage
+<https://schema.org/WebPage> rdf:type owl:Class ;
+                             rdfs:subClassOf <https://github.com/tibonto/PKGonto/SearchResult> ;
+                             rdfs:label "WebPage"@en ;
+                             <http://www.w3.org/2004/02/skos/core#definition> "A web page"@en .
+
+
+###  Generated by the OWL API (version 4.5.13) https://github.com/owlcs/owlapi
