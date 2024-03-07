@@ -66,6 +66,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
      */
     public void onLoad() throws IOException, InterruptedException {
         BeanAssert.authorized(isLoggedIn());
+
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
@@ -86,6 +87,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         } else if (sessions == null && !showGroupHistory) {
             sessions = searchHistoryDao.findSessionsByUserId(selectedUserId);
         }
+
         return sessions;
     }
 
@@ -97,6 +99,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         } else if ("video".equals(selectedQuery.mode())) {
             return "grid";
         }
+
         return null;
     }
 
@@ -106,6 +109,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
             if (!snippets.containsKey(selectedQuery.searchId())) {
                 snippets.put(selectedQuery.searchId(), dao().getSearchHistoryDao().findSearchResultsByQuery(selectedQuery, 100));
             }
+
             searchResults.addAll(snippets.get(selectedQuery.searchId()));
         }
         return searchResults;

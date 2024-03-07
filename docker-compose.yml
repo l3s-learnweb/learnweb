@@ -40,3 +40,14 @@ services:
       - "./src/main/conf/solr-setup.sh:/solr-setup.sh:ro"
       - "./data/solr:/var/solr"
     command: bash -e -c "precreate-core learnweb && source /solr-setup.sh && solr-foreground"
+  fuseki:
+    image: secoresearch/fuseki:latest
+    restart: always
+    environment:
+      ADMIN_PASSWORD: "oydyoMQSP7^R%X"
+    ports:
+      - "7005:3030"
+    volumes:
+      - "./data/fuseki/db:/fuseki-base/databases"
+      - "./data/fuseki/conf:/fuseki-base/configuration"
+    command: bash -e -c "precreate-core learnweb && source /solr-setup.sh && solr-foreground"
