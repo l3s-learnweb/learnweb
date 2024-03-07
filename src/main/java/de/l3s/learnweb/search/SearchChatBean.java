@@ -158,9 +158,9 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
         return defaultBuilder().build();
     }
 
-    public void showFeedback(Message message) {
+    public void showFeedback(Message message, boolean prompt) {
         Map<String, List<String>> params = new HashMap<>();
-        params.put("survey_id", List.of(String.valueOf(message.getRole() == Message.Role.user ? promptSurveyId : responseSurveyId)));
+        params.put("survey_id", List.of(String.valueOf(prompt ? promptSurveyId : responseSurveyId)));
         params.put("message_id", List.of(String.valueOf(message.getId())));
 
         PrimeFaces.current().dialog().openDynamic("/dialogs/chat-feedback", defaultOptions(), params);

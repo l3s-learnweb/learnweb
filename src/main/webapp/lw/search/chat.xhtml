@@ -108,7 +108,7 @@
                                     </div>
                                     <lw:outputMarkdown value="#{message.content}" styleClass="mb-3"/>
                                     <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe response"
-                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     action="#{searchChatBean.showFeedback(message, false)}" immediate="true" process="@this"
                                                      rendered="#{not empty searchChatBean.responseSurveyId}"/>
                                     <p:commandButton icon="fas fa-repeat" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
                                                      action="#{searchChatBean.retry}" immediate="true" update="@form"/>
@@ -131,10 +131,10 @@
                                     </div>
                                     <div class="mb-3">#{message.content}</div>
                                     <p:commandButton icon="fas fa-clipboard" styleClass="ui-button-flat ui-button-plain" title="Describe prompt"
-                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     action="#{searchChatBean.showFeedback(message, true)}" immediate="true" process="@this"
                                                      rendered="#{not empty searchChatBean.promptSurveyId and status.index eq 1}"/>
                                     <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe response"
-                                                     action="#{searchChatBean.showFeedback(message)}" immediate="true" process="@this"
+                                                     action="#{searchChatBean.showFeedback(message, false)}" immediate="true" process="@this"
                                                      rendered="#{not empty searchChatBean.responseSurveyId and status.index ne 1}"/>
                                 </div>
                             </div>
