@@ -110,8 +110,8 @@
                                     <p:commandButton icon="fas fa-clipboard-list" styleClass="ui-button-flat ui-button-plain" title="Describe response"
                                                      action="#{searchChatBean.showFeedback(message, false)}" immediate="true" process="@this"
                                                      rendered="#{not empty searchChatBean.responseSurveyId}"/>
-                                    <p:commandButton icon="fas fa-repeat" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
-                                                     action="#{searchChatBean.retry}" immediate="true" update="@form"/>
+                                    <p:commandButton icon="fas fa-rotate-left" styleClass="ui-button-flat ui-button-plain" rendered="#{status.last}"
+                                                     action="#{searchChatBean.retry}" immediate="true" update="@form" title="Regenerate"/>
                                 </div>
                             </div>
                         </ui:fragment>
