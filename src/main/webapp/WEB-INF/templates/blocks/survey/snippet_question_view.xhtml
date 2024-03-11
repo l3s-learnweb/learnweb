@@ -37,33 +37,33 @@
 
     <p:selectOneButton styleClass="mt-2" rendered="#{question.type eq 'ONE_BUTTON'}" readonly="#{readOnly}"
                        required="#{question.required}" value="#{response.answers[question.id]}">
-        <f:selectItems value="#{question.activeOptions}"/>
+        <f:selectItems value="#{question.activeOptions}" var="o" itemValue="#{o.value}"/>
         <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneButton>
 
     <p:selectOneRadio styleClass="mt-2" rendered="#{question.type eq 'ONE_RADIO'}" readonly="#{readOnly}"
                       required="#{question.required}" value="#{response.answers[question.id]}" layout="responsive" columns="1">
-        <f:selectItems value="#{question.activeOptions}"/>
+        <f:selectItems value="#{question.activeOptions}" var="o" itemValue="#{o.value}"/>
         <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneRadio>
 
     <p:selectOneMenu styleClass="mt-2" rendered="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}" readonly="#{readOnly}"
                      required="#{question.required}" value="#{response.answers[question.id]}" editable="#{question.type eq 'ONE_MENU_EDITABLE'}">
         <f:selectItem itemLabel="#{msg['survey.answer_select_placeholder']}"  itemValue="#{null}" noSelectionOption="true"/>
-        <f:selectItems value="#{question.activeOptions}"/>
+        <f:selectItems value="#{question.activeOptions}" var="o" itemValue="#{o.value}"/>
         <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneMenu>
 
     <p:selectCheckboxMenu styleClass="mt-2" rendered="#{question.type eq 'MULTIPLE_MENU'}" readonly="#{readOnly}" required="#{question.required}"
                           value="#{response.multipleAnswers[question.id]}" emptyLabel="#{msg['survey.answer_select_placeholder']}"
                           filter="#{question.options.size() gt 5}" filterMatchMode="startsWith" multiple="true">
-        <f:selectItems value="#{question.activeOptions}"/>
+        <f:selectItems value="#{question.activeOptions}" var="o" itemValue="#{o.value}"/>
         <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectCheckboxMenu>
 
     <p:selectManyCheckbox styleClass="mt-2" rendered="#{question.type eq 'MANY_CHECKBOX'}" readonly="#{readOnly}"
                           required="#{question.required}" value="#{response.multipleAnswers[question.id]}" layout="pageDirection">
-        <f:selectItems value="#{question.activeOptions}"/>
+        <f:selectItems value="#{question.activeOptions}" var="o" itemValue="#{o.value}"/>
         <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectManyCheckbox>
 

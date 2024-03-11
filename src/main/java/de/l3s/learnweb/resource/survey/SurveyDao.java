@@ -301,12 +301,16 @@ public interface SurveyDao extends SqlObject, Serializable {
         batch.execute();
     }
 
-    default void saveAnswer(SurveyResponse response, int questionId, int variantId, String answer) {
+    default void saveAnswer(SurveyResponse response, SurveyQuestion question, int variantId) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("response_id", response.getId());
-        params.put("question_id", questionId);
+        params.put("question_id", question.getId());
         params.put("variant_id", SqlHelper.toNullable(variantId));
-        params.put("answer", answer);
+        if (question.getType().isMultiple()) {
+            params.put("answer", SurveyResponse.joinAnswers(response.getMultipleAnswers().get(question.getId())));
+        } else {
+            params.put("answer", response.getAnswers().get(question.getId()));
+        }
 
         SqlHelper.handleSave(getHandle(), "lw_survey_response_answer", params).execute();
     }

@@ -84,16 +84,13 @@ public class SurveyResponse implements Serializable, HasId {
         return user;
     }
 
-    public String getAnswer(int id) {
-        if (answers.containsKey(id)) {
-            return answers.get(id);
-        }
+    public boolean isEmpty() {
+        return answers.isEmpty() && multipleAnswers.isEmpty();
+    }
 
-        if (multipleAnswers.containsKey(id)) {
-            return String.join(", ", multipleAnswers.get(id));
-        }
-
-        return "Unanswered";
+    public void clear() {
+        answers.clear();
+        multipleAnswers.clear();
     }
 
     public boolean isSubmitted() {
@@ -112,10 +109,16 @@ public class SurveyResponse implements Serializable, HasId {
         this.createdAt = createdAt;
     }
 
+    /**
+     * @return caution the value will not include multivalued answers
+     */
     public HashMap<Integer, String> getAnswers() {
         return answers;
     }
 
+    /**
+     * @return caution the value will not include single valued answers
+     */
     public HashMap<Integer, String[]> getMultipleAnswers() {
         return multipleAnswers;
     }

@@ -43,19 +43,19 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
 
         response = getUserBean().getSurveyResponses().computeIfAbsent(resource.getId(), k -> {
             if (isLoggedIn()) {
-                SurveyResponse response = surveyDao.findResponseByResourceAndUserId(k, getUser().getId());
-                if (response != null) {
-                    return response;
+                SurveyResponse byUser = surveyDao.findResponseByResourceAndUserId(k, getUser().getId());
+                if (byUser != null) {
+                    return byUser;
                 }
             }
 
-            SurveyResponse response = new SurveyResponse();
-            response.setResourceId(k);
+            SurveyResponse newResponse = new SurveyResponse();
+            newResponse.setResourceId(k);
             if (isLoggedIn()) {
-                response.setUserId(getUser().getId());
+                newResponse.setUserId(getUser().getId());
             }
-            surveyDao.saveResponse(response);
-            return response;
+            surveyDao.saveResponse(newResponse);
+            return newResponse;
         });
 
         if (response.isSubmitted()) {
@@ -64,14 +64,14 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
         } else if (!resource.isValidDate()) {
             formEnabled = false;
             addMessage(FacesMessage.SEVERITY_ERROR, "survey.answer_restricted_dates_between", BeanHelper.date(resource.getOpenDate()), BeanHelper.date(resource.getCloseDate()));
-        } else if (!response.getAnswers().isEmpty()) {
+        } else if (!response.isEmpty()) {
             addGrowl(FacesMessage.SEVERITY_WARN, "survey.answer_unfinished_loaded");
         }
     }
 
     public void onDiscard() {
         surveyDao.deleteAnswersByResponseId(response.getId());
-        response.getAnswers().clear();
+        response.clear();
 
         response.setSubmitted(false);
         surveyDao.saveResponse(response);
@@ -99,7 +99,7 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
         if (getPage().isSampling()) {
             variant = getPage().getVariant(response.getId()).getId();
         }
-        surveyDao.saveAnswer(response, question.getId(), variant, response.getAnswers().get(question.getId()));
+        surveyDao.saveAnswer(response, question, variant);
     }
 
     public SurveyPage getPage() {

@@ -68,7 +68,7 @@ public class DFChatFeedback extends ApplicationBean implements Serializable, Sur
             variant = survey.getVariant(response.getId()).getId();
         }
 
-        surveyDao.saveAnswer(response, question.getId(), variant, response.getAnswers().get(question.getId()));
+        surveyDao.saveAnswer(response, question, variant);
     }
 
     public boolean isReadOnly() {

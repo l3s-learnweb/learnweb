@@ -32,7 +32,14 @@
 				<h:outputText value="#{result.submitted}"/>
 			</p:column>
 			<p:columns var="q" value="#{surveyResponsesBean.writeableQuestions}" headerText="#{q.question}">
-				<h:outputText value="#{result.getAnswer(q.id)}"/>
+                <ui:fragment rendered="#{not q.type.multiple}">
+                    <h:outputText value="#{result.answers[q.id]}"/>
+                </ui:fragment>
+                <ui:fragment rendered="#{q.type.multiple}">
+                    <ui:repeat value="#{result.multipleAnswers[q.id]}" var="a">
+                        <h:outputText value="#{a}"/>
+                    </ui:repeat>
+                </ui:fragment>
 			</p:columns>
 		</p:dataTable>
 	</h:form>
