@@ -6,6 +6,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="pageTitle" value="#{adminChatFeedbackBean.organisation.title} - #{msg.organisation}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="metadata">
     <f:metadata>
