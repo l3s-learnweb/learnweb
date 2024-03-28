@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory;
+package de.l3s.learnweb.pkg;
 
 import java.sql.Date;
 

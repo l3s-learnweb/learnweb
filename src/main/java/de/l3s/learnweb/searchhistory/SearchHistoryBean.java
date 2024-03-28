@@ -27,8 +27,10 @@ import com.google.gson.stream.JsonWriter;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.GroupDao;
+import de.l3s.learnweb.pkg.JsonSharedObject;
+import de.l3s.learnweb.pkg.PKGraph;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.searchhistory.Graph.CollabGraph;
+import de.l3s.learnweb.pkg.CollabGraph;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 
@@ -285,6 +287,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         if (obj == null) {
             return "";
         }
-        return userPkg.rdfGraph.printModel();
+        return userPkg.getRdfGraph().printModel();
     }
 }

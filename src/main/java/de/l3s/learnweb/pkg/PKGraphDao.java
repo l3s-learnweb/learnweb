@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory;
+package de.l3s.learnweb.pkg;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -17,6 +17,7 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.dbpedia.RecognisedEntity;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.SqlHelper;
 

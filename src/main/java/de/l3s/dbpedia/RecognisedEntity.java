@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory;
+package de.l3s.dbpedia;
 
 import java.io.Serial;
 import java.io.Serializable;

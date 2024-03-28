@@ -19,8 +19,8 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.searchhistory.RecognisedEntity;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.DbpediaSpotlightService;
+import de.l3s.dbpedia.RecognisedEntity;
+import de.l3s.dbpedia.DbpediaSpotlightService;
 import de.l3s.learnweb.user.User;
 
 @Named

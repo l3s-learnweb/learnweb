@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory;
+package de.l3s.learnweb.pkg;
 
 import static de.l3s.learnweb.app.Learnweb.dao;
 
@@ -25,6 +25,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.l3s.learnweb.group.Group;
+import de.l3s.dbpedia.RecognisedEntity;
+import de.l3s.learnweb.searchhistory.SearchHistoryBean;
+import de.l3s.learnweb.searchhistory.SearchQuery;
+import de.l3s.learnweb.searchhistory.SearchSession;
 import de.l3s.learnweb.user.User;
 
 /**
@@ -540,6 +544,9 @@ public final class PKGraph {
         return sharedObject;
     }
 
+    public RdfModel getRdfGraph() {
+        return rdfGraph;
+    }
 
     /**
      * The Node class. Has all values of an entity

@@ -43,7 +43,7 @@ import de.l3s.learnweb.resource.office.ResourceHistoryDao;
 import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryDao;
 import de.l3s.learnweb.resource.survey.SurveyDao;
 import de.l3s.learnweb.resource.ted.TedTranscriptDao;
-import de.l3s.learnweb.searchhistory.PKGraphDao;
+import de.l3s.learnweb.pkg.PKGraphDao;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.CourseDao;

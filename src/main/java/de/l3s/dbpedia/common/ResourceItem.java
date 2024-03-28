@@ -1,6 +1,4 @@
-package de.l3s.learnweb.searchhistory.dbpediaspotlight.common;
-
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants.COMMA;
+package de.l3s.dbpedia.common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +102,7 @@ public class ResourceItem {
 
     public List<String> typesList() {
         if (types != null && !types.isEmpty()) {
-            return Arrays.asList(types.split(COMMA));
+            return Arrays.asList(types.split(Constants.COMMA));
         }
 
         return new ArrayList<>();

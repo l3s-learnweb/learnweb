@@ -1,8 +1,8 @@
-package de.l3s.learnweb.searchhistory.dbpediaspotlight.common;
+package de.l3s.dbpedia.common;
 
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants.*;
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes.DBPEDIA_ONTOLOGY;
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes.SCHEMA_ONTOLOGY;
+import static de.l3s.dbpedia.common.Constants.*;
+import static de.l3s.dbpedia.common.Prefixes.DBPEDIA_ONTOLOGY;
+import static de.l3s.dbpedia.common.Prefixes.SCHEMA_ONTOLOGY;
 
 import java.util.List;
 

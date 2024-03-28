@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory.dbpediaspotlight.common;
+package de.l3s.dbpedia.common;
 
 public class Constants {
 

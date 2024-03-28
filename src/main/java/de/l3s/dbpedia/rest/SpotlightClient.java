@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory.dbpediaspotlight.rest;
+package de.l3s.dbpedia.rest;
 
 import static org.apache.http.HttpHeaders.ACCEPT;
 
@@ -20,10 +20,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.google.gson.Gson;
 
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
+import de.l3s.dbpedia.common.AnnotationUnit;
+import de.l3s.dbpedia.common.Constants;
+import de.l3s.dbpedia.common.Prefixes;
+import de.l3s.dbpedia.common.ResourceItem;
 
 public class SpotlightClient {
     private static final String URL = "https://api.dbpedia-spotlight.org/en/annotate";

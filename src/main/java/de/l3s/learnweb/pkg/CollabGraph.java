@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory.Graph;
+package de.l3s.learnweb.pkg;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.github.jsonldjava.shaded.com.google.common.math.Quantiles;
-
-import de.l3s.learnweb.searchhistory.JsonSharedObject;
 
 /**
  * Create the visualisation graph of the top results for the current user, as well as the group it belongs to.

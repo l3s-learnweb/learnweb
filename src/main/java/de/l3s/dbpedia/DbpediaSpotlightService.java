@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory.dbpediaspotlight;
+package de.l3s.dbpedia;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,11 +18,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.l3s.learnweb.searchhistory.PKGraphDao;
-import de.l3s.learnweb.searchhistory.RecognisedEntity;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.rest.SpotlightClient;
+import de.l3s.dbpedia.common.AnnotationUnit;
+import de.l3s.dbpedia.rest.SpotlightClient;
+import de.l3s.learnweb.pkg.PKGraphDao;
+import de.l3s.dbpedia.common.ResourceItem;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
