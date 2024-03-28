@@ -10,13 +10,16 @@ services:
     depends_on:
       - mariadb
       - solr
+      - fuseki
     environment:
       TZ: "Europe/Berlin"
       LEARNWEB_FILE_MANAGER_FOLDER: "/mnt/files"
+      LEARNWEB_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/${DATASOURCE_DATABASE}"
+      LEARNWEB_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      LEARNWEB_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
       LEARNWEB_SOLR_SERVER_URL: "http://solr:8983/solr/learnweb"
-      LEARNWEB_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/learnweb"
-      LEARNWEB_DATASOURCE_USERNAME: "learnweb"
-      LEARNWEB_DATASOURCE_PASSWORD: "cm&dY@FSM7sCtSxZ"
+    env_file:
+      - .env.override
   mariadb:
     image: mariadb:10.11
     restart: always
@@ -28,9 +31,11 @@ services:
       TZ: "Europe/Berlin"
       MARIADB_AUTO_UPGRADE: "yes"
       MARIADB_RANDOM_ROOT_PASSWORD: "yes"
-      MARIADB_DATABASE: "learnweb"
-      MARIADB_USER: "learnweb"
-      MARIADB_PASSWORD: "cm&dY@FSM7sCtSxZ"
+      MARIADB_DATABASE: ${DATASOURCE_DATABASE}
+      MARIADB_USER: ${DATASOURCE_USERNAME}
+      MARIADB_PASSWORD: ${DATASOURCE_PASSWORD}
+    env_file:
+      - .env.override
   solr:
     image: solr:9
     restart: always
@@ -43,11 +48,15 @@ services:
   fuseki:
     image: secoresearch/fuseki:latest
     restart: always
-    environment:
-      ADMIN_PASSWORD: "oydyoMQSP7^R%X"
     ports:
       - "7005:3030"
     volumes:
       - "./data/fuseki/db:/fuseki-base/databases"
       - "./data/fuseki/conf:/fuseki-base/configuration"
-    command: bash -e -c "precreate-core learnweb && source /solr-setup.sh && solr-foreground"
+    environment:
+      ADMIN_PASSWORD: ${FUSEKI_PASSWORD}
+      ENABLE_DATA_WRITE: "true"
+      ENABLE_UPDATE: "true"
+      ENABLE_SHACL: "true"
+    env_file:
+      - .env.override
