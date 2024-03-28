@@ -1,7 +1,10 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +18,19 @@ import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.GroupDao;
+import de.l3s.learnweb.pkg.JsonSharedObject;
+import de.l3s.learnweb.pkg.PKGraph;
 import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.pkg.CollabGraph;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 
@@ -39,19 +52,27 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     @Inject
     private UserDao userDao;
-
+    @Inject
+    private GroupDao groupDao;
     @Inject
     private SearchHistoryDao searchHistoryDao;
+
+    private static final String patternDate = "yyyy-MM-dd";
+    private static final String patternTime = "HH:mm:ss";
+    private static final String patternDateTime = String.format("%s %s", patternDate, patternTime);
+    private transient List<JsonSharedObject> sharedObjects = new ArrayList<>();
+    private transient Gson gson;
 
     /**
      * Load the variables that needs values before the view is rendered.
      */
-    public void onLoad() {
+    public void onLoad() throws IOException, InterruptedException {
         BeanAssert.authorized(isLoggedIn());
 
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
+        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe()).create();
     }
 
     public SearchQuery getSelectedQuery() {
@@ -142,6 +163,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
         //log.info("selected group id: " + selectedGroupId);
         this.selectedGroupId = selectedGroupId;
+        calculateEntities();
     }
 
     public void search() {
@@ -189,5 +211,82 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     public void setSearchQuery(final String searchQuery) {
         this.searchQuery = searchQuery;
+    }
+
+    public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(patternDateTime);
+
+        @Override
+        public void write(JsonWriter out, LocalDateTime value) throws IOException {
+            if (value != null) {
+                out.value(value.format(format));
+            }
+        }
+
+        @Override
+        public LocalDateTime read(JsonReader in) throws IOException {
+            return LocalDateTime.parse(in.nextString(), format);
+        }
+    }
+
+    /**
+    * Calculates and returns a list of top entries for each user belonging to the group.
+    * Also exports a rdf turtle file for every user in the group
+    * */
+    private void calculateEntities() {
+        //For testing only
+        // userPkg.createSharedObject(getUser(), selectedGroupId, 5, true, "negative5SharedObject");
+        // userPkg.createSharedObject(getUser(), selectedGroupId, 10, false, "positive10SharedObject");
+
+        sharedObjects = new ArrayList<>();
+        for (User user : userDao.findByGroupId(selectedGroupId)) {
+            PKGraph userPkg = PKGraph.createPkg(user);
+            JsonSharedObject object = userPkg.createSharedObject(user, selectedGroupId, 3, false, "collabGraph");
+
+            if (object != null) {
+                sharedObjects.add(object);
+            }
+        }
+    }
+
+    /**
+    * Create the CollabGraph file, export it to visualisation.
+    * @return the Json string of the collabGraph
+    * */
+    public String getQueriesJson() {
+        if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) {
+            return null;
+        }
+        //Get the CollabGraph
+        CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createCollabGraph(sharedObjects);
+        //Export file
+        return gson.toJson(calculatedQuery);
+    }
+
+    public String getSingleQueryJson() {
+        PKGraph userPkg = getUserBean().getUserPkg();
+        if (getCurrentUser() != getUser()) {
+            userPkg = PKGraph.createPkg(getCurrentUser());
+        }
+
+        JsonSharedObject obj = userPkg.createSingleGraph();
+        if (obj == null) {
+            return "";
+        }
+        CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createSingleGraph(obj);
+        return gson.toJson(calculatedQuery);
+    }
+
+    public String getRdfModel() {
+        PKGraph userPkg = getUserBean().getUserPkg();
+        if (getCurrentUser() != getUser()) {
+            userPkg = PKGraph.createPkg(getCurrentUser());
+        }
+
+        JsonSharedObject obj = userPkg.createSingleGraph();
+        if (obj == null) {
+            return "";
+        }
+        return userPkg.getRdfGraph().printModel();
     }
 }

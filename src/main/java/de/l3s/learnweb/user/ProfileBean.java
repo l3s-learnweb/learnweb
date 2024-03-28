@@ -33,6 +33,8 @@ import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
+import de.l3s.dbpedia.RecognisedEntity;
+import de.l3s.dbpedia.DbpediaSpotlightService;
 import de.l3s.learnweb.user.User.Gender;
 import de.l3s.util.Image;
 
@@ -75,6 +77,9 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     @Inject
     private GroupDao groupDao;
+
+    @Inject
+    private DbpediaSpotlightService dbpediaSpotlightService;
 
     public void onLoad() {
         User loggedInUser = getUser();
@@ -137,7 +142,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void onSaveProfile() {
+    public void onSaveProfile() throws Exception {
         // send confirmation mail if mail has been changed
         if (StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email)) {
             selectedUser.setEmail(email);
@@ -150,6 +155,11 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
 
         userDao.save(selectedUser);
+
+        // FIXME: check if changed before
+        // Call dbpedia-spotlight recognition
+        List<RecognisedEntity> recognisedEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(getUser(), "user", selectedUser.getId(), selectedUser.getInterest() + " " + selectedUser.getProfession());
+        dbpediaSpotlightService.storeEntities(getSessionId(), selectedUser,  recognisedEntities);
 
         log(Action.changing_profile, 0, selectedUser.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");

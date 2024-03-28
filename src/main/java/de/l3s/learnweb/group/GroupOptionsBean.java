@@ -21,7 +21,10 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
+import de.l3s.dbpedia.RecognisedEntity;
+import de.l3s.dbpedia.DbpediaSpotlightService;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.Image;
 
 @Named
@@ -45,9 +48,12 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     @Inject
     private FileDao fileDao;
-
     @Inject
     private GroupDao groupDao;
+    @Inject
+    private UserDao userDao;
+    @Inject
+    private DbpediaSpotlightService dbpediaSpotlightService;
 
     public void onLoad() {
         User user = getUser();
@@ -74,14 +80,18 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         return group;
     }
 
-    public void onGroupEdit() {
+    public void onGroupEdit() throws Exception {
+        boolean updateGraph = false;
+
         if (!StringUtils.equals(editedGroupDescription, group.getDescription())) {
             group.setDescription(editedGroupDescription);
             log(Action.group_changing_description, group.getId(), group.getId());
+            updateGraph = true;
         }
         if (!editedGroupTitle.equals(group.getTitle())) {
             log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
             group.setTitle(editedGroupTitle);
+            updateGraph = true;
         }
         if (editedGroupLeaderId != group.getLeaderUserId()) {
             if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId()) {
@@ -91,6 +101,16 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             group.setLeaderUserId(editedGroupLeaderId);
             log(Action.group_changing_leader, group.getId(), group.getId());
         }
+
+        if (updateGraph) {
+            List<RecognisedEntity> recognisedEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(getUser(), "group", getGroupId(), group.getTitle() + " " + group.getDescription());
+
+            //Call dbpedia-spotlight recognition
+            for (User user : group.getMembers()) {
+                dbpediaSpotlightService.storeEntities(getSessionId(), user, recognisedEntities);
+            }
+        }
+
         groupDao.save(group);
         //getLearnweb().getGroupManager().resetCache();
         getUser().clearCaches();

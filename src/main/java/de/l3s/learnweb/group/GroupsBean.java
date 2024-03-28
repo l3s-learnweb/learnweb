@@ -19,6 +19,8 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.dbpedia.RecognisedEntity;
+import de.l3s.dbpedia.DbpediaSpotlightService;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -36,6 +38,8 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
     @Inject
     private GroupDao groupDao;
+    @Inject
+    private DbpediaSpotlightService dbpediaSpotlightService;
 
     @PostConstruct
     public void init() {
@@ -110,7 +114,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         return group.canDeleteGroup(getUser());
     }
 
-    public void onCreateGroup() {
+    public void onCreateGroup() throws Exception {
         User user = getUser();
         newGroup.setLeader(user);
 
@@ -121,6 +125,9 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         user.joinGroup(newGroup);
         // refresh group list
         myGroups = user.getGroups();
+
+        List<RecognisedEntity> recognisedEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(user, "group", newGroup.getId(), newGroup.getTitle() + " " + newGroup.getDescription());
+        dbpediaSpotlightService.storeEntities(getSessionId(), user, recognisedEntities);
 
         // log and show notification
         log(Action.group_creating, newGroup.getId(), newGroup.getId());

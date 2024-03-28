@@ -97,31 +97,13 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
       }
     }
 
-    let currentRequest;
-    const myMarket = PrimeFaces.settings.locale;
-    searchField.autoComplete({
-      source(term, response) {
-        currentRequest = $.ajax({
-          url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',
-          data: {
-            query: term,
-            market: myMarket,
-          },
-          dataType: 'jsonp',
-          beforeSend() {
-            if (currentRequest != null) {
-              currentRequest.abort();
-            }
-          },
-          success(data) {
-            const suggestions = [];
-            $.each(data[1], (i, val) => {
-              suggestions.push(val);
-            });
-            response(suggestions);
-          },
-        });
-      },
+    searchField.on('focus', () => {
+      if (searchField.val() && !searchField.data.bypass) {
+        const command = $('#commandSuggestQueries');
+        if (command.length) {
+          command.click();
+        }
+      }
     });
   },
 
