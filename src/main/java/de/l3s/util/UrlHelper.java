@@ -44,14 +44,14 @@ public final class UrlHelper {
     /**
      * This function checks if a given String is a valid url.
      *
-     * @return when the url leads to a redirect the function will return the target of the redirect.
-     * Returns {@code null} if the url is invalid or not reachable.
+     * @return when the url leads to a redirect, the function will return the target of the redirect. Returns {@code null} if the url is invalid or not reachable.
      */
     public static String validateUrl(String url) {
         try {
             if (!url.startsWith("http")) {
                 url = "http://" + url;
             }
+
             url = toAscii(StringHelper.urlDecode(url.trim()));
             if (url != null && url.startsWith("https://waps.io/live/")) {
                 url = url.substring(21);
@@ -70,6 +70,8 @@ public final class UrlHelper {
                 }
 
                 return location;
+            } else {
+                log.warn("unexpected response: {} (response code: {})", url, responseCode);
             }
         } catch (UnknownHostException e) {
             log.warn("unknown host: {}", url, e);

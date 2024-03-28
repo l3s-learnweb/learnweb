@@ -99,6 +99,7 @@
                     <p:ajax event="toggleSelect" process="@this" oncomplete="PF('glossTable').filter()"/>
                 </p:selectCheckboxMenu>
             </f:facet>
+            <!-- FIXME: remove usage of this key -->
             <h:outputText value="#{msg['language_' += item.languageTag]}"/>
         </p:column>
         <p:column headerText="#{msg[Column.uses]}">

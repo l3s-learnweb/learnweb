@@ -77,7 +77,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     public void handleUrlInput() {
         try {
             log.debug("Handle Url input");
-            resource.setUrl(UrlHelper.validateUrl(resource.getUrl()));
+            String url = UrlHelper.validateUrl(resource.getUrl());
+            if (url != null) {
+                resource.setUrl(url);
+            } else {
+                addGrowl(FacesMessage.SEVERITY_WARN, "We were unable to verify the URL");
+            }
 
             log.debug("Extracting info from given url...");
             getLearnweb().getResourceMetadataExtractor().processWebResource(resource);
