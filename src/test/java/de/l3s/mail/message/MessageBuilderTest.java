@@ -78,24 +78,26 @@ class MessageBuilderTest {
 
     @Test
     void testConfirmPasswordEmail() {
-        MessageBuilder builder = MailFactory.buildPasswordChangeEmail("testuser1", "https://learnweb/change");
-        assertEquals("Retrieve Learnweb password", builder.getSubject(msg));
+        MessageBuilder builder = MailFactory.buildPasswordChangeEmail("testuser1", "test@example.com", "https://learnweb/change");
+        assertEquals("Reset your Learnweb password", builder.getSubject(msg));
         assertEquals("""
             Hello testuser1,
 
-            you can change the password of your Learnweb account testuser1 by clicking on this link:
+            We have received a request to reset the password for the Learnweb account associated with test@example.com.
+            You can reset your password by clicking the link below:
             https://learnweb/change
 
             The link will expire in 24 hours.
-            You can just ignore this email, if you haven't requested it.
+            If you did not request a new password, you can ignore this email, or let us know by replying to this email.
 
             _____________________________________
             Best regards,
             Learnweb Team""", builder.buildPlainText(msg));
-        assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Hello testuser1,</p><p>you can change the password of your Learnweb"
-            + " account testuser1 by clicking on this link:<br/><a href=\"https://learnweb/change\">https://learnweb/change</a></p><p>The link will"
-            + " expire in 24 hours.<br/>You can just ignore this email, if you haven't requested it.</p><footer><hr/>Best regards,<br/>Learnweb Team"
-            + "</footer></body></html>", builder.buildHtmlText(msg));
+        assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Hello testuser1,</p><p>We have received a request to reset the password"
+            + " for the Learnweb account associated with test@example.com.<br/>You can reset your password by clicking the link below:<br/>"
+            + "<a href=\"https://learnweb/change\">https://learnweb/change</a></p><p>The link will expire in 24 hours.<br/>"
+            + "If you did not request a new password, you can ignore this email, or let us know by replying to this email.</p>"
+            + "<footer><hr/>Best regards,<br/>Learnweb Team</footer></body></html>", builder.buildHtmlText(msg));
     }
 
     @Test
@@ -180,7 +182,7 @@ class MessageBuilderTest {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(htmlFile, StandardCharsets.UTF_8))) {
             bw.write(MailFactory.buildConfirmEmail("testuser1", "https://learnweb/hash").buildHtmlText(msg));
             bw.write("<br/><hr/><br/>");
-            bw.write(MailFactory.buildPasswordChangeEmail("testuser1", "https://learnweb/change").buildHtmlText(msg));
+            bw.write(MailFactory.buildPasswordChangeEmail("testuser1", "test@example.com", "https://learnweb/change").buildHtmlText(msg));
             bw.write("<br/><hr/><br/>");
             bw.write(MailFactory.buildSuspiciousAlertEmail(suspiciousRequests).buildHtmlText(msg));
             bw.write("<br/><hr/><br/>");

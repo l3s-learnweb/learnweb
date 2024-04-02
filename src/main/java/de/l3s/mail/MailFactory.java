@@ -103,10 +103,11 @@ public final class MailFactory {
             .defaultFooter();
     }
 
-    public static MessageBuilder buildPasswordChangeEmail(String username, String changeUrl) {
+    public static MessageBuilder buildPasswordChangeEmail(String username, String email, String changeUrl) {
         return new MessageBuilder("email_password.retrieve_title", Learnweb.config().getAppName())
             .add(new Paragraph(new Text("greeting")).append(" ").append(username).append(","))
-            .add(new Paragraph(new Text("email_password.change", Learnweb.config().getAppName(), username)).append(new LineBreak()).append(new Link(changeUrl)))
+            .add(new Paragraph(new Text("email_password.reset_requested", Learnweb.config().getAppName(), email)).append(new LineBreak())
+                .append(new Text("email_password.change_link")).append(new LineBreak()).append(new Link(changeUrl)))
             .add(new Paragraph(new Text("email_password.expired_warning")).append(new LineBreak()).append(new Text("email.you_can_ignore")))
             .defaultFooter();
     }

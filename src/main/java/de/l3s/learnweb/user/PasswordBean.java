@@ -49,8 +49,8 @@ public class PasswordBean extends ApplicationBean implements Serializable {
                 int tokenId = tokenDao.insert(user.getId(), Token.TokenType.PASSWORD_RESET, HashHelper.sha256(token), LocalDateTime.now().plusDays(1));
                 String link = url + tokenId + ":" + token;
 
-                Mail mail = MailFactory.buildPasswordChangeEmail(user.getUsername(), link).build(user.getLocale());
-                mail.setRecipient(this.identifier);
+                Mail mail = MailFactory.buildPasswordChangeEmail(user.getDisplayName(), user.getEmail(), link).build(user.getLocale());
+                mail.setRecipient(user.getEmail());
                 mail.send();
             }
 

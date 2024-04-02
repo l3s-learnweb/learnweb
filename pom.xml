@@ -152,7 +152,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.15.1</version>
+            <version>2.16.0</version>
         </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
@@ -427,7 +427,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.14.2</version>
+                        <version>10.15.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
