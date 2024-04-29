@@ -15,7 +15,6 @@ import jakarta.faces.model.SelectItem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -415,7 +414,7 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
     }
 
     public void setGlossaryLanguages(ArrayList<Locale> glossaryLanguages) {
-        if (CollectionUtils.isEmpty(glossaryLanguages)) { // Load default if not defined yet
+        if (glossaryLanguages == null || glossaryLanguages.isEmpty()) { // Load default if not defined yet
             this.glossaryLanguages.clear();
             this.glossaryLanguages.add(Locale.of("de"));
             this.glossaryLanguages.add(Locale.of("it"));

@@ -10,8 +10,6 @@ import java.util.TreeSet;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
@@ -129,7 +127,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
     }
 
     public User getFirstSelectedUser() {
-        if (CollectionUtils.isEmpty(selectedUsersIds)) {
+        if (selectedUsersIds == null || selectedUsersIds.isEmpty()) {
             return null;
         }
 

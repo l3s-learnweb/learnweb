@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections4.map.LinkedMap;
 
 import de.l3s.util.ColorHelper;
 import software.xdev.chartjs.model.charts.LineChart;
@@ -51,7 +50,7 @@ public final class ActivityDashboardChartsFactory {
         List<Map<String, Object>> rows = new ArrayList<>();
 
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
-            Map<String, Object> columns = new LinkedMap<>();
+            Map<String, Object> columns = new LinkedHashMap<>();
             String dateKey = DATE_FORMAT.format(date);
             columns.put("Date", dateKey);
 

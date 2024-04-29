@@ -8,8 +8,6 @@ import java.util.Map;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 
 @Named
@@ -42,7 +40,7 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     }
 
     private void fetchDataFromManager() {
-        if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
+        if (getSelectedUsersIds() != null && !getSelectedUsersIds().isEmpty()) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             statistics = trackerDao.countTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
             proxySources = trackerDao.countUsagePerDomain(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);

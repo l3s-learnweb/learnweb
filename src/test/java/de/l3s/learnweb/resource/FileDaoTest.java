@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -54,7 +53,7 @@ class FileDaoTest {
         assertTrue(file3.isPresent());
         List<File> expected = Arrays.asList(file3.get(), file2.get(), file1.get());
 
-        assertTrue(CollectionUtils.isEqualCollection(expected, retrieved));
+        assertIterableEquals(expected, retrieved);
     }
 
     @Test
@@ -70,7 +69,7 @@ class FileDaoTest {
 
         List<File> retrieved = fileDao.findByResourceId(1);
 
-        assertTrue(CollectionUtils.containsAll(retrieved, toInsert));
+        assertTrue(retrieved.containsAll(toInsert));
     }
 
     @Test
@@ -84,7 +83,7 @@ class FileDaoTest {
 
         List<File> retrieved = fileDao.findByResourceId(1);
 
-        assertEquals(0, CollectionUtils.intersection(retrieved, toDelete).size());
+        assertFalse(retrieved.stream().anyMatch(toDelete::contains));
     }
 
     @Test

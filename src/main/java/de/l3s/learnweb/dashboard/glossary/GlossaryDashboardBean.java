@@ -9,8 +9,6 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.glossary.GlossaryEntryDao;
@@ -79,7 +77,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     }
 
     private void fetchDataFromManager() {
-        if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
+        if (getSelectedUsersIds() != null && !getSelectedUsersIds().isEmpty()) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             totalConcepts = glossaryEntryDao.countTotalEntries(selectedUsersIds, startDate, endDate);
             totalTerms = glossaryTermDao.countTotalTerms(selectedUsersIds, startDate, endDate);

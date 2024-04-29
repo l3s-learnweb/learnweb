@@ -17,8 +17,6 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.logging.Action;
@@ -89,7 +87,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     }
 
     private void fetchDataFromManager() {
-        if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
+        if (getSelectedUsersIds() != null && !getSelectedUsersIds().isEmpty()) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             if (selectedActionItems != null) {
                 List<ActivityGraphData> data = new ArrayList<>();

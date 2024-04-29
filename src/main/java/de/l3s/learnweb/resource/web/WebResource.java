@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,7 +57,7 @@ public class WebResource extends Resource {
     public Resource save() {
         super.save();
 
-        if (CollectionUtils.isNotEmpty(getArchiveUrls())) {
+        if (getArchiveUrls() == null || getArchiveUrls().isEmpty()) {
             try {
                 // To copy archive versions of a resource if it exists
                 Learnweb.dao().getArchiveUrlDao().insertArchiveUrl(getId(), getArchiveUrls());
