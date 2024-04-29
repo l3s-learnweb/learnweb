@@ -123,10 +123,11 @@
 										<img class="d-block w-100 profile-picture m-auto fluent" src="${adminCourseBean.course.registrationIconFileUrl}" alt="Icon picture"/>
 									</div>
 									<div class="col">
-										<p:outputLabel for="@next" value="Registraction icon"/>
+										<p:outputLabel for="@next" value="Registration icon"/>
 										<p:fileUpload id="c_icon" listener="${adminCourseBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
-													  mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
-													  update=":c_icon_wrapper" auto="true" label="#{msg.choose_file}" cancelLabel="abb"/>
+                                                      auto="true" skinSimple="true" update=":c_icon_wrapper" label="#{msg.choose_file}" cancelLabel="abb">
+                                            <p:validateFile sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                        </p:fileUpload>
 										<p:message for="@previous"/>
 									</div>
 								</div>

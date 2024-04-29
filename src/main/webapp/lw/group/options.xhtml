@@ -94,8 +94,9 @@
                             <div class="field mt-2 text-center">
                                 <p:outputLabel for="@next" value="#{msg.photo}" styleClass="d-block"/>
                                 <p:fileUpload id="profilephoto" listener="${groupOptionsBean.handleFileUpload}" mode="simple" skinSimple="true" auto="true"
-                                              styleClass="ui-fileupload-minimal" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
-                                              update="group_picture" label="#{msg.choose_file}"/>
+                                              styleClass="ui-fileupload-minimal" update="group_picture" label="#{msg.choose_file}">
+                                    <p:validateFile sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                </p:fileUpload>
                                 <p:message for="@previous"/>
                             </div>
                         </div>

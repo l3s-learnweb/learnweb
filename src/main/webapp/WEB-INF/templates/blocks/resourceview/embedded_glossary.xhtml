@@ -129,7 +129,9 @@
     <h:form id="import_form">
         <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse == null}">
             <p:fileUpload mode="advanced" listener="#{glossaryBean.onImportXls}" styleClass="ui-fileupload-minimal"
-                          allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update="@form :glossary_table_form" oncomplete="groupRow();"/>
+                          multiple="false" auto="true" update="@form :glossary_table_form" oncomplete="groupRow();">
+                <p:validateFile allowTypes="/(\.|\/)(xls|xlsx)$/"/>
+            </p:fileUpload>
         </h:panelGroup>
 
         <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse != null}">
