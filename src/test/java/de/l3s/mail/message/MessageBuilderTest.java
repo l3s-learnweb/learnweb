@@ -66,13 +66,13 @@ class MessageBuilderTest {
             please use this link to confirm your mail address:
             https://learnweb/hash
 
-            You can just ignore this email, if you haven't requested it.
+            If you did not request a new password, you can ignore this email, or let us know by replying to this email.
 
             _____________________________________
             Best regards,
             Learnweb Team""", builder.buildPlainText(msg));
         assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Hello testuser1,</p><p>please use this link to confirm your mail address:"
-            + "<br/><a href=\"https://learnweb/hash\">https://learnweb/hash</a></p><p>You can just ignore this email, if you haven't requested it.</p>"
+            + "<br/><a href=\"https://learnweb/hash\">https://learnweb/hash</a></p><p>If you did not request a new password, you can ignore this email, or let us know by replying to this email.</p>"
             + "<footer><hr/>Best regards,<br/>Learnweb Team</footer></body></html>", builder.buildHtmlText(msg));
     }
 
