@@ -1,0 +1,112 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{adminChatHistoryBean.organisation.title} - #{msg.organisation}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
+
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="organisation_id" value="#{adminChatHistoryBean.organisationId}" required="false" requiredMessage="#{msg.missing_parameter}"/>
+        <f:viewAction action="#{adminChatHistoryBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:define name="center_layout">
+    <h:form>
+
+        <p:panel header="Chat history">
+            <p:dataTable value="#{adminChatHistoryBean.conversations}" var="conv" emptyMessage="#{msg.no_data}">
+                <p:column headerText="#{msg.date}">
+                    <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
+                                rendered="#{not empty conv.created}"/>
+                </p:column>
+                <p:column headerText="#{msg.user}">
+                    <h:outputText value="#{adminChatHistoryBean.getUserById(conv.user).displayName}"
+                                  rendered="#{not empty adminChatHistoryBean.getUserById(conv.user)}"/>
+                </p:column>
+                <p:column headerText="#{msg.title}">
+                    <h:outputText value="#{conv.title}"/>
+                </p:column>
+                <p:column style="width:3rem;text-align: center">
+                    <p:commandButton update="conv_detail" oncomplete="PF('convDlg').show()" icon="fa fa-search" title="View">
+                        <f:setPropertyActionListener value="#{conv}" target="#{adminChatHistoryBean.selectedConv}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+
+        <p:dialog header="Conversation Details" widgetVar="convDlg" modal="true" closeOnEscape="true" dynamic="true"
+                  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false" fitViewport="true">
+            <p:outputPanel id="conv_detail">
+                <h4>#{adminChatHistoryBean.selectedConv.title}</h4>
+                <h:outputText value="by #{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).displayName}"
+                              rendered="#{not empty adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user)}"/>
+
+                <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
+                    <ui:repeat value="#{adminChatHistoryBean.selectedConv.messages}" var="message" varStatus="status">
+                        <ui:fragment rendered="#{message.role == 'system'}">
+                            <div class="mb-5 d-flex align-items-start p-4 bg-warning-subtle border rounded border-warning">
+                                <i class="mt-2 fas fa-wand-magic-sparkles text-warning fs-3 me-3"></i>
+                                <div class="me-3 w-100">
+                                    <div class="fw-medium fs-5 mb-2">System message</div>
+                                    <h:outputText value="#{message.content}"/>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{message.role == 'assistant'}"> <!-- AI Reply -->
+                            <div class="mb-5 d-flex">
+                                <div class="d-flex flex-column align-items-center" style="width:2rem">
+                                <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle"
+                                      style="min-width:2.5rem; min-height: 2.5rem">
+                                    <i class="fas fa-robot"></i>
+                                </span>
+                                    <div class="h-100 bg-secondary" style="width: 2px; min-height: 4rem"></div>
+                                </div>
+                                <div class="ms-4 bg-body-secondary shadow rounded p-3 flex-fill">
+                                    <div class="mb-3">
+                                        <span class="fw-medium d-inline-block me-3">Assistant</span>
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}"
+                                                    styleClass="text-secondary small" rendered="#{not empty message.created}"/>
+                                    </div>
+                                    <lw:outputMarkdown value="#{message.content}" styleClass="mb-3"/>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{message.role == 'user'}"> <!-- User Prompt -->
+                            <div class="mb-5 d-flex flex-row-reverse">
+                                <div class="d-flex flex-column align-items-center" style="width:2rem">
+                                    <p:avatar label="${adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).initials}" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+                                        <h:graphicImage value="#{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).imageUrl}" alt="#{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).displayName}" rendered="#{not empty adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).imageUrl}"/>
+                                    </p:avatar>
+                                    <div class="h-100 bg-primary" style="width: 2px; min-height: 4rem"></div>
+                                </div>
+                                <div class="me-4 bg-body-secondary shadow rounded p-3 flex-fill">
+                                    <div class="mb-3">
+                                        <span class="fw-medium d-inline-block me-3">#{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).displayName}</span>
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
+                                                    rendered="#{not empty message.created}"/>
+                                    </div>
+                                    <div class="mb-3">#{message.content}</div>
+
+                                    <ui:fragment rendered="#{not empty adminChatHistoryBean.getResponseByMessageId(message.id)}">
+                                        <div class="bg-highlight">
+                                            <ui:repeat value="#{adminChatHistoryBean.getResponseByMessageId(message.id).simplifiedAnswers}" var="answer">
+                                                <h:outputText value="#{adminChatHistoryBean.getQuestionById(answer.key).question}: #{answer.value}"/><br/>
+                                            </ui:repeat>
+                                        </div>
+                                    </ui:fragment>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                    </ui:repeat>
+                </h:panelGroup>
+            </p:outputPanel>
+        </p:dialog>
+    </h:form>
+</ui:define>
+
+</ui:composition>

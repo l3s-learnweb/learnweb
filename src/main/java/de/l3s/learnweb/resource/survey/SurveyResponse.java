@@ -123,6 +123,12 @@ public class SurveyResponse implements Serializable, HasId {
         return multipleAnswers;
     }
 
+    public HashMap<Integer, String> getSimplifiedAnswers() {
+        HashMap<Integer, String> simple = new LinkedHashMap<>(answers);
+        multipleAnswers.forEach((k, v) -> simple.put(k, String.join(", ", v)));
+        return simple;
+    }
+
     public static String joinAnswers(String[] answers) {
         if (ArrayUtils.isEmpty(answers)) {
             return "";
