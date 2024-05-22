@@ -1,6 +1,5 @@
 package de.l3s.learnweb.dashboard.activity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,13 +23,13 @@ public final class ActivityDashboardChartsFactory {
         List<Color> colors = ColorHelper.getColorList(data.size());
 
         for (ActivityGraphData activityData : data) {
-            List<BigDecimal> values = new ArrayList<>();
+            List<Number> values = new ArrayList<>();
             List<String> labels = new ArrayList<>();
 
             for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
                 String dateKey = DATE_FORMAT.format(date);
                 labels.add(dateKey);
-                values.add(BigDecimal.valueOf(activityData.getActionsPerDay().getOrDefault(dateKey, 0)));
+                values.add(activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
 
             chartData.addDataset(new LineDataset()

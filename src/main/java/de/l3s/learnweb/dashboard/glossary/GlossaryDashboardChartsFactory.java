@@ -1,6 +1,5 @@
 package de.l3s.learnweb.dashboard.glossary;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -91,13 +90,13 @@ final class GlossaryDashboardChartsFactory {
     }
 
     public static String createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate) {
-        List<BigDecimal> values = new ArrayList<>();
+        List<Number> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             String dateKey = DATE_FORMAT.format(date);
             labels.add(dateKey);
-            values.add(BigDecimal.valueOf(actionsCountPerDay.getOrDefault(dateKey, 0)));
+            values.add(actionsCountPerDay.getOrDefault(dateKey, 0));
         }
 
         return new LineChart()
@@ -115,23 +114,23 @@ final class GlossaryDashboardChartsFactory {
     public static String createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser) {
         List<String> labels = new ArrayList<>();
 
-        List<BigDecimal> conceptsData = new ArrayList<>();
+        List<Number> conceptsData = new ArrayList<>();
         if (glossaryConceptsCountPerUser.isEmpty()) {
-            conceptsData.add(BigDecimal.ZERO);
+            conceptsData.add(0);
             labels.add("");
         } else {
             for (String key : glossaryConceptsCountPerUser.keySet()) {
                 labels.add(key);
-                conceptsData.add(BigDecimal.valueOf(glossaryConceptsCountPerUser.getOrDefault(key, 0)));
+                conceptsData.add(glossaryConceptsCountPerUser.getOrDefault(key, 0));
             }
         }
 
-        List<BigDecimal> termsData = new ArrayList<>();
+        List<Number> termsData = new ArrayList<>();
         if (glossaryTermsCountPerUser.isEmpty()) {
-            termsData.add(BigDecimal.ZERO);
+            termsData.add(0);
         } else {
             for (String key : glossaryTermsCountPerUser.keySet()) {
-                termsData.add(BigDecimal.valueOf(glossaryTermsCountPerUser.getOrDefault(key, 0)));
+                termsData.add(glossaryTermsCountPerUser.getOrDefault(key, 0));
             }
         }
 
@@ -151,15 +150,15 @@ final class GlossaryDashboardChartsFactory {
 
     public static String createProxySourcesChart(Map<String, Integer> proxySourcesWithCounters) {
         List<String> labels = new ArrayList<>();
-        List<BigDecimal> values = new ArrayList<>();
+        List<Number> values = new ArrayList<>();
 
         if (proxySourcesWithCounters.isEmpty()) {
             labels.add("");
-            values.add(BigDecimal.ZERO);
+            values.add(0);
         } else {
             for (Map.Entry<String, Integer> e : MapHelper.sortByValue(proxySourcesWithCounters).entrySet()) {
                 labels.add(e.getKey());
-                values.add(BigDecimal.valueOf(e.getValue()));
+                values.add(e.getValue());
             }
         }
 

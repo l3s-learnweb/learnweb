@@ -31,6 +31,7 @@ const copyPlugin = ({copyOnce, targets}) => ({
 const /** @type {esbuild.BuildOptions} */ defaultOptions = {
     entryPoints: [
         {in: 'src/main/webapp/resources/learnweb/main.js', out: 'learnweb.main'},
+        {in: 'src/main/webapp/resources/learnweb/js/guide.js', out: 'learnweb.guide'},
     ],
     outdir: 'src/main/webapp/resources/bundle',
     plugins: [
@@ -48,7 +49,6 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
                 {from: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', to: 'video-js.min.js'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css'},
                 {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js'},
-                {from: 'node_modules/shepherd.js/dist/js/shepherd.min.js'},
             ],
         }),
     ],

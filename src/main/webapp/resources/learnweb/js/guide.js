@@ -1,4 +1,5 @@
-/* global Shepherd */
+import Shepherd from 'shepherd.js';
+
 /* global guideBits, guideSteps */
 /* global commandGuideStepComplete */
 
