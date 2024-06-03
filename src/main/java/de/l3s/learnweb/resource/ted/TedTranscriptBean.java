@@ -32,7 +32,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
-import de.l3s.util.LocaleUtils;
 import de.l3s.util.NlpHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -247,7 +246,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
                 ArrayList<Locale> locales = new ArrayList<>();
                 try {
                     for (String lang : langList) {
-                        locales.add(LocaleUtils.toLocale(lang));
+                        locales.add(parseTedLanguage(lang));
                     }
                 } catch (IllegalArgumentException e) {
                     log.error("Error while converting language code to locale", e);
@@ -257,6 +256,14 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             }
         }
         return languageList;
+    }
+
+    private static Locale parseTedLanguage(String locale) {
+        if (locale.length() == 5 && locale.charAt(2) == '-') {
+            String[] parts = locale.split("-");
+            return Locale.of(parts[0], parts[1]);
+        }
+        return Locale.of(locale);
     }
 
     public int getNoteId() {

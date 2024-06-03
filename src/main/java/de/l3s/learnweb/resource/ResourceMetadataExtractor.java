@@ -77,8 +77,8 @@ public class ResourceMetadataExtractor {
                 if (resource.getDuration() == 0 && describeResults.getEntity().getDuration() != null) {
                     resource.setDuration(Math.toIntExact(describeResults.getEntity().getDuration()));
                 }
-                if (StringUtils.isEmpty(resource.getMaxImageUrl()) && describeResults.getEntity().getBiggestThumbnail() != null) {
-                    resource.setMaxImageUrl(describeResults.getEntity().getBiggestThumbnail().getUrl());
+                if (StringUtils.isEmpty(resource.getMaxImageUrl()) && describeResults.getEntity().getLargestThumbnail() != null) {
+                    resource.setMaxImageUrl(describeResults.getEntity().getLargestThumbnail().getUrl());
                 }
             }
 
