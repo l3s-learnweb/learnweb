@@ -124,7 +124,7 @@
         <dependency>
             <groupId>software.xdev</groupId>
             <artifactId>chartjs-java-model</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>
@@ -222,7 +222,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>9.6.0</version>
+            <version>9.6.1</version>
             <exclusions>
                 <!-- We use alternative binding to Log4j-->
                 <exclusion>
@@ -292,7 +292,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.0-jre</version>
+            <version>33.2.1-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
@@ -422,7 +422,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.16.0</version>
+                        <version>10.17.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -523,7 +523,7 @@
             <!-- A maven component that enforces minimum Java and Maven versions -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
