@@ -22,13 +22,13 @@
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
-    "shepherd.js": "^12.0.5",
+    "shepherd.js": "^12.0.6",
     "video.js": "^8.12.0"
   },
   "devDependencies": {
-    "esbuild": "^0.21.4",
-    "esbuild-sass-plugin": "^3.3.0",
-    "sass-embedded": "^1.77.2",
+    "esbuild": "^0.21.5",
+    "esbuild-sass-plugin": "^3.3.1",
+    "sass-embedded": "^1.77.5",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^5.0.0",
@@ -37,7 +37,7 @@
     "stylelint-no-unsupported-browser-features": "^8.0.1"
   },
   "peerDependencies": {
-    "@percy/cli": "^1.28.6",
+    "@percy/cli": "^1.28.7",
     "@percy/puppeteer": "^2.0.2"
   },
   "engines": {
