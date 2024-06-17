@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats a version as String, we need to use zero paddings to make sure v10 is newer than v9 -->
-    <version>3.26.00</version>
+    <version>3.27.00</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -22,7 +22,7 @@
         <maven.dependency.jdbi3.version>3.45.1</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>10.15.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.23.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>7.9.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>7.10.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.12.0</maven.dependency.mockito.version>
 
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>de.l3s.interweb</groupId>
             <artifactId>interweb-client</artifactId>
-            <version>4.0.12</version>
+            <version>4.1.0</version>
         </dependency>
 
         <!-- ################ Jakarta ################ -->
