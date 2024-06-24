@@ -19,11 +19,7 @@
         <param-value>${jakarta.faces.project_stage}</param-value>
     </context-param>
 
-    <!-- PrimeFaces https://primefaces.github.io/primefaces/8_0/#/gettingstarted/configuration -->
-    <context-param>
-        <param-name>primefaces.UPLOADER</param-name>
-        <param-value>native</param-value>
-    </context-param>
+    <!-- PrimeFaces https://primefaces.github.io/primefaces/14_0_0/#/gettingstarted/configuration -->
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>none</param-value>
@@ -60,7 +56,7 @@
         <param-value>#{config.version}</param-value>
     </context-param>
 
-    <!-- Check these recommendations https://primefaces.github.io/primefaces/12_0_0/#/core/performance?id=recommended-configuration -->
+    <!-- Check these recommendations https://primefaces.github.io/primefaces/14_0_0/#/core/performance?id=recommended-configuration -->
     <!-- Also this page provides description for everything https://myfaces.apache.org/#/core40 -->
     <context-param>
         <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>

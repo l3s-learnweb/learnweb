@@ -438,7 +438,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.8.5</version>
+                        <version>4.8.6</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -512,7 +512,7 @@
             <!-- Provides commands to check a dependency tree -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.7.1</version>
             </plugin>
             <!-- Provides commands to check for duplicate classes across dependencies -->
             <plugin>
