@@ -12,25 +12,25 @@ if (window.PrimeFaces) {
     guideGotcha: 'Verstanden',
   });
 
-  PrimeFaces.locales.es = $.extend(true, {}, PrimeFaces.locales.de, {
+  PrimeFaces.locales.es = $.extend(true, {}, PrimeFaces.locales.es, {
     transcriptDeleteSelection: 'Eliminar selección',
     guideDismiss: 'Descartar',
     guideGotcha: 'Entendido',
   });
 
-  PrimeFaces.locales.it = $.extend(true, {}, PrimeFaces.locales.de, {
+  PrimeFaces.locales.it = $.extend(true, {}, PrimeFaces.locales.it, {
     transcriptDeleteSelection: 'Elimina selezione',
     guideDismiss: 'Congedare',
     guideGotcha: 'Capito',
   });
 
-  PrimeFaces.locales.pt = $.extend(true, {}, PrimeFaces.locales.de, {
+  PrimeFaces.locales.pt = $.extend(true, {}, PrimeFaces.locales.pt, {
     transcriptDeleteSelection: 'Eliminar seleção',
     guideDismiss: 'Fechar',
     guideGotcha: 'Entenda',
   });
 
-  PrimeFaces.locales.uk = $.extend(true, {}, PrimeFaces.locales.de, {
+  PrimeFaces.locales.uk = $.extend(true, {}, PrimeFaces.locales.uk, {
     transcriptDeleteSelection: 'Видалити виділене',
     guideDismiss: 'Сховати',
     guideGotcha: 'Зрозуміло',
