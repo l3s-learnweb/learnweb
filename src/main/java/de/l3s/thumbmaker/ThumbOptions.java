@@ -1,15 +1,13 @@
 package de.l3s.thumbmaker;
 
-@SuppressWarnings({"ClassReferencesSubclass", "NonFinalUtilityClass"})
-public class ThumbOptions {
-    protected ThumbOptions() {
-    }
+@SuppressWarnings("ClassReferencesSubclass")
+public interface ThumbOptions {
 
-    public static ScreenshotOptions screenshot() {
+    static ScreenshotOptions screenshot() {
         return new ScreenshotOptions();
     }
 
-    public static FilePreviewOptions file() {
+    static FilePreviewOptions file() {
         return new FilePreviewOptions();
     }
 }

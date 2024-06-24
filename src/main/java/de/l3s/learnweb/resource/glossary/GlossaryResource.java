@@ -90,11 +90,11 @@ public class GlossaryResource extends Resource {
         this.entries = entries;
     }
 
-    public boolean isClonedButNotPersisted() {
+    public boolean isClonedButNotSaved() {
         return clonedButNotSaved;
     }
 
-    public void setClonedButNotPersisted(boolean cloned) {
+    public void setClonedButNotSaved(boolean cloned) {
         this.clonedButNotSaved = cloned;
     }
 

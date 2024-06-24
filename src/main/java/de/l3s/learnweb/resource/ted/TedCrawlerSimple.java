@@ -291,10 +291,10 @@ public class TedCrawlerSimple implements Runnable {
         //if the videos are already added, crawl for new transcripts
         //log.info("Extracting transcripts for existing ted video: " + resourceId);
         Elements transcriptLinkElements = doc.select("link[rel=alternate]");
-        if (transcriptLinkElements != null && !transcriptLinkElements.isEmpty()) {
+        if (!transcriptLinkElements.isEmpty()) {
             for (Element transcriptLinkElement : transcriptLinkElements) {
                 String hrefLang = transcriptLinkElement.attr("hreflang");
-                if (hrefLang != null && !hrefLang.isEmpty() && !hrefLang.equals("x-default")) {
+                if (!hrefLang.isEmpty() && !hrefLang.equals("x-default")) {
                     languageSet.add(hrefLang);
                 }
             }

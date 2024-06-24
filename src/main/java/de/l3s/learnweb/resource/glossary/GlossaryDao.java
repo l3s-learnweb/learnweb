@@ -72,7 +72,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
 
         insertGlossaryResource(resource.getId(), StringHelper.join(resource.getAllowedLanguages()));
 
-        if (resource.isClonedButNotPersisted()) { // after a resource has been cloned we have to persist the cloned entries
+        if (resource.isClonedButNotSaved()) { // after a resource has been cloned we have to persist the cloned entries
             if (resource.getEntries() != null) {
                 for (GlossaryEntry entry : resource.getEntries()) {
                     entry.setUserId(resource.getUserId()); //User ID of user who created the entry
@@ -84,7 +84,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
                 }
             }
 
-            resource.setClonedButNotPersisted(false); //Required to reset it if it was set prior to this.
+            resource.setClonedButNotSaved(false); //Required to reset it if it was set prior to this.
         }
     }
 

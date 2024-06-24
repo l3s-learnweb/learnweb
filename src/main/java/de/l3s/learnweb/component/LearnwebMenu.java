@@ -8,7 +8,6 @@ import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.AbortProcessingException;
 import jakarta.faces.event.ComponentSystemEvent;
-import jakarta.faces.event.ComponentSystemEventListener;
 import jakarta.faces.event.ListenerFor;
 import jakarta.faces.event.PostAddToViewEvent;
 
@@ -18,7 +17,7 @@ import org.primefaces.model.menu.MenuModel;
 
 @FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
 @ListenerFor(sourceClass = LearnwebMenu.class, systemEventClass = PostAddToViewEvent.class)
-public final class LearnwebMenu extends AbstractMenu implements Widget, ComponentSystemEventListener {
+public final class LearnwebMenu extends AbstractMenu implements Widget {
 
     public static final String COMPONENT_TYPE = "de.l3s.learnweb.component.LearnwebMenu";
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";

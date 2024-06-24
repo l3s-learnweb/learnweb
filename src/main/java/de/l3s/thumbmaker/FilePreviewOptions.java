@@ -3,7 +3,7 @@ package de.l3s.thumbmaker;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class FilePreviewOptions extends ThumbOptions implements Serializable {
+public class FilePreviewOptions implements ThumbOptions, Serializable {
     @Serial
     private static final long serialVersionUID = 9108651028356549301L;
 

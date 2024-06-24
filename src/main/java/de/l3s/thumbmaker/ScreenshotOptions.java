@@ -3,7 +3,7 @@ package de.l3s.thumbmaker;
 import java.io.Serial;
 import java.io.Serializable;
 
-public class ScreenshotOptions extends ThumbOptions implements Serializable {
+public class ScreenshotOptions implements ThumbOptions, Serializable {
     @Serial
     private static final long serialVersionUID = 9108651028356549301L;
 

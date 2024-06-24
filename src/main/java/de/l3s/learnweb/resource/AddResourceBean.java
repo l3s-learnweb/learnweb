@@ -90,9 +90,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Creating thumbnails from given url...");
             Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(resource);
             createThumbnailThread.start();
-            createThumbnailThread.join(1000); // wait for a second. If this take longer
+            createThumbnailThread.join(1000); // Wait for a second. If this takes longer, continue
 
-            log.debug("Next step");
+            log.debug("Next step of url input processing");
             formStep++;
         } catch (InterruptedException e) {
             throw new HttpException("Failed to process URL input", e);
