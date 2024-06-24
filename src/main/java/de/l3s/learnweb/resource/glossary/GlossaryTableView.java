@@ -15,8 +15,10 @@ import de.l3s.util.StringHelper;
 public class GlossaryTableView implements Serializable {
     @Serial
     private static final long serialVersionUID = -757320545292668593L;
+
     private GlossaryEntry entry;
     private GlossaryTerm term;
+
     private String topic1;
 
     public GlossaryTableView() {
@@ -46,7 +48,7 @@ public class GlossaryTableView implements Serializable {
 
     public String getTopicOne() {
         return topic1;
-        //return entry.getTopicOne();
+        // return entry.getTopicOne();
     }
 
     public String getTopicTwo() {
@@ -66,7 +68,7 @@ public class GlossaryTableView implements Serializable {
     }
 
     public int getPicturesCount() {
-        return  entry.getPicturesCount();
+        return entry.getPicturesCount();
     }
 
     public String getTerm() {
@@ -79,10 +81,6 @@ public class GlossaryTableView implements Serializable {
 
     public Locale getLanguage() {
         return term.getLanguage();
-    }
-
-    public String getLanguageTag() {
-        return term.getLanguage().toLanguageTag();
     }
 
     public String getUses() {

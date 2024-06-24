@@ -19,6 +19,7 @@
                  styleClass="bg-body" allowUnsorting="true" rows="200"
                  paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+        <!--@elvariable id="item" type="de.l3s.learnweb.resource.glossary.GlossaryTableView"-->
 
         <p:ajax event="filter" oncomplete="groupRow()"/>
         <p:ajax event="page" oncomplete="groupRow()"/>
@@ -99,8 +100,7 @@
                     <p:ajax event="toggleSelect" process="@this" oncomplete="PF('glossTable').filter()"/>
                 </p:selectCheckboxMenu>
             </f:facet>
-            <!-- FIXME: remove usage of this key -->
-            <h:outputText value="#{msg['language_' += item.languageTag]}"/>
+            <h:outputText value="#{item.language.getDisplayLanguage()}"/>
         </p:column>
         <p:column headerText="#{msg[Column.uses]}">
             <h:outputText value="#{item.uses}"/>
@@ -213,7 +213,7 @@
                 <p:carousel value="#{glossaryBean.formEntry.pictures}" var="pic" rendered="#{not empty glossaryBean.formEntry.pictures}"
                             numVisible="#{glossaryBean.formEntry.picturesCount > 3 ? 3 : glossaryBean.formEntry.picturesCount}">
                     <div class="d-flex flex-column align-items-center">
-                        <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-50 rounded" alt="entry picture"/>
+                        <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-50 rounded" alt="#{glossaryBean.formEntry.description}"/>
 
                         <p:commandLink action="#{glossaryBean.handleDeletePicture(pic)}" title="#{msg.delete}" update="edit_pictures" process="@this">
                             <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
