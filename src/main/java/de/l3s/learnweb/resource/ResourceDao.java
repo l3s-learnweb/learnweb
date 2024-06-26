@@ -68,7 +68,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     List<Resource> findByGroupId(int groupId);
 
     @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ?")
-    List<Resource> findByGroupId(int groupId, boolean ignored);
+    List<Resource> findAllByGroupId(int groupId);
 
     @SqlQuery("SELECT * FROM lw_resource r WHERE folder_id = ? AND deleted = 0")
     List<Resource> findByFolderId(int folderId);
@@ -77,7 +77,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     List<Resource> findByOwnerId(int userId);
 
     @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ?")
-    List<Resource> findByOwnerId(int userId, boolean ignored);
+    List<Resource> findAllByOwnerId(int userId);
 
     @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING (resource_id) WHERE tag_id = ? AND deleted = 0")
     List<Resource> findByTagId(int tagId);

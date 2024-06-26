@@ -64,7 +64,7 @@ public interface GroupDao extends SqlObject, Serializable {
     List<Group> findByCourseId(int courseId);
 
     @SqlQuery("SELECT * FROM lw_group WHERE course_id = ?")
-    List<Group> findByCourseId(int courseId, boolean ignored);
+    List<Group> findAllByCourseId(int courseId);
 
     /**
      * Returns a list of all Groups a user belongs to and which groups are also part of the defined course.
@@ -161,7 +161,7 @@ public interface GroupDao extends SqlObject, Serializable {
      * Deletes the group and all its resources permanently. Don't use this if you don't know exactly what you are doing!
      */
     default void deleteHard(Group group) {
-        for (Resource resource : getResourceDao().findByGroupId(group.getId(), true)) {
+        for (Resource resource : getResourceDao().findAllByGroupId(group.getId())) {
             getResourceDao().deleteHard(resource);
         }
 

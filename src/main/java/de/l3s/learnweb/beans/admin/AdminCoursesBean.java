@@ -111,7 +111,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         StringBuilder summary = new StringBuilder();
 
         if (course != null) {
-            List<Group> groups = groupDao.findByCourseId(course.getId(), true);
+            List<Group> groups = groupDao.findAllByCourseId(course.getId());
             if (!groups.isEmpty()) {
                 summary.append("Groups (").append(groups.size()).append(") and resources in them:").append("<br/>");
                 for (Group group : groups) {

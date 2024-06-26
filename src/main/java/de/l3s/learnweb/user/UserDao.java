@@ -82,7 +82,7 @@ public interface UserDao extends SqlObject, Serializable {
     List<User> findByCourseId(int courseId);
 
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_course_user USING(user_id) WHERE course_id = ?")
-    List<User> findByCourseId(int courseId, boolean ignored);
+    List<User> findAllByCourseId(int courseId);
 
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByGroupId(int groupId);
@@ -134,7 +134,7 @@ public interface UserDao extends SqlObject, Serializable {
             throw new BadRequestHttpException("Please, transfer the leadership of your groups before deleting your account.");
         }
 
-        for (Resource resource : getResourceDao().findByOwnerId(user.getId(), true)) {
+        for (Resource resource : getResourceDao().findAllByOwnerId(user.getId())) {
             getResourceDao().deleteHard(resource);
         }
 
