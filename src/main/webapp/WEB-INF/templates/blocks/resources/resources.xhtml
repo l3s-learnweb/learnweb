@@ -226,7 +226,7 @@
         <h:inputHidden id="selectedElements" value="#{groupResourcesBean.selectedElements}"/>
         <p:button value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('downloadConfirm').hide(); return false;"/>
         <p:commandButton value="#{msg.download}" ajax="false"
-                         onclick="document.getElementById('selectedElements').value= JSON.stringify(selected);PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
+                         onclick="document.getElementById('selectedElements').value=JSON.stringify(selected);PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
             <p:fileDownload value="#{groupResourcesBean.downloadResources()}"/>
         </p:commandButton>
     </h:form>

@@ -39,7 +39,7 @@
 			<p>You have to <h:commandLink action="#{loginBean.logout}">logout</h:commandLink> before you can create a new account.</p>
 		</h:form>
 
-		<h:form id="registerForm" rendered="#{not userBean.loggedIn}" prependId="false">
+		<h:form id="registration_form" rendered="#{not userBean.loggedIn}">
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.username}:"/>
 				<p:inputText value="#{registrationBean.username}" required="true" validator="#{registrationBean.validateUsername}">

@@ -44,6 +44,10 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
      */
     public List<TranscriptLog> getTranscriptLogs() {
         if (detailedTranscriptLogs == null) {
+            if (selectedUsers.isEmpty()) {
+                return new ArrayList<>();
+            }
+
             detailedTranscriptLogs = tedTranscriptDao.findTranscriptLogsByUserIds(selectedUsers);
         }
         return detailedTranscriptLogs;

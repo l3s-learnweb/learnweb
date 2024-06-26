@@ -1,7 +1,7 @@
 function groupRow() {
   const columnsToMerge = 5; // number of first columns to merge
 
-  const tableEl = document.getElementById('glossary_table');
+  const tableEl = document.getElementById('glossary_table_form:dt');
   const rows = tableEl.querySelectorAll('.ui-datatable-data > tr');
 
   // if no search result

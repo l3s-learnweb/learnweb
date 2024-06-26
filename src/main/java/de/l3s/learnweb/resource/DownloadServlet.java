@@ -249,7 +249,7 @@ public class DownloadServlet extends HttpServlet {
             ServletOutputStream output = response.getOutputStream()) {
 
             if (ranges.isEmpty()) {
-                // Copy full range.
+                // Copy the full range.
                 copyFullRange(input, output);
             } else if (ranges.size() == 1) {
                 // Copy single part range.
@@ -272,7 +272,7 @@ public class DownloadServlet extends HttpServlet {
                 output.println("--" + MULTIPART_BOUNDARY + "--");
             }
         } catch (IOException ignored) {
-            // Usually thrown when a client aborts connection, just ignore it
+            // Usually thrown when a client aborts a connection, just ignore it
         } catch (IllegalStateException e) {
             // This happens when we can't find or read the file on the server
             log.error("File {} cannot be downloaded because it isn't present in the file system", file);

@@ -30,7 +30,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:form id="editwelcomeform" prependId="false">
+	<h:form id="edit_course_form">
 		<div class="row">
 			<div class="col-12">
 				<p:panel header="#{msg.welcome_message}">
@@ -87,7 +87,7 @@
 							<div class="field">
 								<p:outputLabel for="@next" value="#{msg.registration_type}:"/>
 								<p:selectOneMenu id="c_type" value="#{adminCourseBean.course.registrationType}" required="true">
-									<p:ajax update=":registration_settings" process="@this"/>
+									<p:ajax update="registration_settings" process="@this"/>
 									<f:selectItems value="#{adminCourseBean.registrationTypes}"/>
 								</p:selectOneMenu>
 								<p:message for="@previous"/>
@@ -125,7 +125,7 @@
 									<div class="col">
 										<p:outputLabel for="@next" value="Registration icon"/>
 										<p:fileUpload id="c_icon" listener="${adminCourseBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
-                                                      auto="true" skinSimple="true" update=":c_icon_wrapper" label="#{msg.choose_file}" cancelLabel="abb">
+                                                      auto="true" skinSimple="true" update="c_icon_wrapper" label="#{msg.choose_file}" cancelLabel="abb">
                                             <p:validateFile sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                                         </p:fileUpload>
 										<p:message for="@previous"/>

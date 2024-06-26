@@ -166,7 +166,7 @@
 						</h:form>
 					</p:dialog>
 
-					<h:form id="snippets_results" prependId="false" styleClass="search-#{searchHistoryBean.searchResultsView}">
+					<h:form id="snippets_results" styleClass="search-#{searchHistoryBean.searchResultsView}">
 						<ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
 							<ui:param name="view" value="#{searchHistoryBean.searchResultsView}"/>
 							<ui:param name="resources" value="#{searchHistoryBean.searchResults}"/>

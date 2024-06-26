@@ -1,112 +1,112 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns:ui="jakarta.faces.facelets"
-				xmlns:h="jakarta.faces.html"
-				xmlns:f="jakarta.faces.core"
-				xmlns:p="http://primefaces.org/ui"
-				xmlns:lw="http://l3s.de/learnweb">
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.detailed_transcript_log}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="metadata">
-	<f:metadata>
-		<f:viewAction action="#{tedTranscriptLogBean.onLoad}"/>
-	</f:metadata>
+    <f:metadata>
+        <f:viewAction action="#{tedTranscriptLogBean.onLoad}"/>
+    </f:metadata>
 </ui:define>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="admin/transcript.jsf" title="#{msg.transcript}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="admin/transcript.jsf" title="#{msg.transcript}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+    </lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="admin/detailed_transcript_log.jsf" title="#{msg.detailed_transcript_log}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_transcript.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="admin/detailed_transcript_log.jsf" title="#{msg.detailed_transcript_log}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_transcript.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:form id="us_form" prependId="false">
-		<p:panel header="#{msg.select_users}">
-			<p:tree value="#{tedTranscriptLogBean.treeRoot}" var="node" required="true"
-					selectionMode="checkbox" selection="#{tedTranscriptLogBean.selectedNodes}">
-				<p:treeNode>
-					<h:outputText value="#{node.title}"/>
-				</p:treeNode>
-				<p:treeNode type="course" icon="fas fa-fw fa-graduation-cap">
-					<h:outputText value="#{node.title}" />
-				</p:treeNode>
-				<p:treeNode type="group" icon="fas fa-fw fa-users">
-					<h:outputText value="#{node.title}" />
-				</p:treeNode>
-				<p:treeNode type="user" icon="fas fa-fw fa-user">
-					<h:outputText value="#{node.username}" />
-				</p:treeNode>
-			</p:tree>
-			<p:message for="@previous"/>
+    <h:form id="user_select_form">
+        <p:panel header="#{msg.select_users}">
+            <p:tree value="#{tedTranscriptLogBean.treeRoot}" var="node" required="true"
+                    selectionMode="checkbox" selection="#{tedTranscriptLogBean.selectedNodes}">
+                <p:treeNode>
+                    <h:outputText value="#{node.title}"/>
+                </p:treeNode>
+                <p:treeNode type="course" icon="fas fa-fw fa-graduation-cap">
+                    <h:outputText value="#{node.title}"/>
+                </p:treeNode>
+                <p:treeNode type="group" icon="fas fa-fw fa-users">
+                    <h:outputText value="#{node.title}"/>
+                </p:treeNode>
+                <p:treeNode type="user" icon="fas fa-fw fa-user">
+                    <h:outputText value="#{node.username}"/>
+                </p:treeNode>
+            </p:tree>
+            <p:message for="@previous"/>
 
-			<p:commandButton actionListener="#{tedTranscriptLogBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
-							 process="@form" update=":transcript_table @form"/>
-		</p:panel>
-	</h:form>
+            <p:commandButton actionListener="#{tedTranscriptLogBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
+                             process="@form" update=":transcript_form:transcript_dt"/>
+        </p:panel>
+    </h:form>
 
-	<h:form prependId="false" styleClass="mt-3">
-		<p:dataTable id="transcript_table" widgetVar="transcriptLogs" var="log" value="#{tedTranscriptLogBean.transcriptLogs}" rows="30"
-					 paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="20,25,30,35,40"
-					 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
-			<f:facet name="{Exporters}">
-				<h:commandLink>
-					<i class="fas fa-fw fa-file-excel text-success" aria-hidden="true"></i>
-					<p:dataExporter type="xls" target="transcript_table" fileName="detailed_transcript_log"/>
-				</h:commandLink>
-			</f:facet>
+    <h:form id="transcript_form" styleClass="mt-3">
+        <p:dataTable id="transcript_dt" widgetVar="transcriptLogs" var="log" value="#{tedTranscriptLogBean.transcriptLogs}" rows="30"
+                     paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="20,25,30"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
+            <f:facet name="{Exporters}">
+                <h:commandLink>
+                    <i class="fas fa-fw fa-file-excel text-success" aria-hidden="true"></i>
+                    <p:dataExporter type="xls" target="transcript_dt" fileName="detailed_transcript_log"/>
+                </h:commandLink>
+            </f:facet>
 
-			<f:facet name="header">#{msg.transcript_logs}</f:facet>
+            <f:facet name="header">#{msg.transcript_logs}</f:facet>
 
-			<p:column headerText="#{msg.student}" filterBy="#{log.user.displayName}" sortBy="#{log.user.displayName}">
-				<h:outputText value="#{log.user.displayName}"/>
-			</p:column>
+            <p:column headerText="#{msg.student}" filterBy="#{log.user.displayName}" sortBy="#{log.user.displayName}">
+                <h:outputText value="#{log.user.displayName}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
-				<h:outputText value="#{log.resource.title}"/>
-			</p:column>
+            <p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
+                <h:outputText value="#{log.resource.title}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.user.displayName}" sortBy="#{log.resource.user.displayName}">
-				<h:outputText value="#{log.resource.user.displayName}"/>
-			</p:column>
+            <p:column headerText="#{msg.added_by}" filterBy="#{log.resource.user.displayName}" sortBy="#{log.resource.user.displayName}">
+                <h:outputText value="#{log.resource.user.displayName}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.word}">
-				<h:outputText value="#{log.wordsSelected}"/>
-			</p:column>
+            <p:column headerText="#{msg.word}">
+                <h:outputText value="#{log.wordsSelected}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
-				<h:outputText value="#{log.userAnnotation}"/>
-			</p:column>
+            <p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
+                <h:outputText value="#{log.userAnnotation}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
-				<f:facet name="filter">
-					<p:selectOneMenu onchange="PF('transcriptLogs').filter()">
-						<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
-						<f:selectItem itemLabel="Selection" itemValue="selection"/>
-						<f:selectItem itemLabel="Deselection" itemValue="deselection"/>
-						<f:selectItem itemLabel="Add Annotation" itemValue="add annotation"/>
-						<f:selectItem itemLabel="Edit Annotation" itemValue="edit annotation"/>
-						<f:selectItem itemLabel="Display Definition" itemValue="display definition"/>
-						<f:selectItem itemLabel="Save Transcript" itemValue="save transcript"/>
-						<f:selectItem itemLabel="Submit Transcript" itemValue="submit transcript"/>
-					</p:selectOneMenu>
-				</f:facet>
-				<h:outputText value="#{log.action}"/>
-			</p:column>
+            <p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('transcriptLogs').filter()">
+                        <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selection" itemValue="selection"/>
+                        <f:selectItem itemLabel="Deselection" itemValue="deselection"/>
+                        <f:selectItem itemLabel="Add Annotation" itemValue="add annotation"/>
+                        <f:selectItem itemLabel="Edit Annotation" itemValue="edit annotation"/>
+                        <f:selectItem itemLabel="Display Definition" itemValue="display definition"/>
+                        <f:selectItem itemLabel="Save Transcript" itemValue="save transcript"/>
+                        <f:selectItem itemLabel="Submit Transcript" itemValue="submit transcript"/>
+                    </p:selectOneMenu>
+                </f:facet>
+                <h:outputText value="#{log.action}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
-				<h:outputText value="#{log.timestamp}"/>
-			</p:column>
-		</p:dataTable>
-	</h:form>
+            <p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
+                <h:outputText value="#{log.timestamp}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
 </ui:define>
 
 </ui:composition>

@@ -2,8 +2,8 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
                 xmlns:pt="jakarta.faces.passthrough"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.banlist_header}"/>
@@ -23,7 +23,7 @@
     <div class="row">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
             <p:panel header="#{msg.manual_ban}">
-                <h:form id="banformreg">
+                <h:form id="manual_ban_form">
                     <div class="field">
                         <p:outputLabel for="@next" value="#{msg.ip_addr}:"/>
                         <p:inputText value="#{adminBanlistBean.addr}" required="true"/>
@@ -49,19 +49,19 @@
                         <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}"/>
                     </div>
 
-                    <p:commandButton onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" update=":banlist"
+                    <p:commandButton onstart="PF('banlistOverlay').show()" oncomplete="PF('banlistOverlay').hide()" update=":banlist_form"
                                      action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
                 </h:form>
             </p:panel>
         </div>
     </div>
 
-    <h:form prependId="false">
-        <p:blockUI block="banlist" widgetVar="banlistformOverlay">
+    <h:form id="banlist_form">
+        <p:blockUI block="banlist_dt" widgetVar="banlistOverlay">
             <h:outputText value="#{msg.please_wait}"/>
         </p:blockUI>
 
-        <p:dataTable id="banlist" var="ban" value="#{adminBanlistBean.banlist}" rows="50" paginator="true" paginatorPosition="bottom"
+        <p:dataTable id="banlist_dt" var="ban" value="#{adminBanlistBean.banlist}" rows="50" paginator="true" paginatorPosition="bottom"
                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
             <f:facet name="header">#{msg.banlist}</f:facet>
 
@@ -91,8 +91,8 @@
 
             <p:column styleClass="text-end">
                 <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.unban}"
-                                 process="@this" actionListener="#{adminBanlistBean.onUnban(ban.addr)}" update=":banlist"
-                                 onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()">
+                                 process="@this" actionListener="#{adminBanlistBean.onUnban(ban.addr)}" update="banlist_dt"
+                                 onstart="PF('banlistOverlay').show()" oncomplete="PF('banlistOverlay').hide()">
                     <p:confirm message="#{msg.unban} #{ban.addr}?" icon="fas fa-triangle-exclamation"/>
                 </p:commandButton>
             </p:column>
@@ -104,7 +104,7 @@
 
         <p:dialog header="Ban" widgetVar="banDialog" modal="true" closeOnEscape="true"
                   resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
-            <h:form class="banform" id="banDialogForm">
+            <h:form class="ban_suspicious_form" id="banDialogForm">
                 <div class="field">
                     <p:outputLabel for="@next" value="#{msg.ip_addr}:"/>
                     <p:inputText value="#{adminBanlistBean.addr}" required="true"/>
@@ -134,7 +134,7 @@
             </h:form>
         </p:dialog>
 
-        <h:form id="suspiciouslistform">
+        <h:form id="suspicious_list_form">
             <p:dataTable var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                 <p:column headerText="IP" sortBy="#{aggrReqData.addr}">
@@ -161,10 +161,10 @@
 
                 <p:column styleClass="text-end">
                     <p:commandButton styleClass="ui-button-warning rounded-button ui-button-flat" icon="fas fa-ban" title="#{msg.ban}"
-                                     process="@this" update=":suspiciouslistform" onclick="PF('banDialog').show(); updateFormValues('#{entry.IP}');"/>
+                                     process="@this" update=":suspicious_list_form" onclick="PF('banDialog').show(); updateFormValues('#{entry.IP}');"/>
 
                     <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.remove}"
-                                     process="@this" actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.addr)}" update=":suspiciouslistform">
+                                     process="@this" actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.addr)}" update=":suspicious_list_form">
                         <p:confirm message="#{msg.remove} #{aggrReqData.addr}?" icon="fas fa-triangle-exclamation"/>
                     </p:commandButton>
                 </p:column>

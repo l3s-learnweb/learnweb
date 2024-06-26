@@ -29,7 +29,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:form id="us_form" prependId="false">
+    <h:form id="user_select_form">
         <p:panel header="#{msg.select_users}">
             <p:tree value="#{tedTranscriptLogBean.treeRoot}" var="node" required="true"
                     selectionMode="checkbox" selection="#{tedTranscriptLogBean.selectedNodes}">
@@ -37,30 +37,30 @@
                     <h:outputText value="#{node.title}"/>
                 </p:treeNode>
                 <p:treeNode type="course" icon="fas fa-fw fa-graduation-cap">
-                    <h:outputText value="#{node.title}" />
+                    <h:outputText value="#{node.title}"/>
                 </p:treeNode>
                 <p:treeNode type="group" icon="fas fa-fw fa-users">
-                    <h:outputText value="#{node.title}" />
+                    <h:outputText value="#{node.title}"/>
                 </p:treeNode>
                 <p:treeNode type="user" icon="fas fa-fw fa-user">
-                    <h:outputText value="#{node.username}" />
+                    <h:outputText value="#{node.username}"/>
                 </p:treeNode>
             </p:tree>
             <p:message for="@previous"/>
 
             <p:commandButton actionListener="#{tedTranscriptLogBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
-                             process="@form" update=":transcript_table @form"/>
+                             process="@form" update=":transcript_form:transcript_dt"/>
         </p:panel>
     </h:form>
 
-    <h:form prependId="false" styleClass="mt-3">
-        <p:dataTable id="transcript_table" var="log" value="#{tedTranscriptLogBean.simpleTranscriptLogs}" rows="30"
+    <h:form id="transcript_form" styleClass="mt-3">
+        <p:dataTable id="transcript_dt" var="log" value="#{tedTranscriptLogBean.simpleTranscriptLogs}" rows="30"
                      paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="20,25,30"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
             <f:facet name="{Exporters}">
                 <h:commandLink>
                     <i class="fas fa-fw fa-file-excel text-success" aria-hidden="true"></i>
-                    <p:dataExporter type="xls" target="transcript_table" fileName="simple_transcript_log"/>
+                    <p:dataExporter type="xls" target="transcript_dt" fileName="simple_transcript_log"/>
                 </h:commandLink>
             </f:facet>
 

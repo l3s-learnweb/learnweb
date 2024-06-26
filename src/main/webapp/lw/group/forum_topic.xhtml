@@ -34,7 +34,7 @@
         </ui:decorate>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="group/forum_topic.jsf?topic_id=#{forumEditBean.topic.id}" title="#{forumTopicBean.topic.title}">
+    <lw:breadcrumb-item link="group/forum_topic.jsf?topic_id=#{forumTopicBean.topic.id}" title="#{forumTopicBean.topic.title}">
         <ui:repeat value="#{forumTopicBean.topics}" var="topic">
             <li><a href="#{request.contextPath}/lw/group/forum_topic.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
         </ui:repeat>
@@ -42,7 +42,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:form prependId="false">
+    <h:form id="forum_posts_form">
         <p:panel styleClass="ui-widget-content-flat">
             <f:facet name="header">
                 #{msg['forum.topic']}: #{forumTopicBean.topic.title}
@@ -54,7 +54,7 @@
                 </p:commandButton>
             </f:facet>
 
-            <p:dataTable id="forum_posts_table" var="post" value="#{forumTopicBean.posts}" rows="10"
+            <p:dataTable id="forum_posts_dt" var="post" value="#{forumTopicBean.posts}" rows="10"
                          paginator="true" paginatorPosition="bottom" tableStyleClass="h-100" styleClass="text-break"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
@@ -115,7 +115,7 @@
                             </ui:fragment>
 
                             <div class="col text-end">
-                                <p:commandLink value="#{msg.delete}" update=":forum_posts_table" styleClass="mx-2" immediate="true"
+                                <p:commandLink value="#{msg.delete}" update="forum_posts_dt" styleClass="mx-2" immediate="true"
                                                action="#{forumTopicBean.deletePost(post)}" rendered="#{post.canDeletePost(userBean.user)}">
                                     <p:confirm message="#{msg.delete_message_forum_post}"/>
                                 </p:commandLink>
@@ -203,7 +203,7 @@
             </div>
 
             <p:commandButton value="#{forumTopicBean.replyDialog ? msg.send : msg.save}" action="#{forumTopicBean.saveDialogPost}"
-                             update="@form :forum_posts_table" oncomplete="if(!args.validationFailed){PF('postDialog').hide();}"/>
+                             update="@form :forum_posts_form:forum_posts_dt" oncomplete="if(!args.validationFailed){PF('postDialog').hide();}"/>
         </h:form>
     </p:dialog>
 

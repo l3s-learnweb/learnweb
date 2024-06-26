@@ -14,8 +14,8 @@
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript name="learnweb/js/glossary.js" target="body"/>
 
-<h:form id="glossary_table_form" prependId="false" styleClass="h-100">
-    <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
+<h:form id="glossary_table_form" styleClass="h-100">
+    <p:dataTable id="dt" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
                  styleClass="bg-body" allowUnsorting="true" rows="200"
                  paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
@@ -32,7 +32,7 @@
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
                 <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto ui-button-warning" process="@this"
-                                 update=":glossary_add" oncomplete="PF('glossaryEditDialog').show();return false;" global="false"/>
+                                 update=":glossary_add_term_form" oncomplete="PF('glossaryEditDialog').show();return false;" global="false"/>
             </div>
         </f:facet>
 
@@ -50,11 +50,11 @@
                     Export to:
                     <p:commandLink styleClass="text-success">
                         <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
-                        <p:dataExporter type="xls" target="glossary_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
+                        <p:dataExporter type="xls" target="dt" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
                     </p:commandLink>
                     <p:commandLink styleClass="text-danger">
                         <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
-                        <p:dataExporter type="pdf" fileName="glossary" target="glossary_table" preProcessor="#{glossaryBean.rotatePDF}"/>
+                        <p:dataExporter type="pdf" fileName="glossary" target="dt" preProcessor="#{glossaryBean.rotatePDF}"/>
                     </p:commandLink>
                 </div>
             </div>
@@ -62,7 +62,7 @@
 
         <p:column style="width: 79px;" exportable="false" pt:data-itemId="#{item.entryId}" styleClass="text-end">
             <p:commandButton styleClass="ui-button-warning rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit_entry}"
-                             process="@this" update=":glossary_add" action="#{glossaryBean.setGlossaryForm(item)}"
+                             process="@this" update=":glossary_add_term_form" action="#{glossaryBean.setGlossaryForm(item)}"
                              oncomplete="PF('glossaryEditDialog').show();return false;"/>
 
             <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
@@ -158,7 +158,7 @@
 
 <p:dialog widgetVar="glossaryEditDialog" header="#{msg['glossary.edit_glossary']}" modal="true" closeOnEscape="true"
           resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
-    <h:form id="glossary_add" prependId="false" enctype="multipart/form-data">
+    <h:form id="glossary_add_term_form" enctype="multipart/form-data">
         <div class="row mb-3">
             <p:panelGrid id="grid" layout="flex" styleClass="col-12 col-md-6" contentStyleClass="row border-0" columnClasses="col-5, col-7" columns="2">
                 <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 1"/>
@@ -276,7 +276,7 @@
             </p:column>
             <p:column width="20" rendered="#{not term.deleted}">
                 <p:commandLink id="delete_term" actionListener="#{glossaryBean.onDeleteTerm(term)}" title="#{msg.delete}"
-                               update=":glossary_add :lang_terms" process="@this lang_terms">
+                               update="@form :lang_terms" process="@this lang_terms">
                     <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                 </p:commandLink>
             </p:column>
@@ -285,7 +285,7 @@
         <div class="d-flex mt-3">
             <div class="me-auto">
                 <p:commandButton id="add_synonym" value="#{msg['glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="ui-button-warning"
-                                 update=":glossary_add :lang_terms" process="@this lang_terms">
+                                 update="@form :lang_terms" process="@this lang_terms">
                 </p:commandButton>
             </div>
             <div>
@@ -293,7 +293,7 @@
                 <p:commandButton value="#{msg.cancel}" process="@this" resetValues="true" styleClass="ui-button-secondary"
                                  oncomplete="PF('glossaryEditDialog').hide();return false;">
                 </p:commandButton>
-                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave}" update=":glossary_add :glossary_table_form"
+                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave}" update="@form :glossary_table_form"
                                  binding="#{save}" oncomplete="if(!args.validationFailed){PF('glossaryEditDialog').hide();groupRow();}">
                 </p:commandButton>
             </div>
