@@ -93,23 +93,23 @@ public interface CourseDao extends SqlObject, Serializable {
     }
 
     default List<User> deleteHard(Course course, boolean force) {
+        GroupDao groupDao = getHandle().attach(GroupDao.class);
+        for (Group group : groupDao.findByCourseId(course.getId(), true)) {
+            groupDao.deleteHard(group);
+        }
+
         UserDao userDao = getHandle().attach(UserDao.class);
         if (!force && userDao.countByCourseId(course.getId()) > 0) {
             throw new IllegalArgumentException("The course can't be deleted, remove all members first");
         }
 
         List<User> undeletedUsers = new LinkedList<>(); // users that can't be deleted because they are member of other courses
-        for (User user : userDao.findByCourseId(course.getId())) {
+        for (User user : userDao.findByCourseId(course.getId(), true)) {
             if (userDao.countCoursesByUserId(user.getId()) > 1 || user.isAdmin()) {
                 undeletedUsers.add(user);
             } else {
                 userDao.deleteHard(user);
             }
-        }
-
-        GroupDao groupDao = getHandle().attach(GroupDao.class);
-        for (Group group : groupDao.findByCourseId(course.getId())) {
-            groupDao.deleteHard(group);
         }
 
         getHandle().execute("DELETE FROM lw_course WHERE course_id = ?", course);

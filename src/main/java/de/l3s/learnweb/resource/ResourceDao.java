@@ -67,11 +67,17 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ? and deleted = 0")
     List<Resource> findByGroupId(int groupId);
 
+    @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ?")
+    List<Resource> findByGroupId(int groupId, boolean ignored);
+
     @SqlQuery("SELECT * FROM lw_resource r WHERE folder_id = ? AND deleted = 0")
     List<Resource> findByFolderId(int folderId);
 
     @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ? AND deleted = 0")
     List<Resource> findByOwnerId(int userId);
+
+    @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ?")
+    List<Resource> findByOwnerId(int userId, boolean ignored);
 
     @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING (resource_id) WHERE tag_id = ? AND deleted = 0")
     List<Resource> findByTagId(int tagId);

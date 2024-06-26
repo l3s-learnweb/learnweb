@@ -59,7 +59,14 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         editedGroupDescription = group.getDescription();
         editedGroupLeaderId = group.getLeaderUserId();
         editedGroupTitle = group.getTitle();
-        groupUser = groupDao.findGroupUserRelation(group, user).orElseThrow(BeanAssert.NOT_FOUND);
+
+        groupUser = groupDao.findGroupUserRelation(group, user).orElse(null);
+        if (groupUser == null && user.isAdmin()) {
+            groupUser = new GroupUser();
+            groupUser.setGroupId(group.getId());
+            groupUser.setUserId(user.getId());
+        }
+        BeanAssert.authorized(groupUser != null);
     }
 
     public int getGroupId() {

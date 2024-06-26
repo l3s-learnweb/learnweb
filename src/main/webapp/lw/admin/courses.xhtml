@@ -94,10 +94,8 @@
                 </p:linkButton>
 
                 <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
-                                 process="@this" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" update="@form"
-                                 rendered="#{course.memberCount == 0 || userBean.admin}"
-                                 onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
-                    <p:confirm message="#{of:format1(msg.courses_delete_question, course.title)}"/>
+                                 process="@this" update="delete_confirm_dialog" oncomplete="PF('deleteCourseDialog').show()" rendered="#{course.memberCount == 0 || userBean.admin}">
+                    <f:setPropertyActionListener value="#{course}" target="#{adminCoursesBean.selectedCourse}"/>
                 </p:commandButton>
 
                 <p:commandButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-eye-slash" title="#{msg.anonymise}"
@@ -107,6 +105,20 @@
                 </p:commandButton>
             </p:column>
         </p:dataTable>
+
+        <p:confirmDialog widgetVar="deleteCourseDialog" id="delete_confirm_dialog" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}">
+            <f:facet name="message">
+                <h:outputText value="#{of:format1(msg.courses_delete_question, adminCoursesBean.selectedCourse.title)}" styleClass="d-block mb-2"/>
+                <h:outputText value="This action can not be reverted. The following records will be deleted permanantly:" styleClass="d-block"/>
+                <h:outputText value="#{adminCoursesBean.getDeleteSummary(adminCoursesBean.selectedCourse)}" escape="false"/>
+            </f:facet>
+
+            <p:commandButton value="#{msg.yes}" icon="fas fa-check"
+                             actionListener="#{adminCoursesBean.onDeleteCourse(adminCoursesBean.selectedCourse)}" immediate="true" process="@this" update="@form"
+                             onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('deleteCourseDialog').hide()" />
+            <p:commandButton value="#{msg.no}" styleClass="ui-button-outlined ui-button-secondary" icon="fas fa-xmark"
+                             onclick="PF('deleteCourseDialog').hide()" />
+        </p:confirmDialog>
     </h:form>
 
     <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">

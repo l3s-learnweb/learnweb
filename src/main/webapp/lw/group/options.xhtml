@@ -271,7 +271,7 @@
 
             <p:panel header="#{msg['miscellaneous']}">
                 <h:form id="group_delete_form" styleClass="d-flex justify-content-between">
-                    <p:commandButton value="#{msg.delete_group}"
+                    <p:commandButton value="#{msg.delete_group}" styleClass="ui-button-danger"
                                      rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}"
                                      title="#{msg.delete}" action="#{groupsBean.deleteGroup}" process="@this">
                         <p:confirm message="#{of:format1(msg.group_delete_question, groupOptionsBean.group.title)}"/>
