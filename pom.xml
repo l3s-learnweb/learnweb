@@ -23,7 +23,7 @@
         <maven.dependency.flyway.version>10.15.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.23.1</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>7.10.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.10.2</maven.dependency.junit.version>
+        <maven.dependency.junit.version>5.10.3</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.12.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
