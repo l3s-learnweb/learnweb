@@ -107,7 +107,7 @@
 			<h:inputHidden id="timeZone" value="#{registrationBean.timeZone}"/>
 			<h:outputScript>
 				try {
-					document.getElementById('timeZone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					document.getElementById('registration_form:timeZone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 				} catch (e) {
 					console.log(e);
 				}
