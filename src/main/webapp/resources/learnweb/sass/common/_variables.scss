@@ -62,15 +62,15 @@ $primary-border-subtle-dark: shade-color($primary, 40%) !default;
 // The bg is used as primary background of all panels.
 $body-color: $gray-900;
 $body-color-dark: $gray-100;
-$body-bg: #F2F5FA;
-$body-bg-dark: #1B1F23;
+$body-bg: #f2f5fa;
+$body-bg-dark: #1b1f23;
 
 // Secondary — Use the color option for lighter text.
 // The bg is used as body background (back-fill), and you can use it for dividers and to indicate disabled component states.
 $body-secondary-color: $gray-600;
 $body-secondary-color-dark: $gray-500;
 $body-secondary-bg: $white;
-$body-secondary-bg-dark: #272B2F;
+$body-secondary-bg-dark: #272b2f;
 
 // Tertiary — Use the color option for even lighter text.
 // Use the bg option to style backgrounds for hover states, accents, and wells.

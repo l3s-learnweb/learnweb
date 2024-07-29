@@ -17,8 +17,9 @@ import org.primefaces.model.DialogFrameworkOptions;
 
 import de.l3s.interweb.client.Interweb;
 import de.l3s.interweb.client.InterwebException;
-import de.l3s.interweb.core.completion.Conversation;
-import de.l3s.interweb.core.completion.Message;
+import de.l3s.interweb.core.chat.Conversation;
+import de.l3s.interweb.core.chat.Message;
+import de.l3s.interweb.core.chat.Role;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Settings;
@@ -64,7 +65,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
         conversation.setGenerateTitle(true);
         conversation.setUser(String.valueOf(getUser().getId()));
         // This is the prompt that the bot will refer back to for every message.
-        conversation.addMessage("You are Learnweb Assistant, a helpful chat bot.", Message.Role.system);
+        conversation.addMessage("You are Learnweb Assistant, a helpful chat bot.", Role.system);
         newChat = true;
     }
 
@@ -74,7 +75,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     }
 
     public void sendMessage() throws InterwebException {
-        conversation.addMessage(message, Message.Role.user);
+        conversation.addMessage(message, Role.user);
         message = null;
 
         interweb.chatComplete(conversation);

@@ -3,20 +3,18 @@ package de.l3s.learnweb.beans.admin;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
 import de.l3s.interweb.client.Interweb;
 import de.l3s.interweb.client.InterwebException;
-import de.l3s.interweb.core.completion.Conversation;
+import de.l3s.interweb.core.chat.Conversation;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.survey.SurveyDao;
@@ -77,7 +75,7 @@ public class AdminChatHistoryBean extends ApplicationBean implements Serializabl
 
     public List<Conversation> getConversations() throws InterwebException {
         if (conversations == null) {
-            conversations = interweb.sendGetRequest("/chat", Map.of(), new TypeReference<>() {});
+            conversations = interweb.chatAll();
         }
         return conversations;
     }

@@ -69,7 +69,8 @@ body .res-view {
           color: var(--body-color) !important;
         }
 
-        &.ui-state-active, &.ui-state-hover {
+        &.ui-state-active,
+        &.ui-state-hover {
           border-color: var(--secondary-color);
         }
       }
