@@ -232,6 +232,7 @@ public class SolrSearch implements Serializable {
     private QueryResponse getQueryResourcesByPage(int page) throws IOException {
         SolrQuery solrQuery = new SolrQuery(query);
         solrQuery.set("qt", "/LearnwebQuery");
+        solrQuery.set("mm", "-30%");
 
         if (filterGroupIds != null && !filterGroupIds.isEmpty()) {
             solrQuery.addFilterQuery("groupId : (" + StringUtils.join(filterGroupIds, " OR ") + ")");

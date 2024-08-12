@@ -60,18 +60,24 @@ else
 
     echo "adding schema fields"
     curl -X POST -H 'Content-type:application/json' --data-binary '{
-     "add-field":[
-      {
+  "add-field":[
+    {
+      "name": "title",
+      "type": "text_general",
+      "multiValued": false
+    },
+    {
       "name": "author",
       "type": "text_general",
       "multiValued": false
     },
     {
-      "name": "comments",
-      "type": "text_general"
+      "name": "description",
+      "type": "text_general",
+      "multiValued": false
     },
     {
-      "name": "description",
+      "name": "machineDescription",
       "type": "text_general",
       "multiValued": false
     },
@@ -92,11 +98,6 @@ else
       "type": "string"
     },
     {
-      "name": "machineDescription",
-      "type": "text_general",
-      "multiValued": false
-    },
-    {
       "name": "ownerUserId",
       "type": "pint"
     },
@@ -109,24 +110,8 @@ else
       "type": "string"
     },
     {
-      "name": "tags",
-      "type": "text_general"
-    },
-    {
-      "name": "text",
-      "type": "text_general",
-      "multiValued": true,
-      "indexed": true,
-      "stored": false
-    },
-    {
       "name": "timestamp",
       "type": "pdate"
-    },
-    {
-      "name": "title",
-      "type": "text_general",
-      "multiValued": false
     },
     {
       "name": "type",
@@ -135,36 +120,47 @@ else
     {
       "name": "url",
       "type": "string"
+    },
+    {
+      "name": "tags",
+      "type": "text_general"
+    },
+    {
+      "name": "comments",
+      "type": "text_general"
+    },
+    {
+      "name": "fulltext",
+      "type": "text_general",
+      "multiValued": true,
+      "indexed": true,
+      "stored": false
     }
-     ],
-     "add-copy-field":[
-      {
+  ],
+  "add-copy-field":[
+    {
       "source": "author",
-      "dest": "text"
+      "dest": ["fulltext", "author_s"]
     },
     {
       "source": "comments",
-      "dest": "text"
+      "dest": "fulltext"
     },
     {
       "source": "description",
-      "dest": "text"
+      "dest": "fulltext"
     },
     {
       "source": "machineDescription",
-      "dest": "text"
+      "dest": "fulltext"
     },
     {
       "source": "tags",
-      "dest": "text"
+      "dest": "fulltext"
     },
     {
       "source": "title",
-      "dest": "text"
-    },
-    {
-      "source": "author",
-      "dest": "author_s"
+      "dest": "fulltext"
     },
     {
       "source": "tags",
@@ -174,7 +170,7 @@ else
       "source": "*",
       "dest": "_text_"
     }
-     ]
+  ]
    }' http://$solr_host/solr/$core_name/schema
 
     echo "finished configuring with the Schema API"
