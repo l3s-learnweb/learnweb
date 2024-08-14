@@ -62,7 +62,8 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
 
     public void newChat() {
         conversation = new Conversation();
-        conversation.setGenerateTitle(true);
+        conversation.setSave(true);
+        conversation.setModel("gpt-35-turbo");
         conversation.setUser(String.valueOf(getUser().getId()));
         // This is the prompt that the bot will refer back to for every message.
         conversation.addMessage("You are Learnweb Assistant, a helpful chat bot.", Role.system);
