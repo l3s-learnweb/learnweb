@@ -26,7 +26,7 @@
     "video.js": "^8.17.1"
   },
   "devDependencies": {
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.23.1",
     "esbuild-sass-plugin": "^3.3.1",
     "sass-embedded": "^1.77.8",
     "eslint": "^8.57.0",
