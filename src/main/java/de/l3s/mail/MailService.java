@@ -2,6 +2,7 @@ package de.l3s.mail;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,26 +28,27 @@ public class MailService implements Serializable {
 
     public Session createSession() {
         Properties props = new Properties();
-        // props.setProperty("mail.debug", "true");
-        props.setProperty("mail.smtp.host", config.getProperty("MAIL_SMTP_HOST"));
-        props.setProperty("mail.smtp.port", config.getProperty("MAIL_SMTP_PORT", "587"));
-        props.setProperty("mail.smtp.socketFactory.port", config.getProperty("MAIL_SMTP_PORT", "587"));
-        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.debug", String.valueOf(config.getPropertyBoolean("smtp_debug", false)));
+        props.setProperty("mail.smtp.host", config.getProperty("smtp_host", "localhost"));
+        props.setProperty("mail.smtp.port", config.getProperty("smtp_port", "587"));
         props.setProperty("mail.smtp.auth", "true");
-        if (config.getPropertyBoolean("MAIL_SMTP_STARTTLS", "true")) {
+        if (config.getPropertyBoolean("smtp_enable_starttls", true)) {
             props.setProperty("mail.smtp.starttls.enable", "true");
         }
 
-        final Authenticator authenticator = new PasswordAuthenticator(config.getProperty("MAIL_SMTP_USERNAME"), config.getProperty("MAIL_SMTP_PASSWORD"));
+        final Authenticator authenticator = new PasswordAuthenticator(
+            config.getProperty("smtp_username"),
+            config.getProperty("smtp_password")
+        );
         return Session.getInstance(props, authenticator);
     }
 
     public MimeMessage createMessage() {
         try {
             MimeMessage message = new MimeMessage(createSession());
-            message.setFrom(new InternetAddress(config.getProperty("MAIL_FROM_ADDRESS")));
+            message.setFrom(new InternetAddress(config.getProperty("mail_from_address"), config.getProperty("mail_from_name", "Learnweb"), "UTF-8"));
             return message;
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException("The from address is not valid", e);
         }
     }

@@ -54,19 +54,17 @@ public class BounceManager {
 
     public Store getStore() throws MessagingException {
         Properties props = new Properties();
-        // props.setProperty("mail.debug", "true");
-        props.setProperty("mail.imap.host", config.getProperty("MAIL_IMAP_HOST", config.getProperty("MAIL_SMTP_HOST")));
-        props.setProperty("mail.imap.port", config.getProperty("MAIL_IMAP_PORT", "143"));
-        props.setProperty("mail.imap.socketFactory.port", config.getProperty("MAIL_IMAP_PORT", "143"));
-        props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.debug", String.valueOf(config.getPropertyBoolean("imap_debug", config.getPropertyBoolean("smtp_debug", false))));
+        props.setProperty("mail.imap.host", config.getProperty("imap_host", config.getProperty("smtp_host", "localhost")));
+        props.setProperty("mail.imap.port", config.getProperty("imap_port", "143"));
         props.setProperty("mail.imap.auth", "true");
-        if (config.getPropertyBoolean("MAIL_IMAP_STARTTLS", "true")) {
+        if (config.getPropertyBoolean("imap_enable_starttls", config.getPropertyBoolean("smtp_enable_starttls", true))) {
             props.setProperty("mail.imap.starttls.enable", "true");
         }
 
         final Authenticator authenticator = new PasswordAuthenticator(
-            config.getProperty("MAIL_IMAP_USERNAME", config.getProperty("MAIL_SMTP_USERNAME")),
-            config.getProperty("MAIL_IMAP_PASSWORD", config.getProperty("MAIL_SMTP_PASSWORD"))
+            config.getProperty("imap_username", config.getProperty("smtp_username")),
+            config.getProperty("imap_password", config.getProperty("smtp_password"))
         );
         return Session.getInstance(props, authenticator).getStore("imap");
     }

@@ -17,9 +17,6 @@ public class Mail implements Serializable {
     ArrayList<String> recipientsBcc = new ArrayList<>();
     String replyTo;
 
-    public Mail() {
-    }
-
     public void setSubject(String subject) {
         this.subject = subject;
     }

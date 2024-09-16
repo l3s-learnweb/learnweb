@@ -12,6 +12,7 @@ import java.util.Properties;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.DeploymentException;
@@ -63,7 +64,7 @@ public class ConfigProvider implements Serializable {
      * Indicated whether the application is started in Servlet container with CDI or initialized manually.
      * E.g. {@code true} on Tomcat and {@code false} in tests or maintenance tasks.
      */
-    private final boolean servlet;
+    private boolean servlet;
 
     /**
      * Indicates whether the application is started in development mode according to jakarta.faces.PROJECT_STAGE in web.xml.
@@ -92,11 +93,16 @@ public class ConfigProvider implements Serializable {
 
         this.servlet = servlet;
         if (servlet) {
-            loadJndiVariables();
+            try {
+                loadJndiVariables();
 
-            contextPath = Servlets.getContext().getContextPath();
-            log.info("Found servlet context: '{}'", contextPath);
-            replaceVariablesContext(contextPath);
+                contextPath = Servlets.getContext().getContextPath();
+                log.info("Found servlet context: '{}'", contextPath);
+                replaceVariablesContext(contextPath);
+            } catch (NamingException e) {
+                log.error("Unable to load JNDI variables", e);
+                this.servlet = false;
+            }
         } else {
             development = true;
             version = "dev";
@@ -174,33 +180,29 @@ public class ConfigProvider implements Serializable {
         }
     }
 
-    private void loadJndiVariables() {
-        try {
-            String namespace = "java:comp/env/";
-            InitialContext ctx = new InitialContext();
-            NamingEnumeration<NameClassPair> list = ctx.list(namespace);
+    private void loadJndiVariables() throws NamingException {
+        String namespace = "java:comp/env/";
+        InitialContext ctx = new InitialContext();
+        NamingEnumeration<NameClassPair> list = ctx.list(namespace);
 
-            while (list.hasMore()) {
-                NameClassPair next = list.next();
-                String propKey = next.getName().toLowerCase(Locale.ROOT);
-                String namespacedKey = namespace + next.getName();
-                String propValue = ctx.lookup(namespacedKey).toString();
+        while (list.hasMore()) {
+            NameClassPair next = list.next();
+            String propKey = next.getName().toLowerCase(Locale.ROOT);
+            String namespacedKey = namespace + next.getName();
+            String propValue = ctx.lookup(namespacedKey).toString();
 
-                if (properties.containsKey(propKey)) {
-                    log.debug("JNDI variable override '{}' with value: {}", propKey, propValue);
-                    setProperty(propKey, propValue);
-                } else if (propKey.startsWith(PROP_KEY_PREFIX)) {
-                    propKey = propKey.substring(PROP_KEY_PREFIX.length());
-                    log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, namespacedKey);
-                    setProperty(propKey, propValue);
-                }
+            if (properties.containsKey(propKey)) {
+                log.debug("JNDI variable override '{}' with value: {}", propKey, propValue);
+                setProperty(propKey, propValue);
+            } else if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                propKey = propKey.substring(PROP_KEY_PREFIX.length());
+                log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, namespacedKey);
+                setProperty(propKey, propValue);
             }
-
-            list.close();
-            ctx.close();
-        } catch (Exception e) {
-            log.error("Unable to load JNDI variables", e);
         }
+
+        list.close();
+        ctx.close();
     }
 
     private void replaceVariablesContext(String contextPath) {
@@ -231,11 +233,11 @@ public class ConfigProvider implements Serializable {
     }
 
     public boolean getPropertyBoolean(final String key) {
-        return "true".equalsIgnoreCase(properties.getProperty(key));
+        return Boolean.parseBoolean(properties.getProperty(key));
     }
 
-    public boolean getPropertyBoolean(final String key, final String defaultValue) {
-        return "true".equalsIgnoreCase(properties.getProperty(key, defaultValue));
+    public boolean getPropertyBoolean(final String key, final boolean defaultValue) {
+        return Boolean.parseBoolean(properties.getProperty(key, String.valueOf(defaultValue)));
     }
 
     public String getEnvironment() {
