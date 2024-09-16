@@ -234,6 +234,10 @@ public class ConfigProvider implements Serializable {
         return "true".equalsIgnoreCase(properties.getProperty(key));
     }
 
+    public boolean getPropertyBoolean(final String key, final String defaultValue) {
+        return "true".equalsIgnoreCase(properties.getProperty(key, defaultValue));
+    }
+
     public String getEnvironment() {
         if (environment == null) {
             if (!isDevelopment()) {

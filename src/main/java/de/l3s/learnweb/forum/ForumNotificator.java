@@ -20,6 +20,7 @@ import de.l3s.learnweb.user.User.NotificationFrequency;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
+import de.l3s.mail.MailService;
 import de.l3s.util.HashHelper;
 
 public class ForumNotificator implements Runnable, Serializable {
@@ -32,6 +33,9 @@ public class ForumNotificator implements Runnable, Serializable {
 
     @Inject
     private ForumTopicDao forumTopicDao;
+
+    @Inject
+    private MailService mailService;
 
     @Override
     public void run() {
@@ -68,8 +72,8 @@ public class ForumNotificator implements Runnable, Serializable {
         List<ForumTopic> otherTopics = topics.stream().filter(topic -> topic.getUserId() != user.getId()).toList();
 
         Mail mail = MailFactory.buildForumNotificationEmail(user.getUsername(), userTopics, otherTopics, getHash(user)).build(user.getLocale());
-        mail.setRecipient(user.getEmail());
-        mail.send();
+        mail.addRecipient(user.getEmail());
+        mailService.send(mail);
     }
 
     public static String getHash(User user) {

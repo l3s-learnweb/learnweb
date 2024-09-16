@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
+import de.l3s.mail.MailService;
 import de.l3s.util.SqlHelper;
 
 /**
@@ -72,6 +73,9 @@ public class RequestManager implements Serializable {
 
     @Inject
     private RequestDao requestDao;
+
+    @Inject
+    private MailService mailService;
 
     @PostConstruct
     public void init() {
@@ -289,8 +293,8 @@ public class RequestManager implements Serializable {
             List<Request> suspiciousTemp = suspiciousRequests.size() > 10 ? suspiciousRequests.subList(0, 10) : suspiciousRequests;
 
             Mail mail = MailFactory.buildSuspiciousAlertEmail(suspiciousTemp).build(Locale.ENGLISH);
-            mail.setRecipient(Learnweb.config().getSupportEmail());
-            mail.send();
+            mail.addRecipient(Learnweb.config().getSupportEmail());
+            mailService.send(mail);
         } catch (MessagingException e) {
             log.error("Failed to send admin alert mail. Error: ", e);
         }

@@ -79,6 +79,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
+    @Inject
+    private EmailConfirmationBean emailConfirmationBean;
+
     public String onLoad() {
         if (StringUtils.isNotEmpty(wizard)) {
             course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
@@ -178,7 +181,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         if ((mailRequired || StringUtils.isNotEmpty(email)) && !user.isEmailConfirmed()) {
-            user.sendEmailConfirmation();
+            emailConfirmationBean.sendEmailConfirmation(user);
 
             if (mailRequired) {
                 confirmRequiredBean.setLoggedInUser(user);

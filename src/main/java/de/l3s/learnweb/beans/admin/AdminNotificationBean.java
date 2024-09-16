@@ -24,6 +24,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
+import de.l3s.mail.MailService;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -47,6 +48,9 @@ public class AdminNotificationBean extends ApplicationBean {
 
     @Inject
     private MessageDao messageDao;
+
+    @Inject
+    private MailService mailService;
 
     @PostConstruct
     public void init() {
@@ -108,8 +112,8 @@ public class AdminNotificationBean extends ApplicationBean {
         try {
             mail = MailFactory.buildNotificationEmail(title, text, user.getUsername()).build(user.getLocale());
             mail.setReplyTo(user.getEmail());
-            mail.setBccRecipients(recipients);
-            mail.send();
+            mail.setRecipientsBcc(recipients);
+            mailService.send(mail);
 
             addMessage(FacesMessage.SEVERITY_INFO, recipients.size() + " emails send");
         } catch (Exception e) {

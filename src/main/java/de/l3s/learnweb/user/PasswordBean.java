@@ -19,6 +19,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
+import de.l3s.mail.MailService;
 import de.l3s.util.HashHelper;
 
 @Named
@@ -31,6 +32,9 @@ public class PasswordBean extends ApplicationBean implements Serializable {
 
     @Inject
     private TokenDao tokenDao;
+
+    @Inject
+    private MailService mailService;
 
     public void submit() {
         try {
@@ -50,8 +54,8 @@ public class PasswordBean extends ApplicationBean implements Serializable {
                 String link = url + tokenId + ":" + token;
 
                 Mail mail = MailFactory.buildPasswordChangeEmail(user.getDisplayName(), user.getEmail(), link).build(user.getLocale());
-                mail.setRecipient(user.getEmail());
-                mail.send();
+                mail.addRecipient(user.getEmail());
+                mailService.send(mail);
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");

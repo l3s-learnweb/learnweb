@@ -27,6 +27,9 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
     @Inject
     private UserDao userDao;
 
+    @Inject
+    private EmailConfirmationBean emailConfirmationBean;
+
     @Override
     public User getUser() {
         if (super.getUser() != null) {
@@ -47,7 +50,7 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
             userDao.save(user);
         }
 
-        if (user.sendEmailConfirmation()) {
+        if (emailConfirmationBean.sendEmailConfirmation(user)) {
             addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
         } else {
             addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");

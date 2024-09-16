@@ -76,6 +76,9 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     @Inject
     private GroupDao groupDao;
 
+    @Inject
+    private EmailConfirmationBean emailConfirmationBean;
+
     public void onLoad() {
         User loggedInUser = getUser();
         BeanAssert.authorized(loggedInUser);
@@ -142,7 +145,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         if (StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email)) {
             selectedUser.setEmail(email);
 
-            if (selectedUser.sendEmailConfirmation()) {
+            if (emailConfirmationBean.sendEmailConfirmation(selectedUser)) {
                 addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
             } else {
                 addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");

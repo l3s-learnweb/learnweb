@@ -14,12 +14,10 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,13 +32,10 @@ import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.mail.Mail;
-import de.l3s.mail.MailFactory;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.ProfileImageHelper;
-import de.l3s.util.StringHelper;
 
 public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private static final Logger log = LogManager.getLogger(User.class);
@@ -391,27 +386,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     @Override
     public int compareTo(User o) {
         return getUsername().compareTo(o.getUsername());
-    }
-
-    /**
-     * @return FALSE if an error occurred while sending this message
-     */
-    public boolean sendEmailConfirmation() {
-        try {
-            String token = RandomStringUtils.secure().nextAlphanumeric(32);
-            int tokenId = Learnweb.dao().getTokenDao().override(id, Token.TokenType.EMAIL_CONFIRMATION, token, LocalDateTime.now().plusYears(1));
-
-            String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
-                "email=" + StringHelper.urlEncode(getEmail()) + "&token=" + tokenId + ":" + token;
-
-            Mail mail = MailFactory.buildConfirmEmail(getUsername(), confirmEmailUrl).build(getLocale());
-            mail.setRecipient(getEmail());
-            mail.send();
-            return true;
-        } catch (MessagingException e) {
-            log.error("Can't send confirmation mail to {}", this, e);
-        }
-        return false;
     }
 
     public boolean isAdmin() {

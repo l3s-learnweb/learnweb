@@ -9,15 +9,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import jakarta.mail.Authenticator;
 import jakarta.mail.Flags;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
 import jakarta.mail.Store;
 import jakarta.mail.search.ComparisonTerm;
 import jakarta.mail.search.ReceivedDateTerm;
@@ -26,7 +29,8 @@ import jakarta.mail.search.SearchTerm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.mail.Mail;
+import de.l3s.learnweb.app.ConfigProvider;
+import de.l3s.mail.PasswordAuthenticator;
 
 /**
  * Parses the mailbox every sometime and detects whether bounces are present. Bounced emails are
@@ -45,8 +49,26 @@ public class BounceManager {
     @Inject
     private BounceDao bounceDao;
 
+    @Inject
+    private ConfigProvider config;
+
     public Store getStore() throws MessagingException {
-        return Mail.createSession().getStore("imap");
+        Properties props = new Properties();
+        // props.setProperty("mail.debug", "true");
+        props.setProperty("mail.imap.host", config.getProperty("MAIL_IMAP_HOST", config.getProperty("MAIL_SMTP_HOST")));
+        props.setProperty("mail.imap.port", config.getProperty("MAIL_IMAP_PORT", "143"));
+        props.setProperty("mail.imap.socketFactory.port", config.getProperty("MAIL_IMAP_PORT", "143"));
+        props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.imap.auth", "true");
+        if (config.getPropertyBoolean("MAIL_IMAP_STARTTLS", "true")) {
+            props.setProperty("mail.imap.starttls.enable", "true");
+        }
+
+        final Authenticator authenticator = new PasswordAuthenticator(
+            config.getProperty("MAIL_IMAP_USERNAME", config.getProperty("MAIL_SMTP_USERNAME")),
+            config.getProperty("MAIL_IMAP_PASSWORD", config.getProperty("MAIL_SMTP_PASSWORD"))
+        );
+        return Session.getInstance(props, authenticator).getStore("imap");
     }
 
     public void parseInbox() throws MessagingException, IOException {
@@ -102,7 +124,7 @@ public class BounceManager {
      * @param msg Message to be examined
      */
     private boolean parseMessage(Message msg) throws MessagingException, IOException {
-        //Return path is checked first, since in bounce messages those are usually empty or contain just "<>"
+        // Return path is checked first, since in bounce messages those are usually empty or contain just "<>"
         String[] returnPaths = msg.getHeader("Return-Path");
 
         if (returnPaths != null && returnPaths.length > 0 && returnPaths[0].length() > 3) {
@@ -111,7 +133,7 @@ public class BounceManager {
 
         log.debug("BOUNCE: {} {}", msg.getSubject(), msg.getReceivedDate());
 
-        //Checks the status code
+        // Checks the status code
         String text = getText(msg);
         Matcher matcherCode = STATUS_CODE_PATTERN.matcher(text);
 
@@ -133,7 +155,7 @@ public class BounceManager {
             originalRecipient = matcherRecipient.group(2);
         }
 
-        //Adds message to database
+        // Adds message to database
         bounceDao.save(originalRecipient, msg.getReceivedDate().toInstant(), code, description);
         return true;
     }
@@ -148,7 +170,7 @@ public class BounceManager {
 
         String[] codes = errCode.split("\\.", 2);
 
-        //Transient or permanent
+        // Transient or permanent
         if ("4".equals(codes[0])) {
             description = "Transient Persistent Failure: ";
         } else if ("5".equals(codes[0])) {

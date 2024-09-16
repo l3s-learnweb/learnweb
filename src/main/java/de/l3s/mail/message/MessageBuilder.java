@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Locale;
 
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,5 +103,14 @@ public class MessageBuilder {
         mail.setText(buildPlainText(bundle));
         mail.setHTML(buildHtmlText(bundle));
         return mail;
+    }
+
+    public MimeMessage build(Locale locale, MimeMessage message) throws MessagingException {
+        MessagesBundle bundle = new MessagesBundle(locale);
+
+        message.setSubject(getSubject(bundle));
+        message.setText(buildPlainText(bundle));
+        message.setText(buildHtmlText(bundle), "UTF-8", "html");
+        return message;
     }
 }

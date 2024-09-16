@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Email;
@@ -15,6 +16,7 @@ import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.user.User;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
+import de.l3s.mail.MailService;
 
 @Named
 @RequestScoped
@@ -32,6 +34,9 @@ public class ContactBean extends ApplicationBean implements Serializable {
     @NotBlank
     private String message;
 
+    @Inject
+    private MailService mailService;
+
     @PostConstruct
     public void init() {
         User user = getUser();
@@ -45,9 +50,9 @@ public class ContactBean extends ApplicationBean implements Serializable {
     public void sendMail() {
         try {
             Mail mail = MailFactory.buildContactFormEmail(name, email, message).build(getLocale());
-            mail.setRecipient(config().getSupportEmail());
+            mail.addRecipient(config().getSupportEmail());
             mail.setReplyTo(email);
-            mail.send();
+            mailService.send(mail);
 
             clearForm();
         } catch (MessagingException e) {
