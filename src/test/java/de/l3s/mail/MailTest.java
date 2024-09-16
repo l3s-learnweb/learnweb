@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 
-import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.jboss.weld.junit5.auto.ExcludeBean;
 import org.junit.jupiter.api.Disabled;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import de.l3s.learnweb.app.ConfigProvider;
 
 @EnableAutoWeld
-@AddPackages(MailService.class)
 class MailTest {
 
     @Produces
