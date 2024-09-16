@@ -130,7 +130,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         }
 
         if (remember) {
-            String authToken = RandomStringUtils.randomAlphanumeric(128);
+            String authToken = RandomStringUtils.secure().nextAlphanumeric(128);
             int tokenId = tokenDao.insert(user.getId(), Token.TokenType.AUTH, HashHelper.sha512(authToken), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
             Faces.addResponseCookie(AUTH_COOKIE_NAME, tokenId + ":" + authToken, config().getContextPath(), Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
         } else {

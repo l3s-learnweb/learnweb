@@ -42,7 +42,7 @@ public interface TokenDao extends SqlObject, Serializable {
         }
 
         if (retrievedToken.isEmpty()) {
-            String token = RandomStringUtils.randomAlphanumeric(128);
+            String token = RandomStringUtils.secure().nextAlphanumeric(128);
             insert(userId, type, token, SqlHelper.now().plusYears(1));
             return token;
         }

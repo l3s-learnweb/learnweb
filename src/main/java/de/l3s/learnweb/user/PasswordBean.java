@@ -45,7 +45,7 @@ public class PasswordBean extends ApplicationBean implements Serializable {
 
             String url = config().getServerUrl() + "/lw/user/change_password.jsf?token=";
             for (User user : users) {
-                String token = RandomStringUtils.randomAlphanumeric(32);
+                String token = RandomStringUtils.secure().nextAlphanumeric(32);
                 int tokenId = tokenDao.insert(user.getId(), Token.TokenType.PASSWORD_RESET, HashHelper.sha256(token), LocalDateTime.now().plusDays(1));
                 String link = url + tokenId + ":" + token;
 

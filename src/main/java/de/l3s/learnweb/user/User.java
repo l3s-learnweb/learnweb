@@ -398,7 +398,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public boolean sendEmailConfirmation() {
         try {
-            String token = RandomStringUtils.randomAlphanumeric(32);
+            String token = RandomStringUtils.secure().nextAlphanumeric(32);
             int tokenId = Learnweb.dao().getTokenDao().override(id, Token.TokenType.EMAIL_CONFIRMATION, token, LocalDateTime.now().plusYears(1));
 
             String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +

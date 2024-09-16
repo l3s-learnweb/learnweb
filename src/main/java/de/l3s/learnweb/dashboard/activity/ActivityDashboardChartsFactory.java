@@ -9,7 +9,7 @@ import java.util.Map;
 
 import de.l3s.util.ColorHelper;
 import software.xdev.chartjs.model.charts.LineChart;
-import software.xdev.chartjs.model.color.Color;
+import software.xdev.chartjs.model.color.RGBAColor;
 import software.xdev.chartjs.model.data.LineData;
 import software.xdev.chartjs.model.dataset.LineDataset;
 import software.xdev.chartjs.model.options.elements.Fill;
@@ -20,7 +20,7 @@ public final class ActivityDashboardChartsFactory {
     public static String createActivitiesChart(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {
         LineData chartData = new LineData();
 
-        List<Color> colors = ColorHelper.getColorList(data.size());
+        List<RGBAColor> colors = ColorHelper.getColorList(data.size());
 
         for (ActivityGraphData activityData : data) {
             List<Number> values = new ArrayList<>();

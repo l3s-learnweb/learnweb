@@ -26,7 +26,7 @@ import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
 import software.xdev.chartjs.model.charts.BarChart;
-import software.xdev.chartjs.model.color.Color;
+import software.xdev.chartjs.model.color.RGBAColor;
 import software.xdev.chartjs.model.data.BarData;
 import software.xdev.chartjs.model.datapoint.XYDataPoint;
 import software.xdev.chartjs.model.dataset.BarDataset;
@@ -101,7 +101,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
                     .addDataset(new BarDataset()
                         .setLabel(getLocaleMessage("archive.timeline_series_name"))
                         .setDataUnchecked(getTimelineData())
-                        .setBackgroundColor(new Color(74, 163, 130))))
+                        .setBackgroundColor(new RGBAColor(74, 163, 130))))
                 .setOptions(new BarOptions()
                     .setPlugins(new Plugins()
                         .setTitle(new Title()
@@ -111,7 +111,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
                             .setMode("index"))
                         .setLegend(new Legend()
                             .setDisplay(false))))
-                .toJsonNative();
+                .toJson();
         }
 
         return timelineModel;

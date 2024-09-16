@@ -17,7 +17,7 @@ import de.l3s.util.MapHelper;
 import software.xdev.chartjs.model.charts.BarChart;
 import software.xdev.chartjs.model.charts.LineChart;
 import software.xdev.chartjs.model.charts.PieChart;
-import software.xdev.chartjs.model.color.Color;
+import software.xdev.chartjs.model.color.RGBAColor;
 import software.xdev.chartjs.model.data.BarData;
 import software.xdev.chartjs.model.data.LineData;
 import software.xdev.chartjs.model.data.PieData;
@@ -107,7 +107,7 @@ final class GlossaryDashboardChartsFactory {
                     .setLineTension(0.1f)
                     .setFill(new Fill<>(false))
                     .setData(values)
-                    .setBackgroundColor(new Color(75, 192, 192))))
+                    .setBackgroundColor(new RGBAColor(75, 192, 192))))
             .toJson();
     }
 
