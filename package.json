@@ -40,6 +40,9 @@
     "@percy/cli": "^1.29.3",
     "@percy/puppeteer": "^2.0.2"
   },
+  "overrides": {
+    "caniuse-lite": "1.0.30001653"
+  },
   "engines": {
     "node": "^20.9.0 || >=21.1.0"
   },
