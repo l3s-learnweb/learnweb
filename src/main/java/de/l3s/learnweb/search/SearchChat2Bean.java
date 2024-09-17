@@ -73,7 +73,7 @@ public class SearchChat2Bean extends ApplicationBean implements Serializable {
 
     public void newChat() {
         conversation = new Conversation();
-        // conversation.setModel("llama3.1:70b");
+        conversation.setModel("llama3.1:70b");
         conversation.setSave(true);
         conversation.setUser(String.valueOf(getUser().getId()));
         // This is the prompt that the bot will refer back to for every message.

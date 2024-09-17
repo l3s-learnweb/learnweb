@@ -3,6 +3,7 @@ package de.l3s.learnweb.app;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Inject;
 
@@ -105,6 +106,7 @@ public final class Learnweb {
         return solrClient;
     }
 
+    @Produces
     public Interweb getInterweb() {
         return interweb;
     }
