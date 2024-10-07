@@ -23,7 +23,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "shepherd.js": "^13.0.3",
-    "video.js": "^8.17.4"
+    "video.js": "^8.18.1"
   },
   "devDependencies": {
     "esbuild": "^0.23.1",
