@@ -29,7 +29,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-          server-id: github-l3s-learnweb
 
       - name: Run Checkstyle check
         run: $MVN checkstyle:check

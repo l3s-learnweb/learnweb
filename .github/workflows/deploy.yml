@@ -19,7 +19,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-          server-id: github-l3s-learnweb
       - uses: actions/setup-node@v4
         with:
           node-version-file: 'package.json'
