@@ -145,7 +145,7 @@ class UserDaoTest {
 
     @Test
     void authToken() {
-        String token = RandomStringUtils.randomAlphanumeric(128);
+        String token = RandomStringUtils.secure().nextAlphanumeric(128);
 
         int tokenId = tokenDao.insert(2, Token.TokenType.AUTH, HashHelper.sha512(token), SqlHelper.now().plusDays(31));
 
@@ -160,7 +160,7 @@ class UserDaoTest {
 
     @Test
     void grantToken() {
-        String token = RandomStringUtils.randomAlphanumeric(128);
+        String token = RandomStringUtils.secure().nextAlphanumeric(128);
 
         int tokenId = tokenDao.insert(1, Token.TokenType.GRANT, token, SqlHelper.now().plusDays(31));
 

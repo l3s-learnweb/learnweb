@@ -23,12 +23,12 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "shepherd.js": "^13.0.3",
-    "video.js": "^8.17.4"
+    "video.js": "^8.18.1"
   },
   "devDependencies": {
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.24.0",
     "esbuild-sass-plugin": "^3.3.1",
-    "sass-embedded": "^1.78.0",
+    "sass-embedded": "^1.79.4",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^6.0.1",
