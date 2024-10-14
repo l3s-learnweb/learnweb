@@ -22,7 +22,7 @@
         <maven.dependency.jdbi3.version>3.45.4</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>10.19.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>7.14.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>7.15.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.11.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.14.1</maven.dependency.mockito.version>
 
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
         <!-- Jakarta EL API (provided by Tomcat) -->
