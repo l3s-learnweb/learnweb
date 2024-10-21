@@ -19,12 +19,12 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.dependency.myfaces.version>4.0.2</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.45.4</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>10.19.0</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.46.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>10.20.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>7.14.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>7.15.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.11.2</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>5.14.1</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>5.14.2</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>14.0.5</version>
+            <version>14.0.6</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -116,7 +116,7 @@
         <dependency>
             <groupId>software.xdev</groupId>
             <artifactId>chartjs-java-model</artifactId>
-            <version>2.3.0</version>
+            <version>2.3.1</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>
@@ -500,7 +500,7 @@
                     <processUnboundPlugins>true</processUnboundPlugins>
                     <ruleSet>
                         <ignoreVersion>
-                            <type>regex</type>c
+                            <type>regex</type>
                             <version>(?i).*[-_\.](alpha|beta|rc)[-_\.]?\d*</version>
                         </ignoreVersion>
                     </ruleSet>
