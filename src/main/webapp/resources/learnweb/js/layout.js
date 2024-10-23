@@ -9,7 +9,6 @@
 PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
   init(cfg) {
-    // eslint-disable-next-line no-underscore-dangle
     this._super(cfg);
     this.wrapper = $('.layout-wrapper');
 
@@ -150,7 +149,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
   init(cfg) {
-    // eslint-disable-next-line no-underscore-dangle
     this._super(cfg);
 
     this.menu = this.jq;
@@ -396,7 +394,6 @@ $(() => {
  */
 PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
   init(cfg) {
-    // eslint-disable-next-line no-underscore-dangle
     this._super(cfg);
 
     this.defaultVisibleItems = 5;

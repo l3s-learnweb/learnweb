@@ -22,16 +22,17 @@
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
-    "shepherd.js": "^13.0.3",
+    "shepherd.js": "^14.1.0",
     "video.js": "^8.18.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "esbuild": "^0.24.0",
     "esbuild-sass-plugin": "^3.3.1",
-    "sass-embedded": "^1.79.5",
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint": "^9.13.0",
     "eslint-plugin-compat": "^6.0.1",
+    "globals": "^15.11.0",
+    "sass-embedded": "^1.80.3",
     "stylelint": "^16.10.0",
     "stylelint-config-sass-guidelines": "^12.1.0",
     "stylelint-no-unsupported-browser-features": "^8.0.1"
@@ -40,49 +41,8 @@
     "@percy/cli": "^1.29.3",
     "@percy/puppeteer": "^2.0.2"
   },
-  "overrides": {
-    "caniuse-lite": "1.0.30001653"
-  },
   "engines": {
     "node": "^20.9.0 || >=21.1.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "airbnb-base",
-      "plugin:compat/recommended"
-    ],
-    "env": {
-      "es6": true,
-      "browser": true,
-      "jquery": true
-    },
-    "globals": {
-      "PF": "readonly",
-      "PrimeFaces": "readonly"
-    },
-    "rules": {
-      "linebreak-style": "off",
-      "func-names": "off",
-      "no-plusplus": "off",
-      "consistent-return": "off",
-      "no-console": "off",
-      "no-param-reassign": "off",
-      "no-unused-vars": "off",
-      "no-use-before-define": [
-        "error",
-        {
-          "functions": false,
-          "classes": false,
-          "variables": true
-        }
-      ],
-      "max-len": [
-        "warn",
-        {
-          "code": 150
-        }
-      ]
-    }
   },
   "stylelint": {
     "extends": [

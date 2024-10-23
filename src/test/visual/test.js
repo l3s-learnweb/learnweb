@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop,no-restricted-syntax,import/no-extraneous-dependencies */
 import puppeteer from 'puppeteer';
 import percySnapshot from '@percy/puppeteer';
 

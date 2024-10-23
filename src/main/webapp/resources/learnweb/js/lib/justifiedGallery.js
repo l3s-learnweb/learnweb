@@ -84,7 +84,6 @@
    * @returns {String} return the used suffix
    */
   JustifiedGallery.prototype.getUsedSuffix = function (str) {
-    // eslint-disable-next-line no-restricted-syntax
     for (const suffix of Object.values(this.settings.sizeRangeSuffixes)) {
       if (suffix.length !== 0 && this.endsWith(str, suffix)) return suffix;
     }
@@ -922,9 +921,7 @@
           });
         } else {
           $entry.data('jg.loaded', true);
-          // eslint-disable-next-line no-bitwise
           $entry.data('jg.width', $entry.width() | parseFloat($entry.css('width')) | 1);
-          // eslint-disable-next-line no-bitwise
           $entry.data('jg.height', $entry.height() | parseFloat($entry.css('height')) | 1);
         }
       }
@@ -1080,11 +1077,9 @@
    */
   JustifiedGallery.prototype.retrieveSuffixRanges = function () {
     const suffixRanges = [];
-    // eslint-disable-next-line no-restricted-syntax
     for (const rangeIdx of Object.keys(this.settings.sizeRangeSuffixes)) {
       suffixRanges.push(parseInt(rangeIdx, 10));
     }
-    // eslint-disable-next-line no-nested-ternary
     suffixRanges.sort((a, b) => (a > b ? 1 : (a < b ? -1 : 0)));
     return suffixRanges;
   };

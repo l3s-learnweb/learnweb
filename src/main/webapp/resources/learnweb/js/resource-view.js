@@ -158,7 +158,6 @@ $(() => {
 
   if (window.self !== window.top) {
     $('.ui-button.navbar-back').on('click', (e) => {
-      // eslint-disable-next-line
       parent.$.fancybox.close();
       e.preventDefault();
     });

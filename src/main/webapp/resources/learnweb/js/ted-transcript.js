@@ -114,7 +114,6 @@ $(() => {
     html: true,
     trigger: 'hover',
     selector: '[data-bs-toggle="tooltip"]',
-    // eslint-disable-next-line object-shorthand
     title: function () {
       return $(this).attr('data-title');
     },
@@ -122,11 +121,9 @@ $(() => {
     html: true,
     trigger: 'hover',
     selector: '[data-bs-toggle="popover"]',
-    // eslint-disable-next-line object-shorthand
     title: function () {
       return $(this).attr('data-title') || '';
     },
-    // eslint-disable-next-line object-shorthand
     content: function () {
       return $(this).attr('data-content');
     },
