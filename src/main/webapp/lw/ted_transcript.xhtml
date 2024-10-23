@@ -61,10 +61,8 @@
 							<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
 
 							<p:menuButton value="#{msg.options}" iconPos="right" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}">
-								<p:menuitem value="#{msg.show_summary}" icon="fas fa-circle-chevron-left" onclick="openTagsDiv(); selectTab(1);">
-								</p:menuitem>
-								<p:menuitem value="#{msg.show_tags}" icon="fas fa-circle-chevron-left" onclick="openTagsDiv(); selectTab(0);">
-								</p:menuitem>
+								<p:menuitem value="#{msg.show_summary}" icon="fas fa-circle-chevron-left" url="javascript:void(0)" onclick="openTagsDiv(); selectTab(1);"/>
+								<p:menuitem value="#{msg.show_tags}" icon="fas fa-circle-chevron-left" url="javascript:void(0)" onclick="openTagsDiv(); selectTab(0);"/>
 								<p:menuitem value="#{msg.disable_editing}" icon="fas fa-pencil" rendered="#{!tedTranscriptBean.tedResource.readOnlyTranscript and userBean.moderator}" update=":transcript :transcript_options">
 									<f:setPropertyActionListener value="true" target="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 								</p:menuitem>
@@ -136,8 +134,8 @@
 			<p:inputText id="text" />
 			<div class="mt-2 d-flex justify-content-between">
 				<p:defaultCommand target="userinput_ok"/>
-				<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel'); return false;"></p:commandButton>
-				<p:commandButton id="userinput_ok" value="#{msg.save}" onclick="getUserText('ok'); return false;"></p:commandButton>
+				<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel');return false;"></p:commandButton>
+				<p:commandButton id="userinput_ok" value="#{msg.save}" onclick="getUserText('ok');return false;"></p:commandButton>
 			</div>
 		</h:form>
 	</p:dialog>
