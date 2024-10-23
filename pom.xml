@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats a version as String, we need to use zero paddings to make sure v10 is newer than v9 -->
-    <version>3.28.01</version>
+    <version>3.28.02</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -23,7 +23,7 @@
         <maven.dependency.flyway.version>10.20.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.1</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>7.15.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.11.2</maven.dependency.junit.version>
+        <maven.dependency.junit.version>5.11.3</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.14.2</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -326,7 +326,7 @@
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.23.0</version>
+            <version>0.24.0</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
@@ -428,7 +428,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.6.4</version>
+                <version>4.8.6.5</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
