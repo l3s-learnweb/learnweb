@@ -19,8 +19,6 @@ $info: #1a89c6;
 $warning: #e7ae23;
 $help: #9c27b0;
 $danger: #e44;
-$light: $gray-200;
-$dark: $gray-900;
 
 $mod: #fe875d; // for moderator-only elements
 
@@ -98,8 +96,6 @@ $theme-colors: (
   'info': $info,
   'warning': $warning,
   'danger': $danger,
-  'light': $light, // $gray-200
-  'dark': $dark // $gray-900
 );
 
 // layout variables

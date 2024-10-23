@@ -48,7 +48,7 @@
 		<div class="col-md">
 			<h:panelGroup layout="block" id="transcript_column" styleClass="right_bar">
 				<p:outputPanel id="transcript_options">
-					<div class="p-2 bg-light">
+					<div class="p-2 bg-body-tertiary">
 						<h:form>
 							<p:outputLabel for="@next" styleClass="me-2" value="#{msg.select_transcript_lang}:"/>
 							<p:selectOneMenu id="select_lang" styleClass="me-2" value="#{tedTranscriptBean.transcriptLanguage}" converter="localeConverter">
@@ -72,7 +72,7 @@
 							</p:menuButton>
 						</h:form>
 					</div>
-					<div class="border border-dark my-2 p-2">
+					<div class="border my-2 p-2">
 						<strong>#{msg['ted_transcript.owner_of_transcript']}: </strong><h:outputText value="#{tedTranscriptBean.tedResource.user.displayName}"/><br/>
 						<strong>#{msg.note}:</strong> <h:outputText value="#{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
 						<h:outputText value="#{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" styleClass="text-danger"/>
@@ -80,22 +80,22 @@
 					</div>
 				</p:outputPanel>
 				<h:panelGroup layout="block" id="transcript">
-					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="transcript-container tran-selection my-3 p-3 border border-dark" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="transcript-container tran-selection my-3 p-3 border" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
-					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:panelGroup layout="block" styleClass="my-3 p-3 border transcript-container" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
 				</h:panelGroup>
 			</h:panelGroup>
-			<p:outputPanel styleClass="bg-light tran-tabs-overlay">
+			<p:outputPanel styleClass="bg-body-secondary tran-tabs-overlay">
                 <div class="d-flex justify-content-end my-1">
                     <a onclick="closeTagsDiv(); return false;" href="">
                         <i class="fas fa-times me-1" aria-hidden="true"></i>
                     </a>
                 </div>
                 <h:form>
-					<p:tabView id="myNav" widgetVar="tabViewVar" styleClass="ui-tabs-fluid bg-light">
+					<p:tabView id="myNav" widgetVar="tabViewVar" styleClass="ui-tabs-fluid">
 						<p:tab title="#{msg.tags}">
 							<ol id="selectable" class="tran-tabs-selectable"></ol>
 						</p:tab>

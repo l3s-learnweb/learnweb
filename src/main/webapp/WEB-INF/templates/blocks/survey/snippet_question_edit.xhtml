@@ -12,9 +12,9 @@
 
 <h:form id="question_edit" styleClass="survey-question bg-body-secondary mb-3 d-flex flex-nowrap" rendered="#{!question.deleted}">
     <div class="d-flex flex-column justify-content-center bg-primary" faces:rendered="#{not empty questionStatus}">
-        <p:commandButton alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!questionStatus.first}"
+        <p:commandButton alt="#{msg['move_up']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-up" rendered="#{!questionStatus.first}"
                          actionListener="#{surveyPageEditBean.onMoveQuestion(page, question, -1)}" update="questions" process="@this"/>
-        <p:commandButton alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!questionStatus.last}"
+        <p:commandButton alt="#{msg['move_down']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-down" rendered="#{!questionStatus.last}"
                          action="#{surveyPageEditBean.onMoveQuestion(page, question, 1)}" update="questions" process="@this"/>
     </div>
 

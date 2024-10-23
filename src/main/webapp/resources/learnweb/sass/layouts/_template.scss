@@ -8,7 +8,6 @@ body {
 
 body {
   min-width: $min-width;
-  background: var(--body-bg);
 
   &.layout-dark {
     background: rgba(#121212, 0.9);

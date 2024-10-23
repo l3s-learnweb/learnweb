@@ -74,7 +74,7 @@
                                 <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.displayName}">
                                     <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
                                 </p:link>
-                                <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2"
+                                <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-body-secondary ms-2"
                                                onclick="PF('changeLeader').show(); return false;" style="width: 0;" aria-hidden="true"/>
                             </div>
                             <ui:fragment rendered="#{not groupOptionsBean.group.course.registrationClosed}">

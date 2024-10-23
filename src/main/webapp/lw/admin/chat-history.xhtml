@@ -21,7 +21,7 @@
         <p:panel header="Chat history">
             <p:dataTable value="#{adminChatHistoryBean.conversations}" var="conv" emptyMessage="#{msg.no_data}">
                 <p:column headerText="#{msg.date}">
-                    <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
+                    <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-body-secondary small"
                                 rendered="#{not empty conv.created}"/>
                 </p:column>
                 <p:column headerText="#{msg.user}">
@@ -60,17 +60,17 @@
                         <ui:fragment rendered="#{message.role == 'assistant'}"> <!-- AI Reply -->
                             <div class="mb-5 d-flex">
                                 <div class="d-flex flex-column align-items-center" style="width:2rem">
-                                <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle"
+                                <span class="bg-body-tertiary text-white d-flex align-items-center justify-content-center rounded-circle"
                                       style="min-width:2.5rem; min-height: 2.5rem">
                                     <i class="fas fa-robot"></i>
                                 </span>
-                                    <div class="h-100 bg-secondary" style="width: 2px; min-height: 4rem"></div>
+                                    <div class="h-100 bg-body-tertiary" style="width: 2px; min-height: 4rem"></div>
                                 </div>
                                 <div class="ms-4 bg-body-secondary shadow rounded p-3 flex-fill">
                                     <div class="mb-3">
                                         <span class="fw-medium d-inline-block me-3">Assistant</span>
                                         <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}"
-                                                    styleClass="text-secondary small" rendered="#{not empty message.created}"/>
+                                                    styleClass="text-body-secondary small" rendered="#{not empty message.created}"/>
                                     </div>
                                     <lw:outputMarkdown value="#{message.content}" styleClass="mb-3"/>
                                 </div>
@@ -87,7 +87,7 @@
                                 <div class="me-4 bg-body-secondary shadow rounded p-3 flex-fill">
                                     <div class="mb-3">
                                         <span class="fw-medium d-inline-block me-3">#{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).displayName}</span>
-                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}" styleClass="text-body-secondary small"
                                                     rendered="#{not empty message.created}"/>
                                     </div>
                                     <div class="mb-3">#{message.content}</div>

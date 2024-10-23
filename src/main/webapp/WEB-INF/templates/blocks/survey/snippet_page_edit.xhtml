@@ -10,9 +10,9 @@
 
 <f:subview id="p${page.id}">
 <div class="d-flex flex-column justify-content-center bg-info" style="width: 3rem;" faces:rendered="#{not empty pageStatus}">
-    <p:commandButton form="page_edit" alt="#{msg['move_up']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
+    <p:commandButton form="page_edit" alt="#{msg['move_up']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
                      actionListener="#{surveyEditBean.onMovePage(page, -1)}" update="pages" process="@this" immediate="true"/>
-    <p:commandButton form="page_edit" alt="#{msg['move_down']}" styleClass="ui-button-flat text-dark mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
+    <p:commandButton form="page_edit" alt="#{msg['move_down']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
                      action="#{surveyEditBean.onMovePage(page, 1)}" update="pages" process="@this" immediate="true"/>
 </div>
 
