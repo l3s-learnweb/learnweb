@@ -31,7 +31,7 @@ import software.xdev.chartjs.model.data.BarData;
 import software.xdev.chartjs.model.datapoint.XYDataPoint;
 import software.xdev.chartjs.model.dataset.BarDataset;
 import software.xdev.chartjs.model.options.BarOptions;
-import software.xdev.chartjs.model.options.Legend;
+import software.xdev.chartjs.model.options.LegendOptions;
 import software.xdev.chartjs.model.options.Plugins;
 import software.xdev.chartjs.model.options.Title;
 import software.xdev.chartjs.model.options.Tooltip;
@@ -109,7 +109,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
                             .setText(getLocaleMessage("archive.timeline_click_zoom")))
                         .setTooltip(new Tooltip()
                             .setMode("index"))
-                        .setLegend(new Legend()
+                        .setLegend(new LegendOptions()
                             .setDisplay(false))))
                 .toJson();
         }

@@ -19,30 +19,30 @@
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
-    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/fontawesome-free": "^6.7.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "shepherd.js": "^14.1.0",
-    "video.js": "^8.18.1"
+    "video.js": "^8.19.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.13.0",
+    "@eslint/js": "^9.15.0",
     "esbuild": "^0.24.0",
     "esbuild-sass-plugin": "^3.3.1",
-    "eslint": "^9.13.0",
+    "eslint": "^9.15.0",
     "eslint-plugin-compat": "^6.0.1",
-    "globals": "^15.11.0",
-    "sass-embedded": "^1.80.3",
+    "globals": "^15.12.0",
+    "sass-embedded": "^1.81.0",
     "stylelint": "^16.10.0",
     "stylelint-config-sass-guidelines": "^12.1.0",
-    "stylelint-no-unsupported-browser-features": "^8.0.1"
+    "stylelint-no-unsupported-browser-features": "^8.0.2"
   },
   "peerDependencies": {
-    "@percy/cli": "^1.29.3",
+    "@percy/cli": "^1.30.2",
     "@percy/puppeteer": "^2.0.2"
   },
   "engines": {
-    "node": "^20.9.0 || >=21.1.0"
+    "node": ">=22.11.0"
   },
   "stylelint": {
     "extends": [
