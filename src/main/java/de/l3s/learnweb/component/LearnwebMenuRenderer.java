@@ -32,6 +32,15 @@ import org.primefaces.util.WidgetBuilder;
 public class LearnwebMenuRenderer extends BaseMenuRenderer {
 
     @Override
+    protected void encodePlaceholder(FacesContext context, AbstractMenu menu) throws IOException {
+        ResponseWriter writer = context.getResponseWriter();
+        writer.startElement("div", menu);
+        writer.writeAttribute("id", menu.getClientId(context), "id");
+        writer.writeAttribute("class", "ui-menu-placeholder", "styleClass");
+        writer.endElement("div");
+    }
+
+    @Override
     protected void encodeMarkup(FacesContext context, AbstractMenu abstractMenu) throws IOException {
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
         ResponseWriter writer = context.getResponseWriter();

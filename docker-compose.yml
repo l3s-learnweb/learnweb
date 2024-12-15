@@ -1,6 +1,6 @@
 services:
   webapp:
-    image: tomcat:10.1-jdk17
+    image: tomcat:11
     restart: always
     volumes:
       - "./target/Learnweb.war:/usr/local/tomcat/webapps/ROOT.war"
@@ -18,7 +18,7 @@ services:
       LEARNWEB_DATASOURCE_USERNAME: "learnweb"
       LEARNWEB_DATASOURCE_PASSWORD: "cm&dY@FSM7sCtSxZ"
   mariadb:
-    image: mariadb:10.11
+    image: mariadb:10
     restart: always
     ports:
       - "3306:3306"
