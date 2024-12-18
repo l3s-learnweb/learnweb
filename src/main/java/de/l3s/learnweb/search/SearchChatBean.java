@@ -47,7 +47,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws InterwebException {
         BeanAssert.authorized(isLoggedIn());
-        BeanAssert.hasPermission(getUser().isModerator() || getUserBean().isSearchChatEnabled());
+        BeanAssert.hasPermission(getUser().isAdmin() || getUserBean().isSearchChatEnabled());
         interweb = getLearnweb().getInterweb();
         promptSurveyId = getUser().getOrganisation().getSettings().getIntValue(Settings.chat_feedback_prompt_survey_page_id);
         responseSurveyId = getUser().getOrganisation().getSettings().getIntValue(Settings.chat_feedback_response_survey_page_id);

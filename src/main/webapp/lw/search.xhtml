@@ -63,7 +63,7 @@
                     <f:param name="query" value="#{searchBean.query}"/>
                 </h:link>
             </li>
-            <li class="filter" faces:rendered="#{userBean.searchChatEnabled}">
+            <li class="filter" faces:rendered="#{userBean.admin or userBean.searchChatEnabled}">
                 <h:link outcome="search/chat">
                      <span class="filter-title">
                         <span class="text-truncate">#{msg.chat}</span>

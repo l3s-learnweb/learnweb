@@ -35,15 +35,24 @@ $topbar-button-padding: 1rem;
 
   button {
     border: 0 !important;
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border-radius: 0;
     display: flex;
     align-items: center;
     background: var(--secondary-bg);
     color: var(--secondary-text-emphasis);
+    margin: 0 !important;
+
+    &.ui-button-icon-only .ui-button-text {
+      padding: 0.3rem;
+    }
 
     &:hover {
       background: $primaryDarkColor;
       color: $primaryTextColor;
+    }
+
+    &:last-child {
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
     }
   }
 }

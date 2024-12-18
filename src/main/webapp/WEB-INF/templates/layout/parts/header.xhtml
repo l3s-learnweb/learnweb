@@ -2,6 +2,7 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html"
                 xmlns:ui="jakarta.faces.facelets"
+                xmlns:faces="jakarta.faces"
                 xmlns:p="http://primefaces.org/ui">
 
     <nav class="navbar sticky-top navbar-main navbar-dark bg-primary shadow">
@@ -27,6 +28,8 @@
                 <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search" autocomplete="off"/>
                 <p:commandButton title="#{msg.searchLabel}" icon="fas fa-search"
                                  onclick="window.location.href = 'search.jsf?query=' + $('#navbar_form\\:searchfield').val();return false;"/>
+                <p:commandButton title="#{msg.llm_chat}" icon="fas fa-comment-dots"
+                                 onclick="window.location.href = 'search/chat.jsf?query=' + $('#navbar_form\\:searchfield').val();return false;"/>
             </div>
 
             <ul class="navbar-nav ms-auto">
