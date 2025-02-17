@@ -6,13 +6,13 @@ import jakarta.servlet.annotation.WebListener;
 
 import org.apache.logging.log4j.LogManager;
 
-import io.sentry.HubAdapter;
+import io.sentry.ScopesAdapter;
 
 @WebListener
 public class SentryServletContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(final ServletContextEvent sce) {
         LogManager.getLogger(SentryServletContextListener.class).info("Servlet context is shutting down...");
-        HubAdapter.getInstance().close();
+        ScopesAdapter.getInstance().close();
     }
 }

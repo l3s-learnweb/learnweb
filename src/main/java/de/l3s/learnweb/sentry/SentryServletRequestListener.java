@@ -9,25 +9,29 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import io.sentry.Breadcrumb;
 import io.sentry.Hint;
-import io.sentry.HubAdapter;
-import io.sentry.IHub;
+import io.sentry.IScopes;
+import io.sentry.ISentryLifecycleToken;
+import io.sentry.ScopesAdapter;
 
 @WebListener
 public class SentryServletRequestListener implements ServletRequestListener {
-    private final IHub hub;
+    private final IScopes hub;
+    private ISentryLifecycleToken token;
 
     public SentryServletRequestListener() {
-        this.hub = Objects.requireNonNull(HubAdapter.getInstance(), "hub is required");
+        this.hub = Objects.requireNonNull(ScopesAdapter.getInstance(), "hub is required");
     }
 
     @Override
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-        this.hub.popScope();
+        if (token != null) {
+            token.close();
+        }
     }
 
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-        this.hub.pushScope();
+        token = this.hub.pushScope();
 
         if (servletRequestEvent.getServletRequest() instanceof HttpServletRequest httpRequest) {
             Hint hint = new Hint();

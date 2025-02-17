@@ -41,7 +41,7 @@ public class IndexFakeNews extends MaintenanceTask {
     }
 
     public void indexFullfactFile(String file) throws IOException {
-        CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.builder().setHeader().build());
+        CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.builder().setHeader().get());
 
         logoResource = resourceDao.findByIdOrElseThrow(217749);
 
