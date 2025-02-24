@@ -20,10 +20,10 @@
         <maven.dependency.myfaces.version>4.1.0</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.48.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.3.2</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>11.3.3</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.3</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>8.2.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.11.4</maven.dependency.junit.version>
+        <maven.dependency.junit.version>5.12.0</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.15.2</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-core</artifactId>
-            <version>6.0.0.Final</version>
+            <version>6.0.1.Final</version>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>14.0.9</version> <!-- PF 15 uses jQuery 4, which is not compatible with fancybox -->
+            <version>15.0.0</version> <!-- PF 15 uses jQuery 4, which is not compatible with fancybox -->
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -428,7 +428,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.6.6</version>
+                <version>4.9.1.0</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>

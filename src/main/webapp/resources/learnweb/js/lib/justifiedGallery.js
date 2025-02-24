@@ -586,7 +586,7 @@
 
     if (newEntries.length > 0) {
       // Sort or randomize
-      if ($.isFunction(this.settings.sort)) {
+      if (typeof this.settings.sort === "function") {
         newEntries = this.sortArray(newEntries);
       } else if (this.settings.randomize) {
         newEntries = this.shuffleArray(newEntries);
@@ -666,7 +666,7 @@
    */
   JustifiedGallery.prototype.filterArray = function (a) {
     const { settings } = this;
-    if ($.type(settings.filter) === 'string') {
+    if (typeof settings.filter === 'string') {
       // Filter only keeping the entries passed in the string
       return a.filter((el) => {
         const $el = $(el);
@@ -677,7 +677,7 @@
         $el.addClass('jg-filtered').removeClass('jg-visible');
         return false;
       });
-    } if ($.isFunction(settings.filter)) {
+    } if (typeof settings.filter === "function") {
       // Filter using the passed function
       const filteredArr = a.filter(settings.filter);
       for (let i = 0; i < a.length; i++) {
@@ -938,11 +938,11 @@
    * @param settingName the setting name
    */
   JustifiedGallery.prototype.checkOrConvertNumber = function (settingContainer, settingName) {
-    if ($.type(settingContainer[settingName]) === 'string') {
+    if (typeof settingContainer[settingName] === 'string') {
       settingContainer[settingName] = parseFloat(settingContainer[settingName]);
     }
 
-    if ($.type(settingContainer[settingName]) === 'number') {
+    if (typeof settingContainer[settingName] === 'number') {
       if (Number.isNaN(settingContainer[settingName])) throw new Error(`invalid number for ${settingName}`);
     } else {
       throw new Error(`${settingName} must be a number`);
@@ -954,14 +954,14 @@
    * its keys from string (e.g. old settings with 'lt100') to int.
    */
   JustifiedGallery.prototype.checkSizeRangesSuffixes = function () {
-    if ($.type(this.settings.sizeRangeSuffixes) !== 'object') {
+    if (typeof this.settings.sizeRangeSuffixes !== 'object') {
       throw new Error('sizeRangeSuffixes must be defined and must be an object');
     }
 
     const suffixRanges = Object.keys(this.settings.sizeRangeSuffixes);
     const newSizeRngSuffixes = { 0: '' };
     for (let i = 0; i < suffixRanges.length; i++) {
-      if ($.type(suffixRanges[i]) === 'string') {
+      if (typeof suffixRanges[i] === 'string') {
         try {
           const numIdx = parseInt(suffixRanges[i].replace(/^[a-z]+/, ''), 10);
           newSizeRngSuffixes[numIdx] = this.settings.sizeRangeSuffixes[suffixRanges[i]];
@@ -986,13 +986,13 @@
     let newMaxRowHeight = null;
     const { rowHeight } = this.settings;
 
-    if ($.type(this.settings.maxRowHeight) === 'string') {
+    if (typeof this.settings.maxRowHeight === 'string') {
       if (this.settings.maxRowHeight.match(/^[0-9]+%$/)) {
         newMaxRowHeight = (rowHeight * parseFloat(this.settings.maxRowHeight.match(/^([0-9]+)%$/)[1])) / 100;
       } else {
         newMaxRowHeight = parseFloat(this.settings.maxRowHeight);
       }
-    } else if ($.type(this.settings.maxRowHeight) === 'number') {
+    } else if (typeof this.settings.maxRowHeight === 'number') {
       newMaxRowHeight = this.settings.maxRowHeight;
     } else if (this.settings.maxRowHeight === false || this.settings.maxRowHeight == null) {
       return null;
@@ -1036,11 +1036,11 @@
     if (this.settings.justifyThreshold < 0 || this.settings.justifyThreshold > 1) {
       throw new Error('justifyThreshold must be in the interval [0,1]');
     }
-    if ($.type(this.settings.cssAnimation) !== 'boolean') {
+    if (typeof this.settings.cssAnimation !== 'boolean') {
       throw new Error('cssAnimation must be a boolean');
     }
 
-    if ($.type(this.settings.captions) !== 'boolean') throw new Error('captions must be a boolean');
+    if (typeof this.settings.captions !== 'boolean') throw new Error('captions must be a boolean');
     this.checkOrConvertNumber(this.settings.captionSettings, 'animationDuration');
 
     this.checkOrConvertNumber(this.settings.captionSettings, 'visibleOpacity');
@@ -1058,15 +1058,14 @@
     this.checkOrConvertNumber(this.settings, 'imagesAnimationDuration');
     this.checkOrConvertNumber(this.settings, 'refreshTime');
     this.checkOrConvertNumber(this.settings, 'refreshSensitivity');
-    if ($.type(this.settings.randomize) !== 'boolean') throw new Error('randomize must be a boolean');
-    if ($.type(this.settings.selector) !== 'string') throw new Error('selector must be a string');
+    if (typeof this.settings.randomize !== 'boolean') throw new Error('randomize must be a boolean');
+    if (typeof this.settings.selector !== 'string') throw new Error('selector must be a string');
 
-    if (this.settings.sort !== false && !$.isFunction(this.settings.sort)) {
+    if (this.settings.sort !== false && typeof this.settings.sort !== "function") {
       throw new Error('sort must be false or a comparison function');
     }
 
-    if (this.settings.filter !== false && !$.isFunction(this.settings.filter)
-        && $.type(this.settings.filter) !== 'string') {
+    if (this.settings.filter !== false && typeof this.settings.filter !== "function" && typeof this.settings.filter !== 'string') {
       throw new Error('filter must be false, a string or a filter function');
     }
   };
@@ -1180,7 +1179,7 @@
       let controller = $gallery.data('jg.controller');
       if (typeof controller === 'undefined') {
         // Create a controller and assign it to the object data
-        if (typeof arg !== 'undefined' && arg !== null && $.type(arg) !== 'object') {
+        if (typeof arg !== 'undefined' && arg !== null && typeof arg !== 'object') {
           if (arg === 'destroy') return; // Just a call to an unexisting object
           throw new Error('The argument must be an object');
         }
