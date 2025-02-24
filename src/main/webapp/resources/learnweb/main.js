@@ -9,7 +9,7 @@ import Collapse from 'bootstrap/js/src/collapse';
 
 // Learnweb modules
 import './js/modules/jquery.auto-complete';
-// import './js/modules/*';
+import './js/modules/jquery.fancybox';
 
 window.bootstrap = {
   Tooltip,

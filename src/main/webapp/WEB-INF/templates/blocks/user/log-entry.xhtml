@@ -11,9 +11,6 @@
 <!--@elvariable id="logEntry" type="de.l3s.learnweb.logging.LogEntry"-->
 
 <div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') }">
-	<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
-	<h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
-
 	<p:avatar label="${logEntry.user.initials}" styleClass="mt-1 me-3 align-self-start" shape="circle" dynamicColor="true" saturation="50" lightness="50">
 		<h:graphicImage value="#{logEntry.user.imageUrl}" alt="#{logEntry.user.displayName}" rendered="#{not empty logEntry.user.imageUrl}"/>
 	</p:avatar>

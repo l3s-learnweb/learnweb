@@ -18,24 +18,23 @@
     "test:percy": "percy exec -- node src/test/visual/test.js"
   },
   "dependencies": {
-    "@fancyapps/fancybox": "^3.5.7",
-    "@fortawesome/fontawesome-free": "^6.7.0",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
-    "shepherd.js": "^14.4.0",
+    "shepherd.js": "^14.5.0",
     "video.js": "^8.21.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
+    "@eslint/js": "^9.21.0",
     "esbuild": "^0.25.0",
     "esbuild-sass-plugin": "^3.3.1",
-    "eslint": "^9.18.0",
-    "eslint-plugin-compat": "^6.0.1",
-    "globals": "^15.14.0",
-    "sass-embedded": "^1.83.1",
-    "stylelint": "^16.13.1",
+    "eslint": "^9.21.0",
+    "eslint-plugin-compat": "^6.0.2",
+    "globals": "^16.0.0",
+    "sass-embedded": "^1.85.0",
+    "stylelint": "^16.14.1",
     "stylelint-config-sass-guidelines": "^12.1.0",
-    "stylelint-no-unsupported-browser-features": "^8.0.2"
+    "stylelint-no-unsupported-browser-features": "^8.0.4"
   },
   "peerDependencies": {
     "@percy/cli": "^1.30.2",

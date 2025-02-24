@@ -48,8 +48,6 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
                 {from: 'node_modules/@fortawesome/fontawesome-free/webfonts'},
                 {from: 'node_modules/video.js/dist/video-js.min.css'},
                 {from: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', to: 'video-js.min.js'},
-                {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.css'},
-                {from: 'node_modules/@fancyapps/fancybox/dist/jquery.fancybox.min.js'},
             ],
         }),
     ],
