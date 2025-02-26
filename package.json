@@ -12,7 +12,7 @@
     "build": "node esbuild.js",
     "build:dev": "node esbuild.js dev",
     "watch": "node esbuild.js watch",
-    "lint:scss": "stylelint src/main/webapp/resources/learnweb/sass",
+    "lint:scss": "stylelint src/main/webapp/resources/learnweb/sass --fix",
     "lint:js": "eslint src/main/webapp/resources/learnweb/js/**",
     "test:visual": "node src/test/visual/test.js",
     "test:percy": "percy exec -- node src/test/visual/test.js"

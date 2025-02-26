@@ -8,6 +8,7 @@
 // Copyright 2019 fancyApps
 //
 // ==================================================
+/* eslint-disable max-len, no-undef */
 (function (window, document, $) {
   "use strict";
 
@@ -722,9 +723,9 @@
             if (!obj.opts.video.format) {
               obj.opts.video.format = "video/" + (found[1] === "ogv" ? "ogg" : found[1]);
             }
-          } else if (src.match(/(^data:image\/[a-z0-9+\/=]*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg|ico)((\?|#).*)?$)/i)) {
+          } else if (src.match(/(^data:image\/[a-z0-9+/=]*,)|(\.(jp(e|g|eg)|gif|png|bmp|webp|svg|ico)((\?|#).*)?$)/i)) {
             type = "image";
-          } else if (src.match(/\.(pdf)((\?|#).*)?$/i)) {
+          } else if (src.match(/\.(pdf)(([?#]).*)?$/i)) {
             type = "iframe";
             obj = $.extend(true, obj, {
               contentType: "pdf",
@@ -2026,7 +2027,9 @@
           try {
             $contents = $iframe.contents();
             $body = $contents.find("body");
-          } catch (ignore) {}
+          } catch (ignore) {
+            // ignore
+          }
 
           // Calculate content dimensions, if it is accessible
           if ($body && $body.length && $body.children().length) {
@@ -2071,7 +2074,9 @@
             .hide()
             .unbind()
             .attr("src", "//about:blank");
-        } catch (ignore) {}
+        } catch (ignore) {
+          // ignore
+        }
 
         $(this)
           .off("refresh.fb")
@@ -2579,7 +2584,7 @@
       self.trigger("afterShow");
 
       // Autoplay first html5 video/audio
-      if (!!current.opts.video.autoStart) {
+      if (current.opts.video.autoStart) {
         current.$slide
           .find("video,audio")
           .filter(":visible:first")
@@ -3445,7 +3450,7 @@
   // Object containing properties for each media type
   var defaults = {
     youtube: {
-      matcher: /(youtube\.com|youtu\.be|youtube\-nocookie\.com)\/(watch\?(.*&)?v=|v\/|u\/|embed\/?)?(videoseries\?list=(.*)|[\w-]{11}|\?listType=(.*)&list=(.*))(.*)/i,
+      matcher: /(youtube\.com|youtu\.be|youtube-nocookie\.com)\/(watch\?(.*&)?v=|v\/|u\/|embed\/?)?(videoseries\?list=(.*)|[\w-]{11}|\?listType=(.*)&list=(.*))(.*)/i,
       params: {
         autoplay: 1,
         autohide: 1,
@@ -3478,7 +3483,7 @@
     },
 
     instagram: {
-      matcher: /(instagr\.am|instagram\.com)\/p\/([a-zA-Z0-9_\-]+)\/?/i,
+      matcher: /(instagr\.am|instagram\.com)\/p\/([a-zA-Z0-9_-]+)\/?/i,
       type: "image",
       url: "//$1/p/$2/media/?size=l"
     },
@@ -3489,7 +3494,7 @@
     // https://www.google.com/maps/@52.2111123,2.9237542,6.61z?hl=en
     // https://www.google.com/maps/place/Googleplex/@37.4220041,-122.0833494,17z/data=!4m5!3m4!1s0x0:0x6c296c66619367e0!8m2!3d37.4219998!4d-122.0840572
     gmap_place: {
-      matcher: /(maps\.)?google\.([a-z]{2,3}(\.[a-z]{2})?)\/(((maps\/(place\/(.*)\/)?\@(.*),(\d+.?\d+?)z))|(\?ll=))(.*)?/i,
+      matcher: /(maps\.)?google\.([a-z]{2,3}(\.[a-z]{2})?)\/(((maps\/(place\/(.*)\/)?@(.*),(\d+.?\d+?)z))|(\?ll=))(.*)?/i,
       type: "iframe",
       url: function (rez) {
         return (
@@ -5329,7 +5334,7 @@
       "=": "&#x3D;"
     };
 
-    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return String(string).replace(/[&<>"'`=/]/g, function (s) {
       return entityMap[s];
     });
   }
@@ -5391,6 +5396,7 @@
   // Simple $.escapeSelector polyfill (for jQuery prior v3)
   if (!$.escapeSelector) {
     $.escapeSelector = function (sel) {
+      // eslint-disable-next-line no-control-regex
       var rcssescape = /([\0-\x1f\x7f]|^-?\d)|^-$|[^\x80-\uFFFF\w-]/g;
       var fcssescape = function (ch, asCodePoint) {
         if (asCodePoint) {
