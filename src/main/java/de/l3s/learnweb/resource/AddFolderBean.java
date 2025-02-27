@@ -5,11 +5,14 @@ import java.io.Serializable;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebGroupEvent;
 
 @Named
 @ViewScoped
@@ -20,6 +23,9 @@ public class AddFolderBean extends ApplicationBean implements Serializable {
     private Folder folder;
     private Group targetGroup;
     private Folder targetFolder;
+
+    @Inject
+    private EventBus eventBus;
 
     public void create(Group targetGroup, Folder targetFolder) {
         this.folder = new Folder();
@@ -38,9 +44,8 @@ public class AddFolderBean extends ApplicationBean implements Serializable {
         folder.setUser(getUser());
         folder.save();
 
-        log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
-
         addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
+        eventBus.dispatch(new LearnwebGroupEvent(Action.add_folder, targetGroup).setTargetId(folder.getId()).setParams(folder.getTitle()));
     }
 
     public Group getTargetGroup() {
