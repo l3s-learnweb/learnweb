@@ -32,6 +32,9 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebGroupEvent;
+import de.l3s.learnweb.logging.LearnwebResourceEvent;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.ExportManager;
@@ -98,6 +101,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
     @Inject
     private ResourceDao resourceDao;
+
+    @Inject
+    private EventBus eventBus;
 
     public void clearCaches() {
         paginator = null;
@@ -308,7 +314,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                 this.currentFolder = null;
             } else {
                 Folder targetFolder = folderDao.findByIdOrElseThrow(folderId);
-                log(Action.opening_folder, targetFolder.getGroupId(), targetFolder.getId());
+                eventBus.dispatch(new LearnwebGroupEvent(Action.opening_folder, group).setTargetId(targetFolder.getId()));
                 this.currentFolder = targetFolder;
             }
 
@@ -376,7 +382,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             newResource.save();
-            log(Action.adding_resource, targetGroup.getId(), resource.getId());
+            eventBus.dispatch(new LearnwebResourceEvent(Action.adding_resource, newResource).setTargetId(resource.getId()));
         }
 
         for (Folder folder : items.getFolders()) {
@@ -386,7 +392,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             newFolder.setParentFolderId(targetFolderId);
             newFolder.setUserId(getUser().getId());
             newFolder.save();
-            log(Action.add_folder, targetGroup.getId(), newFolder.getId());
+            eventBus.dispatch(new LearnwebGroupEvent(Action.add_folder, targetGroup).setTargetId(folder.getId()));
 
             ResourceUpdateBatch copyChild = new ResourceUpdateBatch(folder.getResources(), folder.getSubFolders());
             copyResources(copyChild, targetGroup, newFolder, true);
@@ -425,7 +431,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
             folder.moveTo(targetGroupId, targetFolderId);
 
-            log(Action.move_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+            eventBus.dispatch(new LearnwebGroupEvent(Action.move_folder, group).setTargetId(folder.getId()).setParams(folder.getTitle()));
         }
 
         for (Resource resource : items.getResources()) {
@@ -436,7 +442,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
             resource.moveTo(targetGroupId, targetFolderId);
 
-            log(Action.move_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+            eventBus.dispatch(new LearnwebResourceEvent(Action.move_resource, resource).setParams(resource.getTitle()));
         }
 
         if (skipped != 0) {
@@ -463,7 +469,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             folder.delete();
-            log(Action.deleting_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+            eventBus.dispatch(new LearnwebGroupEvent(Action.deleting_folder, group).setTargetId(folder.getId()).setParams(folder.getTitle()));
 
             if (folder.equals(currentFolder)) {
                 currentFolder = null;
@@ -477,7 +483,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             resource.delete();
-            log(Action.deleting_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+            eventBus.dispatch(new LearnwebResourceEvent(Action.deleting_resource, resource).setParams(resource.getTitle()));
         }
 
         if (items.size() - skipped > 0) {
@@ -500,7 +506,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             resource.addTag(tag, getUser());
-            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
+            eventBus.dispatch(new LearnwebResourceEvent(Action.tagging_resource, resource).setParams(tag));
         }
 
         if (!items.getResources().isEmpty()) {
@@ -569,7 +575,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             this.searchQuery = null;
         } else if (!searchQuery.equalsIgnoreCase(this.searchQuery)) {
             this.searchQuery = searchQuery;
-            log(Action.group_resource_search, group.getId(), 0, searchQuery);
+            eventBus.dispatch(new LearnwebGroupEvent(Action.group_resource_search, group).setParams(searchQuery));
         }
     }
 
