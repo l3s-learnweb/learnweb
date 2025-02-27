@@ -62,6 +62,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     @Inject
     private CommentDao commentDao;
+
     @Inject
     private EventBus eventBus;
 
@@ -77,7 +78,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
         }
 
-        log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
+        eventBus.dispatch(new LearnwebResourceEvent(Action.opening_resource, resource));
 
         embeddedTab = resource.getDefaultTab().ordinal();
         if (editResource) {
@@ -145,21 +146,19 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         releaseResourceIfLocked();
         if (!resource.lockResource(getUser())) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.locked_by_user", resource.getLockUsername());
-            log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
+            eventBus.dispatch(new LearnwebResourceEvent(Action.lock_rejected_edit_resource, resource));
             return;
         }
 
-        log(Action.opening_resource, resource.getGroupId(), resource.getId());
         viewAction = ViewAction.editResource;
     }
 
     public void saveEdit() {
         BeanAssert.hasPermission(resource.canEditResource(getUser()));
-
         resource.save();
 
-        log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
         addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+        eventBus.dispatch(new LearnwebResourceEvent(Action.edit_resource, resource).setParams(resource.getId()));
 
         resource.unlockResource(getUser());
         viewAction = ViewAction.viewResource;
@@ -179,8 +178,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     public void editActivityListener() {
         if (resource != null && !resource.lockerUpdate(getUser())) {
             releaseResourceIfLocked();
-            log(Action.lock_interrupted_returned_resource, resource.getGroupId(), resource.getId());
+
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.edit_interrupted");
+            eventBus.dispatch(new LearnwebResourceEvent(Action.lock_interrupted_returned_resource, resource));
 
             viewAction = ViewAction.viewResource;
             PrimeFaces.current().ajax().update(":resource_view");
@@ -209,9 +209,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         }
 
         resource.addTag(newTag, getUser());
-        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-        log(Action.tagging_resource, resource.getGroupId(), resource.getId(), newTag);
         newTag = ""; // clear tag input field
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
+        eventBus.dispatch(new LearnwebResourceEvent(Action.tagging_resource, resource).setParams(newTag));
     }
 
     /**
@@ -314,8 +315,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
 
             resource.save();
-            log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
+
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
+            eventBus.dispatch(new LearnwebResourceEvent(Action.resource_thumbnail_update, resource));
         } catch (RuntimeException | IOException e) {
             throw new HttpException("Failed to set thumbnail", e);
         }
@@ -382,9 +384,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             return;
         }
 
-        log(Action.rating_resource, resource.getGroupId(), resource.getId());
-
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
+        eventBus.dispatch(new LearnwebResourceEvent(Action.rating_resource, resource));
     }
 
     public List<LogEntry> getLogs() {

@@ -12,6 +12,7 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,10 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebEvent;
+import de.l3s.learnweb.logging.LearnwebGroupEvent;
+import de.l3s.learnweb.logging.LearnwebResourceEvent;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
@@ -68,6 +73,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
     private int counter = 0;
     private transient List<GroupedResources> resourcesGroupedBySource;
+
+    @Inject
+    private EventBus eventBus;
 
     @PostConstruct
     public void init() {
@@ -128,10 +136,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
             }
 
             search.getResourcesByPage(1); // load first page
-
-            log(Action.searching, 0, search.getId(), query);
-
             resourcesGroupedBySource = null;
+
+            eventBus.dispatch(new LearnwebEvent(Action.searching).setTargetId(search.getId()).setParams(query));
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -192,7 +199,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             if (search != null) {
                 search.logResourceSaved(selectedResource.getRank(), newResource.getId());
-                log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
+                eventBus.dispatch(new LearnwebResourceEvent(Action.adding_resource, newResource).setParams(search.getId() + " - " + selectedResource.getRank()));
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());

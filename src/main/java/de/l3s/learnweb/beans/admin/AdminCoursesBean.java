@@ -22,6 +22,9 @@ import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebEvent;
+import de.l3s.learnweb.logging.LearnwebGroupEvent;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.User;
@@ -47,6 +50,9 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
     @Inject
     private UserDao userDao;
+
+    @Inject
+    private EventBus eventBus;
 
     @PostConstruct
     public void init() {
@@ -78,9 +84,8 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         groupDao.save(group);
         user.joinGroup(group);
 
-        // log and show notification
-        log(Action.group_creating, group.getId(), group.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "A new group with the name of the course was created.");
+        eventBus.dispatch(new LearnwebGroupEvent(Action.group_creating, group));
         return "admin/course.jsf?course_id=" + course.getId();
     }
 
@@ -137,10 +142,9 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
     public void onDeleteCourse(Course course) {
         List<User> undeletedUsers = courseDao.deleteHard(course, getUser().isAdmin());
 
-        log.info("Deleted course {}", course);
-        log(Action.course_delete, 0, course.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted. " +
             (undeletedUsers.isEmpty() ? "" : "But " + undeletedUsers.size() + " were not deleted because they are member of other courses."));
+        eventBus.dispatch(new LearnwebEvent(Action.course_delete).setTargetId(course.getId()));
 
         courses.remove(course);
     }
@@ -148,9 +152,8 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
     public void onAnonymiseCourse(Course course) {
         courseDao.anonymize(course);
 
-        log.info("Anonymized course {}", course);
-        log(Action.course_anonymize, 0, course.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been anonymized.");
+        eventBus.dispatch(new LearnwebEvent(Action.course_anonymize).setTargetId(course.getId()));
     }
 
     public Course getNewCourse() {

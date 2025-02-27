@@ -12,6 +12,7 @@ public class LearnwebEvent implements Serializable {
 
     private final Action action;
     private User targetUser;
+    private Integer targetId;
     private String params;
     private final Instant created;
 
@@ -38,6 +39,15 @@ public class LearnwebEvent implements Serializable {
         return this;
     }
 
+    public Integer getTargetId() {
+        return targetId;
+    }
+
+    public LearnwebEvent setTargetId(Integer targetId) {
+        this.targetId = targetId;
+        return this;
+    }
+
     public String getParams() {
         return params;
     }
@@ -58,6 +68,6 @@ public class LearnwebEvent implements Serializable {
 
     @Override
     public String toString() {
-        return "LearnwebEvent [action=" + action + ", params='" + params + ", created=" + created + ']';
+        return "[event=" + action + ", targetUser=" + targetUser + ", targetId=" + targetId + ", params=" + params + "]";
     }
 }
