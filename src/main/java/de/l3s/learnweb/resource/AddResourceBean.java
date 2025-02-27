@@ -20,6 +20,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebResourceEvent;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileUtility;
@@ -43,6 +45,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     @Inject
     private FileDao fileDao;
+
+    @Inject
+    private EventBus eventBus;
 
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
@@ -144,7 +149,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         res.save();
 
         log.debug("addResource; saved={}", res.getId());
-        log(Action.adding_resource, res.getGroupId(), res.getId());
+        eventBus.dispatch(new LearnwebResourceEvent(Action.adding_resource, res));
 
         // create temporal thumbnails
         res.postConstruct();
