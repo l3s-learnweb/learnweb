@@ -15,6 +15,8 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebGroupEvent;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -42,6 +44,9 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     @Inject
     private ForumTopicDao forumTopicDao;
+
+    @Inject
+    private EventBus eventBus;
 
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
@@ -80,7 +85,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
             posts.add(dialogPost);
             forumTopicDao.updateIncreaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getCreatedAt());
             dialogPost.getUser().incForumPostCount();
-            log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
+            eventBus.dispatch(new LearnwebGroupEvent(Action.forum_post_added, group).setTargetId(topicId).setParams(topic.getTitle()));
         } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         }
@@ -99,8 +104,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         }
 
         posts.remove(post);
-
-        log(Action.forum_post_deleted, group.getId(), post.getId(), topic.getTitle());
+        eventBus.dispatch(new LearnwebGroupEvent(Action.forum_post_deleted, group).setTargetId(post.getId()).setParams(topic.getTitle()));
     }
 
     public void replyPost() {

@@ -3,6 +3,7 @@ package de.l3s.learnweb.logging;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import jakarta.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
 @ApplicationScoped
@@ -50,16 +52,20 @@ public class EventBus implements Serializable {
     }
 
     public void dispatch(LearnwebEvent event) {
-        log.debug("Publishing event: {}", event);
+        log.debug("Event dispatched: {}", event);
+        final User user = userBean.getUser();
+        final String sessionId = userBean.getSessionId();
 
-        for (LearnwebEventListener listener : listeners) {
-            if (listener.isInterestedIn(event)) {
-                try {
-                    listener.onEvent(event, userBean.getUser(), userBean.getSessionId());
-                } catch (Exception e) {
-                    log.error("Error processing event in listener", e);
+        CompletableFuture.runAsync(() -> {
+            for (LearnwebEventListener listener : listeners) {
+                if (listener.isInterestedIn(event)) {
+                    try {
+                        listener.onEvent(event, user, sessionId);
+                    } catch (Exception e) {
+                        log.error("Error processing event in listener", e);
+                    }
                 }
             }
-        }
+        });
     }
 }
