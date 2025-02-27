@@ -31,6 +31,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.user.User.Gender;
@@ -78,6 +79,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     @Inject
     private EmailConfirmationBean emailConfirmationBean;
+    @Inject
+    private EventBus eventBus;
 
     public void onLoad() {
         User loggedInUser = getUser();
@@ -367,6 +370,6 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     }
 
     public String rootLogin() {
-        return LoginBean.rootLogin(this, selectedUser);
+        return LoginBean.rootLogin(this, eventBus, selectedUser);
     }
 }
