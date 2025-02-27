@@ -59,8 +59,8 @@ public enum Action implements Argument {
     glossary_term_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary id
     glossary_term_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary_term_id
     resource_thumbnail_update(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    unused1(ActionTargetId.NONE, ActionCategory.OTHER), //target_id = resource_id
-    unused8(ActionTargetId.NONE, ActionCategory.OTHER),
+    search_result_clicked(ActionTargetId.NONE, ActionCategory.OTHER),
+    search_result_saved(ActionTargetId.NONE, ActionCategory.OTHER),
     unused2(ActionTargetId.NONE, ActionCategory.OTHER),
     adding_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // was added by chloe . can be reused
     edit_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // was added by chloe . can be reused
