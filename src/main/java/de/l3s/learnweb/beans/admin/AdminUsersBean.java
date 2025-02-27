@@ -11,6 +11,7 @@ import jakarta.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.logging.EventBus;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.LoginBean;
@@ -33,6 +34,9 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
 
     @Inject
     private UserDao userDao;
+
+    @Inject
+    private EventBus eventBus;
 
     public void onLoad() {
         User user = getUser();
@@ -58,7 +62,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
     }
 
     public String rootLogin(User targetUser) {
-        return LoginBean.rootLogin(this, targetUser);
+        return LoginBean.rootLogin(this, eventBus, targetUser);
     }
 
     public List<UserView> getUserViews() {
