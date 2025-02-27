@@ -1,5 +1,7 @@
 package de.l3s.learnweb.logging;
 
+import java.io.Serial;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -10,6 +12,8 @@ import de.l3s.learnweb.user.User;
 
 @ApplicationScoped
 public class LoggingEventListener implements LearnwebEventListener {
+    @Serial
+    private static final long serialVersionUID = -2665514411435623504L;
     private static final Logger log = LogManager.getLogger(LoggingEventListener.class);
 
     @Inject
@@ -31,11 +35,21 @@ public class LoggingEventListener implements LearnwebEventListener {
             }
         }
 
+        if (event.getTargetId() != null && event.getAction().getTargetId() != null) {
+            targetId = event.getTargetId();
+        }
+
         if (event instanceof LearnwebGroupEvent groupEvent) {
             groupId = groupEvent.getGroup().getId();
 
             if (event.getAction().getTargetId() == ActionTargetId.GROUP_ID) {
                 targetId = groupEvent.getGroup().getId();
+            }
+        }
+
+        if (event instanceof LearnwebResourceEvent resourceEvent) {
+            if (event.getAction().getTargetId() == ActionTargetId.RESOURCE_ID) {
+                targetId = resourceEvent.getResource().getId();
             }
         }
 

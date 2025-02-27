@@ -6,8 +6,6 @@ import java.util.ResourceBundle;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
@@ -16,16 +14,11 @@ import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.i18n.MessagesBundle;
-import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
 @SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class ApplicationBean {
-    private static final Logger log = LogManager.getLogger(ApplicationBean.class);
-
-    private transient Learnweb learnweb;
-    private transient String sessionId;
 
     @Inject
     private UserBean userBean;
@@ -92,38 +85,6 @@ public abstract class ApplicationBean {
         userBean.setPreference(key, value);
     }
 
-    // Logging ---------------------------------------------------------------------------------------------------------
-
-    /**
-     * Logs a user action for the currently active user.
-     *
-     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
-     */
-    public void log(Action action, int groupId, int targetId, String params) {
-        log(action, groupId, targetId, params, getUser());
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     *
-     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
-     */
-    public void log(Action action, int groupId, int targetId) {
-        log(action, groupId, targetId, null, getUser());
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     * The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
-     */
-    protected void log(Action action, Integer groupId, Integer targetId, String params, User user) {
-        if (null != user) {
-            // TODO: anonymous logging
-            dao().getLogDao().insert(user, action, groupId, targetId, params, userBean.getSessionId());
-        }
-    }
-
     // Messaging -------------------------------------------------------------------------------------------------------
 
     protected FacesMessage getFacesMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
@@ -162,17 +123,14 @@ public abstract class ApplicationBean {
     // Helper ----------------------------------------------------------------------------------------------------------
 
     protected Learnweb getLearnweb() {
-        if (null == learnweb) {
-            learnweb = Learnweb.getInstance();
-        }
-        return learnweb;
+        return Learnweb.getInstance();
     }
 
     protected DaoProvider dao() {
-        return getLearnweb().getDaoProvider();
+        return Learnweb.dao();
     }
 
     protected ConfigProvider config() {
-        return getLearnweb().getConfigProvider();
+        return Learnweb.config();
     }
 }
