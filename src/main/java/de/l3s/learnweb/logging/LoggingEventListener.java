@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.l3s.learnweb.searchhistory.LearnwebSearchEvent;
 import de.l3s.learnweb.user.User;
 
 @ApplicationScoped
@@ -54,5 +55,10 @@ public class LoggingEventListener implements LearnwebEventListener {
         }
 
         logDao.insert(performingUser, event.getAction(), groupId, targetId, event.getParams(), sessionId);
+    }
+
+    @Override
+    public boolean isInterestedIn(final LearnwebEvent event) {
+        return !(event instanceof LearnwebSearchEvent);
     }
 }
