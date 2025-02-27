@@ -29,8 +29,6 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.EventBus;
-import de.l3s.learnweb.logging.LearnwebEvent;
-import de.l3s.learnweb.logging.LearnwebGroupEvent;
 import de.l3s.learnweb.logging.LearnwebResourceEvent;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -42,6 +40,7 @@ import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.searchhistory.LearnwebSearchEvent;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -141,7 +140,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             search.getResourcesByPage(1); // load first page
             resourcesGroupedBySource = null;
 
-            eventBus.dispatch(new LearnwebEvent(Action.searching).setTargetId(search.getId()).setParams(query));
+            eventBus.dispatch(new LearnwebSearchEvent(Action.searching, search));
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -203,7 +202,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             if (search != null) {
                 search.logResourceSaved(selectedResource.getRank(), newResource.getId());
-                eventBus.dispatch(new LearnwebResourceEvent(Action.adding_resource, newResource).setParams(search.getId() + " - " + selectedResource.getRank()));
+                eventBus.dispatch(new LearnwebResourceEvent(Action.adding_resource, newResource));
+                eventBus.dispatch(new LearnwebSearchEvent(Action.search_result_saved, search).setTargetId(newResource.getId()).setParams(selectedResource.getRank()));
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
@@ -246,6 +246,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             int tempResourceId = Integer.parseInt(params.get("resourceId"));
 
             search.logResourceClicked(tempResourceId);
+            eventBus.dispatch(new LearnwebSearchEvent(Action.search_result_clicked, search).setTargetId(tempResourceId));
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
         }
