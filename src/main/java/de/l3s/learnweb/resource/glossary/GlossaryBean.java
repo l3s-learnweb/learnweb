@@ -47,6 +47,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebGlossaryEvent;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
@@ -136,6 +138,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     @Inject
     private FileDao fileDao;
 
+    @Inject
+    private EventBus eventBus;
+
     @PostConstruct
     public void init() {
         User user = getUser();
@@ -149,7 +154,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         if (duration > 500) {
             log.warn("Glossary loading time: {}", duration);
         }
-        log(Action.glossary_open, glossaryResource);
+
+        eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_open, glossaryResource));
 
         // for labint francesca.bianchi@unisalento.it
         availableTopicOne.add(new SelectItem("Environment"));
@@ -191,11 +197,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public void onSave() {
-        //logging
         if (formEntry.getId() > 1) {
-            log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
+            eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_entry_edit, glossaryResource).setEntry(formEntry));
         } else {
-            log(Action.glossary_entry_add, glossaryResource, formEntry.getId());
+            eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_entry_add, glossaryResource).setEntry(formEntry));
         }
 
         formEntry.setLastChangedByUserId(getUser().getId());
@@ -210,7 +215,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             term.setLastChangedByUserId(getUser().getId());
             //log term edit actions
             if (term.getId() != 0) {
-                log(Action.glossary_term_edit, glossaryResource, term.getId());
+                eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_term_edit, glossaryResource).setTerm(term));
             }
         }
 
@@ -244,8 +249,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         //Remove entry from resource
         glossaryResource.getEntries().remove(row.getEntry());
 
-        log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
         addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
+        eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_entry_delete, glossaryResource).setEntry(row.getEntry()));
     }
 
     public void onDeleteTerm(GlossaryTerm term) {
@@ -262,8 +267,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         formEntry.setFulltext(null); // reset full text index
 
         addGrowl(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
-
-        log(Action.glossary_term_delete, glossaryResource, term.getId());
+        eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_term_delete, glossaryResource).setTerm(term));
     }
 
     private boolean containsUndeletedTerms(GlossaryEntry entry) {
@@ -292,7 +296,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         newTerm.setLanguage(unusedLanguages.getFirst());
         formEntry.addTerm(newTerm);
 
-        log(Action.glossary_term_add, glossaryResource, formEntry.getId());
+        eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_term_add, glossaryResource).setTerm(newTerm));
     }
 
     public void onChangeTopicOne(AjaxBehaviorEvent event) {
@@ -397,8 +401,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 Learnweb.dao().getGlossaryDao().saveEntry(entry);
                 glossaryResource.getEntries().add(entry);
 
-                log(Action.glossary_entry_add, glossaryResource, entry.getId());
-                entry.getTerms().forEach(term -> log(Action.glossary_term_add, glossaryResource, formEntry.getId()));
+                eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_entry_add, glossaryResource).setEntry(entry));
+                entry.getTerms().forEach(term -> eventBus.dispatch(new LearnwebGlossaryEvent(Action.glossary_term_add, glossaryResource).setTerm(term)));
             }
 
             repaintTable();
