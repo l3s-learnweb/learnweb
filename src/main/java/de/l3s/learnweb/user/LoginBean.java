@@ -26,6 +26,8 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebEvent;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.HashHelper;
 
@@ -49,6 +51,9 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
     @Inject
     private TokenDao tokenDao;
+
+    @Inject
+    private EventBus eventBus;
 
     @Inject
     private RequestManager requestManager;
@@ -138,7 +143,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, config().getContextPath());
         }
 
-        return loginUser(this, user);
+        return loginUser(this, eventBus, user);
     }
 
     /**
@@ -154,34 +159,33 @@ public class LoginBean extends ApplicationBean implements Serializable {
             userBean.setModeratorUser(null);
             return "/lw/admin/users.xhtml?faces-redirect=true";
         } else {
-            log(Action.logout, 0, 0);
+            eventBus.dispatch(new LearnwebEvent(Action.logout));
             Faces.invalidateSession();
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, config().getContextPath());
             return "/lw/index.jsf?faces-redirect=true";
         }
     }
 
-    public static String rootLogin(ApplicationBean bean, User targetUser) {
+    public static String rootLogin(ApplicationBean bean, EventBus eventBus, User targetUser) {
         UserBean userBean = bean.getUserBean();
         // validate permission
         BeanAssert.hasPermission(userBean.canLoginToAccount(targetUser), userBean.getUser() + " tried to hijack account");
         // store moderator account while logged in as user
         userBean.setModeratorUser(userBean.getUser());
         // login
-        return loginUser(bean, targetUser);
+        return loginUser(bean, eventBus, targetUser);
     }
 
-    public static String loginUser(ApplicationBean bean, User user) {
+    public static String loginUser(ApplicationBean bean, EventBus eventBus, User user) {
         UserBean userBean = bean.getUserBean();
-        userBean.setUser(user); // logs the user in
-
-        user.updateLoginDate(); // the last login date has to be updated before we log a new login event
-
         if (userBean.getModeratorUser() != null) {
-            bean.log(Action.moderator_login, 0, userBean.getModeratorUser().getId());
+            eventBus.dispatch(new LearnwebEvent(Action.moderator_login).setTargetUser(user));
         } else {
-            bean.log(Action.login, 0, 0, Faces.getRequestURI());
+            user.updateLoginDate(); // the last login date has to be updated before we log a new login event
+            eventBus.dispatch(new LearnwebEvent(Action.login, Faces.getRequestURI()).setTargetUser(user));
         }
+
+        userBean.setUser(user); // logs the user in
 
         Organisation userOrganisation = user.getOrganisation();
         String redirect = Faces.getRequestParameter("redirect");

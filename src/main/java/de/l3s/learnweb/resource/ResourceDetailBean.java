@@ -23,6 +23,8 @@ import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.EventBus;
+import de.l3s.learnweb.logging.LearnwebResourceEvent;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
@@ -60,6 +62,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     @Inject
     private CommentDao commentDao;
+    @Inject
+    private EventBus eventBus;
 
     public void onLoad() {
         resource = resourceDao.findByIdOrElseThrow(resourceId);
@@ -281,15 +285,17 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void onDeleteComment(Comment comment) {
         resource.deleteComment(comment);
+
         addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-        log(Action.deleting_comment, resource.getGroupId(), comment.getResourceId(), comment.getId());
+        eventBus.dispatch(new LearnwebResourceEvent(Action.deleting_comment, resource).setParams(comment.getId()));
     }
 
     public void addComment() {
         Comment comment = resource.addComment(newComment, getUser());
-        log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId());
-        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
         newComment = "";
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
+        eventBus.dispatch(new LearnwebResourceEvent(Action.commenting_resource, resource).setParams(comment.getId()));
     }
 
     public void setResourceThumbnail(String archiveUrl) {
