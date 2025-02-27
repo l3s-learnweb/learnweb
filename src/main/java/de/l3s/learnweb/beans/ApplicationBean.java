@@ -17,7 +17,6 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
@@ -100,15 +99,6 @@ public abstract class ApplicationBean {
      *
      * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
      */
-    public void log(Action action, int groupId, int targetId, int params) {
-        log(action, groupId, targetId, Integer.toString(params), getUser());
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     *
-     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
-     */
     public void log(Action action, int groupId, int targetId, String params) {
         log(action, groupId, targetId, params, getUser());
     }
@@ -120,18 +110,6 @@ public abstract class ApplicationBean {
      */
     public void log(Action action, int groupId, int targetId) {
         log(action, groupId, targetId, null, getUser());
-    }
-
-    public void log(Action action, Resource resource, int params) {
-        log(action, resource.getGroupId(), resource.getId(), Integer.toString(params), getUser());
-    }
-
-    public void log(Action action, Resource resource, String params) {
-        log(action, resource.getGroupId(), resource.getId(), params, getUser());
-    }
-
-    public void log(Action action, Resource resource) {
-        log(action, resource.getGroupId(), resource.getId(), null, getUser());
     }
 
     /**

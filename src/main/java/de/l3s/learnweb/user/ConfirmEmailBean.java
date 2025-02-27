@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.logging.EventBus;
 
 @Named
 @RequestScoped
@@ -29,6 +30,8 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     private TokenDao tokenDao;
     @Inject
     private UserDao userDao;
+    @Inject
+    private EventBus eventBus;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
@@ -47,7 +50,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
             tokenDao.deleteByTypeAndUser(Token.TokenType.EMAIL_CONFIRMATION, user.getId());
 
             if (user.equals(confirmRequiredBean.getLoggedInUser())) {
-                LoginBean.loginUser(this, user);
+                LoginBean.loginUser(this, eventBus, user);
                 return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
             }
             return null;
