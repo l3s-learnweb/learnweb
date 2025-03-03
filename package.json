@@ -31,8 +31,8 @@
     "eslint": "^9.21.0",
     "eslint-plugin-compat": "^6.0.2",
     "globals": "^16.0.0",
-    "sass-embedded": "^1.85.0",
-    "stylelint": "^16.14.1",
+    "sass-embedded": "^1.85.1",
+    "stylelint": "^16.15.0",
     "stylelint-config-sass-guidelines": "^12.1.0",
     "stylelint-no-unsupported-browser-features": "^8.0.4"
   },
