@@ -34,7 +34,7 @@ import software.xdev.chartjs.model.options.BarOptions;
 import software.xdev.chartjs.model.options.LegendOptions;
 import software.xdev.chartjs.model.options.Plugins;
 import software.xdev.chartjs.model.options.Title;
-import software.xdev.chartjs.model.options.Tooltip;
+import software.xdev.chartjs.model.options.tooltip.TooltipOptions;
 
 @Named
 @ViewScoped
@@ -107,7 +107,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
                         .setTitle(new Title()
                             .setDisplay(true)
                             .setText(getLocaleMessage("archive.timeline_click_zoom")))
-                        .setTooltip(new Tooltip()
+                        .setTooltip(new TooltipOptions()
                             .setMode("index"))
                         .setLegend(new LegendOptions()
                             .setDisplay(false))))
