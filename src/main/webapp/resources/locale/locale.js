@@ -35,4 +35,10 @@ if (window.PrimeFaces) {
     guideDismiss: 'Сховати',
     guideGotcha: 'Зрозуміло',
   });
+
+  PrimeFaces.locales.el = $.extend(true, {}, PrimeFaces.locales.el, {
+    transcriptDeleteSelection: 'Διαγραφή επιλογής',
+    guideDismiss: 'Απορρίψτε',
+    guideGotcha: 'Κατανοητό',
+  });
 }
