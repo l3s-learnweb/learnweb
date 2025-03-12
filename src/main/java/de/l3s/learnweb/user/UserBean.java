@@ -230,6 +230,7 @@ public class UserBean implements Serializable {
             case "it" -> Locale.of("it", "IT", languageVariant);
             case "pt" -> Locale.of("pt", "BR", languageVariant);
             case "es" -> Locale.of("es", "ES", languageVariant);
+            case "el" -> Locale.of("el", "GR", languageVariant);
             case "uk" -> Locale.of("uk", "UA", languageVariant);
             case "xx" -> Locale.of("xx"); // only for translation editors
             default -> {
