@@ -23,9 +23,9 @@
         <p:message for="@previous"/>
     </div>
 
-    <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired and not empty config.recaptchaPublicKey}">
+    <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired and config.captchaEnabled}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
-        <p:captcha id="captcha" language="#{userBean.localeCode}" required="true"/>
+        <p:captcha type="g-recaptcha" id="captcha" language="#{userBean.localeCode}" required="true"/>
         <p:message for="@previous"/>
     </h:panelGroup>
 

@@ -53,9 +53,9 @@
                 <p:message for="@previous"/>
             </div>
 
-            <ui:fragment rendered="#{not userBean.loggedIn and not empty config.recaptchaPublicKey}">
+            <ui:fragment rendered="#{not userBean.loggedIn and config.captchaEnabled}">
                 <div class="field mw-r25 overflow-hidden" style="min-height: 78px;">
-                    <p:captcha label="Captcha" language="#{userBean.localeCode}" />
+                    <p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" />
                     <p:message for="@previous" />
                 </div>
             </ui:fragment>

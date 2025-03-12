@@ -50,7 +50,7 @@
 
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.password}:"/>
-				<p:password id="password" value="#{registrationBean.password}" autocomplete="false" feedback="true"
+				<p:password id="password" value="#{registrationBean.password}" autocomplete="off" feedback="true"
 							match="repeated_password" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
 							goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}" />
 				<p:message for="@previous"/>
@@ -58,7 +58,7 @@
 
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.confirm_password}:"/>
-				<p:password id="repeated_password" value="#{registrationBean.password}" autocomplete="false"/>
+				<p:password id="repeated_password" value="#{registrationBean.password}" autocomplete="off"/>
 				<p:message for="@previous"/>
 			</div>
 
@@ -80,8 +80,8 @@
 				<p:message for="@previous"/>
 			</h:panelGroup>
 
-			<h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{not empty config.recaptchaPublicKey}">
-				<p:captcha label="Captcha" language="#{userBean.localeCode}" requiredMessage="Captcha: #{msg['validation.please_confirm']}" />
+			<h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{config.captchaEnabled}">
+				<p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" requiredMessage="Captcha: #{msg['validation.please_confirm']}" />
 				<p:message for="@previous"/>
 			</h:panelGroup>
 

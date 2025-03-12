@@ -340,6 +340,10 @@ public class ConfigProvider implements Serializable {
         return getProperty("app_support_email", "learnweb-support@l3s.de");
     }
 
+    public boolean isCaptchaEnabled() {
+        return getRecaptchaPublicKey() != null && getRecaptchaPrivateKey() != null;
+    }
+
     public String getRecaptchaPublicKey() {
         return getProperty("recaptcha_public_key");
     }
