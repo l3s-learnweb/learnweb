@@ -442,7 +442,7 @@ public class UserBean implements Serializable {
     }
 
     /**
-     * @return Returns the given url proxied through WAPS.io if enabled for the current organisation
+     * @return returns the given url proxied through WAPS, if enabled for the current organisation
      */
     public String getUrlProxied(String url) {
         User user = getUser();
@@ -457,9 +457,10 @@ public class UserBean implements Serializable {
             return "https://via.hypothes.is/" + url;
         } else {
             if (url.startsWith("https://waps.io") || url.startsWith("http://waps.io")) {
-                return url;
+                return url.replace("waps.io", "waps.l3s.uni-hannover.de");
             }
-            return "https://waps.io/open?c=2" +
+
+            return "https://waps.l3s.uni-hannover.de/open?c=2" +
                 "&u=" + StringHelper.urlEncode(url) +
                 "&i=" + user.getId() +
                 "&t=" + getTrackerApiKey();

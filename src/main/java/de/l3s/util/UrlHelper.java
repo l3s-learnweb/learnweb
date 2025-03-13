@@ -56,6 +56,9 @@ public final class UrlHelper {
             if (url != null && url.startsWith("https://waps.io/live/")) {
                 url = url.substring(21);
             }
+            if (url != null && url.startsWith("https://waps.l3s.uni-hannover.de/live/")) {
+                url = url.substring(38);
+            }
 
             HttpURLConnection connection = getHttpURLConnection(url);
             connection.setInstanceFollowRedirects(false);
