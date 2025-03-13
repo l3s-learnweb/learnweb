@@ -142,7 +142,7 @@ public abstract class ApplicationBean {
     protected void log(Action action, Integer groupId, Integer targetId, String params, User user) {
         if (null != user) {
             // TODO: anonymous logging
-            dao().getLogDao().insert(user, action, groupId, targetId, params, getSessionId());
+            dao().getLogDao().insert(user, action, groupId, targetId, params, userBean.getSessionId());
         }
     }
 
@@ -182,16 +182,6 @@ public abstract class ApplicationBean {
     }
 
     // Helper ----------------------------------------------------------------------------------------------------------
-
-    public String getSessionId() {
-        if (null == sessionId) {
-            sessionId = Faces.getSessionId();
-            if (sessionId == null) {
-                log.warn("Couldn't create session");
-            }
-        }
-        return sessionId;
-    }
 
     protected Learnweb getLearnweb() {
         if (null == learnweb) {
