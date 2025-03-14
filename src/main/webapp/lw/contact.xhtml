@@ -53,12 +53,10 @@
                 <p:message for="@previous"/>
             </div>
 
-            <ui:fragment rendered="#{not userBean.loggedIn and config.captchaEnabled}">
-                <div class="field mw-r25 overflow-hidden" style="min-height: 78px;">
-                    <p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" />
-                    <p:message for="@previous" />
-                </div>
-            </ui:fragment>
+            <h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{not userBean.loggedIn and config.captchaEnabled}">
+                <p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true" requiredMessage="#{msg['captcha']}: #{msg['validation.please_confirm']}"/>
+                <p:message for="@previous" />
+            </h:panelGroup>
 
             <p:commandButton action="#{contactBean.sendMail}" value="#{msg.send}" ajax="false"/>
         </h:form>

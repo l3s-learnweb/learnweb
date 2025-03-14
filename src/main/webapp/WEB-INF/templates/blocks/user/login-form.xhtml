@@ -25,7 +25,7 @@
 
     <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired and config.captchaEnabled}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
-        <p:captcha type="g-recaptcha" id="captcha" language="#{userBean.localeCode}" required="true"/>
+        <p:captcha type="g-recaptcha" id="captcha" language="#{userBean.localeCode}" required="true" requiredMessage="#{msg['captcha']}: #{msg['validation.please_confirm']}"/>
         <p:message for="@previous"/>
     </h:panelGroup>
 

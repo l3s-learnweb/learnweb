@@ -341,7 +341,7 @@ public class ConfigProvider implements Serializable {
     }
 
     public boolean isCaptchaEnabled() {
-        return getRecaptchaPublicKey() != null && getRecaptchaPrivateKey() != null;
+        return StringUtils.isNoneEmpty(getRecaptchaPublicKey(), getRecaptchaPrivateKey());
     }
 
     public String getRecaptchaPublicKey() {

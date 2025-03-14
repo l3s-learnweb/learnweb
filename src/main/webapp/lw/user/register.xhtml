@@ -81,7 +81,7 @@
 			</h:panelGroup>
 
 			<h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{config.captchaEnabled}">
-				<p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" requiredMessage="Captcha: #{msg['validation.please_confirm']}" />
+				<p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true" requiredMessage="#{msg['captcha']}: #{msg['validation.please_confirm']}"/>
 				<p:message for="@previous"/>
 			</h:panelGroup>
 
