@@ -136,7 +136,11 @@ public class ConfigProvider implements Serializable {
 
     private void loadProperties() {
         try (InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("application.properties")) {
-            properties.load(defaultProperties);
+            Properties prop = new Properties();
+            prop.load(defaultProperties);
+            for (String propKey : prop.stringPropertyNames()) {
+                setProperty(propKey, prop.getProperty(propKey));
+            }
         } catch (IOException e) {
             log.error("Unable to load application properties", e);
         }
@@ -146,7 +150,7 @@ public class ConfigProvider implements Serializable {
                 Properties prop = new Properties();
                 prop.load(localProperties);
                 for (String propKey : prop.stringPropertyNames()) {
-                    setProperty(propKey.toLowerCase(Locale.ROOT), prop.getProperty(propKey));
+                    setProperty(propKey, prop.getProperty(propKey));
                 }
 
                 environment = "local";
@@ -221,7 +225,11 @@ public class ConfigProvider implements Serializable {
     }
 
     public Object setProperty(final String key, final String value) {
-        return properties.setProperty(key, value);
+        if (StringUtils.isBlank(value)) {
+            return properties.remove(key);
+        } else {
+            return properties.setProperty(key.toLowerCase(Locale.ROOT), value);
+        }
     }
 
     public String getProperty(final String key) {
