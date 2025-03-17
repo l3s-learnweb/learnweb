@@ -22,9 +22,9 @@
         <maven.dependency.jdbi3.version>3.48.0</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>11.4.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.3</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.3.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.12.0</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>5.16.0</maven.dependency.mockito.version>
+        <maven.dependency.sentry.version>8.4.0</maven.dependency.sentry.version>
+        <maven.dependency.junit.version>5.12.1</maven.dependency.junit.version>
+        <maven.dependency.mockito.version>5.16.1</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -370,7 +370,7 @@
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
-            <version>4.9.2</version>
+            <version>4.9.3</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -428,7 +428,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.2.0</version>
+                <version>4.9.3.0</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -465,7 +465,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.24</version>
+                <version>11.0.25</version>
                 <configuration>
                     <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
                     <webApp>
