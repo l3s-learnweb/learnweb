@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Inject;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
@@ -14,6 +15,8 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 import de.l3s.learnweb.app.ConfigProvider;
 
@@ -26,7 +29,7 @@ public class MailService implements Serializable {
     @Inject
     private ConfigProvider config;
 
-    public Session createSession() {
+    private Session createSession() {
         Properties props = new Properties();
         props.setProperty("mail.debug", String.valueOf(config.getPropertyBoolean("smtp_debug", false)));
         props.setProperty("mail.smtp.host", config.getProperty("smtp_host", "localhost"));
@@ -43,8 +46,12 @@ public class MailService implements Serializable {
         return Session.getInstance(props, authenticator);
     }
 
-    public MimeMessage createMessage() {
+    private MimeMessage createMessage() {
         try {
+            if (ObjectUtils.anyNull(config.getProperty("smtp_host"), config.getProperty("smtp_username"), config.getProperty("smtp_password"))) {
+                throw new DeploymentException("SMTP configuration is not complete, please verify smtp_* fields in the configuration");
+            }
+
             MimeMessage message = new MimeMessage(createSession());
             message.setFrom(new InternetAddress(config.getProperty("mail_from_address"), config.getProperty("mail_from_name", "Learnweb"), "UTF-8"));
             return message;
