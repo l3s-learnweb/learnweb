@@ -340,16 +340,25 @@ public class ConfigProvider implements Serializable {
         return getProperty("app_support_email", "learnweb-support@l3s.de");
     }
 
-    public boolean isCaptchaEnabled() {
-        return StringUtils.isNoneEmpty(getRecaptchaPublicKey(), getRecaptchaPrivateKey());
+    public String getCaptchaType() {
+        if (StringUtils.isAnyEmpty(getCaptchaPublicKey(), getCaptchaPrivateKey())) {
+            return null;
+        }
+        if (getCaptchaPublicKey().length() == 40) {
+            return "g-recaptcha";
+        }
+        if (getCaptchaPublicKey().length() == 36) {
+            return "h-captcha";
+        }
+        return null;
     }
 
-    public String getRecaptchaPublicKey() {
-        return getProperty("recaptcha_public_key");
+    public String getCaptchaPublicKey() {
+        return getProperty("captcha_public_key");
     }
 
-    public String getRecaptchaPrivateKey() {
-        return getProperty("recaptcha_private_key");
+    public String getCaptchaPrivateKey() {
+        return getProperty("captcha_private_key");
     }
 
     /**

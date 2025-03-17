@@ -53,8 +53,8 @@
                 <p:message for="@previous"/>
             </div>
 
-            <h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{not userBean.loggedIn and config.captchaEnabled}">
-                <p:captcha type="g-recaptcha" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true" requiredMessage="#{msg['captcha']}: #{msg['validation.please_confirm']}"/>
+            <h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{not userBean.loggedIn and not empty config.captchaType}">
+                <p:captcha type="#{config.captchaType}" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true" requiredMessage="#{msg['captcha']}: #{msg['validation.please_confirm']}"/>
                 <p:message for="@previous" />
             </h:panelGroup>
 

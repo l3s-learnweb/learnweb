@@ -42,11 +42,11 @@
     </context-param>
     <context-param>
         <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-        <param-value>#{config.recaptchaPublicKey}</param-value>
+        <param-value>#{config.captchaPublicKey}</param-value>
     </context-param>
     <context-param>
         <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-        <param-value>#{config.recaptchaPrivateKey}</param-value>
+        <param-value>#{config.captchaPrivateKey}</param-value>
     </context-param>
 
     <!-- OmniFaces VersionedResourceHandler https://showcase.omnifaces.org/resourcehandlers/VersionedResourceHandler -->
