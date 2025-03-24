@@ -70,4 +70,5 @@ jobs:
 
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
             mv "${TEMP_DIR}/Learnweb.war" "ROOT##dev.war"
+            echo "Artifact deployed"
             rm -rf "${TEMP_DIR}"

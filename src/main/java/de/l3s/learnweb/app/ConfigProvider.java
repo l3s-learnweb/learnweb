@@ -275,7 +275,7 @@ public class ConfigProvider implements Serializable {
                 version = properties.getProperty("version");
                 log.info("Learnweb version: {}", version);
             } catch (Exception e) {
-                development = true;
+                version = "";
             }
         }
         return version;

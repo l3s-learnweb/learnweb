@@ -57,26 +57,24 @@ jobs:
             #!/bin/bash
             set -e
 
-            cd ~/stacks/learnweb
-
-            # Ensure webapps directory exists
-            mkdir -p webapps
-
-            # Get artifact ID
-            ARTIFACT_ID=$(curl -s -H "Authorization: Bearer ${{ github.token }}" -H "Accept: application/vnd.github+json" \
-              "${{ github.event.workflow_run.artifacts_url }}" | jq -r '.artifacts[] | select(.name=="learnweb-release") | .id')
-
-            # Create temp directory for extraction
+            cd ~/stacks/learnweb/webapps
             TEMP_DIR=$(mktemp -d)
 
-            # Download and extract in two steps
-            curl -L -s -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ github.token }}" \
-              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip" -o "${TEMP_DIR}/artifact.zip"
+            echo "Getting artifact from workflow ${{ github.run_id }}"
+            ARTIFACT_ID=$(curl -s \
+              -H "Authorization: Bearer ${{ github.token }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | \
+              jq -r '.artifacts[] | select(.name=="learnweb-release") | .id')
+
+            echo "Downloading artifact $ARTIFACT_ID"
+            curl -L -s \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: token ${{ github.token }}" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip" \
+              -o "${TEMP_DIR}/artifact.zip"
 
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
-
-            # Move to final location with correct name
-            mv "${TEMP_DIR}/Learnweb.war" "webapps/ROOT##${{ needs.build-release.outputs.version }}.war"
-
-            # Clean up
+            mv "${TEMP_DIR}/Learnweb.war" "ROOT##${{ needs.build-release.outputs.version }}.war"
+            echo "Artifact deployed"
             rm -rf "${TEMP_DIR}"
