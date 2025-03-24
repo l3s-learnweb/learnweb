@@ -42,7 +42,7 @@
     </p:selectOneButton>
 
     <p:selectOneRadio styleClass="mt-2" rendered="#{question.type eq 'ONE_RADIO'}" readonly="#{readOnly}"
-                      required="#{question.required}" value="#{response.answers[question.id]}" layout="responsive" columns="1">
+                      required="#{question.required}" value="#{response.answers[question.id]}" layout="pageDirection">
         <f:selectItems value="#{question.activeOptions}" var="o" itemValue="#{o.value}"/>
         <p:ajax event="change" listener="#{bean.onQuestionAnswer(question)}"/>
     </p:selectOneRadio>

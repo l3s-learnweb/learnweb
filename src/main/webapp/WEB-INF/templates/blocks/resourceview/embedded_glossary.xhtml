@@ -160,7 +160,7 @@
           resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="glossary_add_term_form" enctype="multipart/form-data">
         <div class="row mb-3">
-            <p:panelGrid id="grid" layout="flex" styleClass="col-12 col-md-6" contentStyleClass="row border-0" columnClasses="col-5, col-7" columns="2">
+            <p:panelGrid id="grid" styleClass="col-12 col-md-6" contentStyleClass="row border-0" columnClasses="col-5, col-7" columns="2">
                 <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 1"/>
                 <p:column>
                     <p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" editable="true">

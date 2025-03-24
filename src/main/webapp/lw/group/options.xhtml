@@ -107,7 +107,7 @@
                     <h:form id="group_security_form">
                         <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
-                            <p:selectOneRadio value="#{groupOptionsBean.group.policyJoin}" layout="grid" columns="1">
+                            <p:selectOneRadio value="#{groupOptionsBean.group.policyJoin}" layout="pageDirection" columns="1">
                                 <c:if test="#{userBean.admin}">
                                     <f:selectItem itemValue="ALL_LEARNWEB_USERS" itemLabel="#{msg['policy.option.ALL_LEARNWEB_USERS']}"/>
                                 </c:if>
@@ -139,7 +139,7 @@
 
                         <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.add']}" styleClass="h5"/>
-                            <p:selectOneRadio value="#{groupOptionsBean.group.policyAdd}" layout="grid" columns="1">
+                            <p:selectOneRadio value="#{groupOptionsBean.group.policyAdd}" layout="pageDirection" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyAddOptions}" var="option" itemValue="#{option}"
                                                itemLabel="#{msg['policy.option.' += option]}"/>
                             </p:selectOneRadio>
@@ -148,7 +148,7 @@
 
                         <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.edit']}" styleClass="h5"/>
-                            <p:selectOneRadio value="#{groupOptionsBean.group.policyEdit}" layout="grid" columns="1">
+                            <p:selectOneRadio value="#{groupOptionsBean.group.policyEdit}" layout="pageDirection" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyEditOptions}" var="option" itemValue="#{option}"
                                                itemLabel="#{msg['policy.option.' += option]}"/>
                             </p:selectOneRadio>
@@ -157,7 +157,7 @@
 
                         <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.view']}" styleClass="h5"/>
-                            <p:selectOneRadio value="#{groupOptionsBean.group.policyView}" layout="grid" columns="1">
+                            <p:selectOneRadio value="#{groupOptionsBean.group.policyView}" layout="pageDirection" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyViewOptions}" var="option" itemValue="#{option}"
                                                itemLabel="#{msg['policy.option.' += option]}"/>
                             </p:selectOneRadio>
@@ -166,7 +166,7 @@
 
                         <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.annotate']}" styleClass="h5"/>
-                            <p:selectOneRadio value="#{groupOptionsBean.group.policyAnnotate}" layout="grid" columns="1">
+                            <p:selectOneRadio value="#{groupOptionsBean.group.policyAnnotate}" layout="pageDirection" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}"
                                                itemLabel="#{msg['policy.option.' += option]}"/>
                             </p:selectOneRadio>

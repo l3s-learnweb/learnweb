@@ -23,7 +23,7 @@
     <h:form>
         <p:dashboard id="board" model="#{adminSystemBean.model}" styleClass="row" responsive="true" reordering="false">
             <p:panel id="memory" header="Memory usage">
-                <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
+                <p:panelGrid columns="2" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Free memory:"/>
                     <h:outputText value="#{adminSystemBean.runtimeInfo.freeMemory}"/>
 
@@ -62,7 +62,7 @@
             </p:panel>
 
             <p:panel id="solr_index" header="Solr Index">
-                <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
+                <p:panelGrid columns="2" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Total resources:"/>
                     <h:outputText value="#{adminSystemBean.totalResources}"/>
 

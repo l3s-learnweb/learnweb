@@ -54,6 +54,9 @@ jobs:
           proxy_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
 
           script: |
+            #!/bin/bash
+            set -e
+
             cd ~/stacks/learnweb
 
             # Ensure webapps directory exists
