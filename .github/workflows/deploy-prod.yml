@@ -1,15 +1,12 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows: [ CI ]
-    types: [ completed ]
-    branches: [ main ]
+  release:
+    types: [ published ]
 
 jobs:
-  build:
+  build-release:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
@@ -31,17 +28,20 @@ jobs:
 
       - id: get_version
         name: Get version
-        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+        uses: astappiev/get-version-from-tag@v1
+        with:
+          format: 'tomcat'
 
       - uses: actions/upload-artifact@v4
         with:
-          name: learnweb-war
+          name: learnweb-release
           path: target/Learnweb.war
           if-no-files-found: error
 
-  deploy-dev:
+  deploy-prod:
+    environment: production
     runs-on: ubuntu-latest
-    needs: [ build ]
+    needs: [ build-release ]
     steps:
       - uses: appleboy/ssh-action@v1.2.2
         with:
@@ -54,14 +54,14 @@ jobs:
           proxy_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
 
           script: |
-            cd ~/stacks/learnweb_dev
+            cd ~/stacks/learnweb
 
             # Ensure webapps directory exists
             mkdir -p webapps
 
             # Get artifact ID
             ARTIFACT_ID=$(curl -s -H "Authorization: Bearer ${{ github.token }}" -H "Accept: application/vnd.github+json" \
-              "${{ github.event.workflow_run.artifacts_url }}" | jq -r '.artifacts[] | select(.name=="learnweb-war") | .id')
+              "${{ github.event.workflow_run.artifacts_url }}" | jq -r '.artifacts[] | select(.name=="learnweb-release") | .id')
 
             # Create temp directory for extraction
             TEMP_DIR=$(mktemp -d)
@@ -73,7 +73,7 @@ jobs:
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
 
             # Move to final location with correct name
-            mv "${TEMP_DIR}/Learnweb.war" "webapps/ROOT##${{ needs.build.outputs.version }}.war"
+            mv "${TEMP_DIR}/Learnweb.war" "webapps/ROOT##${{ needs.build-release.outputs.version }}.war"
 
             # Clean up
             rm -rf "${TEMP_DIR}"

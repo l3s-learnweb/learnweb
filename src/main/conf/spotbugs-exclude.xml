@@ -42,6 +42,10 @@
         <Class name="de.l3s.learnweb.user.UserBean"/>
         <Bug pattern="DCN_NULLPOINTER_EXCEPTION"/>
     </Match>
+    <!-- Better safe than sorry (allows to catch exceptions when they are not thrown) -->
+    <Match>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+    </Match>
     <!-- We need the pseudo random with defined seed -->
     <Match>
         <Class name="de.l3s.learnweb.resource.survey.SurveyPage"/>
