@@ -45,7 +45,7 @@ public class RegenerateThumbnails extends MaintenanceTask {
         String url = resource.getUrl();
         log.debug("{}\t{}", resource.getId(), url);
 
-        url = UrlHelper.validateUrl(url);
+        url = UrlHelper.verifyUrl(url);
         if (url == null) {
             resource.setOnlineStatus(Resource.OnlineStatus.OFFLINE);
             resource.save();
@@ -71,10 +71,10 @@ public class RegenerateThumbnails extends MaintenanceTask {
     }
 
     private void generateThumbnailsForMediaResource(Resource resource) throws Exception {
-        String url = UrlHelper.validateUrl(resource.getMaxImageUrl());
+        String url = UrlHelper.verifyUrl(resource.getMaxImageUrl());
 
         if (null == url || url.contains("unavailable")) {
-            log.error("image not available {}, for resource {} {}", resource.getUrl(), resource.getId(), UrlHelper.validateUrl(resource.getUrl()));
+            log.error("image not available {}, for resource {} {}", resource.getMaxImageUrl(), resource.getId(), resource.getUrl());
             resource.setOnlineStatus(Resource.OnlineStatus.OFFLINE);
             resource.save();
             return;

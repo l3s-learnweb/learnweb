@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -25,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 public final class UrlHelper {
     private static final Logger log = LogManager.getLogger(UrlHelper.class);
 
-    public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0";
+    public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0";
 
     private static final TrustManager[] trustAllCerts = {
         new X509TrustManager() {
@@ -42,23 +43,43 @@ public final class UrlHelper {
     };
 
     /**
+     * Validates whether the given string is a valid url.
+     *
+     * @return the function only checks that the given string is a valid url. Returns {@code null} if the url is invalid.
+     */
+    public static String validateUrl(String str) {
+        try {
+            if (str == null || str.isBlank()) {
+                return null;
+            }
+
+            str = toAscii(StringHelper.urlDecode(str.trim()));
+
+            if (str.startsWith("https://waps.io/live/")) {
+                str = str.substring(21);
+            } else if (str.startsWith("https://waps.l3s.uni-hannover.de/live/")) {
+                str = str.substring(38);
+            }
+
+            URL url = URI.create(str).toURL();
+            return url.toString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
      * This function checks if a given String is a valid url.
      *
      * @return when the url leads to a redirect, the function will return the target of the redirect. Returns {@code null} if the url is invalid or not reachable.
      */
-    public static String validateUrl(String url) {
+    public static String verifyUrl(String url) {
         try {
             if (!url.startsWith("http")) {
                 url = "http://" + url;
             }
 
-            url = toAscii(StringHelper.urlDecode(url.trim()));
-            if (url != null && url.startsWith("https://waps.io/live/")) {
-                url = url.substring(21);
-            }
-            if (url != null && url.startsWith("https://waps.l3s.uni-hannover.de/live/")) {
-                url = url.substring(38);
-            }
+            url = validateUrl(url);
 
             HttpURLConnection connection = getHttpURLConnection(url);
             connection.setInstanceFollowRedirects(false);
@@ -74,7 +95,7 @@ public final class UrlHelper {
 
                 return location;
             } else {
-                log.warn("unexpected response: {} (response code: {})", url, responseCode);
+                log.warn("unexpected response for {} (response code: {})", url, responseCode);
             }
         } catch (UnknownHostException e) {
             log.warn("unknown host: {}", url, e);
