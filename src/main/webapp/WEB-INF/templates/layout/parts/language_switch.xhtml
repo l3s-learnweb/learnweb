@@ -12,7 +12,7 @@
 			</h:outputLink>
 
 			<p:menu overlay="true" trigger="languageDropdown" my="right top" at="right bottom" collision="fit" styleClass="ui-menu-navbar">
-				<c:forEach items="#{userBean.supportedLocales}" var="locale">
+				<c:forEach items="#{config.supportedLocales}" var="locale">
 					<p:menuitem action="#{userBean.setLocaleCode(locale.language)}" immediate="true" process="@this">
 						<h:graphicImage name="images/flags/flag_#{locale.language}.svg" alt="#{locale.displayName}"/>
 						<span class="text-capitalize">#{locale.getDisplayName(locale)}</span>

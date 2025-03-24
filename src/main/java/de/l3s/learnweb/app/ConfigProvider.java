@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
@@ -25,6 +27,7 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 
 import de.l3s.util.UrlHelper;
+import de.l3s.util.bean.BeanHelper;
 import io.sentry.Sentry;
 
 @Named("config")
@@ -271,8 +274,7 @@ public class ConfigProvider implements Serializable {
 
                 version = properties.getProperty("version");
                 log.info("Learnweb version: {}", version);
-            } catch (IOException e) {
-                log.error("Unable to load maven/**/pom.properties", e);
+            } catch (Exception e) {
                 development = true;
             }
         }
@@ -407,5 +409,13 @@ public class ConfigProvider implements Serializable {
         } else if (!folder.canWrite()) {
             throw new DeploymentException("Can't write into folder '" + folder.getPath() + "'");
         }
+    }
+
+    public List<Locale> getSupportedLocales() {
+        return BeanHelper.getSupportedLocales();
+    }
+
+    public Set<Locale> getSupportedGlossaryLocales() {
+        return BeanHelper.getSupportedGlossaryLocales();
     }
 }

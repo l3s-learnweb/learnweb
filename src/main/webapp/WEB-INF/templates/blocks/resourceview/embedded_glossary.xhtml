@@ -96,7 +96,8 @@
             <f:facet name="filter">
                 <p:selectCheckboxMenu label="#{msg.filter}" value="#{glossaryBean.tableLanguageFilter}" onchange="PF('glossTable').filter()"
                                       converter="localeConverter">
-                    <f:selectItems value="#{glossaryBean.allowedTermLanguages}"/>
+                    <f:selectItems value="#{glossaryBean.glossaryResource.allowedLanguages}" var="locale"
+                                   itemLabel="${locale.getDisplayName(userBean.locale)}" itemValue="#{locale}"/>
                     <p:ajax event="toggleSelect" process="@this" oncomplete="PF('glossTable').filter()"/>
                 </p:selectCheckboxMenu>
             </f:facet>
@@ -237,7 +238,8 @@
 
             <p:column headerText="#{msg.language}" rendered="#{not term.deleted}">
                 <p:selectOneMenu id="language" value="#{term.language}" converter="localeConverter">
-                    <f:selectItems value="#{glossaryBean.allowedTermLanguages}"/>
+                    <f:selectItems value="#{glossaryBean.glossaryResource.allowedLanguages}" var="locale"
+                                   itemLabel="${locale.getDisplayName(userBean.locale)}" itemValue="#{locale}"/>
                 </p:selectOneMenu>
                 <p:message for="@previous"/>
             </p:column>

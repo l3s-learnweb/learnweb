@@ -28,7 +28,6 @@ import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.util.HasId;
 import de.l3s.util.UrlHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -167,12 +166,5 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     public int getFormStep() {
         return formStep;
-    }
-
-    public List<SelectItem> getAvailableGlossaryLanguages() {
-        if (null == availableGlossaryLanguages) {
-            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(getUser().getOrganisation().getGlossaryLanguages(), getLocale());
-        }
-        return availableGlossaryLanguages;
     }
 }

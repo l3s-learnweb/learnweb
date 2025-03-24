@@ -39,7 +39,6 @@ import de.l3s.learnweb.resource.survey.SurveyResponse;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -521,10 +520,6 @@ public class UserBean implements Serializable {
 
     public boolean isLanguageSwitchEnabled() {
         return !getActiveOrganisation().map(o -> o.getOption(Option.Users_Hide_language_switch)).orElse(false);
-    }
-
-    public List<Locale> getSupportedLocales() {
-        return BeanHelper.getSupportedLocales();
     }
 
     public boolean isHideSidebarMenu() {

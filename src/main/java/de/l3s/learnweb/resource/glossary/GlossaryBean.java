@@ -544,13 +544,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         return availableTopicThree;
     }
 
-    public List<SelectItem> getAllowedTermLanguages() {
-        if (null == allowedTermLanguages) {
-            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getLocale());
-        }
-        return allowedTermLanguages;
-    }
-
     public boolean isOptionMandatoryDescription() {
         return optionMandatoryDescription;
     }

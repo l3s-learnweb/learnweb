@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeSet;
 
 import jakarta.faces.model.SelectItem;
@@ -28,6 +30,7 @@ import de.l3s.util.Misc;
 
 public final class BeanHelper {
     private static final List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<>());
+    private static final Set<Locale> supportedGlossaryLocales = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * @return Supported frontend locales as defined in faces-config.xml
@@ -37,6 +40,21 @@ public final class BeanHelper {
             supportedLocales.addAll(Faces.getSupportedLocales());
         }
         return Collections.unmodifiableList(supportedLocales);
+    }
+
+    public static Set<Locale> getSupportedGlossaryLocales() {
+        if (supportedGlossaryLocales.isEmpty()) {
+            supportedGlossaryLocales.add(Locale.of("en"));
+            supportedGlossaryLocales.addAll(getSupportedLocales());
+            supportedGlossaryLocales.add(Locale.of("ar"));
+            supportedGlossaryLocales.add(Locale.of("el"));
+            supportedGlossaryLocales.add(Locale.of("fr"));
+            supportedGlossaryLocales.add(Locale.of("nl"));
+            supportedGlossaryLocales.add(Locale.of("ru"));
+            supportedGlossaryLocales.add(Locale.of("sv"));
+            supportedGlossaryLocales.add(Locale.of("zh"));
+        }
+        return Collections.unmodifiableSet(supportedGlossaryLocales);
     }
 
     public static boolean isMessageExists(String msgKey) {
@@ -51,7 +69,8 @@ public final class BeanHelper {
     /**
      * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
      */
-    public static List<SelectItem> getLocalesAsSelectItems(List<Locale> locales, Locale inLocale) {
+    @Deprecated(forRemoval = true)
+    public static List<SelectItem> getLocalesAsSelectItems(Collection<Locale> locales, Locale inLocale) {
         ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
 
         for (Locale locale : locales) {

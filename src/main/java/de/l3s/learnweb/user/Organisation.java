@@ -416,10 +416,9 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
     public void setGlossaryLanguages(ArrayList<Locale> glossaryLanguages) {
         if (glossaryLanguages == null || glossaryLanguages.isEmpty()) { // Load default if not defined yet
             this.glossaryLanguages.clear();
+            this.glossaryLanguages.add(Locale.of("en"));
             this.glossaryLanguages.add(Locale.of("de"));
             this.glossaryLanguages.add(Locale.of("it"));
-            this.glossaryLanguages.add(Locale.of("nl"));
-            this.glossaryLanguages.add(Locale.of("en"));
         } else {
             this.glossaryLanguages = glossaryLanguages;
         }

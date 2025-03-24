@@ -41,7 +41,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private int organisationId;
     private Organisation organisation;
     private LinkedList<OptionWrapperGroup> optionGroups;
-    private transient List<SelectItem> availableGlossaryLanguages;
+    private transient List<SelectItem> supportedGlossaryLanguages;
 
     @Inject
     private FileDao fileDao;
@@ -86,13 +86,6 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
         organisation.setBannerImageFileId(0);
         organisationDao.save(organisation);
-    }
-
-    /**
-     * @return list of supported languages (codes) of this Learnweb instance
-     */
-    public List<Locale> getSupportedLocales() {
-        return BeanHelper.getSupportedLocales();
     }
 
     /**
@@ -147,16 +140,6 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             options.add(new OptionWrapper(option, selectedOrganisation.getOption(option)));
         }
         optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
-    }
-
-    public List<SelectItem> getAvailableGlossaryLanguages() {
-        if (null == availableGlossaryLanguages) {
-            List<Locale> glossaryLanguages = Arrays.asList(Locale.of("ar"), Locale.of("de"), Locale.of("el"),
-                Locale.of("en"), Locale.of("es"), Locale.of("fr"), Locale.of("it"), Locale.of("nl"),
-                Locale.of("pt"), Locale.of("ru"), Locale.of("sv"), Locale.of("zh"));
-            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getLocale());
-        }
-        return availableGlossaryLanguages;
     }
 
     public int getOrganisationId() {

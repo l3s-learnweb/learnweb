@@ -62,7 +62,8 @@
                 <p:outputLabel for="@next" value="Allowed languages:"/>
                 <p:selectCheckboxMenu value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
                                       label="#{msg.language}" multiple="true" converter="localeConverter">
-                    <f:selectItems value="#{addResourceBean.availableGlossaryLanguages}"></f:selectItems>
+                    <f:selectItems value="#{userBean.user.organisation.glossaryLanguages}" var="locale"
+                                   itemLabel="${locale.getDisplayName(userBean.locale)}" itemValue="#{locale}"/>
                 </p:selectCheckboxMenu>
             </ui:fragment>
 

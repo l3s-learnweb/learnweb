@@ -130,8 +130,8 @@
                             <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                 <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}"/>
-                                <f:selectItems value="#{adminOrganisationBean.supportedLocales}" var="locale"
-                                               itemLabel="${locale.getDisplayName(locale)}" itemValue="#{locale.language}"></f:selectItems>
+                                <f:selectItems value="#{config.supportedLocales}" var="locale"
+                                               itemLabel="${locale.getDisplayName(userBean.locale)}" itemValue="#{locale.language}"/>
                             </p:selectOneMenu>
                             <p:message for="@previous"/>
                         </div>
@@ -141,7 +141,7 @@
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
                                 <f:selectItem itemValue="" itemLabel="#{msg.no_lang_variant}"/>
                                 <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
-                                               itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
+                                               itemLabel="#{variant}" itemValue="#{variant}"/>
                             </p:selectOneMenu>
                             <p:message for="@previous"/>
                         </div>
@@ -150,7 +150,8 @@
                             <p:outputLabel for="@next" value="#{msg.glossary_languages}:"/>
                             <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true"
                                                   requiredMessage="#{msg.mandatory_field}" multiple="true" converter="localeConverter">
-                                <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
+                                <f:selectItems value="#{config.supportedGlossaryLocales}" var="locale"
+                                               itemLabel="${locale.getDisplayName(userBean.locale)}" itemValue="#{locale}"/>
                             </p:selectCheckboxMenu>
                             <p:message for="@previous"/>
                         </div>
