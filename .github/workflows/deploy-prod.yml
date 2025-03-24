@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Prod
 
 on:
   release:
@@ -10,6 +10,12 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
+      - id: get_version
+        name: Get version
+        uses: astappiev/get-version-from-tag@v1
+        with:
+          format: 'tomcat'
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
@@ -24,13 +30,7 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - run: mvn --batch-mode -P prod,!local -Dmaven.test.skip=true install
-
-      - id: get_version
-        name: Get version
-        uses: astappiev/get-version-from-tag@v1
-        with:
-          format: 'tomcat'
+      - run: mvn --batch-mode -P prod,!local -Drevision=${{ steps.get_version.outputs.version }} install
 
       - uses: actions/upload-artifact@v4
         with:

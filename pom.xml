@@ -6,14 +6,14 @@
 
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
-    <!-- Because Tomcat treats a version as String, we need to use zero paddings to make sure v10 is newer than v9 -->
-    <version>3.28.05</version>
+    <version>${revision}</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
     <description>Learnweb is a collaborative search and sharing system.</description>
 
     <properties>
+        <revision>3.0.0-SNAPSHOT</revision>
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>21</maven.compiler.release>
@@ -381,17 +381,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <excludes>
-                    <exclude>.env</exclude>
-                    <exclude>release.properties</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>release.properties</include>
-                </includes>
             </resource>
         </resources>
         <testResources>

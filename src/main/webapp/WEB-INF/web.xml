@@ -14,8 +14,6 @@
 
     <context-param>
         <param-name>jakarta.faces.PROJECT_STAGE</param-name>
-        <!--<param-value>Development</param-value>-->
-        <!--<param-value>Production</param-value>-->
         <param-value>${jakarta.faces.project_stage}</param-value>
     </context-param>
 

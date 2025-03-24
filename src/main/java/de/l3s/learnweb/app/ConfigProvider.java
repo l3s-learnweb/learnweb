@@ -21,6 +21,7 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 
 import de.l3s.util.UrlHelper;
@@ -264,17 +265,14 @@ public class ConfigProvider implements Serializable {
 
     public String getVersion() {
         if (version == null) {
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream("release.properties")) {
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/maven/de.l3s/learnweb/pom.properties")) {
                 Properties properties = new Properties();
                 properties.load(is);
 
-                development = !"Production".equals(properties.getProperty("project.stage"));
-                if (!development) {
-                    version = properties.getProperty("project.version");
-                    log.info("Learnweb version: {}", version);
-                }
+                version = properties.getProperty("version");
+                log.info("Learnweb version: {}", version);
             } catch (IOException e) {
-                log.error("Unable to load release.properties", e);
+                log.error("Unable to load maven/**/pom.properties", e);
                 development = true;
             }
         }
@@ -335,7 +333,12 @@ public class ConfigProvider implements Serializable {
 
     public boolean isDevelopment() {
         if (development == null) {
-            getVersion(); // reads release.properties
+            try {
+                development = Faces.isDevelopment();
+            } catch (Exception e) {
+                log.error("Unable to determine development mode", e);
+                development = true;
+            }
         }
         return development;
     }
