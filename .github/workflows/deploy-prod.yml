@@ -5,7 +5,7 @@ on:
     types: [ published ]
 
 jobs:
-  build-release:
+  build:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.version }}
@@ -38,10 +38,10 @@ jobs:
           path: target/Learnweb.war
           if-no-files-found: error
 
-  deploy-prod:
+  deploy:
     environment: production
     runs-on: ubuntu-latest
-    needs: [ build-release ]
+    needs: [ build ]
     steps:
       - uses: appleboy/ssh-action@v1.2.2
         with:

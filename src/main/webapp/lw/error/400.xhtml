@@ -12,7 +12,7 @@
 
 <ui:define name="center_layout">
 	<f:view transient="true">
-		<c:set var="message" value="#{requestScope['jakarta.servlet.error.message']}" scope="request"/>
+		<c:set var="message" value="#{requestScope['de.l3s.learnweb.error.reason']}" scope="request"/>
 
 		<p:panel header="#{msg['error']} 400: #{msg['error_pages.bad_request']}" styleClass="ui-widget-warning">
 			<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.bad_request_default_description']}" rendered="#{empty message}"/>

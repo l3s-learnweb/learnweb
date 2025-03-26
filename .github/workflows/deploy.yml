@@ -33,7 +33,8 @@ jobs:
           path: target/Learnweb.war
           if-no-files-found: error
 
-  deploy-dev:
+  deploy:
+    environment: development
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:

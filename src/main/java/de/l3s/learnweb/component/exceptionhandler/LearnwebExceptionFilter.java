@@ -33,6 +33,8 @@ public class LearnwebExceptionFilter extends HttpFilter {
     @Serial
     private static final long serialVersionUID = 3190219905269569699L;
 
+    private static final String ERROR_REASON = "de.l3s.learnweb.error.reason";
+
     @Override
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws IOException, ServletException {
@@ -57,6 +59,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
                 response.sendRedirect(LoginBean.prepareLoginURL(request));
             } else if (throwable instanceof HttpException httpException) {
                 // Show an appropriate error page, these exceptions usually expected
+                request.setAttribute(ERROR_REASON, httpException.getReason());
                 response.sendError(httpException.getStatus(), httpException.getReason());
             } else {
                 // An unexpected error, usually something went wrong
