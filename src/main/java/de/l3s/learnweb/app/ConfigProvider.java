@@ -23,7 +23,6 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 
 import de.l3s.util.UrlHelper;
@@ -109,7 +108,7 @@ public class ConfigProvider implements Serializable {
             }
         } else {
             development = true;
-            version = "dev";
+            version = "non-servlet";
         }
 
         // load server URL from config file or guess it
@@ -258,7 +257,7 @@ public class ConfigProvider implements Serializable {
                 if ("/".equals(contextPath)) {
                     return "production";
                 } else if ("/dev".equals(contextPath)) {
-                    return "development";
+                    return "staging";
                 }
             }
             environment = "local";
@@ -268,14 +267,21 @@ public class ConfigProvider implements Serializable {
 
     public String getVersion() {
         if (version == null) {
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream("META-INF/maven/de.l3s/learnweb/pom.properties")) {
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream("release.properties")) {
                 Properties properties = new Properties();
                 properties.load(is);
 
-                version = properties.getProperty("version");
-                log.info("Learnweb version: {}", version);
-            } catch (Exception e) {
-                version = "";
+                development = !"Production".equals(properties.getProperty("project.stage"));
+                if (!development) {
+                    version = properties.getProperty("project.version");
+                    log.info("Learnweb version: {}", version);
+                } else {
+                    version = "development";
+                }
+            } catch (IOException e) {
+                log.error("Unable to load release.properties", e);
+                development = true;
+                version = "unknown";
             }
         }
         return version;
@@ -335,12 +341,7 @@ public class ConfigProvider implements Serializable {
 
     public boolean isDevelopment() {
         if (development == null) {
-            try {
-                development = Faces.isDevelopment();
-            } catch (Exception e) {
-                log.error("Unable to determine development mode", e);
-                development = true;
-            }
+            getVersion(); // reads release.properties
         }
         return development;
     }
