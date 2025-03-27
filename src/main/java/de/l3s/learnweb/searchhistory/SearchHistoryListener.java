@@ -2,7 +2,7 @@ package de.l3s.learnweb.searchhistory;
 
 import java.io.Serial;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +12,7 @@ import de.l3s.learnweb.logging.LearnwebEvent;
 import de.l3s.learnweb.logging.LearnwebEventListener;
 import de.l3s.learnweb.user.User;
 
-@ApplicationScoped
+@Dependent
 public class SearchHistoryListener implements LearnwebEventListener {
     @Serial
     private static final long serialVersionUID = -8073175169591967421L;

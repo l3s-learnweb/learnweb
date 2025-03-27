@@ -2,7 +2,7 @@ package de.l3s.learnweb.logging;
 
 import java.io.Serial;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.searchhistory.LearnwebSearchEvent;
 import de.l3s.learnweb.user.User;
 
-@ApplicationScoped
+@Dependent
 public class LoggingEventListener implements LearnwebEventListener {
     @Serial
     private static final long serialVersionUID = -2665514411435623504L;

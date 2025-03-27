@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.searchhistory.SearchHistoryListener;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
@@ -26,24 +24,14 @@ public class EventBus implements Serializable {
     private final List<LearnwebEventListener> listeners = new CopyOnWriteArrayList<>();
 
     @Inject
-    private LoggingEventListener loggingEventListener;
-
-    @Inject
-    private SearchHistoryListener searchHistoryListener;
-
-    @Inject
     private UserBean userBean;
 
     @Inject
-    EventBus() {
+    public EventBus(Iterable<LearnwebEventListener> listeners) {
         log.debug("Event bus created");
-    }
 
-    @PostConstruct
-    void init() {
-        log.debug("Event bus initialized");
-        register(loggingEventListener);
-        register(searchHistoryListener);
+        listeners.forEach(this::register);
+        log.info("Loaded {} event listeners", this.listeners.size());
     }
 
     public void register(LearnwebEventListener listener) {
