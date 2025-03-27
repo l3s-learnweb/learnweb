@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.l3s.collabrec.GraphEventListener;
 import de.l3s.learnweb.searchhistory.SearchHistoryListener;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
@@ -32,6 +33,9 @@ public class EventBus implements Serializable {
     private SearchHistoryListener searchHistoryListener;
 
     @Inject
+    private GraphEventListener graphEventListener;
+
+    @Inject
     private UserBean userBean;
 
     @Inject
@@ -44,6 +48,7 @@ public class EventBus implements Serializable {
         log.debug("Event bus initialized");
         register(loggingEventListener);
         register(searchHistoryListener);
+        register(graphEventListener);
     }
 
     public void register(LearnwebEventListener listener) {
