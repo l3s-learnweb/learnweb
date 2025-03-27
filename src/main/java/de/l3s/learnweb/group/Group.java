@@ -130,7 +130,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return id;
     }
 
-    void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
