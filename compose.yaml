@@ -25,6 +25,9 @@ services:
       LEARNWEB_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/${MARIADB_DATABASE:-learnweb}"
       LEARNWEB_DATASOURCE_USERNAME: "${MARIADB_USER:-learnweb}"
       LEARNWEB_DATASOURCE_PASSWORD: "${MARIADB_PASSWORD}"
+      LEARNWEB_FUSEKI_URL: "http://fuseki:3030"
+      LEARNWEB_FUSEKI_USER: "${FUSEKI_USER}"
+      LEARNWEB_FUSEKI_PASSWORD: "${FUSEKI_PASSWORD}"
       # Enable remote debugging, disable in production!
       JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 
@@ -67,3 +70,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  fuseki:
+    image: secoresearch/fuseki:latest
+    restart: unless-stopped
+    ports:
+      - "3040:3030"
+    volumes:
+      - "./data/fuseki/db:/fuseki-base/databases"
+      - "./data/fuseki/conf:/fuseki-base/configuration"
+    environment:
+      ADMIN_PASSWORD: "${FUSEKI_PASSWORD}"
+      ENABLE_DATA_WRITE: "true"
+      ENABLE_UPDATE: "true"
+      ENABLE_SHACL: "true"
