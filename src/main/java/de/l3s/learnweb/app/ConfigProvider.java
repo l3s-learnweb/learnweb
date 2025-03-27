@@ -165,7 +165,7 @@ public class ConfigProvider implements Serializable {
     }
 
     /**
-     * Because Tomcat always removes per-application context config file, we have to add context-prefix.
+     * Because Tomcat always removes a per-application context config file, we have to add context-prefix.
      * https://stackoverflow.com/questions/4032773/why-does-tomcat-replace-context-xml-on-redeploy
      */
     private void loadEnvironmentVariables() {

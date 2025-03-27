@@ -70,6 +70,6 @@ jobs:
               -o "${TEMP_DIR}/artifact.zip"
 
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
-            mv "${TEMP_DIR}/Learnweb.war" "ROOT##dev.war"
+            mv "${TEMP_DIR}/Learnweb.war" "dev.war"
             echo "Artifact deployed"
             rm -rf "${TEMP_DIR}"
