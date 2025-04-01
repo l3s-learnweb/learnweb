@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - run: mvn --batch-mode -P prod,!local -Drevision=dev-${{ github.event.repository.updated_at}} install
+      - run: mvn --batch-mode -P prod,!local -Drevision=dev-$(echo ${{ github.event.repository.updated_at }} | tr -d ':') install
 
       - uses: actions/upload-artifact@v4
         with:
@@ -66,6 +66,6 @@ jobs:
               -o "${TEMP_DIR}/artifact.zip"
 
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
-            mv "${TEMP_DIR}/Learnweb.war" "ROOT##${{ github.event.repository.updated_at}}.war"
+            mv "${TEMP_DIR}/Learnweb.war" "ROOT##$(echo ${{ github.event.repository.updated_at }} | tr -d ':').war"
             echo "Artifact deployed"
             rm -rf "${TEMP_DIR}"
