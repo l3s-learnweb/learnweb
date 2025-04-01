@@ -42,6 +42,8 @@ services:
     restart: unless-stopped
     ports:
       - "8983:8983"
+    environment:
+      - SOLR_MODULES=extraction
     volumes:
       - "./src/main/conf/solr-setup.sh:/solr-setup.sh:ro"
       - "./data/solr:/var/solr"
