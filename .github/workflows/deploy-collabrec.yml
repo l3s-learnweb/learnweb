@@ -4,10 +4,18 @@ on:
   push:
     branches: [ collabrec ]
 
+env:
+  ARTIFACT_NAME: learnweb-collabrec
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
     steps:
+      - id: get_version
+        run: echo "version=$(echo ${{ github.event.head_commit.timestamp }} | sed 's/+.*//; s/://g')" >> $GITHUB_OUTPUT
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
@@ -22,17 +30,20 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - run: mvn --batch-mode -P prod,!local -Drevision=dev-$(echo ${{ github.event.repository.updated_at }} | tr -d ':') install
+      - run: mvn --batch-mode -P prod,!local -Drevision=collabrec-${{ steps.get_version.outputs.version }} install
 
       - uses: actions/upload-artifact@v4
         with:
-          name: learnweb-collabrec
+          name: ${{ env.ARTIFACT_NAME }}
           path: target/Learnweb.war
           if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
     needs: [ build ]
+    env:
+      DEPLOY_ROOT: ${{ secrets.COLLABREC_DEPLOY_PATH }}/webapps
+      DEPLOY_NAME: ROOT##${{ needs.build.outputs.version }}
     steps:
       - uses: appleboy/ssh-action@v1.2.2
         with:
@@ -48,7 +59,7 @@ jobs:
             #!/bin/bash
             set -e
 
-            cd ${{ secrets.COLLABREC_DEPLOY_PATH }}/webapps
+            cd ${{ env.DEPLOY_ROOT }}
             TEMP_DIR=$(mktemp -d)
 
             echo "Getting artifact from workflow ${{ github.run_id }}"
@@ -56,7 +67,7 @@ jobs:
               -H "Authorization: Bearer ${{ github.token }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | \
-              jq -r '.artifacts[] | select(.name=="learnweb-collabrec") | .id')
+              jq -r '.artifacts[] | select(.name=="${{ env.ARTIFACT_NAME }}") | .id')
 
             echo "Downloading artifact $ARTIFACT_ID"
             curl -L -s \
@@ -66,6 +77,6 @@ jobs:
               -o "${TEMP_DIR}/artifact.zip"
 
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
-            mv "${TEMP_DIR}/Learnweb.war" "ROOT##$(echo ${{ github.event.repository.updated_at }} | tr -d ':').war"
-            echo "Artifact deployed"
+            mv "${TEMP_DIR}/Learnweb.war" "${{ env.DEPLOY_NAME }}.war"
+            echo "Artifact deployed as ${{ env.DEPLOY_NAME }}"
             rm -rf "${TEMP_DIR}"
