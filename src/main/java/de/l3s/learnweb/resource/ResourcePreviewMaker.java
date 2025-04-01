@@ -86,7 +86,7 @@ public class ResourcePreviewMaker implements Serializable {
                 resource.addFile(file);
             }
 
-            if (resource.getType() == ResourceType.website) {
+            if (resource.getType() == ResourceType.website && StringUtils.isNotEmpty(resource.getUrl())) {
                 processWebsite(resource, resource.getUrl());
             } else if (resource.getFile(FileType.MAIN) != null) {
                 inputStream = resource.getFile(FileType.MAIN).getInputStream();
