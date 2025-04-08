@@ -20,10 +20,10 @@
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.49.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.5.0</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>11.6.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.3</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.6.0</maven.dependency.sentry.version>
-        <maven.dependency.mockito.version>5.16.1</maven.dependency.mockito.version>
+        <maven.dependency.sentry.version>8.7.0</maven.dependency.sentry.version>
+        <maven.dependency.mockito.version>5.17.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -34,7 +34,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.12.0</version>
+                <version>5.12.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>de.l3s.interweb</groupId>
             <artifactId>interweb-client</artifactId>
-            <version>4.5.2</version>
+            <version>4.5.3</version>
         </dependency>
 
         <!-- ################ Jakarta ################ -->
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-core</artifactId>
-            <version>6.0.1.Final</version>
+            <version>6.0.2.Final</version>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
@@ -115,13 +115,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.4.0</version>
+            <version>5.4.1</version>
         </dependency>
         <!-- poi XLSX support used for Glossary exporter -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.4.0</version>
+            <version>5.4.1</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for Chart models) -->
         <dependency>
@@ -141,11 +141,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.17.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.14.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -295,7 +290,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.4.6-jre</version>
+            <version>33.4.7-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
@@ -379,13 +374,6 @@
             <artifactId>h2</artifactId>
             <version>2.3.232</version>
             <scope>test</scope>
-        </dependency>
-        <!-- Get rid of compilation warning-->
-        <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-annotations</artifactId>
-            <version>4.9.3</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
