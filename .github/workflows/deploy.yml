@@ -56,16 +56,16 @@ jobs:
             TEMP_DIR=$(mktemp -d)
 
             echo "Getting artifact from workflow ${{ github.run_id }}"
-            ARTIFACT_ID=$(curl -s \
-              -H "Authorization: Bearer ${{ github.token }}" \
+            ARTIFACT_ID=$(curl --no-progress-meter --fail-with-body \
               -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ github.token }}" \
               "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | \
               jq -r '.artifacts[] | select(.name=="learnweb-war") | .id')
 
             echo "Downloading artifact $ARTIFACT_ID"
-            curl -L -s \
+            curl --no-progress-meter --fail-with-body -L \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: token ${{ github.token }}" \
+              -H "Authorization: Bearer ${{ github.token }}" \
               "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${ARTIFACT_ID}/zip" \
               -o "${TEMP_DIR}/artifact.zip"
 

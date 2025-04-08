@@ -26,9 +26,12 @@ class GlossaryXLSXExporterTest {
         GlossaryXLSXExporter exporter = new GlossaryXLSXExporter(Locale.ENGLISH);
         Workbook workbook = exporter.convertGlossaryToWorkbook(resource);
 
-        assertRowEquals(workbook.getSheet("Glossary").getRow(0), "Topic 1", "Topic 2", "Topic 3", "Definition", "Term", "Language", "Uses", "Pronunciation", "Acronym", "Source", "Phraseology");
-        assertRowEquals(workbook.getSheet("Glossary").getRow(3), "Computer Science", "Artificial Intelligence", "Data Science", "A field of study that gives computers the ability to learn without being explicitly programmed.", "Machine Learning", "English", "technical, academic", "ML", "Academic publications", "algorithms, neural networks, deep learning");
-        assertRowEquals(workbook.getSheet("Glossary").getRow(4), "", "", "", "", "Maschinelles Lernen", "German", "technical", "ML", "Technical papers", "Algorithmen, künstliche Intelligenz");
+        assertRowEquals(workbook.getSheet("Glossary")
+            .getRow(0), "Topic 1", "Topic 2", "Topic 3", "Definition", "Term", "Language", "Uses", "Pronunciation", "Acronym", "Source", "Phraseology");
+        assertRowEquals(workbook.getSheet("Glossary")
+            .getRow(3), "Computer Science", "Artificial Intelligence", "Data Science", "A field of study that gives computers the ability to learn without being explicitly programmed.", "Machine Learning", "English", "technical, academic", "ML", "Academic publications", "algorithms, neural networks, deep learning");
+        assertRowEquals(workbook.getSheet("Glossary")
+            .getRow(4), "", "", "", "", "Maschinelles Lernen", "German", "technical", "ML", "Technical papers", "Algorithmen, künstliche Intelligenz");
 
         // saveWorkbook(workbook);
     }
@@ -57,7 +60,9 @@ class GlossaryXLSXExporterTest {
         for (int i = 0; i < row.getLastCellNum(); i++) {
             String cellValue = "";
             Cell cell = row.getCell(i);
-            if (cell != null) cellValue = cell.getStringCellValue();
+            if (cell != null) {
+                cellValue = cell.getStringCellValue();
+            }
             actualRow.add(cellValue);
         }
         assertIterableEquals(List.of(expected), actualRow, "Row does not match expected values");
