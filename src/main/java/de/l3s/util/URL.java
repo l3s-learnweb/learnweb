@@ -3,7 +3,7 @@ package de.l3s.util;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.poi.ss.formula.eval.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * Stores a URL as ASCII encoded bytes.

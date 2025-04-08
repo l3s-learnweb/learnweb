@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -33,19 +34,22 @@ import com.hp.gagawa.java.elements.Tr;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.FileType;
+import de.l3s.learnweb.resource.glossary.GlossaryResource;
+import de.l3s.learnweb.resource.glossary.GlossaryXLSXExporter;
 import de.l3s.learnweb.user.User;
 
 public final class ExportManager {
     private static final Logger log = LogManager.getLogger(ExportManager.class);
+
     private static final String EXPORT_FILE_PREFIX = "learnweb-";
     private static final String EXPORT_FILE_EXT = ".zip";
     private static final String EXPORT_CONTENT_TYPE = "application/zip";
 
-    public static StreamedContent streamResources(User user) throws IOException {
+    public static StreamedContent streamResources(User user) {
         return streamResources(packResources(null, user.getResources()), user.getUsername().toLowerCase());
     }
 
-    public static StreamedContent streamResources(final Group group) throws IOException {
+    public static StreamedContent streamResources(final Group group) {
         return streamResources(packResources(group.getTitle(), group.getResources()), group.getTitle());
     }
 
@@ -151,8 +155,14 @@ public final class ExportManager {
             File mainFile = resource.getFile(FileType.MAIN);
             if (mainFile != null) {
                 files.put(folderName + mainFile.getName(), mainFile.getInputStream());
+            } else if (resource instanceof GlossaryResource glossaryResource) {
+                try {
+                    GlossaryXLSXExporter exporter = new GlossaryXLSXExporter(Locale.ENGLISH);
+                    files.put(folderName + glossaryResource.getTitle() + ".xlsx", exporter.streamWorkbook(glossaryResource));
+                } catch (IOException e) {
+                    log.error("Unable to export glossary to XLSX", e);
+                }
             } else {
-                // TODO: export glossary as table
                 log.error("Can't get main file for resource {}", resource.getId());
             }
         }

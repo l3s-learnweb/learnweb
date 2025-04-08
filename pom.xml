@@ -23,12 +23,23 @@
         <maven.dependency.flyway.version>11.5.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.3</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>8.6.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.12.1</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.16.1</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.12.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -331,15 +342,18 @@
 
         <!-- ################ Test dependencies ################ -->
         <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${maven.dependency.junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>${maven.dependency.junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

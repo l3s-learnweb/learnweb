@@ -1,5 +1,9 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -25,18 +29,29 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import de.l3s.learnweb.i18n.MessagesBundle;
 
 /**
- * Allows to export a glossary into an Excel file.
+ * Allows exporting a glossary into an Excel file.
  *
  * @author Philipp
- *
  */
 public final class GlossaryXLSXExporter {
-    private final GlossaryResource glossaryResource;
     private final ResourceBundle bundle; // language of the exported header fields
 
-    public GlossaryXLSXExporter(GlossaryResource resource, Locale locale) {
-        this.glossaryResource = resource;
+    public GlossaryXLSXExporter(Locale locale) {
         this.bundle = MessagesBundle.of(locale);
+    }
+
+    public InputStream streamWorkbook(GlossaryResource resource) throws IOException {
+        return streamWorkbook(convertGlossaryToWorkbook(resource));
+    }
+
+    public static InputStream streamWorkbook(Workbook wb) throws IOException {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            wb.write(out);
+
+            try (ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray())) {
+                return in;
+            }
+        }
     }
 
     public Workbook convertGlossaryToWorkbook(GlossaryResource resource) {
@@ -47,20 +62,20 @@ public final class GlossaryXLSXExporter {
 
         Sheet sheet = wb.createSheet("Glossary");
 
-        //turn off gridlines
+        // turn off gridlines
         sheet.setDisplayGridlines(false);
         sheet.setPrintGridlines(false);
-        //sheet.setFitToPage(true);
-        //sheet.setHorizontallyCenter(true);
+        // sheet.setFitToPage(true);
+        // sheet.setHorizontallyCenter(true);
         PrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setLandscape(true);
 
-        //the following three statements are required only for HSSF
+        // the following three statements are required only for HSSF
         sheet.setAutobreaks(true);
         printSetup.setFitHeight((short) 1);
         printSetup.setFitWidth((short) 1);
 
-        //the header row: centered text in 48pt font
+        // the header row: centered text in 48pt font
         Row headerRow = sheet.createRow(0);
         headerRow.setHeightInPoints(12.75f);
 
@@ -71,7 +86,7 @@ public final class GlossaryXLSXExporter {
             cell.setCellStyle(styles.get("header"));
         }
 
-        //freeze the first row
+        // freeze the first row
         sheet.createFreezePane(0, 1);
 
         Row row;
@@ -80,7 +95,7 @@ public final class GlossaryXLSXExporter {
         int rowIndex = 1;
         int entryIndex = 0;
 
-        for (GlossaryEntry entry : glossaryResource.getEntries()) {
+        for (GlossaryEntry entry : resource.getEntries()) {
             row = sheet.createRow(rowIndex);
 
             CellStyle style = styles.get("cell_normal_" + (entryIndex++ % 2));
@@ -138,7 +153,7 @@ public final class GlossaryXLSXExporter {
             }
         }
 
-        //set column widths, the width is measured in units of 1/256th of a character width
+        // set column widths, the width is measured in units of 1/256th of a character width
         sheet.setColumnWidth(0, 256 * 20);
         sheet.setColumnWidth(1, 256 * 20);
         sheet.setColumnWidth(2, 256 * 20);
@@ -149,7 +164,7 @@ public final class GlossaryXLSXExporter {
         sheet.setColumnWidth(7, 256 * 12);
         sheet.setColumnWidth(8, 256 * 30);
         sheet.setColumnWidth(9, 256 * 30);
-        //sheet.setZoom(75); //75% scale
+        // sheet.setZoom(75); //75% scale
 
         return wb;
     }
