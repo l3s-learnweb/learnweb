@@ -201,7 +201,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             createThumbnailThread.start();
 
             if (search != null) {
-                search.logResourceSaved(selectedResource.getRank(), getUser(), newResource.getId());
+                search.logResourceSaved(selectedResource.getRank(), newResource.getId());
                 log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
             }
 
@@ -244,7 +244,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             Map<String, String> params = Faces.getRequestParameterMap();
             int tempResourceId = Integer.parseInt(params.get("resourceId"));
 
-            search.logResourceClicked(tempResourceId, getUser());
+            search.logResourceClicked(tempResourceId);
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
         }

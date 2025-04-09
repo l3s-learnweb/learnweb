@@ -91,7 +91,7 @@
 												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="text-wrap p-1">
 													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{query}"/>
 
-													<span class="search-source-icon source-#{query.service} mode-#{query.mode} py-2">#{query.query}</span>
+													<span class="search-source-icon source-#{query.service.name()} mode-#{query.mode.name()} py-2">#{query.query}</span>
 												</p:commandLink>
 											</ui:repeat>
 										</div>
@@ -116,7 +116,7 @@
 					<div>
 						<h:outputFormat value="#{msg['search_history.results_for_query']}" escape="false">
 							<f:param value="#{searchHistoryBean.selectedQuery.query}"/>
-							<f:param value="#{searchHistoryBean.selectedQuery.timestamp}"/>
+							<f:param value="#{searchHistoryBean.selectedQuery.createdAt}"/>
 						</h:outputFormat>
 
 						<h:outputText id="snippetsDescription" styleClass="fas fa-question-circle text-primary ms-2"></h:outputText>

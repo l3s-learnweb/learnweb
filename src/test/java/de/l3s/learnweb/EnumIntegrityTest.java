@@ -56,7 +56,7 @@ class EnumIntegrityTest {
     void testResourceService() throws SQLException {
         String[] values = Arrays.stream(ResourceService.values()).map(Enum::name).toArray(String[]::new);
         assertArrayEquals(values, getDatabaseColumnEnumValues("lw_resource", "service"));
-        assertArrayEquals(values, getDatabaseColumnEnumValues("learnweb_large.sl_query", "service"));
+        assertArrayEquals(values, getDatabaseColumnEnumValues("lw_search_history", "service"));
     }
 
     @Test
@@ -96,8 +96,8 @@ class EnumIntegrityTest {
 
     @Test
     void testSearchHistory() throws SQLException {
-        assertArrayEquals(Arrays.stream(SearchHistoryDao.SearchAction.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("learnweb_large.sl_action", "action"));
-        assertArrayEquals(Arrays.stream(SearchMode.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("learnweb_large.sl_query", "mode"));
+        assertArrayEquals(Arrays.stream(SearchHistoryDao.SearchAction.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("lw_search_history_action", "action"));
+        assertArrayEquals(Arrays.stream(SearchMode.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("lw_search_history", "mode"));
     }
 
     private String[] getDatabaseColumnEnumValues(String tableName, final String columnName) throws SQLException {

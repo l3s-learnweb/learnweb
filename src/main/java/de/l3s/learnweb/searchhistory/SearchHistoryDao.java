@@ -31,19 +31,26 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         resource_saved
     }
 
-    @RegisterRowMapper(QueryMapper.class)
-    @SqlQuery("SELECT q.search_id, q.query, q.mode, q.timestamp, q.service "
-        + "FROM learnweb_large.sl_query q join lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id "
-        + "WHERE l.action = 5 AND l.session_id = ? ORDER BY q.timestamp ASC")
-    List<SearchQuery> findQueriesBySessionId(String sessionId);
+    @RegisterRowMapper(SearchHistoryQueryMapper.class)
+    @SqlQuery("""
+        SELECT q.*
+        FROM lw_search_history q JOIN lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id
+        WHERE l.action = 5 AND l.session_id = ?
+        ORDER BY q.created_at ASC
+        """)
+    List<SearchHistoryQuery> findQueriesBySessionId(String sessionId);
 
-    default List<ResourceDecorator> findSearchResultsByQuery(SearchQuery query, int limit) {
+    default List<ResourceDecorator> findSearchResultsByQuery(SearchHistoryQuery query, int limit) {
         ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
 
-        return getHandle().select("SELECT r.resource_id, r.rank, r.url, r.title, r.description, r.thumbnail_url, r.thumbnail_width, r.thumbnail_height, "
-            + "COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved "
-            + "FROM learnweb_large.sl_resource r LEFT JOIN learnweb_large.sl_action a ON r.search_id = a.search_id AND r.rank = a.rank "
-            + "WHERE r.search_id = ? GROUP BY r.resource_id, r.rank, r.url, r.title, r.description ORDER BY r.rank ASC LIMIT ?", query.searchId(), limit)
+        return getHandle().select("""
+                SELECT r.*, COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved
+                FROM lw_search_history_resource r LEFT JOIN lw_search_history_action a ON r.search_id = a.search_id AND r.rank = a.rank
+                WHERE r.search_id = ?
+                GROUP BY r.resource_id, r.rank
+                ORDER BY r.rank ASC
+                LIMIT ?
+                """, query.searchId(), limit)
             .map((rs, ctx) -> {
                 int resourceId = rs.getInt("resource_id");
 
@@ -71,8 +78,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     default List<SearchSession> findSessionsByUserId(int userId) {
-        return getHandle().select("SELECT DISTINCT l.session_id FROM learnweb_large.sl_query q JOIN lw_user_log l ON q.search_id = l.target_id "
-            + "AND q.user_id = l.user_id WHERE l.action = 5 AND l.user_id = ? ORDER BY q.timestamp DESC LIMIT 30", userId)
+        return getHandle().select("SELECT DISTINCT l.session_id FROM lw_search_history q JOIN lw_user_log l ON q.search_id = l.target_id "
+                + "AND q.user_id = l.user_id WHERE l.action = 5 AND l.user_id = ? ORDER BY q.created_at DESC LIMIT 30", userId)
             .map((rs, ctx) -> {
                 SearchSession session = new SearchSession(rs.getString("session_id"), userId);
                 session.setQueries(findQueriesBySessionId(session.getSessionId()));
@@ -81,9 +88,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     default List<SearchSession> findSessionsByGroupId(int groupId) {
-        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM learnweb_large.sl_query q JOIN lw_user_log l ON q.search_id = l.target_id "
-            + "AND q.user_id = l.user_id JOIN lw_group_user ug ON ug.user_id = l.user_id "
-            + "WHERE l.action = 5 AND ug.group_id = ? GROUP BY l.user_id, l.session_id, q.timestamp ORDER BY q.timestamp DESC LIMIT 30", groupId)
+        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM lw_search_history q JOIN lw_user_log l ON q.search_id = l.target_id "
+                + "AND q.user_id = l.user_id JOIN lw_group_user ug ON ug.user_id = l.user_id "
+                + "WHERE l.action = 5 AND ug.group_id = ? GROUP BY l.user_id, l.session_id, q.created_at ORDER BY q.created_at DESC LIMIT 30", groupId)
             .map((rs, ctx) -> {
                 SearchSession session = new SearchSession(rs.getString("session_id"), rs.getInt("user_id"));
                 session.setQueries(findQueriesBySessionId(session.getSessionId()));
@@ -91,23 +98,23 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             }).list();
     }
 
-    @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
+    @SqlUpdate("INSERT INTO lw_search_history (query, mode, service, language, filters, user_id) VALUES (?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("search_id")
     int insertQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user);
 
-    @SqlUpdate("INSERT INTO learnweb_large.sl_query (group_id, query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, 'group', 'learnweb', ?, ?, ?, CURRENT_TIMESTAMP, 3)")
+    @SqlUpdate("INSERT INTO lw_search_history (group_id, query, mode, service, language, filters, user_id) VALUES (?, ?, 'group', 'learnweb', ?, ?, ?)")
     @GetGeneratedKeys("search_id")
     int insertGroupQuery(int groupId, String query, String language, String searchFilters, int userId);
 
-    @SqlUpdate("INSERT INTO learnweb_large.sl_action (search_id, `rank`, user_id, action, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)")
-    void insertAction(int searchId, int rank, User user, SearchAction action);
+    @SqlUpdate("INSERT INTO lw_search_history_action (search_id, `rank`, action) VALUES (?, ?, ?)")
+    void insertAction(int searchId, int rank, SearchAction action);
 
     default void insertResources(int searchId, List<ResourceDecorator> resources) {
         if (resources.isEmpty() || searchId == 0) { // failed to log query, no need to log resources
             return;
         }
 
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO learnweb_large.sl_resource (search_id, `rank`, resource_id, url, title, description, "
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_search_history_resource (search_id, `rank`, resource_id, url, title, description, "
             + "thumbnail_url, thumbnail_height, thumbnail_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         for (ResourceDecorator decoratedResource : resources) {
@@ -139,28 +146,16 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         batch.execute();
     }
 
-    class QueryMapper implements RowMapper<SearchQuery> {
+    class SearchHistoryQueryMapper implements RowMapper<SearchHistoryQuery> {
         @Override
-        public SearchQuery map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            return new SearchQuery(
+        public SearchHistoryQuery map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            return new SearchHistoryQuery(
                 rs.getInt("search_id"),
                 rs.getString("query"),
-                rs.getString("mode"),
-                SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")),
-                rs.getString("service")
+                SearchMode.valueOf(rs.getString("mode")),
+                ResourceService.valueOf(rs.getString("service")),
+                SqlHelper.getLocalDateTime(rs.getTimestamp("created_at"))
             );
-        }
-    }
-
-    class AnnotationMapper implements RowMapper<SearchAnnotation> {
-        @Override
-        public SearchAnnotation map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SearchAnnotation annotation = new SearchAnnotation();
-            annotation.setUserId(rs.getInt("user_id"));
-            annotation.setText(rs.getString("text"));
-            annotation.setQuote(rs.getString("quote"));
-            annotation.setTargetUrl(rs.getString("target_uri"));
-            return annotation;
         }
     }
 }

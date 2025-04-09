@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 
@@ -32,7 +33,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     private String searchQuery;
     private boolean showGroupHistory;
-    private SearchQuery selectedQuery;
+    private SearchHistoryQuery selectedQuery;
 
     private transient List<SearchSession> sessions;
     private final transient Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
@@ -54,11 +55,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public SearchQuery getSelectedQuery() {
+    public SearchHistoryQuery getSelectedQuery() {
         return selectedQuery;
     }
 
-    public void setSelectedQuery(final SearchQuery selectedQuery) {
+    public void setSelectedQuery(final SearchHistoryQuery selectedQuery) {
         this.selectedQuery = selectedQuery;
     }
 
@@ -73,11 +74,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getSearchResultsView() {
-        if ("text".equals(selectedQuery.mode())) {
+        if (selectedQuery.mode() == SearchMode.text) {
             return "list";
-        } else if ("image".equals(selectedQuery.mode())) {
+        } else if (selectedQuery.mode() == SearchMode.image) {
             return "float";
-        } else if ("video".equals(selectedQuery.mode())) {
+        } else if (selectedQuery.mode() == SearchMode.video) {
             return "grid";
         }
 

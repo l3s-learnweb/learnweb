@@ -383,7 +383,7 @@ public class ConfigProvider implements Serializable {
     }
 
     public boolean isCollectSearchHistory() {
-        return !isDevelopment() && "https://learnweb.l3s.uni-hannover.de".equals(getServerUrl()) || getPropertyBoolean("force_search_history");
+        return !isDevelopment() || getPropertyBoolean("force_search_history");
     }
 
     public boolean isMaintenance() {

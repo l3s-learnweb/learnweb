@@ -1,41 +1,6 @@
 /* ================= `learnweb_large` schema ================= */
 CREATE SCHEMA IF NOT EXISTS `learnweb_large`;
 
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_action` (
-    `search_id` INT(10) UNSIGNED NOT NULL,
-    `rank` SMALLINT(5) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `action` ENUM ('resource_clicked','resource_saved') NOT NULL,
-    `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-    KEY `sl_action_search_id` (`search_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_query` (
-    `search_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `group_id` INT(10) UNSIGNED DEFAULT 0,
-    `query` VARCHAR(250) NOT NULL,
-    `mode` ENUM ('text','image','video','group') NOT NULL,
-    `service` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
-    `language` CHAR(5) DEFAULT NULL,
-    `filters` VARCHAR(1000) DEFAULT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-    `learnweb_version` TINYINT(4) NOT NULL DEFAULT 0 COMMENT 'which learnweb instance has inserted this row'
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_resource` (
-    `search_id` INT(10) UNSIGNED NOT NULL,
-    `rank` SMALLINT(5) UNSIGNED NOT NULL,
-    `resource_id` INT(10) UNSIGNED DEFAULT NULL COMMENT 'id of a learnweb resource NULL otherwise',
-    `url` VARCHAR(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
-    `title` VARCHAR(250) DEFAULT NULL COMMENT 'null if learnweb resource',
-    `description` VARCHAR(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
-    `thumbnail_url` VARCHAR(1000) DEFAULT NULL,
-    `thumbnail_height` SMALLINT(5) UNSIGNED DEFAULT NULL,
-    `thumbnail_width` SMALLINT(5) UNSIGNED DEFAULT NULL,
-    PRIMARY KEY (`search_id`, `rank`)
-);
-
 CREATE TABLE IF NOT EXISTS `learnweb_large`.`speechrepository_video` (
     `id` INT(11) NOT NULL PRIMARY KEY,
     `title` VARCHAR(1000) NOT NULL,
@@ -127,6 +92,3 @@ CREATE TABLE IF NOT EXISTS `learnweb_large`.`wb_url_content` (
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
     KEY `wb_url_content_url_id` (`url_id`)
 );
-
-ALTER TABLE `learnweb_large`.`sl_action` ADD CONSTRAINT `fk_sl_action_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large`.`sl_query` (`search_id`) ON DELETE CASCADE;
-ALTER TABLE `learnweb_large`.`sl_resource` ADD CONSTRAINT `fk_sl_resource_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large`.`sl_query` (`search_id`) ON DELETE CASCADE;

@@ -11,7 +11,7 @@ import jakarta.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.searchhistory.SearchQuery;
+import de.l3s.learnweb.searchhistory.SearchHistoryQuery;
 import de.l3s.learnweb.searchhistory.SearchSession;
 import de.l3s.learnweb.user.User;
 
@@ -24,7 +24,7 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
     @Serial
     private static final long serialVersionUID = 8515265854401597437L;
 
-    private LinkedList<SearchQuery> userQueries;
+    private LinkedList<SearchHistoryQuery> userQueries;
 
     @PostConstruct
     public void init() {
@@ -39,7 +39,7 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
         }
     }
 
-    public List<SearchQuery> getUserQueries() {
+    public List<SearchHistoryQuery> getUserQueries() {
         return userQueries;
     }
 }
