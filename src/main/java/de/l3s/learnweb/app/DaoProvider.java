@@ -75,8 +75,6 @@ public class DaoProvider {
     private final DataSource dataSource;
     private final Jdbi jdbi;
 
-    // private SpeechRepositoryDao speechRepositoryDao;
-    // private TrackerDao trackerDao;
     private final AnnouncementDao announcementDao;
     private final ArchiveUrlDao archiveUrlDao;
     private final BanDao banDao;

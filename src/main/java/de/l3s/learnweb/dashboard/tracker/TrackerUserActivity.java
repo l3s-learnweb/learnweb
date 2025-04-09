@@ -17,14 +17,11 @@ public class TrackerUserActivity implements Serializable {
     private long timeStay;
     private long timeActive;
     private int clicks;
-    private int keyPresses;
-
-    private long timeActiveInMinutes;
-    private String timeActiveFormatted;
-    private long timeStayInMinutes;
-    private String timeStayFormatted;
+    private int keypresses;
 
     private transient User user;
+    private transient String timeActiveFormatted;
+    private transient String timeStayFormatted;
 
     public User getUser() {
         if (null == user && userId != 0) {
@@ -55,10 +52,6 @@ public class TrackerUserActivity implements Serializable {
 
     public void setTimeStay(long timeStay) {
         this.timeStay = timeStay;
-
-        Duration durationStay = Duration.ofMillis(timeStay);
-        this.timeStayInMinutes = durationStay.toMinutes();
-        this.timeStayFormatted = StringHelper.formatDuration(durationStay);
     }
 
     public long getTimeActive() {
@@ -67,10 +60,6 @@ public class TrackerUserActivity implements Serializable {
 
     public void setTimeActive(long timeActive) {
         this.timeActive = timeActive;
-
-        Duration durationActive = Duration.ofMillis(timeActive);
-        this.timeActiveInMinutes = durationActive.toMinutes();
-        this.timeActiveFormatted = StringHelper.formatDuration(durationActive);
     }
 
     public int getClicks() {
@@ -81,43 +70,25 @@ public class TrackerUserActivity implements Serializable {
         this.clicks = clicks;
     }
 
-    public int getKeyPresses() {
-        return keyPresses;
+    public int getKeypresses() {
+        return keypresses;
     }
 
-    public void setKeyPresses(int keyPresses) {
-        this.keyPresses = keyPresses;
-    }
-
-    public long getTimeActiveInMinutes() {
-        return timeActiveInMinutes;
-    }
-
-    public void setTimeActiveInMinutes(long timeActiveInMinutes) {
-        this.timeActiveInMinutes = timeActiveInMinutes;
+    public void setKeypresses(int keypresses) {
+        this.keypresses = keypresses;
     }
 
     public String getTimeActiveFormatted() {
+        if (timeActiveFormatted == null) {
+            timeActiveFormatted = StringHelper.formatDuration(Duration.ofMillis(timeActive));
+        }
         return timeActiveFormatted;
     }
 
-    public void setTimeActiveFormatted(String timeActiveFormatted) {
-        this.timeActiveFormatted = timeActiveFormatted;
-    }
-
-    public long getTimeStayInMinutes() {
-        return timeStayInMinutes;
-    }
-
-    public void setTimeStayInMinutes(long timeStayInMinutes) {
-        this.timeStayInMinutes = timeStayInMinutes;
-    }
-
     public String getTimeStayFormatted() {
+        if (timeStayFormatted == null) {
+            timeStayFormatted = StringHelper.formatDuration(Duration.ofMillis(timeStay));
+        }
         return timeStayFormatted;
-    }
-
-    public void setTimeStayFormatted(String timeStayFormatted) {
-        this.timeStayFormatted = timeStayFormatted;
     }
 }
