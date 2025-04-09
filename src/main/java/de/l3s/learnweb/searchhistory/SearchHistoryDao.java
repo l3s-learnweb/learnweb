@@ -37,11 +37,6 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         + "WHERE l.action = 5 AND l.session_id = ? ORDER BY q.timestamp ASC")
     List<SearchQuery> findQueriesBySessionId(String sessionId);
 
-    @RegisterRowMapper(AnnotationMapper.class)
-    @SqlQuery("SELECT a.user_id, a.text, a.quote, a.target_uri FROM learnweb_annotations.annotation a "
-        + "WHERE a.user_id = ? AND a.target_uri_normalized = ? ORDER BY a.created")
-    List<SearchAnnotation> findAnnotationsByUserIdAndUrl(int userId, String url);
-
     default List<ResourceDecorator> findSearchResultsByQuery(SearchQuery query, int limit) {
         ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
 
@@ -71,11 +66,6 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 rd.setSnippet(rs.getString("description"));
                 rd.setClicked(rs.getInt("clicked") > 0);
                 rd.setSaved(rs.getInt("saved") > 0);
-
-                // quick fix to not show annotations for each result of same url
-                if (rd.getClicked()) {
-                    rd.setAnnotations(findAnnotationsByUserIdAndUrl(res.getUserId(), res.getUrl()));
-                }
                 return rd;
             }).list();
     }
