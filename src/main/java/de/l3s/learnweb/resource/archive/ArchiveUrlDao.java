@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -26,7 +27,7 @@ public interface ArchiveUrlDao extends SqlObject, Serializable {
     List<ArchiveUrl> findByResourceId(int resourceId);
 
     @RegisterRowMapper(ArchiveUrlMapper.class)
-    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? AND date(timestamp) = date(?)")
+    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? AND DATE(timestamp) = DATE(?)")
     List<ArchiveUrl> findByResourceId(int resourceId, LocalDate timestamp);
 
     @SqlUpdate("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (?, ?, ?)")
@@ -34,6 +35,36 @@ public interface ArchiveUrlDao extends SqlObject, Serializable {
 
     @SqlBatch("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (:resourceId, :archiveUrl, :timestamp)")
     void insertArchiveUrl(@Bind("resourceId") int resourceId, @BindMethods Collection<ArchiveUrl> archiveUrls);
+
+    default TreeMap<LocalDate, Integer> countSnapshotsByDays(int resourceId) {
+        return getHandle().select("""
+                SELECT CAST(timestamp AS DATE) AS date, COUNT(*) AS count
+                FROM lw_resource_archiveurl
+                WHERE resource_id = ?
+                GROUP BY YEAR(timestamp), MONTH(timestamp), DAY(timestamp)
+                ORDER BY timestamp ASC
+                """, resourceId)
+            .reduceResultSet(new TreeMap<>(), (map, rs, ctx) -> {
+                LocalDate date = SqlHelper.getLocalDate(rs.getDate("date"));
+                map.put(date, rs.getInt("count"));
+                return map;
+            });
+    }
+
+    default TreeMap<LocalDate, Integer> countSnapshotsByMonths(int resourceId) {
+        return getHandle().select("""
+                SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') AS DATE) AS date, COUNT(*) AS count
+                FROM lw_resource_archiveurl
+                WHERE resource_id = ?
+                GROUP BY YEAR(timestamp), MONTH(timestamp)
+                ORDER BY timestamp ASC
+                """, resourceId)
+            .reduceResultSet(new TreeMap<>(), (map, rs, ctx) -> {
+                LocalDate date = SqlHelper.getLocalDate(rs.getDate("date"));
+                map.put(date, rs.getInt("count"));
+                return map;
+            });
+    }
 
     class ArchiveUrlMapper implements RowMapper<ArchiveUrl> {
         @Override

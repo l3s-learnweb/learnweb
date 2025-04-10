@@ -16,6 +16,9 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.util.SqlHelper;
 
+/**
+ * FIXME: This class only uses learnweb_large database. Should be eventually excluded.
+ */
 @RegisterRowMapper(SpeechRepositoryDao.SpeechRepositoryEntityMapper.class)
 public interface SpeechRepositoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM learnweb_large.speechrepository_video WHERE id = ?")

@@ -241,7 +241,6 @@ public class Search implements Serializable {
 
             rankIndex.put(temporaryId, decoratedResource);
             temporaryId++;
-            //Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
             newResources.add(decoratedResource);
         }
 

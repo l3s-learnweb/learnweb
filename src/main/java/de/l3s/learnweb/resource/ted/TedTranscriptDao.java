@@ -26,6 +26,9 @@ import org.jsoup.select.Elements;
 
 import de.l3s.util.SqlHelper;
 
+/**
+ * FIXME: This class uses learnweb_large and learnweb databases. Should be eventually split.
+ */
 public interface TedTranscriptDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT resource_id FROM learnweb_large.ted_video WHERE ted_id = ?")

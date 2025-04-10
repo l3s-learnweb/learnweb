@@ -35,7 +35,6 @@ import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.TagDao;
 import de.l3s.learnweb.resource.archive.ArchiveUrlDao;
-import de.l3s.learnweb.resource.archive.WaybackUrlDao;
 import de.l3s.learnweb.resource.glossary.GlossaryDao;
 import de.l3s.learnweb.resource.glossary.GlossaryEntryDao;
 import de.l3s.learnweb.resource.glossary.GlossaryTermDao;
@@ -102,7 +101,6 @@ public class DaoProvider {
     private final TokenDao tokenDao;
     private final TedTranscriptDao tedTranscriptDao;
     private final UserDao userDao;
-    private final WaybackUrlDao waybackUrlDao;
 
     @Inject
     public DaoProvider(final ConfigProvider configProvider) {
@@ -150,7 +148,6 @@ public class DaoProvider {
         tokenDao = jdbi.onDemand(TokenDao.class);
         tedTranscriptDao = jdbi.onDemand(TedTranscriptDao.class);
         userDao = jdbi.onDemand(UserDao.class);
-        waybackUrlDao = jdbi.onDemand(WaybackUrlDao.class);
     }
 
     private void migrateDatabase() {
@@ -359,11 +356,6 @@ public class DaoProvider {
     @Produces
     public UserDao getUserDao() {
         return userDao;
-    }
-
-    @Produces
-    public WaybackUrlDao getWaybackUrlDao() {
-        return waybackUrlDao;
     }
 
     private static final class LearnwebSqlLogger implements SqlLogger {
