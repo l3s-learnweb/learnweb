@@ -36,7 +36,7 @@ VALUES (1, 1, 1, 'Lets get you into a', '2021-02-19 17:53:56'),
        (9, 6, 6, 'https://satoristudio.net/delorean-ipsum/', '2021-02-19 18:38:44'),
        (10, 6, 6, 'The keys are in the', '2021-02-19 18:40:36');
 
-INSERT INTO `lw_course` (`course_id`, `title`, `options_field1`, `organisation_id`, `default_group_id`, `wizard_param`, `next_x_users_become_moderator`, `welcome_message`, `updated_at`, `created_at`)
+INSERT INTO `lw_course` (`course_id`, `title`, `options_field1`, `organisation_id`, `default_group_id`, `reg_wizard`, `next_x_users_become_moderator`, `welcome_message`, `updated_at`, `created_at`)
 VALUES (1, 'Public', 17, 1, NULL, 'public', 0, 'Welcome to the public course', '2019-11-27 20:38:07', '2019-11-27 20:38:07'),
        (2, 'Vel possimus', 53, 2, NULL, NULL, 3, 'Excepturi blanditiis eos veniam ut.', '2021-02-06 14:42:33', '2020-04-16 16:35:42'),
        (3, 'Nulla earum ratione', 53, 2, NULL, 'eius', 0, 'Velit alias asperiores ut in sunt et ratione ut.', '2021-02-04 01:02:29', '2020-06-29 14:47:29'),
@@ -265,17 +265,17 @@ VALUES (1, '33.143.226.138', 4, 2, '[admin]', '2019-06-16 05:00:00'),
        (9, '207.84.18.203', 1, 0, '', '2020-01-30 18:00:00'),
        (10, '151.45.185.174', 24, 0, '', '2018-03-27 18:00:00');
 
-INSERT INTO `lw_resource` (`resource_id`, `deleted`, `group_id`, `folder_id`, `title`, `description`, `url`, `storage_type`, `policy_view`, `service`, `language`, `author`, `type`, `format`, `duration`, `width`, `height`, `owner_user_id`, `id_at_service`, `rating`, `rate_number`, `max_image_url`, `query`, `original_resource_id`, `machine_description`, `embedded_url`, `transcript`, `read_only_transcript`, `online_status`, `updated_at`, `created_at`, `metadata`)
-VALUES (1, 0, 1, 4, 'Building the Perfect Squirrel Proof Bird Feeder', 'Squirrels were stealing my bird seed so I solved the problem with mechanical engineering :)\nGet your first month of KiwiCo for FREE!!! https://www.kiwico.com/markrober\n\nHere is an explanation of the illusion dish thing!- https://demos.smu.ca/index.php/demos/optics/69-mirage-mirror\n\nHere is a link to the illusion dish (not sponsored :) https://www.amazon.com/dp/B0718XCG7F/ref=cm_sw_em_r_mt_dp_U_D9PYEbC85X14F\n\n*MUSIC*\n0:02 - Arrow (Instrumental) - Andrew Applepie http://andrewapplepie.com/\n0:27 - Kalimba Jam - Blue Wednesday https://soundcloud.com/bluewednesday/\n3:21 - Zambo - Devil in Disguise https://danijel-zambo.bandcamp.com/track/devil-in-disguise-2 \n3:47 - Cereal Killa - Blue Wednesday https://soundcloud.com/bluewednesday/\n5:28 - J. Thompson - Real Quick Lovin https://www.amazon.com/Real-Quick-Lovin/dp/B0010YGE3W\n5:39 - New Shoes - Blue Wednesday https://soundcloud.com/bluewednesday/\n7:51- Chi- Ponder- https://www.prodbyponder.com/5-free-beats32029775\n8:31 - Marimba Idea - Blue Wednesday https://soundcloud.com/bluewednesday/ \n9:25 - Josef Falkenskold - Tiny Tumble https://www.epidemicsound.com/artists/josef-falkenskold\n19:07 - Nik- Ponder- https://www.prodbyponder.com/5-free-beats32029775', 'https://www.youtube.com/watch?v=hFZFjoX2cGg', 'WEB', 'DEFAULT_RIGHTS', 'youtube', '', 'Mark Rober', 'video', '', 0, 1280, 720, 1, 'hFZFjoX2cGg', 0, 0, 'https://i.ytimg.com/vi/hFZFjoX2cGg/maxresdefault.jpg', NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 17:52:48', '2021-02-19 17:52:38', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (2, 0, NULL, NULL, 'Using Drones to Plant 20,000,000 Trees', 'Join #TeamTrees at https://teamtrees.org/\nCreate your own personal website at https://wix.com/go/MarkRober\n\nALSO, see how I make all my builds using Wix: https://markroberbuildinstructions.com\n\nThanks to my friends at Discovery Channel for helping us find Arbor Day in the first place and then capturing all the footage for my video.  They are absolute champions to work with Ive got some really cool projects coming up soon.  \n\nLearn more about my smart friends at DroneSeed- https://www.droneseed.co/\n\nThanks to Carlyle tools for giving my workbench tools a seriously needed upgrade! https://www.carlyletools.com/\n\nIf you want to learn more about C02 in ancient ice, check out this great video from Dr. Joe Hanson at Its OK to be Smart- https://www.youtube.com/watch?v=myxVsYI4WZk&amp;t=2s\n\nMUSIC-\n0:28 - On My Way - Tom Goldstein https://artlist.io/song/14203/on-my-way\n3:27 - Arrow (Instrumental) - Andrew Applepie http://andrewapplepie.com/\n4:42 - Dive - Lvly \n6:27 - New Shoes - Blue Wednesday https://soundcloud.com/bluewednesday/\n9:16 - Cereal Killa - Blue Wednesday https://soundcloud.com/bluewednesday/\n11:13 - Q - Blue Wednesday https://soundcloud.com/bluewednesday/  \n12:22 - Too Happy to be cool by Notebreak https://soundcloud.com/notebreak/dubstep-too-happy-to-be-cool\n\n\n\n\nSummary:  The internet challenged Mr. Beast to plant 20 million trees.  That is a really hard thing to do. So...', 'https://www.youtube.com/watch?v=U7nJBFjKqAY', 'WEB', 'DEFAULT_RIGHTS', 'youtube', '', 'Mark Rober', 'video', '', 0, 1280, 720, 1, 'U7nJBFjKqAY', 0, 0, 'https://i.ytimg.com/vi/U7nJBFjKqAY/maxresdefault.jpg', NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 17:54:33', '2021-02-19 17:54:25', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (3, 0, NULL, 7, 'Glitterbomb 3.0 vs. Porch Pirates', 'Merry Christmas ya filthy animals.  If you want to learn the design fundamentals it takes to make something like the Glitter Bomb, enroll in my NEW Creative Engineering course at https://Monthly.com/MarkRober and Ill see you in class!\n\nMY NEW MERCH!!!  https://markrober.store/\n\nThanks to SimpliSafe for providing the cameras.  Check out their biggest sale of the year by visiting http://simplisafe.com/markrober\n\nSubscribe to Jims channel here- https://www.youtube.com/channel/UCBNG0osIBAprVcZZ3ic84vw\n\nBiodegradable glitter courtesy of  https://www.altnaturals.com/pages/glitter\n\nSo stoked to finally announce my creative engineering class has just launched today! Enrollment is now open until Dec 27 at Monthly.com/MarkRober (link also in bio).\n\nThis class is a hands-on, 30-day learning experience that will teach you how to use engineering and science to bring your creative ideas to life.\n\nDuring this class, Im going to share with you my entire creative engineering process from start to finish. Youre going to follow along with me as I fully design and engineer 3 brand new builds from scratch... from how I come up the idea, all the way through bringing the final builds to life.\n\nThe best part is, over the month, youll follow along with me and my process, side by side, and you will leave the class with 3 original, creative builds of your own.\n\nThis is the class I wish I had when...', 'https://www.youtube.com/watch?v=h4T_LlK1VE4', 'WEB', 'DEFAULT_RIGHTS', 'youtube', '', 'Mark Rober', 'video', '', 0, 1280, 720, 1, 'h4T_LlK1VE4', 0, 0, 'https://i.ytimg.com/vi/h4T_LlK1VE4/maxresdefault.jpg', NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 17:56:37', '2021-02-19 17:55:55', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (4, 0, 1, NULL, 'amet erat nulla tempus', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 691, 4, '', 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:00', '2021-02-19 18:03:03', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (5, 0, 1, NULL, 'ut rhoncus aliquet pulvinar', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 691, 4, '', 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:15', '2021-02-19 18:04:04', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (6, 0, 1, NULL, 'mauris non ligula', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 691, 4, '', 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:29', '2021-02-19 18:04:20', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (7, 0, 1, NULL, 'nisi venenatis tristique fusce congue', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 689, 4, '', 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:40', '2021-02-19 18:04:32', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (8, 0, 1, NULL, 'quis lectus suspendisse potenti in', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 685, 4, '', 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:54', '2021-02-19 18:04:43', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (9, 0, 1, NULL, 'Glossary res', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'learnweb', '', '', 'glossary', '', 0, NULL, NULL, 4, '', 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:10:37', '2021-02-19 18:10:20', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
-       (10, 0, NULL, NULL, 'Test survey', 'Some test here', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'learnweb', NULL, NULL, 'survey', NULL, NULL, NULL, NULL, 1, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'UNKNOWN', '2021-04-11 17:57:09', '2021-04-11 17:57:09', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078);
+INSERT INTO `lw_resource` (`resource_id`, `deleted`, `group_id`, `folder_id`, `title`, `description`, `url`, `storage_type`, `policy_view`, `service`, `language`, `author`, `type`, `format`, `duration`, `width`, `height`, `owner_user_id`, `id_at_service`, `max_image_url`, `query`, `original_resource_id`, `machine_description`, `embedded_url`, `transcript`, `read_only_transcript`, `online_status`, `updated_at`, `created_at`, `metadata`)
+VALUES (1, 0, 1, 4, 'Building the Perfect Squirrel Proof Bird Feeder', 'Squirrels were stealing my bird seed so I solved the problem with mechanical engineering :)\nGet your first month of KiwiCo for FREE!!! https://www.kiwico.com/markrober\n\nHere is an explanation of the illusion dish thing!- https://demos.smu.ca/index.php/demos/optics/69-mirage-mirror\n\nHere is a link to the illusion dish (not sponsored :) https://www.amazon.com/dp/B0718XCG7F/ref=cm_sw_em_r_mt_dp_U_D9PYEbC85X14F\n\n*MUSIC*\n0:02 - Arrow (Instrumental) - Andrew Applepie http://andrewapplepie.com/\n0:27 - Kalimba Jam - Blue Wednesday https://soundcloud.com/bluewednesday/\n3:21 - Zambo - Devil in Disguise https://danijel-zambo.bandcamp.com/track/devil-in-disguise-2 \n3:47 - Cereal Killa - Blue Wednesday https://soundcloud.com/bluewednesday/\n5:28 - J. Thompson - Real Quick Lovin https://www.amazon.com/Real-Quick-Lovin/dp/B0010YGE3W\n5:39 - New Shoes - Blue Wednesday https://soundcloud.com/bluewednesday/\n7:51- Chi- Ponder- https://www.prodbyponder.com/5-free-beats32029775\n8:31 - Marimba Idea - Blue Wednesday https://soundcloud.com/bluewednesday/ \n9:25 - Josef Falkenskold - Tiny Tumble https://www.epidemicsound.com/artists/josef-falkenskold\n19:07 - Nik- Ponder- https://www.prodbyponder.com/5-free-beats32029775', 'https://www.youtube.com/watch?v=hFZFjoX2cGg', 'WEB', 'DEFAULT_RIGHTS', 'youtube', '', 'Mark Rober', 'video', '', 0, 1280, 720, 1, 'hFZFjoX2cGg', 'https://i.ytimg.com/vi/hFZFjoX2cGg/maxresdefault.jpg', NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 17:52:48', '2021-02-19 17:52:38', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (2, 0, NULL, NULL, 'Using Drones to Plant 20,000,000 Trees', 'Join #TeamTrees at https://teamtrees.org/\nCreate your own personal website at https://wix.com/go/MarkRober\n\nALSO, see how I make all my builds using Wix: https://markroberbuildinstructions.com\n\nThanks to my friends at Discovery Channel for helping us find Arbor Day in the first place and then capturing all the footage for my video.  They are absolute champions to work with Ive got some really cool projects coming up soon.  \n\nLearn more about my smart friends at DroneSeed- https://www.droneseed.co/\n\nThanks to Carlyle tools for giving my workbench tools a seriously needed upgrade! https://www.carlyletools.com/\n\nIf you want to learn more about C02 in ancient ice, check out this great video from Dr. Joe Hanson at Its OK to be Smart- https://www.youtube.com/watch?v=myxVsYI4WZk&amp;t=2s\n\nMUSIC-\n0:28 - On My Way - Tom Goldstein https://artlist.io/song/14203/on-my-way\n3:27 - Arrow (Instrumental) - Andrew Applepie http://andrewapplepie.com/\n4:42 - Dive - Lvly \n6:27 - New Shoes - Blue Wednesday https://soundcloud.com/bluewednesday/\n9:16 - Cereal Killa - Blue Wednesday https://soundcloud.com/bluewednesday/\n11:13 - Q - Blue Wednesday https://soundcloud.com/bluewednesday/  \n12:22 - Too Happy to be cool by Notebreak https://soundcloud.com/notebreak/dubstep-too-happy-to-be-cool\n\n\n\n\nSummary:  The internet challenged Mr. Beast to plant 20 million trees.  That is a really hard thing to do. So...', 'https://www.youtube.com/watch?v=U7nJBFjKqAY', 'WEB', 'DEFAULT_RIGHTS', 'youtube', '', 'Mark Rober', 'video', '', 0, 1280, 720, 1, 'U7nJBFjKqAY', 'https://i.ytimg.com/vi/U7nJBFjKqAY/maxresdefault.jpg', NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 17:54:33', '2021-02-19 17:54:25', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (3, 0, NULL, 7, 'Glitterbomb 3.0 vs. Porch Pirates', 'Merry Christmas ya filthy animals.  If you want to learn the design fundamentals it takes to make something like the Glitter Bomb, enroll in my NEW Creative Engineering course at https://Monthly.com/MarkRober and Ill see you in class!\n\nMY NEW MERCH!!!  https://markrober.store/\n\nThanks to SimpliSafe for providing the cameras.  Check out their biggest sale of the year by visiting http://simplisafe.com/markrober\n\nSubscribe to Jims channel here- https://www.youtube.com/channel/UCBNG0osIBAprVcZZ3ic84vw\n\nBiodegradable glitter courtesy of  https://www.altnaturals.com/pages/glitter\n\nSo stoked to finally announce my creative engineering class has just launched today! Enrollment is now open until Dec 27 at Monthly.com/MarkRober (link also in bio).\n\nThis class is a hands-on, 30-day learning experience that will teach you how to use engineering and science to bring your creative ideas to life.\n\nDuring this class, Im going to share with you my entire creative engineering process from start to finish. Youre going to follow along with me as I fully design and engineer 3 brand new builds from scratch... from how I come up the idea, all the way through bringing the final builds to life.\n\nThe best part is, over the month, youll follow along with me and my process, side by side, and you will leave the class with 3 original, creative builds of your own.\n\nThis is the class I wish I had when...', 'https://www.youtube.com/watch?v=h4T_LlK1VE4', 'WEB', 'DEFAULT_RIGHTS', 'youtube', '', 'Mark Rober', 'video', '', 0, 1280, 720, 1, 'h4T_LlK1VE4', 'https://i.ytimg.com/vi/h4T_LlK1VE4/maxresdefault.jpg', NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 17:56:37', '2021-02-19 17:55:55', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (4, 0, 1, NULL, 'amet erat nulla tempus', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 691, 4, '', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:00', '2021-02-19 18:03:03', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (5, 0, 1, NULL, 'ut rhoncus aliquet pulvinar', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 691, 4, '', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:15', '2021-02-19 18:04:04', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (6, 0, 1, NULL, 'mauris non ligula', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 691, 4, '', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:29', '2021-02-19 18:04:20', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (7, 0, 1, NULL, 'nisi venenatis tristique fusce congue', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 689, 4, '', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:40', '2021-02-19 18:04:32', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (8, 0, 1, NULL, 'quis lectus suspendisse potenti in', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'desktop', '', '', 'image', 'image/png', 0, 1280, 685, 4, '', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:04:54', '2021-02-19 18:04:43', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (9, 0, 1, NULL, 'Glossary res', '', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'learnweb', '', '', 'glossary', '', 0, NULL, NULL, 4, '', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', '2021-02-19 18:10:37', '2021-02-19 18:10:20', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
+       (10, 0, NULL, NULL, 'Test survey', 'Some test here', NULL, 'LEARNWEB', 'DEFAULT_RIGHTS', 'learnweb', NULL, NULL, 'survey', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'UNKNOWN', '2021-04-11 17:57:09', '2021-04-11 17:57:09', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078);
 
 INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`, `created_at`)
 VALUES (1, 1, 1, '2021-02-19 17:53:04'),
@@ -290,72 +290,67 @@ VALUES (1, 1, 1, '2021-02-19 17:53:04'),
        (6, 7, 4, '2021-02-19 18:07:30'),
        (6, 10, 6, '2021-02-19 18:39:33');
 
-INSERT INTO `lw_resource_rating` (resource_id, user_id, rating)
-VALUES (1, 2, 2),
-       (1, 5, 5),
-       (4, 3, 4),
-       (4, 4, 5),
-       (4, 2, 3),
-       (5, 5, 5),
-       (5, 3, 4),
-       (6, 4, 4),
-       (6, 6, 3),
-       (6, 2, 3);
+INSERT INTO `lw_resource_rating` (`resource_id`, `user_id`, `type`, `rating`, `created_at`)
+VALUES (1, 2, 'star', 2, '2021-02-19 18:03:03'),
+       (1, 5, 'star', 5, '2021-02-21 09:15:27'),
+       (4, 3, 'star', 4, '2021-02-22 14:32:19'),
+       (4, 4, 'star', 5, '2021-02-20 16:45:38'),
+       (4, 2, 'star', 3, '2021-02-23 11:05:22'),
+       (5, 5, 'star', 5, '2021-02-24 09:18:45'),
+       (5, 3, 'star', 4, '2021-02-19 22:37:11'),
+       (6, 4, 'star', 4, '2021-02-25 08:42:56'),
+       (6, 6, 'star', 3, '2021-02-22 19:30:15'),
+       (6, 2, 'star', 3, '2021-02-20 13:27:49'),
+       (1, 2, 'thumb', -1, '2021-02-19 18:03:03'),
+       (1, 5, 'thumb', 1, '2021-02-25 14:27:36'),
+       (4, 3, 'thumb', 1, '2021-02-28 19:42:15'),
+       (4, 4, 'thumb', 1, '2021-03-05 11:08:23'),
+       (4, 2, 'thumb', 1, '2021-03-08 09:34:57'),
+       (5, 5, 'thumb', 1, '2021-03-12 16:45:32'),
+       (5, 3, 'thumb', 1, '2021-03-15 08:22:19'),
+       (6, 4, 'thumb', 1, '2021-03-18 14:56:41'),
+       (6, 6, 'thumb', -1, '2021-03-21 17:30:05'),
+       (6, 2, 'thumb', 1, '2021-03-24 10:15:27');
 
-INSERT INTO `lw_resource_thumb` (resource_id, user_id, direction)
-VALUES (1, 2, -1),
-       (1, 5, 1),
-       (4, 3, 1),
-       (4, 4, 1),
-       (4, 2, 1),
-       (5, 5, 1),
-       (5, 3, 1),
-       (6, 4, 1),
-       (6, 6, -1),
-       (6, 2, 1);
+INSERT INTO `lw_survey_page` (`page_id`, `resource_id`, `deleted`, `order`, `title`, `description`, `sampling`)
+VALUES (1, 10, 0, 0, 'Test survey', 'Some test here', 0);
 
-INSERT INTO `lw_survey` (`survey_id`, `organisation_id`, `title`, `description`, `user_id`, `deleted`, `public_template`)
-VALUES (1, 1, 'Test survey', 'Some test here', 1, 0, 1);
+INSERT INTO `lw_survey_question` (`page_id`, `question_id`, `deleted`, `order`, `question`, `question_type`, `description`, `placeholder`, `required`, `min_length`, `max_length`)
+VALUES (1, 1, 0, 1, 'Question one', 'INPUT_TEXT', NULL, NULL, 1, NULL, NULL),
+       (1, 2, 0, 0, 'Question zero', 'MANY_CHECKBOX', NULL, NULL, 1, NULL, NULL),
+       (1, 3, 0, 2, 'Question two', 'ONE_MENU', NULL, NULL, 1, NULL, NULL),
+       (1, 4, 0, 3, 'Question three', 'FULLWIDTH_HEADER', NULL, NULL, 1, NULL, NULL),
+       (1, 5, 0, 4, 'Question four', 'MULTIPLE_MENU', NULL, NULL, 0, NULL, NULL),
+       (1, 6, 0, 5, 'Question five', 'FULLWIDTH_HEADER', NULL, NULL, 0, NULL, NULL),
+       (1, 7, 0, 6, 'Question six', 'ONE_RADIO', NULL, NULL, 0, NULL, NULL),
+       (1, 8, 0, 7, 'Question seven', 'INPUT_TEXT', NULL, NULL, 0, NULL, NULL),
+       (1, 9, 0, 9, 'Question eight', 'INPUT_TEXT', NULL, NULL, 0, NULL, NULL),
+       (1, 10, 0, 10, 'Question nine', 'INPUT_TEXT', NULL, NULL, 0, NULL, NULL);
 
-INSERT INTO `lw_survey_question` (`question_id`, `deleted`, `survey_id`, `order`, `question`, `question_type`, `answers`, `extra`, `option`, `info`, `required`)
-VALUES (1, 0, 1, 1, 'Question one', 'INPUT_TEXT', NULL, NULL, '10|||150', '', 1),
-       (2, 0, 1, 0, 'Question zero', 'MANY_CHECKBOX', NULL, NULL, '0|||6000', NULL, 1),
-       (3, 0, 1, 2, 'Question two', 'ONE_MENU', NULL, NULL, '0|||6000', NULL, 1),
-       (4, 0, 1, 3, 'Question three', 'FULLWIDTH_HEADER', NULL, NULL, '0|||6000', NULL, 1),
-       (5, 0, 1, 4, 'Question four', 'MULTIPLE_MENU', NULL, NULL, '0|||6000', NULL, 0),
-       (6, 0, 1, 5, 'Question five', 'FULLWIDTH_HEADER', NULL, NULL, '0|||6000', NULL, 0),
-       (7, 0, 1, 6, 'Question six', 'ONE_RADIO', NULL, NULL, '0|||6000', NULL, 0),
-       (8, 0, 1, 7, 'Question seven', 'INPUT_TEXT', NULL, NULL, '0|||6000', NULL, 0),
-       (9, 0, 1, 9, 'Question eight', 'INPUT_TEXT', NULL, NULL, '10|||200', NULL, 0),
-       (10, 0, 1, 10, 'Question nine', 'INPUT_TEXT', NULL, NULL, '0|||6000', NULL, 0);
+INSERT INTO `lw_survey_question_option` (`question_id`, `option_id`, `deleted`, `value`)
+VALUES (2, 1, 0, 'checkbox a'),
+       (2, 2, 0, 'checkbox b'),
+       (2, 3, 0, 'checkbox c'),
+       (3, 4, 0, 'option a'),
+       (3, 5, 0, 'option b'),
+       (5, 6, 0, 'option a'),
+       (5, 7, 0, 'option b'),
+       (7, 8, 0, 'option a'),
+       (7, 9, 0, 'option b'),
+       (7, 10, 0, 'option c');
 
-INSERT INTO `lw_survey_question_option` (`answer_id`, `deleted`, `question_id`, `value`)
-VALUES (1, 0, 2, 'checkbox a'),
-       (2, 0, 2, 'checkbox b'),
-       (3, 0, 2, 'checkbox c'),
-       (4, 0, 3, 'option a'),
-       (5, 0, 3, 'option b'),
-       (6, 0, 5, 'option a'),
-       (7, 0, 5, 'option b'),
-       (8, 0, 7, 'option a'),
-       (9, 0, 7, 'option b'),
-       (10, 0, 7, 'option c');
+INSERT INTO `lw_survey_response` (`response_id`, `resource_id`, `message_id`, `user_id`, `submitted`, `created_at`)
+VALUES (1, 10, NULL, 2, 1, CURRENT_TIMESTAMP() + 60);
 
-INSERT INTO `lw_survey_resource` (`resource_id`, `survey_id`, `open_date`, `close_date`, `editable`)
-VALUES (10, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() + 1209600, 0);
-
-INSERT INTO `lw_survey_answer` (`resource_id`, `user_id`, `question_id`, `answer`)
-VALUES (10, 2, 1, 'answer one'),
-       (10, 2, 2, 'checkbox b'),
-       (10, 2, 3, 'option b'),
-       (10, 2, 5, 'option a|||option b'),
-       (10, 2, 7, 'option b'),
-       (10, 2, 8, 'answer seven'),
-       (10, 2, 9, 'answer eight'),
-       (10, 2, 10, 'answer nine');
-
-INSERT INTO `lw_survey_resource_user` (`resource_id`, `user_id`, `submitted`, `created_at`)
-VALUES (10, 2, 1, CURRENT_TIMESTAMP() + 60);
+INSERT INTO `lw_survey_response_answer` (`response_id`, `question_id`, `variant_id`, `answer`)
+VALUES (1, 1, NULL, 'answer one'),
+       (1, 2, NULL, 'checkbox b'),
+       (1, 3, NULL, 'option b'),
+       (1, 5, NULL, 'option a|||option b'),
+       (1, 7, NULL, 'option b'),
+       (1, 8, NULL, 'answer seven'),
+       (1, 9, NULL, 'answer eight'),
+       (1, 10, NULL, 'answer nine');
 
 INSERT INTO `lw_tag` (`tag_id`, `name`)
 VALUES (10, 'Cactus'),

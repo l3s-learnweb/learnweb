@@ -114,13 +114,17 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
         }
 
         if (startDate != null) {
-            if (hasParams) params.append("&");
+            if (hasParams) {
+                params.append("&");
+            }
             params.append("start_date=").append(startDate);
             hasParams = true;
         }
 
         if (endDate != null) {
-            if (hasParams) params.append("&");
+            if (hasParams) {
+                params.append("&");
+            }
             params.append("end_date=").append(endDate);
         }
 

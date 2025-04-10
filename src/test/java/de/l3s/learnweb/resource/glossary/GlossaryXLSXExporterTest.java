@@ -96,7 +96,7 @@ class GlossaryXLSXExporterTest {
         GlossaryTerm term12 = new GlossaryTerm();
         term12.setTerm("Cambio Climático");
         term12.setAcronym("CC");
-        term12.setLanguage(new Locale("es"));
+        term12.setLanguage(Locale.of("es"));
         term12.setSource("UN Documents");
         term12.setPhraseology("calentamiento global");
         term12.setUses(List.of("scientific"));
@@ -161,7 +161,7 @@ class GlossaryXLSXExporterTest {
         GlossaryTerm term33 = new GlossaryTerm();
         term33.setTerm("Цифрова конфіденційність");
         term33.setAcronym("ЦК");
-        term33.setLanguage(new Locale("uk"));
+        term33.setLanguage(Locale.of("uk"));
         term33.setSource("Технічні стандарти");
         term33.setPhraseology("Конфіденційність");
         term33.setUses(List.of("legal"));

@@ -64,6 +64,7 @@ class SurveyDaoTest {
     void saveQuestion() {
         List<SurveyQuestion> before = surveyDao.findQuestionsByResourceId(10);
         assertFalse(before.isEmpty());
+
         SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.MANY_CHECKBOX);
         question.setId(11);
         question.setPageId(1);
