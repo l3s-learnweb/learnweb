@@ -72,7 +72,6 @@ public class WebResource extends Resource {
     public LinkedHashSet<ArchiveUrl> getArchiveUrls() {
         if (archiveUrls == null && getId() != 0) {
             archiveUrls = new LinkedHashSet<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(getId()));
-            archiveUrls.addAll(Learnweb.dao().getWaybackUrlDao().findByUrl(getUrl()));
         }
 
         return archiveUrls;

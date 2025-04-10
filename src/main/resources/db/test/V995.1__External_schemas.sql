@@ -1,4 +1,3 @@
-/* ================= `learnweb_large` schema ================= */
 CREATE SCHEMA IF NOT EXISTS `learnweb_large`;
 
 CREATE TABLE IF NOT EXISTS `learnweb_large`.`speechrepository_video` (
@@ -55,40 +54,4 @@ CREATE TABLE IF NOT EXISTS `learnweb_large`.`ted_video` (
     `duration` SMALLINT(6) UNSIGNED NOT NULL DEFAULT 0,
     `json` MEDIUMTEXT DEFAULT NULL,
     KEY `ted_video_slug` (`slug`)
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`wb2_url` (
-    `url_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `url` VARCHAR(2000) NOT NULL,
-    `first_capture` TIMESTAMP NULL DEFAULT NULL,
-    `last_capture` TIMESTAMP NULL DEFAULT NULL,
-    `all_captures_fetched` BOOLEAN NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
-    `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    KEY `wb2_url_url` (`url`)
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`wb2_url_capture` (
-    `url_id` BIGINT(20) NOT NULL,
-    `timestamp` TIMESTAMP NULL DEFAULT NULL,
-    KEY `wb2_url_capture_url_id` (`url_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`wb_url` (
-    `url_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `url` VARCHAR(2084) NOT NULL,
-    `first_capture` TIMESTAMP NULL DEFAULT NULL,
-    `last_capture` TIMESTAMP NULL DEFAULT NULL,
-    `all_captures_fetched` BOOLEAN NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
-    `crawl_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    `status_code` SMALLINT(6) NOT NULL DEFAULT -3,
-    `status_code_date` TIMESTAMP NOT NULL DEFAULT '1990-01-01 01:00:00',
-    UNIQUE KEY `wb_url_url_index` (`url`)
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`wb_url_content` (
-    `url_id` BIGINT(20) NOT NULL,
-    `status_code` SMALLINT(6) NOT NULL DEFAULT -3,
-    `content` LONGTEXT DEFAULT NULL,
-    `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-    KEY `wb_url_content_url_id` (`url_id`)
 );

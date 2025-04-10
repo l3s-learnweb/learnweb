@@ -119,7 +119,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
 
     private ArrayList<XYDataPoint> getTimelineData() {
         if (timelineData == null) {
-            TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
+            TreeMap<LocalDate, Integer> monthlySeriesData = dao().getArchiveUrlDao().countSnapshotsByMonths(resource.getId());
 
             timelineData = new ArrayList<>();
             monthlySeriesData.forEach((key, value) -> timelineData.add(new XYDataPoint(key.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli(), value)));

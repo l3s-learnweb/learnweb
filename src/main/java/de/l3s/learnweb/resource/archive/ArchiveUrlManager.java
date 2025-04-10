@@ -15,19 +15,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.app.ConfigProvider;
-import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.web.WebResource;
 
 @ApplicationScoped
@@ -36,36 +33,17 @@ public final class ArchiveUrlManager {
 
     private final String archiveSaveURL;
     private final ArchiveUrlDao archiveUrlDao;
-    private final WaybackUrlDao waybackUrlDao;
 
     private final ExecutorService executorService;
     private final ExecutorService cdxExecutorService;
 
     @Inject
-    public ArchiveUrlManager(ConfigProvider configProvider, final ArchiveUrlDao archiveUrlDao, final WaybackUrlDao waybackUrlDao) {
+    public ArchiveUrlManager(ConfigProvider configProvider, final ArchiveUrlDao archiveUrlDao) {
         this.archiveSaveURL = configProvider.getProperty("integration_archive_saveurl");
         this.archiveUrlDao = archiveUrlDao;
-        this.waybackUrlDao = waybackUrlDao;
 
         executorService = Executors.newCachedThreadPool();
         cdxExecutorService = Executors.newSingleThreadExecutor(); // In order to sequentially poll the CDX server and not overload it
-    }
-
-    public void checkWaybackCaptures(ResourceDecorator resource) {
-        try {
-            if (resource.getResource().getMetadataValue("first_timestamp") == null) {
-                Optional<ImmutablePair<String, String>> firstAndLastCapture = waybackUrlDao.findFirstAndLastCapture(resource.getUrl());
-                if (firstAndLastCapture.isPresent()) {
-                    resource.getResource().setMetadataValue("first_timestamp", firstAndLastCapture.get().left);
-                    resource.getResource().setMetadataValue("last_timestamp", firstAndLastCapture.get().right);
-                } else {
-                    cdxExecutorService.submit(new CDXWorker(resource));
-                }
-            }
-        } catch (RejectedExecutionException e) {
-            log.error("Checking if executor was shutdown: {}", cdxExecutorService.isShutdown());
-            log.error("Executor exception while submitting new wayback capture request", e);
-        }
     }
 
     public Boolean addResourceToArchive(WebResource resource) throws IOException {
@@ -105,15 +83,6 @@ public final class ArchiveUrlManager {
             Thread.currentThread().interrupt();
         }
 
-    }
-
-    private record CDXWorker(ResourceDecorator resource) implements Callable<String> {
-        @Override
-        public String call() throws IOException {
-            CDXClient cdxClient = new CDXClient();
-            cdxClient.isArchived(resource);
-            return null;
-        }
     }
 
     class ArchiveNowWorker implements Callable<Boolean> {
