@@ -119,10 +119,10 @@ public final class MailFactory {
                 .append(new Text("Message")).append(": ").append(message));
     }
 
-    public static MessageBuilder buildNotificationEmail(String title, String text, String username) {
+    public static MessageBuilder buildNotificationEmail(String title, String text, String username, String serverUrl, String appName) {
         return new MessageBuilder("Learnweb: " + title)
             .add(new Text(text))
-            .footer(new Text("mail_notification_footer", username));
+            .footer(new Text("mail_notification_footer", username, serverUrl, appName));
     }
 
     public static MessageBuilder buildSuspiciousAlertEmail(List<Request> suspiciousRequests) {

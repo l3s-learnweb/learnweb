@@ -34,17 +34,18 @@ public class JobScheduler {
         scheduler.schedule("0 3 * * Sun", new ExpiredBansCleaner());
         // Cleans up requests once an hour
         scheduler.schedule("0 * * * *", new RequestsTaskHandler());
-
-        // Runs the TED crawler at 23:00 once a month to check for new/update TED videos
-        scheduler.schedule("0 23 1 * *", new TedCrawlerSimple());
-        // Runs the speech repository crawler at 22:00 once a month to check for new/update of videos
-        scheduler.schedule("0 22 2 * *", new SpeechRepositoryCrawler());
-
         // Checks bounced mail every 5 minutes
         scheduler.schedule("0/5 * * * *", new BounceFetcher());
-
         // Runs the Forum Notificator at 8:00AM once a day to send summary emails
         scheduler.schedule("0 8 * * *", new ForumNotificator());
+
+        // FIXME: this have to be moved separately
+        if ("https://learnweb.l3s.uni-hannover.de".equals(configProvider.getServerUrl())) {
+            // Runs the TED crawler at 23:00 once a month to check for new/update TED videos
+            scheduler.schedule("0 23 1 * *", new TedCrawlerSimple());
+            // Runs the speech repository crawler at 22:00 once a month to check for new/update of videos
+            scheduler.schedule("0 22 2 * *", new SpeechRepositoryCrawler());
+        }
     }
 
     @PostConstruct

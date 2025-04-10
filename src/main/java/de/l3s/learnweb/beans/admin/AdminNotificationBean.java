@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
+import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Message;
@@ -51,6 +52,9 @@ public class AdminNotificationBean extends ApplicationBean {
 
     @Inject
     private MailService mailService;
+
+    @Inject
+    private ConfigProvider config;
 
     @PostConstruct
     public void init() {
@@ -110,7 +114,7 @@ public class AdminNotificationBean extends ApplicationBean {
     private void sendMail(final ArrayList<String> recipients) {
         Mail mail = null;
         try {
-            mail = MailFactory.buildNotificationEmail(title, text, user.getUsername()).build(user.getLocale());
+            mail = MailFactory.buildNotificationEmail(title, text, user.getUsername(), config.getServerUrl(), config.getAppName()).build(user.getLocale());
             mail.setReplyTo(user.getEmail());
             mail.setRecipientsBcc(recipients);
             mailService.send(mail);

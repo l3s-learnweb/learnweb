@@ -379,7 +379,7 @@ public class ConfigProvider implements Serializable {
      * If started in development (also when no servlet context) or other test instance, do not schedule any jobs.
      */
     public boolean isRunScheduler() {
-        return isServlet() && !isDevelopment() && "https://learnweb.l3s.uni-hannover.de".equals(getServerUrl());
+        return isServlet() && !isDevelopment();
     }
 
     public boolean isCollectSearchHistory() {
