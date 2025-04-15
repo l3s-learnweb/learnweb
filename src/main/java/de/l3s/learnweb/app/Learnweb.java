@@ -38,8 +38,6 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 @ApplicationScoped
 @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
 public final class Learnweb {
-    public static final String SALT_1 = "ff4a9ff19306ee0407cf69d592";
-    public static final String SALT_2 = "3a129713cc1b33650816d61450";
 
     private static Learnweb learnweb;
 

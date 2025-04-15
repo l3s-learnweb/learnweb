@@ -56,6 +56,7 @@ import de.l3s.learnweb.resource.glossary.parser.GlossaryXLSParser;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.HashHelper;
 import de.l3s.util.Image;
 import de.l3s.util.bean.BeanHelper;
 
@@ -458,11 +459,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
                 HSSFCellStyle copyrightStyle = wb.createCellStyle();
                 copyrightStyle.setLocked(true);
-                sheet.protectSheet(Learnweb.SALT_1); // use SALT as password
+                sheet.protectSheet(getXlsPassword());
             }
         } catch (RuntimeException | IOException e) {
             throw new HttpException("Error in postprocessing Glossary XLS for resource: " + glossaryResource.getId(), e);
         }
+    }
+
+    private String getXlsPassword() {
+        String glossaryPassword = config().getProperty("glossary_password");
+        if (glossaryPassword == null) {
+            return HashHelper.sha256(config().getAppSecret() + "glossary");
+        }
+        return glossaryPassword;
     }
 
     public void rotatePDF(Object document) {

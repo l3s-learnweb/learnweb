@@ -77,6 +77,6 @@ public class ForumNotificator implements Runnable, Serializable {
     }
 
     public static String getHash(User user) {
-        return user.getId() + ":" + HashHelper.sha512(Learnweb.SALT_1 + user.getId() + Learnweb.SALT_2 + "notification");
+        return user.getId() + ":" + HashHelper.sha256(user.getId() + "unsubscribe" + Learnweb.config().getAppSecret());
     }
 }

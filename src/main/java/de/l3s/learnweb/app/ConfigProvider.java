@@ -20,6 +20,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Named;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +42,11 @@ public class ConfigProvider implements Serializable {
      * All the application configuration stored here.
      */
     private final Properties properties = new Properties();
+
+    /**
+     * Application secret key, used for links generation, encryption, etc. Might break links if changed.
+     */
+    private String appSecret;
 
     /**
      * A version of the application from pom.xml (extracted from web.xml, maven should put it there on build).
@@ -249,6 +255,18 @@ public class ConfigProvider implements Serializable {
 
     public boolean getPropertyBoolean(final String key, final boolean defaultValue) {
         return Boolean.parseBoolean(properties.getProperty(key, String.valueOf(defaultValue)));
+    }
+
+    public String getAppSecret() {
+        if (appSecret == null) {
+            appSecret = properties.getProperty("app_secret");
+            if (appSecret == null) {
+                appSecret = RandomStringUtils.secure().nextAlphanumeric(56);
+                log.warn("No app secret found, new token generated: {}", appSecret);
+                log.warn("Please set app_secret in application.properties or .env file to avoid token regeneration on every restart.");
+            }
+        }
+        return appSecret;
     }
 
     public String getEnvironment() {
