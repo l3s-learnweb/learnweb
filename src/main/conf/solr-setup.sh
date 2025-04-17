@@ -19,9 +19,6 @@ else
 
     echo "core detected: $core_name"
 
-    sed -i '/<!-- <lib dir="${solr.install.dir:..\/..\/..\/..}\/modules\/ltr\/lib" regex=".*\\.jar" \/> -->/a\
-  <lib dir="${solr.install.dir:..\/..\/..}\/modules\/extraction\/lib" regex=".*\\.jar" \/>' /var/solr/data/$core_name/conf/solrconfig.xml
-
     # start a Solr so we can use the Schema API, but only on localhost
     echo "starting local solr"
     start-local-solr &
@@ -31,17 +28,17 @@ else
     # Now configure with the Schema API
 
     echo "adding /update/extract request handler"
-    curl -X POST -H 'Content-type:application/json' -d '{
+    curl -s --fail-with-body -X POST -H 'Content-type:application/json' -d '{
       "add-requesthandler": {
         "name": "/update/extract",
         "startup": "lazy",
         "class": "solr.extraction.ExtractingRequestHandler",
         "defaults":{ "lowernames": "true", "fmap.content":"_text_"}
       }
-    }' http://$solr_host/solr/$core_name/config
+    }' http://$solr_host/solr/$core_name/config || exit 1
 
     echo "adding /LearnwebQuery request handler"
-    curl -X POST -H 'Content-type:application/json' -d '{
+    curl -s --fail-with-body --fail -X POST -H 'Content-type:application/json' -d '{
       "add-requesthandler": {
         "name": "/LearnwebQuery",
         "class": "solr.SearchHandler",
@@ -56,10 +53,10 @@ else
           "mm": "-20%"
         }
       }
-    }' http://$solr_host/solr/$core_name/config
+    }' http://$solr_host/solr/$core_name/config || exit 1
 
     echo "adding schema fields"
-    curl -X POST -H 'Content-type:application/json' --data-binary '{
+    curl -s --fail-with-body --fail -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":[
     {
       "name": "title",
@@ -171,7 +168,7 @@ else
       "dest": "_text_"
     }
   ]
-   }' http://$solr_host/solr/$core_name/schema
+   }' http://$solr_host/solr/$core_name/schema || exit 1
 
     echo "finished configuring with the Schema API"
 

@@ -1,7 +1,7 @@
 services:
   webapp:
     image: tomcat:11
-    restart: always
+    restart: unless-stopped
     volumes:
       # the project has to be built (mvn clean package -Pprod) before running the docker-compose
       - "./target/Learnweb.war:/usr/local/tomcat/webapps/ROOT.war"
@@ -21,7 +21,7 @@ services:
 
   mariadb:
     image: mariadb:11.4
-    restart: always
+    restart: unless-stopped
     ports:
       - "3306:3306"
     volumes:
@@ -36,9 +36,11 @@ services:
 
   solr:
     image: solr:9
-    restart: always
+    restart: unless-stopped
     ports:
       - "8983:8983"
+    environment:
+      - SOLR_MODULES=extraction
     volumes:
       - "./src/main/conf/solr-setup.sh:/solr-setup.sh:ro"
       - "./data/solr:/var/solr"

@@ -6,6 +6,9 @@ on:
     types: [ completed ]
     branches: [ main ]
 
+env:
+  ARTIFACT_NAME: learnweb-war
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,7 +32,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: learnweb-war
+          name: ${{ env.ARTIFACT_NAME }}
           path: target/Learnweb.war
           if-no-files-found: error
 
@@ -37,6 +40,9 @@ jobs:
     environment: staging
     runs-on: ubuntu-latest
     needs: [ build ]
+    env:
+      DEPLOY_ROOT: ~/stacks/learnweb_dev/webapps
+      DEPLOY_NAME: dev
     steps:
       - uses: appleboy/ssh-action@v1.2.2
         with:
@@ -52,7 +58,7 @@ jobs:
             #!/bin/bash
             set -e
 
-            cd ~/stacks/learnweb_dev/webapps
+            cd ${{ env.DEPLOY_ROOT }}
             TEMP_DIR=$(mktemp -d)
 
             echo "Getting artifact from workflow ${{ github.run_id }}"
@@ -60,7 +66,7 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ github.token }}" \
               "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" | \
-              jq -r '.artifacts[] | select(.name=="learnweb-war") | .id')
+              jq -r '.artifacts[] | select(.name=="${{ env.ARTIFACT_NAME }}") | .id')
 
             echo "Downloading artifact $ARTIFACT_ID"
             curl --no-progress-meter --fail-with-body -L \
@@ -70,6 +76,6 @@ jobs:
               -o "${TEMP_DIR}/artifact.zip"
 
             unzip -q "${TEMP_DIR}/artifact.zip" -d "${TEMP_DIR}"
-            mv "${TEMP_DIR}/Learnweb.war" "dev.war"
-            echo "Artifact deployed"
+            mv "${TEMP_DIR}/Learnweb.war" "${{ env.DEPLOY_NAME }}.war"
+            echo "Artifact deployed as ${{ env.DEPLOY_NAME }}"
             rm -rf "${TEMP_DIR}"
