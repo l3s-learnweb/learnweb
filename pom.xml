@@ -19,10 +19,10 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.49.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.7.1</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.49.3</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>11.8.1</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.24.3</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.8.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.11.1</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.17.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>15.0.3</version>
+            <version>15.0.4</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -284,7 +284,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.13.0</version>
+            <version>2.13.1</version>
         </dependency>
         <!-- A dependency of several other packages, but as we anyway need to include it, feel free to use it -->
         <dependency>
@@ -296,7 +296,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.19.1</version>
+            <version>1.20.1</version>
         </dependency>
         <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
