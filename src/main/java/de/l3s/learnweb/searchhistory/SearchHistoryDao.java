@@ -106,7 +106,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("search_id")
     int insertGroupQuery(int groupId, String query, String language, String searchFilters, int userId);
 
-    @SqlUpdate("INSERT INTO lw_search_history_action (search_id, `rank`, action) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT IGNORE INTO lw_search_history_action (search_id, `rank`, action) VALUES (?, ?, ?)")
     void insertAction(int searchId, int rank, SearchAction action);
 
     default void insertResources(int searchId, List<ResourceDecorator> resources) {

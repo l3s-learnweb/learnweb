@@ -92,8 +92,8 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             eventBus.dispatch(new LearnwebGroupEvent(Action.group_changing_description, group).setParams(group.getDescription()));
         }
         if (!editedGroupTitle.equals(group.getTitle())) {
-            eventBus.dispatch(new LearnwebGroupEvent(Action.group_changing_title, group).setParams(group.getTitle()));
             group.setTitle(editedGroupTitle);
+            eventBus.dispatch(new LearnwebGroupEvent(Action.group_changing_title, group).setParams(group.getTitle()));
         }
         if (editedGroupLeaderId != group.getLeaderUserId()) {
             if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId()) {
