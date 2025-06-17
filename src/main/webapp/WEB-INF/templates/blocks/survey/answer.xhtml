@@ -23,9 +23,9 @@
 
 			<h:panelGroup id="page" layout="block">
 				<p:panel styleClass="mb-3 no-margin" rendered="#{not empty surveyAnswerBean.page.title or not empty surveyAnswerBean.page.description}">
-					<h3 faces:rendered="#{not empty surveyAnswerBean.page.title}">
+					<h2 faces:rendered="#{not empty surveyAnswerBean.page.title}">
 						<h:outputText value="${surveyAnswerBean.page.title}"/>
-					</h3>
+					</h2>
 					<div class="no-margin" faces:rendered="#{not empty surveyAnswerBean.page.description and not surveyAnswerBean.page.sampling}">
 						<h:outputText value="${surveyAnswerBean.page.description}" escape="false"/>
 					</div>

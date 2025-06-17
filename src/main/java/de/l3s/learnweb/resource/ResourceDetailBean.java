@@ -336,7 +336,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     public HashMap<String, Integer> getRatingValues() {
         if (null == ratingValues) {
             ratingValues = new HashMap<>();
-            resource.getRatings().forEach((key, value) -> ratingValues.put(key, value.getRate(getUser().getId())));
+            if (isLoggedIn()) {
+                resource.getRatings().forEach((key, value) -> ratingValues.put(key, value.getRate(getUser().getId())));
+            }
         }
         return ratingValues;
     }
