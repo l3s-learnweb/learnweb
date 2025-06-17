@@ -31,7 +31,8 @@ logs
 data
 
 ## Local files
-.env
+.env*
+!.env.example
 **/webapp/resources/bundle
 
 ## We don't use Yarn in production
