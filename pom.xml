@@ -109,7 +109,7 @@
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
-            <version>1.4.1</version>
+            <version>2.0.5</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (Excel or XML)) -->
         <dependency>
