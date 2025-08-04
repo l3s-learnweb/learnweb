@@ -20,9 +20,9 @@
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.49.5</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.10.2</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>11.10.5</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.25.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.17.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.18.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.18.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,7 +34,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.13.3</version>
+                <version>5.13.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.eclipse.angus</groupId>
             <artifactId>angus-mail</artifactId>
-            <version>2.0.3</version>
+            <version>2.0.4</version>
         </dependency>
 
         <!-- ################ Faces Libraries ################ -->
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>15.0.5</version>
+            <version>15.0.6</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.19.0</version>
+            <version>2.20.0</version>
         </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
@@ -192,7 +192,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>6.3.0</version>
+            <version>7.0.0</version>
         </dependency>
         <!-- JDBC wrapper -->
         <dependency>
@@ -220,7 +220,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>9.8.1</version>
+            <version>9.9.0</version>
             <exclusions>
                 <!-- We use alternative binding to Log4j-->
                 <exclusion>
@@ -332,7 +332,7 @@
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.25.0</version>
+            <version>0.25.1</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
@@ -522,7 +522,7 @@
             <!-- A maven component that enforces minimum Java and Maven versions -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
