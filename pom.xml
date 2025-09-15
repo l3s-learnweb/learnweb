@@ -20,10 +20,10 @@
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.49.5</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.10.5</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>11.12.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.25.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.18.0</maven.dependency.sentry.version>
-        <maven.dependency.mockito.version>5.18.0</maven.dependency.mockito.version>
+        <maven.dependency.sentry.version>8.21.1</maven.dependency.sentry.version>
+        <maven.dependency.mockito.version>5.19.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>15.0.6</version>
+            <version>15.0.7</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -186,13 +186,13 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.5.4</version>
+            <version>3.5.6</version>
         </dependency>
         <!-- Connection pool -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>7.0.0</version>
+            <version>7.0.2</version>
         </dependency>
         <!-- JDBC wrapper -->
         <dependency>
@@ -284,7 +284,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.13.1</version>
+            <version>2.13.2</version>
         </dependency>
         <!-- A dependency of several other packages, but as we anyway need to include it, feel free to use it -->
         <dependency>
@@ -296,7 +296,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.21.1</version>
+            <version>1.21.2</version>
         </dependency>
         <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
@@ -332,7 +332,7 @@
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.25.1</version>
+            <version>0.26.0</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
@@ -354,7 +354,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-junit5</artifactId>
-            <version>5.0.1.Final</version>
+            <version>5.0.2.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -430,7 +430,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.3.2</version>
+                <version>4.9.5.0</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -438,7 +438,7 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.5.4</version>
             </plugin>
             <!-- Specifies WebARchive configuration -->
             <plugin>
@@ -497,7 +497,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.18.0</version>
+                <version>2.19.0</version>
                 <configuration>
                     <processUnboundPlugins>true</processUnboundPlugins>
                     <ruleSet>
