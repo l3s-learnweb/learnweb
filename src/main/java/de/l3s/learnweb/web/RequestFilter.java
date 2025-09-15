@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Servlets;
@@ -53,7 +54,7 @@ public class RequestFilter extends HttpFilter {
 
         // validate ip address
         String ipAddr = Servlets.getRemoteAddr(request);
-        if (!InetAddresses.isInetAddress(ipAddr)) {
+        if (!InetAddresses.isInetAddress(ipAddr) && !isLocalAddress(ipAddr)) {
             /*
              * This rule should ban threats like:
              * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
@@ -103,5 +104,9 @@ public class RequestFilter extends HttpFilter {
         }
 
         return true;
+    }
+
+    private static boolean isLocalAddress(String ipAddr) {
+        return Strings.CI.equalsAny(ipAddr, "[0:0:0:0:0:0:0:1]", "127.0.0.1", "localhost");
     }
 }
