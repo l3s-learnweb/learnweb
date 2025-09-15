@@ -20,7 +20,7 @@ services:
       LEARNWEB_DATASOURCE_PASSWORD: "${MARIADB_PASSWORD}"
 
   mariadb:
-    image: mariadb:11.4
+    image: mariadb:11
     restart: unless-stopped
     ports:
       - "3306:3306"
