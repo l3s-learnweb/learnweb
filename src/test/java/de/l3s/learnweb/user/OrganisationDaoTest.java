@@ -37,7 +37,7 @@ class OrganisationDaoTest {
         assertEquals(3, retrieved.get().getGlossaryLanguages().size());
         assertEquals(ColorTheme.emerald, retrieved.get().getTheme());
         assertEquals(SearchMode.text, retrieved.get().getDefaultSearchMode());
-        assertEquals(ResourceService.bing, retrieved.get().getDefaultSearchServiceText());
+        assertEquals(ResourceService.google, retrieved.get().getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, retrieved.get().getDefaultSearchServiceImage());
         assertEquals(ResourceService.youtube, retrieved.get().getDefaultSearchServiceVideo());
     }
@@ -70,8 +70,8 @@ class OrganisationDaoTest {
         testOrganisation.setTermsAndConditions("By registering in the organization you confirm you are not russian");
         testOrganisation.setWelcomePage("/lw/myhome/welcome.jsf");
         testOrganisation.setDefaultLanguage("en");
+        testOrganisation.setDefaultSearchServiceText(ResourceService.google);
         testOrganisation.setDefaultSearchServiceImage(ResourceService.flickr);
-        testOrganisation.setDefaultSearchServiceText(ResourceService.bing);
         testOrganisation.setDefaultSearchServiceVideo(ResourceService.youtube);
 
         organisationDao.save(testOrganisation);
@@ -88,7 +88,7 @@ class OrganisationDaoTest {
 
         assertEquals(ColorTheme.emerald, retrieved.get().getTheme());
         assertEquals(SearchMode.text, retrieved.get().getDefaultSearchMode());
-        assertEquals(ResourceService.bing, retrieved.get().getDefaultSearchServiceText());
+        assertEquals(ResourceService.google, retrieved.get().getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, retrieved.get().getDefaultSearchServiceImage());
         assertEquals(ResourceService.youtube, retrieved.get().getDefaultSearchServiceVideo());
     }

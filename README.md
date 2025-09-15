@@ -10,7 +10,7 @@
 </p>
 
 Learnweb is a collaborative search and sharing system which brings together different online services such as
-YouTube, Flickr, Bing, Vimeo and SlideShare under one umbrella. It also provides advanced features for organizing and
+YouTube, Flickr, Google Search, Vimeo and SlideShare under one umbrella. It also provides advanced features for organizing and
 sharing distributed resources with a group of people.
 
 ## History

@@ -171,7 +171,7 @@ class ResourceDaoTest {
         Resource resource = new Resource();
         resource.setId(10);
         resource.setUserId(2);
-        resource.setService(ResourceService.bing);
+        resource.setService(ResourceService.google);
         resource.setType(ResourceType.document);
         resource.setTitle("ABC");
         resource.setFormat("doc");

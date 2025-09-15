@@ -6,10 +6,11 @@ import java.util.regex.Pattern;
 /**
  * List of possible resource sources.
  *
- * Used in database ENUMs: lw_resource.source
+ * Used in database ENUMs: lw_resource.source, lw_resource_history.source
  */
 public enum ResourceService { // when adding more services remember to update the `service` columns (ENUM values)
-    bing("Bing"), // Does not support filtering by date
+    bing("Bing"), // deprecated
+    google("Google Search"), // Does not support filtering by date
     flickr("Flickr"),
     giphy("GIPHY"), // The uppercase name is required
     youtube("YouTube"),
@@ -36,7 +37,7 @@ public enum ResourceService { // when adding more services remember to update th
 
     public boolean isInterweb() {
         return switch (this) {
-            case bing, giphy, flickr, youtube, vimeo, ipernity, slideshare -> true;
+            case google, giphy, flickr, youtube, vimeo, ipernity, slideshare -> true;
             default -> false;
         };
     }

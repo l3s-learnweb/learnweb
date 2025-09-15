@@ -177,9 +177,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             log.debug("Add resource; group: {}; folder: {}", newResource.getGroupId(), newResource.getFolderId());
 
-            // we need to check whether a Bing result is a PDF, Word or other document
-            if (newResource.getOriginalResourceId() == 0 && newResource.getService() == ResourceService.bing
-                && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text)) {
+            // we need to check whether it is a PDF, Word or other document
+            if (newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text)) {
                 log.debug("Extracting info from given url...");
                 FileInfo fileInfo = getLearnweb().getResourceMetadataExtractor().getFileInfo(newResource.getUrl());
                 getLearnweb().getResourceMetadataExtractor().processFileResource(newResource, fileInfo);

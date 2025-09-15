@@ -11,8 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
 
 import de.l3s.interweb.core.search.SearchConnectorResults;
 import de.l3s.interweb.core.search.SearchItem;
@@ -129,13 +127,7 @@ public class InterwebResultsWrapper implements Serializable {
         decoratedResource.setSnippet(searchItem.getDescription());
         decoratedResource.setAuthorUrl(searchItem.getAuthorUrl());
 
-        // bing description contains snippet with term highlighting
-        if (resource.getService() == ResourceService.bing && decoratedResource.getSnippet() == null && decoratedResource.getDescription() != null) {
-            // add snippet
-            decoratedResource.setSnippet(resource.getDescription());
-            // remove search term highlighting from description
-            resource.setDescription(Jsoup.clean(resource.getDescription(), Safelist.none()));
-        }
+        // TODO: investigate possibility to highlight search terms in snippet
 
         if (decoratedResource.getSnippet() == null && resource.getShortDescription() != null) {
             decoratedResource.setSnippet(resource.getShortDescription());

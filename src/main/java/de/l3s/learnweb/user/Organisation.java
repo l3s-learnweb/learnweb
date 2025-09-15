@@ -65,7 +65,7 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
     private String welcomePage = "myhome/welcome.jsf"; // page to show after login
     private ColorTheme theme = ColorTheme.emerald;
     private SearchMode defaultSearchMode = SearchMode.text;
-    private ResourceService defaultSearchServiceText = ResourceService.bing;
+    private ResourceService defaultSearchServiceText = ResourceService.google;
     private ResourceService defaultSearchServiceImage = ResourceService.flickr;
     private ResourceService defaultSearchServiceVideo = ResourceService.youtube;
     private String defaultLanguage; // the language which is used after the user logged in

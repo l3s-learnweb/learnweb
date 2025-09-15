@@ -273,11 +273,11 @@ public class Search implements Serializable {
             params.setServices(searchFilters.getFilterValue(FilterType.service));
         } else {
             if (configMode == SearchMode.text) {
-                params.setServices("Bing");
+                params.setServices("Google");
             } else if (configMode == SearchMode.image) {
-                params.setServices("Flickr", "Giphy", "Bing", "Ipernity");
+                params.setServices("Flickr", "Giphy", "Google", "Ipernity");
             } else if (configMode == SearchMode.video) {
-                params.setServices("YouTube", "Vimeo");
+                params.setServices("YouTube", "Vimeo", "Google");
             }
             params.setPerPage(configResultsPerService);
         }
@@ -397,6 +397,7 @@ public class Search implements Serializable {
         for (ResourceDecorator res : resources) {
             GroupedResources resGroup = new GroupedResources();
             resGroup.setGroupName(res.getService().getLabel());
+            resGroup.setGroupAlias(res.getService().name());
 
             if (res.getService().getLabel().equalsIgnoreCase(searchService.name())) {
                 continue;
@@ -529,18 +530,15 @@ public class Search implements Serializable {
         }
 
         public void setGroupName(String groupName) {
-            try {
-                ResourceService src = ResourceService.parse(groupName);
-                this.groupAlias = src.name();
-                this.groupName = src.toString();
-            } catch (IllegalArgumentException e) {
-                this.groupAlias = groupName.toLowerCase();
-                this.groupName = groupName;
-            }
+            this.groupName = groupName;
         }
 
         public String getGroupAlias() {
             return groupAlias;
+        }
+
+        public String setGroupAlias(String groupAlias) {
+            return this.groupAlias = groupAlias;
         }
 
         public Long getTotalResources() {

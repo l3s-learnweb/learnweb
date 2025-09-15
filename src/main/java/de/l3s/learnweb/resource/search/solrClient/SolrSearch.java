@@ -48,7 +48,7 @@ public class SolrSearch implements Serializable {
 
     // search filters
     private String filterType = ""; // image, video or web
-    private String filterService = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Learnweb ...
+    private String filterService = ""; // Google, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Learnweb ...
     private String filterDateFrom = "";
     private String filterDateTo = "";
     private String filterCollector = "";

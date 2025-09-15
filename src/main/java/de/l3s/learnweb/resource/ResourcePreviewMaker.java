@@ -80,7 +80,7 @@ public class ResourcePreviewMaker implements Serializable {
         InputStream inputStream = null;
         try {
             // if a web resource is not a simple website then download it
-            if (resource.isWebResource() && resource.getType() != ResourceType.website && resource.getService().in(ResourceService.bing, ResourceService.internet)) {
+            if (resource.isWebResource() && resource.getType() != ResourceType.website && resource.getService().in(ResourceService.bing, ResourceService.google, ResourceService.internet)) {
                 File file = new File(FileType.MAIN, resource.getTitle(), resource.getFormat());
                 fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
                 resource.addFile(file);
