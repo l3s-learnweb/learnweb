@@ -153,7 +153,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 rs.getInt("search_id"),
                 rs.getString("query"),
                 SearchMode.valueOf(rs.getString("mode")),
-                ResourceService.valueOf(rs.getString("service")),
+                ResourceService.parse(rs.getString("service")),
                 SqlHelper.getLocalDateTime(rs.getTimestamp("created_at"))
             );
         }

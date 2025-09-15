@@ -75,6 +75,10 @@ public enum ResourceService { // when adding more services remember to update th
      * Same as valueOf(), but removes spaces and dashes, also case insensitive.
      */
     public static ResourceService parse(String value) {
+        if ("bing".equalsIgnoreCase(value)) {
+            return internet;
+        }
+
         return valueOf(Pattern.compile("[ -]").matcher(value.toLowerCase()).replaceAll(""));
     }
 

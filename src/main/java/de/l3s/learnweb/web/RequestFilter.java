@@ -70,7 +70,7 @@ public class RequestFilter extends HttpFilter {
         if (shouldBeValidated(requestUri)) {
             // check if not maintenance
             if (configProvider.isMaintenance() && !userBean.isAdmin()) {
-                response.sendError(HttpException.UNAVAILABLE, request.getRequestURI());
+                response.sendError(HttpException.UNAVAILABLE);
                 return;
             }
 

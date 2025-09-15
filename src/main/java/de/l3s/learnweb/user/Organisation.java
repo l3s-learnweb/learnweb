@@ -471,7 +471,7 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
 
     private static ResourceService getServiceFromString(String name) {
         try {
-            return ResourceService.valueOf(name);
+            return ResourceService.parse(name);
         } catch (Exception e) {
             log.fatal("Can't get service for {}", name, e);
         }

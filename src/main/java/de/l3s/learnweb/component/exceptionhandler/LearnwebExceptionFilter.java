@@ -43,7 +43,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             chain.doFilter(request, response);
         } catch (FileNotFoundException exception) {
             // Ignoring thrown exception; this is a Faces quirk, and it should be interpreted as 404.
-            response.sendError(HttpException.NOT_FOUND, request.getRequestURI());
+            response.sendError(HttpException.NOT_FOUND);
         } catch (ServletException exception) {
             // get unwrapped exception
             Throwable throwable = Exceptions.unwrap(exception.getRootCause(), FacesException.class, ELException.class, WeldException.class, InvocationTargetException.class);
@@ -53,7 +53,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             request.setAttribute(ERROR_EXCEPTION, throwable);
 
             if (throwable instanceof ViewExpiredException) {
-                response.sendError(HttpException.SESSION_EXPIRED, request.getRequestURI());
+                response.sendError(HttpException.SESSION_EXPIRED);
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
                 response.sendRedirect(LoginBean.prepareLoginURL(request));

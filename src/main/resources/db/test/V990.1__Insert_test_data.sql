@@ -242,16 +242,16 @@ VALUES (1, 2, 1, 'Dolores eum illum neque.', 'Omnis tempore et deserunt. Quia qu
        (10, 1, 1, 'Deserunt commodi necessitatibus deserunt voluptatibus.', 'Molestias quibusdam a nemo et. Dolores earum possimus maiores est. Non qui quas quaerat odio veniam placeat quidem molestias. Non voluptate incidunt rerum odio enim commodi. Neque dolor nulla quo dolore.', '2019-08-20 13:21:46');
 
 INSERT INTO `lw_organisation` (`organisation_id`, `title`, `logo`, `welcome_page`, `welcome_message`, `options_field1`, `default_search_text`, `default_search_image`, `default_search_video`, `default_language`, `language_variant`, `banner_image_file_id`, `glossary_languages`)
-VALUES (1, 'Public', NULL, 'myhome/welcome.jsf', 'Hello world', 3118, 'bing', 'flickr', 'youtube', 'en', '', NULL, 'en,de,it'),
-       (2, 'Université de Bamenda', NULL, 'myhome/groups.jsf', 'Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.', 1154, 'bing', 'ipernity', 'vimeo', '', '', NULL, 'ar,zh,de,en,fr,el,it,nl,pt,ru,sv,es'),
-       (3, 'Fachhochschule Merseburg', NULL, 'myhome/welcome.jsf', 'In hac habitasse platea dictumst.', 2050, 'bing', 'flickr', 'youtube', '', '', NULL, 'de,en,fr,it,nl,pt,es'),
-       (4, 'University of Kota', NULL, 'myhome/welcome.jsf', 'Aenean lectus. Pellentesque eget nunc.', 4, 'bing', 'ipernity', 'youtube', 'it', '', NULL, 'en,it,nl,de'),
-       (5, 'National University of Ireland', NULL, 'myhome/groups.jsf', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla.', 128, 'bing', 'yovisto', 'vimeo', 'de', '', NULL, 'en,de,it'),
-       (6, 'Al Azhar University', NULL, 'myhome/resources.jsf', 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.', 3592, 'bing', 'flickr', 'youtube', 'es', '', NULL, 'ar,zh,de,en,fr,el,it,nl,pt,ru,sv,es'),
+VALUES (1, 'Public', NULL, 'myhome/welcome.jsf', 'Hello world', 3118, 'google', 'flickr', 'youtube', 'en', '', NULL, 'en,de,it'),
+       (2, 'Université de Bamenda', NULL, 'myhome/groups.jsf', 'Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.', 1154, 'google', 'ipernity', 'vimeo', '', '', NULL, 'ar,zh,de,en,fr,el,it,nl,pt,ru,sv,es'),
+       (3, 'Fachhochschule Merseburg', NULL, 'myhome/welcome.jsf', 'In hac habitasse platea dictumst.', 2050, 'google', 'flickr', 'youtube', '', '', NULL, 'de,en,fr,it,nl,pt,es'),
+       (4, 'University of Kota', NULL, 'myhome/welcome.jsf', 'Aenean lectus. Pellentesque eget nunc.', 4, 'google', 'ipernity', 'youtube', 'it', '', NULL, 'en,it,nl,de'),
+       (5, 'National University of Ireland', NULL, 'myhome/groups.jsf', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla.', 128, 'google', 'yovisto', 'vimeo', 'de', '', NULL, 'en,de,it'),
+       (6, 'Al Azhar University', NULL, 'myhome/resources.jsf', 'In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.', 3592, 'google', 'flickr', 'youtube', 'es', '', NULL, 'ar,zh,de,en,fr,el,it,nl,pt,ru,sv,es'),
        (7, 'University of Berne', NULL, 'myhome/welcome.jsf', 'In sagittis dui vel nisl. Duis ac nibh.', 1154, 'learnweb', 'ipernity', 'vimeo', 'en', '', NULL, 'en,de,it'),
-       (8, 'Kun Shan University', NULL, 'myhome/resources.jsf', 'Donec vitae nisi.', 128, 'bing', 'giphy', 'vimeo', 'en', '', NULL, 'nl,en,de,it'),
+       (8, 'Kun Shan University', NULL, 'myhome/resources.jsf', 'Donec vitae nisi.', 128, 'google', 'giphy', 'vimeo', 'en', '', NULL, 'nl,en,de,it'),
        (9, 'Njala University', NULL, 'myhome/welcome.jsf', 'Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', 196, 'learnweb', 'flickr', 'youtube', 'pt', '', NULL, 'de,en,it,lv,ru'),
-       (10, 'Universidad de Navarra', NULL, 'myhome/welcome.jsf', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.', 12, 'bing', 'flickr', 'youtube', 'en', '', NULL, 'en,de,it');
+       (10, 'Universidad de Navarra', NULL, 'myhome/welcome.jsf', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.', 12, 'google', 'flickr', 'youtube', 'en', '', NULL, 'en,de,it');
 
 INSERT INTO `lw_requests` (`request_id`, `addr`, `requests`, `logins`, `usernames`, `created_at`)
 VALUES (1, '33.143.226.138', 4, 2, '[admin]', '2019-06-16 05:00:00'),
@@ -589,7 +589,7 @@ VALUES (1, 1, '42A21BC3D47DA8D2D92340F51A2F87C1', 12, 0, '', '2021-02-18 11:27:2
        (198, 6, '289DF779CCACECB51156B90EC5D87D86', 2, 6, '12', '2021-02-19 18:40:37', 1);
 
 INSERT INTO `lw_search_history` (`search_id`, `group_id`, `query`, `mode`, `service`, `language`, `filters`, `user_id`, `created_at`)
-VALUES (1, NULL, 'Food', 'text', 'bing', 'it', NULL, 1, '2021-03-05 18:30:25'),
+VALUES (1, NULL, 'Food', 'text', 'google', 'it', NULL, 1, '2021-03-05 18:30:25'),
        (2, NULL, 'spacex', 'video', 'vimeo', 'en', NULL, 2, '2021-03-05 12:53:42'),
        (3, 1, 'a whales tale', 'video', 'youtube', 'it', NULL, 4, '2021-03-05 07:42:29');
 

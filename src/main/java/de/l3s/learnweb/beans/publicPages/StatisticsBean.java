@@ -76,7 +76,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             resourcesPerSource = handle.select("SELECT service, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY service ORDER BY count(*) DESC")
                 .map((rs, ctx) -> {
                     String serviceName = rs.getString(1);
-                    ResourceService service = ResourceService.valueOf(serviceName);
+                    ResourceService service = ResourceService.parse(serviceName);
 
                     serviceName = service.getLabel();
                     if (service.isCrawled()) {

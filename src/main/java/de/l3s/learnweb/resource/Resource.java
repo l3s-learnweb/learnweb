@@ -197,7 +197,7 @@ public class Resource extends AbstractResource implements Serializable {
             case survey -> new SurveyResource();
             case glossary -> new GlossaryResource();
             case website -> new WebResource();
-            default -> new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.valueOf(source));
+            default -> new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.parse(source));
         };
     }
 

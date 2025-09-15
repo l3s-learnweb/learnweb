@@ -265,7 +265,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             if (service == null) {
                 throw new IllegalArgumentException();
             }
-            searchService = ResourceService.valueOf(service);
+            searchService = ResourceService.parse(service);
         } catch (Exception e) {
             String prefService = switch (searchMode) {
                 case text -> "SEARCH_SERVICE_TEXT";
@@ -279,7 +279,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 case video -> getUser().getOrganisation().getDefaultSearchServiceVideo().name();
                 case group -> "learnweb";
             };
-            searchService = ResourceService.valueOf(isShowAlternativeSources() ? getPreference(prefService, defService) : defService);
+            searchService = ResourceService.parse(isShowAlternativeSources() ? getPreference(prefService, defService) : defService);
         }
 
         queryService = searchService.name();

@@ -537,8 +537,8 @@ public class Search implements Serializable {
             return groupAlias;
         }
 
-        public String setGroupAlias(String groupAlias) {
-            return this.groupAlias = groupAlias;
+        public void setGroupAlias(String groupAlias) {
+            this.groupAlias = groupAlias;
         }
 
         public Long getTotalResources() {
