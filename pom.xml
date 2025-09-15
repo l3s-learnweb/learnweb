@@ -24,6 +24,7 @@
         <maven.dependency.log4j.version>2.25.2</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>8.26.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.20.0</maven.dependency.mockito.version>
+        <maven.dependency.jetty.version>12.1.4</maven.dependency.jetty.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -465,16 +466,27 @@
             </plugin>
             <!-- Can be used to run the application without Tomcat server -->
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.26</version>
+                <groupId>org.eclipse.jetty.ee11</groupId>
+                <artifactId>jetty-ee11-maven-plugin</artifactId>
+                <version>${maven.dependency.jetty.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.jetty.ee11</groupId>
+                        <artifactId>jetty-ee11-cdi</artifactId>
+                        <version>${maven.dependency.jetty.version}</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
-                    <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
+                    <!-- see https://eclipse.dev/jetty/documentation/jetty-12/programming-guide/index.html#jetty-run-goal -->
                     <webApp>
                         <contextPath>/</contextPath>
-                        <jettyEnvXml>src/main/conf/jetty-env.xml</jettyEnvXml>
+                        <overrideDescriptor>src/main/conf/jetty-override-web.xml</overrideDescriptor>
                     </webApp>
-                    <scan>5</scan>
+                    <scan>3</scan>
+                    <httpConnector>
+                        <port>7050</port>
+                        <idleTimeout>60000</idleTimeout>
+                    </httpConnector>
                 </configuration>
             </plugin>
             <!-- Can be used to create JAR archive and set specific class as entry point -->

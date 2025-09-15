@@ -53,6 +53,7 @@ public class RequestFilter extends HttpFilter {
 
         // validate ip address
         String ipAddr = Servlets.getRemoteAddr(request);
+        ipAddr = ipAddr.startsWith("[") && ipAddr.endsWith("]") ? ipAddr.substring(1, ipAddr.length() - 1) : ipAddr;
         if (!InetAddresses.isInetAddress(ipAddr)) {
             /*
              * This rule should ban threats like:

@@ -5,9 +5,9 @@
 
     <footer class="layout-footer bg-body-secondary text-body-secondary">
         <div class="container p-3">
-            <a href="#{request.contextPath}/lw/imprint.jsf">#{msg['imprint.title']}</a> -
-			<a href="#{request.contextPath}/lw/privacy_statement.jsf">#{msg['privacy_statement']}</a> -
-			<a href="#{request.contextPath}/lw/contact.jsf">#{msg['contact']}</a> -
+            <h:link outcome="/lw/imprint" value="#{msg['imprint.title']}"/> -
+            <h:link outcome="/lw/privacy_statement" value="#{msg['privacy_statement']}"/> -
+            <h:link outcome="/lw/contact" value="#{msg['contact']}"/> -
             <h:outputFormat value="#{msg.index_footer_text}"><f:param value="#{config.appName}"/></h:outputFormat>
         </div>
     </footer>
