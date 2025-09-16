@@ -20,19 +20,19 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3",
-    "shepherd.js": "^14.5.0",
-    "video.js": "^8.23.3"
+    "bootstrap": "^5.3.8",
+    "shepherd.js": "^14.5.1",
+    "video.js": "^8.23.4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
-    "esbuild": "^0.25.0",
+    "@eslint/js": "^9.35.0",
+    "esbuild": "^0.25.9",
     "esbuild-sass-plugin": "^3.3.1",
-    "eslint": "^9.28.0",
+    "eslint": "^9.35.0",
     "eslint-plugin-compat": "^6.0.2",
-    "globals": "^16.0.0",
-    "sass-embedded": "^1.89.2",
-    "stylelint": "^16.20.0",
+    "globals": "^16.4.0",
+    "sass-embedded": "^1.92.1",
+    "stylelint": "^16.24.0",
     "stylelint-config-sass-guidelines": "^12.1.0",
     "stylelint-no-unsupported-browser-features": "^8.0.4"
   },
