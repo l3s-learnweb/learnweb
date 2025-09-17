@@ -2,13 +2,12 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:o="http://omnifaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
-<ui:param name="helpText" value="#{of:format1(msg.myhomeProfileHelp, config.appName)}"/>
+<ui:param name="helpText" value="#{o:format1(msg.myhomeProfileHelp, config.appName)}"/>
 
 <ui:define name="metadata">
     <f:metadata>

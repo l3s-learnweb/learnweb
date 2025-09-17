@@ -2,9 +2,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg.personal_info} - #{msg.your_information}"/>
 
@@ -29,7 +29,7 @@
                         <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.displayName}" rendered="#{not empty userBean.user.imageUrl}"/>
                     </p:avatar>
 
-                    <span class="profile-name"><h:outputText value="#{of:coalesce(userBean.user.fullName, 'N/D')}"/></span>
+                    <span class="profile-name"><h:outputText value="#{o:coalesce(userBean.user.fullName, 'N/D')}"/></span>
                     <span class="profile-role"><h:outputText value="#{userBean.user.username}"/></span>
                     <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
                         type="button" aria-disabled="false"><span class="ui-button-text ui-c"><h:outputText value="#{msg.go_to_profile}"/></span></a>
@@ -42,7 +42,7 @@
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.dateofbirth}"/></div>
                                     <div class="stats-title">
-                                        <h:outputText value="#{of:coalesce(userBean.user.dateOfBirth, 'N/D')}">
+                                        <h:outputText value="#{o:coalesce(userBean.user.dateOfBirth, 'N/D')}">
                                             <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                                         </h:outputText>
                                     </div>
@@ -50,12 +50,12 @@
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.address}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{of:coalesce(userBean.user.address, 'N/D')}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{o:coalesce(userBean.user.address, 'N/D')}"/></div>
                                 </div>
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.profession}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{of:coalesce(userBean.user.profession, 'N/D')}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{o:coalesce(userBean.user.profession, 'N/D')}"/></div>
                                 </div>
                             </div>
                             <div class="profile-statistics-panel col-4">
@@ -63,7 +63,7 @@
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.email_address}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{of:coalesce(userBean.user.email, 'N/D')}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{o:coalesce(userBean.user.email, 'N/D')}"/></div>
                                 </div>
                             </div>
                             <div class="profile-statistics-panel col-4">
@@ -71,12 +71,12 @@
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.student_id}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{of:coalesce(userBean.user.studentId, 'N/D')}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{o:coalesce(userBean.user.studentId, 'N/D')}"/></div>
                                 </div>
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.organisation}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{of:coalesce(userBean.user.organisation.title, 'N/D')}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{o:coalesce(userBean.user.organisation.title, 'N/D')}"/></div>
                                 </div>
                             </div>
                         </div>

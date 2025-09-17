@@ -2,9 +2,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg.users}"/>
 
@@ -80,7 +80,7 @@
                 <h:outputText value="#{userView.lastLoginDate.atZone(userView.timeZone)}" id="last_login">
                     <f:convertDateTime timeStyle="short" type="localDateTime"/>
                 </h:outputText>
-                <p:tooltip for="@previous" value="#{of:formatDateWithTimezone(userView.lastLoginDate, 'yyyy-MM-dd HH:mm', userView.timeZone)}" position="top"/>
+                <p:tooltip for="@previous" value="#{o:formatDateWithTimezone(userView.lastLoginDate, 'yyyy-MM-dd HH:mm', userView.timeZone)}" position="top"/>
             </p:column>
 
             <p:column headerText="#{msg.student_id}" sortBy="#{userView.studentId}" filterBy="#{userView.studentId}" filterMatchMode="contains" visible="false">

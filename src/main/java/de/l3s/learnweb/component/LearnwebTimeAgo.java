@@ -17,7 +17,7 @@ import jakarta.faces.context.ResponseWriter;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
-@FacesComponent(createTag = true, tagName = "timeAgo", namespace = "http://l3s.de/learnweb")
+@FacesComponent(createTag = true, tagName = "timeAgo", namespace = "learnweb")
 public class LearnwebTimeAgo extends UIComponentBase {
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component.LearnwebTimeAgo";
 

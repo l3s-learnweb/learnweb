@@ -2,9 +2,9 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg.searchTitle}"/>
 <ui:param name="helpText" value="#{msg.searchHelp}"/>
@@ -151,7 +151,7 @@
 
                     <ui:fragment rendered="#{not searchChatBean.newChat and not empty searchChatBean.conversation.created}">
                         <div class="d-flex flex-column text-center text-body-secondary">
-                            <p class="mb-0">You are viewing a chat history from #{of:formatDateWithTimezone(searchChatBean.conversation.created, 'yyyy-MM-dd HH:mm:ss', userBean.timeZone)}.</p>
+                            <p class="mb-0">You are viewing a chat history from #{o:formatDateWithTimezone(searchChatBean.conversation.created, 'yyyy-MM-dd HH:mm:ss', userBean.timeZone)}.</p>
                             <p>You can continue the conversation any time.</p>
                         </div>
                     </ui:fragment>

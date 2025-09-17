@@ -2,10 +2,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:o="http://omnifaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{groupOverviewBean.group.title}"/>
 <ui:param name="helpText" value="#{msg.groupOverviewHelp}"/>
@@ -53,7 +52,7 @@
                                          oncomplete="window.location.replace(window.location.href);" rendered="${groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                             <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
-                            <p:confirm message="#{of:format1(msg.leave_group_question, groupOverviewBean.group.title)}"/>
+                            <p:confirm message="#{o:format1(msg.leave_group_question, groupOverviewBean.group.title)}"/>
                         </p:commandButton>
                     </h:form>
                 </f:facet>

@@ -2,9 +2,9 @@
 				xmlns:ui="jakarta.faces.facelets"
 				xmlns:h="jakarta.faces.html"
 				xmlns:f="jakarta.faces.core"
-				xmlns:p="http://primefaces.org/ui"
-				xmlns:of="http://omnifaces.org/functions"
-				xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="primefaces"
+				xmlns:o="omnifaces"
+				xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg['error_pages.server_error']}"/>
 
@@ -16,7 +16,7 @@
 
 		<pre class="mt-3 mb-0 collapse overflow-scroll" style="max-height: 340px;">
 			<h:outputText value="Message: #{requestScope['jakarta.servlet.error.message']}"/><br/>
-			<h:outputText value="Stack trace: #{of:printStackTrace(lw:unwrap(requestScope['jakarta.servlet.error.exception']))}" escape="false"/>
+			<h:outputText value="Stack trace: #{o:printStackTrace(lw:unwrap(requestScope['jakarta.servlet.error.exception']))}" escape="false"/>
 		</pre>
 
 		<h:outputScript>$('.ui-panel-content .h5').on('click', () => $('.collapse').fadeIn());</h:outputScript>

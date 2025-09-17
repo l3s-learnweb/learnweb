@@ -4,10 +4,9 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:c="jakarta.tags.core"
                 xmlns:faces="jakarta.faces"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:o="http://omnifaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="hideGrowl" value="false"/>
 <ui:param name="pageTitle" value="#{groupOptionsBean.group.title}"/>
@@ -80,7 +79,7 @@
                             <ui:fragment rendered="#{not groupOptionsBean.group.course.registrationClosed}">
                                 <div class="field">
                                     <h:outputText value="#{msg.registration_wizard}:"/>
-                                    <p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.registrationWizard}/#{groupOptionsBean.group.id}"/>
+                                    <p:staticMessage severity="info" detail="#{o:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.registrationWizard}/#{groupOptionsBean.group.id}"/>
                                 </div>
                             </ui:fragment>
 
@@ -248,7 +247,7 @@
 
                     <div class="d-flex justify-content-end">
                         <p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form">
-                            <p:confirm message="#{of:format1(msg.group_copy_resources_question, groupOptionsBean.group.resources.size())}"/>
+                            <p:confirm message="#{o:format1(msg.group_copy_resources_question, groupOptionsBean.group.resources.size())}"/>
                         </p:commandButton>
                     </div>
                 </h:form>
@@ -274,7 +273,7 @@
                     <p:commandButton value="#{msg.delete_group}" styleClass="ui-button-danger"
                                      rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}"
                                      title="#{msg.delete}" action="#{groupsBean.deleteGroup}" process="@this">
-                        <p:confirm message="#{of:format1(msg.group_delete_question, groupOptionsBean.group.title)}"/>
+                        <p:confirm message="#{o:format1(msg.group_delete_question, groupOptionsBean.group.title)}"/>
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
                         <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                     </p:commandButton>
@@ -282,7 +281,7 @@
                                      oncomplete="window.location.replace(window.location.href);" rendered="${groupOptionsBean.group.isMember(userBean.user)}">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
                         <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
-                        <p:confirm message="#{of:format1(msg.leave_group_question, groupOptionsBean.group.title)}"/>
+                        <p:confirm message="#{o:format1(msg.leave_group_question, groupOptionsBean.group.title)}"/>
                     </p:commandButton>
                 </h:form>
             </p:panel>

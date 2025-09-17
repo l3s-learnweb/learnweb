@@ -15,7 +15,7 @@ import org.primefaces.component.api.Widget;
 import org.primefaces.component.menu.AbstractMenu;
 import org.primefaces.model.menu.MenuModel;
 
-@FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
+@FacesComponent(createTag = true, tagName = "menu", namespace = "learnweb")
 @ListenerFor(sourceClass = LearnwebMenu.class, systemEventClass = PostAddToViewEvent.class)
 public final class LearnwebMenu extends AbstractMenu implements Widget {
 

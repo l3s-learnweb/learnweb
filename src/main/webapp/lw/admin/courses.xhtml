@@ -2,9 +2,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg.courses}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
@@ -69,7 +69,7 @@
             <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.registrationWizard}" filterBy="#{course.registrationWizard}" filterMatchMode="contains">
                 <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.registrationClosed}"/>
 
-                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}" rendered="#{not course.registrationClosed}">
+                <h:outputLink value="#{o:getRequestBaseURL()}wizard=#{course.registrationWizard}" rendered="#{not course.registrationClosed}">
                     <h:outputText value="#{course.registrationWizard}"/>
                 </h:outputLink>
 	        </p:column>
@@ -101,14 +101,14 @@
                 <p:commandButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-eye-slash" title="#{msg.anonymise}"
                                  process="@this" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" update="@form" rendered="#{userBean.admin}"
                                  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
-                    <p:confirm message="#{of:format1(msg.courses_anonymise_question, course.title)}"/>
+                    <p:confirm message="#{o:format1(msg.courses_anonymise_question, course.title)}"/>
                 </p:commandButton>
             </p:column>
         </p:dataTable>
 
         <p:confirmDialog widgetVar="deleteCourseDialog" id="delete_confirm_dialog" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}">
             <f:facet name="message">
-                <h:outputText value="#{of:format1(msg.courses_delete_question, adminCoursesBean.selectedCourse.title)}" styleClass="d-block mb-2"/>
+                <h:outputText value="#{o:format1(msg.courses_delete_question, adminCoursesBean.selectedCourse.title)}" styleClass="d-block mb-2"/>
                 <h:outputText value="This action can not be reverted. The following records will be deleted permanantly:" styleClass="d-block"/>
                 <h:outputText value="#{adminCoursesBean.getDeleteSummary(adminCoursesBean.selectedCourse)}" escape="false"/>
             </f:facet>

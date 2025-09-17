@@ -2,17 +2,17 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
                 xmlns:pt="jakarta.faces.passthrough"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:lw="learnweb">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
 
     <h:panelGroup layout="block" styleClass="metadata text-start" rendered="#{res ne null}">
         <h:form styleClass="mb-2">
             <p:linkButton href="${userBean.getUrlProxied(res.url)}" styleClass="ui-button-secondary me-2 guide-search-open-link" target="_blank"
-                          value="#{res.service == 'internet' ? msg.search_resource_visit : of:format1(msg.search_resource_visit_service, res.service.label)}"/>
+                          value="#{res.service == 'internet' ? msg.search_resource_visit : o:format1(msg.search_resource_visit_service, res.service.label)}"/>
 
             <p:linkButton href="${res.thumbnailLargest}" value="#{msg.search_resource_image}" styleClass="ui-button-secondary me-2" target="_blank"
                           rendered="#{res.type == 'image' and res.thumbnailLargest ne null}"/>

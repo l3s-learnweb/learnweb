@@ -14,7 +14,7 @@ import org.omnifaces.util.FacesLocal;
 import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.user.User;
 
-@FacesComponent(createTag = true, tagName = "user", namespace = "http://l3s.de/learnweb")
+@FacesComponent(createTag = true, tagName = "user", namespace = "learnweb")
 public class LearnwebUser extends UIComponentBase {
     private static final Logger log = LogManager.getLogger(LearnwebUser.class);
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component.LearnwebUser";

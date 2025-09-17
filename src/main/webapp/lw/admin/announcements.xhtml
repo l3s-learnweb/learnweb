@@ -2,9 +2,9 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces"
+                xmlns:lw="learnweb">
 
 
 <ui:param name="pageTitle" value="#{msg.announcements}"/>
@@ -65,7 +65,7 @@
                 <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
                                  process="@this" actionListener="#{adminAnnouncementsBean.onDelete(news)}" update="@form"
                                  onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
-                    <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, news.title)}" icon="fas fa-triangle-exclamation"/>
+                    <p:confirm message="#{o:format1(msg.delete_entry_confirm_message, news.title)}" icon="fas fa-triangle-exclamation"/>
                 </p:commandButton>
             </p:column>
         </p:dataTable>

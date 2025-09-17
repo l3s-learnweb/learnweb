@@ -2,7 +2,7 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
-                xmlns:of="http://omnifaces.org/functions">
+                xmlns:o="omnifaces">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
@@ -12,11 +12,11 @@
     const editorConfigValues = {
         user: {
             id: '#{userBean.user.id}',
-            name: '#{of:escapeJS(userBean.user.displayName)}'
+            name: '#{o:escapeJS(userBean.user.displayName)}'
         },
         documentType: '#{officeResourceBean.documentType}',
         document: {
-            title: '#{of:escapeJS(res.title)}',
+            title: '#{o:escapeJS(res.title)}',
             url: '#{officeResourceBean.documentUrl}',
             fileType: '#{officeResourceBean.documentFileType}',
             key: '#{officeResourceBean.documentKey}',

@@ -7,7 +7,7 @@ import jakarta.faces.component.UIComponentBase;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 
-@FacesComponent(createTag = true, tagName = "encryptEmail", namespace = "http://l3s.de/learnweb")
+@FacesComponent(createTag = true, tagName = "encryptEmail", namespace = "learnweb")
 public class LearnwebEncryptEmail extends UIComponentBase {
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component.LearnwebEncryptEmail";
 

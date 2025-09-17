@@ -2,11 +2,10 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:o="http://omnifaces.org/ui"
                 xmlns:faces="jakarta.faces"
-                xmlns:of="http://omnifaces.org/functions"
-                xmlns:pt="jakarta.faces.passthrough">
+                xmlns:pt="jakarta.faces.passthrough"
+                xmlns:p="primefaces"
+                xmlns:o="omnifaces">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 <o:importConstants type="de.l3s.learnweb.resource.glossary.Column"/>
@@ -67,7 +66,7 @@
 
             <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
                              process="@this" update="@form" action="#{glossaryBean.onDeleteEntry(item)}" oncomplete="groupRow()">
-                <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
+                <p:confirm message="#{o:format1(msg.delete_entry_confirm_message, item.topics)}"/>
             </p:commandButton>
         </p:column>
         <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}">
@@ -108,7 +107,7 @@
         </p:column>
         <p:column headerText="#{msg[Column.pronounciation]}">
             <p:commandLink type="button" styleClass="me-1" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
-                           onclick="responsiveVoice.speak('#{of:escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
+                           onclick="responsiveVoice.speak('#{o:escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                 <i class="fas fa-fw fa-volume-up"></i>
             </p:commandLink>
             <h:outputText value="#{item.pronounciation}"/>
