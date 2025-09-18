@@ -6,6 +6,7 @@
   "browserslist": [
     "Firefox ESR",
     "> 0.5% in DE",
+    "not Firefox 115",
     "not op_mini all"
   ],
   "scripts": {
