@@ -67,7 +67,6 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
     }
 
     public void onQuestionOptionChange(SurveyQuestion question, SurveyQuestionOption answer) {
-        // log.info("New value: [{}] {}", question.getId(), answer);
         surveyDao.saveQuestionOption(question.getId(), answer);
     }
 
@@ -116,5 +115,20 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
         duplicate.setPageId(page.getId());
         surveyDao.saveQuestion(duplicate);
         page.getQuestions().add(duplicate);
+    }
+
+    public void onConditionQuestionChange(SurveyPage page) {
+        page.setRequiredAnswer(null);
+        surveyDao.savePage(page);
+    }
+
+    public void onConditionValueChange(SurveyPage page) {
+        surveyDao.savePage(page);
+    }
+
+    public void onClearCondition(SurveyPage page) {
+        page.setRequiredQuestionId(null);
+        page.setRequiredAnswer(null);
+        surveyDao.savePage(page);
     }
 }

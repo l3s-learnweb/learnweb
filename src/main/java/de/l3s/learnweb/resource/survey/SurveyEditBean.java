@@ -67,4 +67,27 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
     public List<SurveyPage> getPages() {
         return resource.getPages().stream().filter(page -> !page.isDeleted()).toList();
     }
+
+    public List<SurveyQuestion> getExposedQuestions(SurveyPage targetPage) {
+        return getPages().stream()
+            .filter(p -> p.getOrder() < targetPage.getOrder())
+            .flatMap(p -> p.getQuestions().stream())
+            .filter(SurveyQuestion::isExposable)
+            .toList();
+    }
+
+    public List<SurveyQuestionOption> getExposedQuestionOptions(SurveyPage page) {
+        List<SurveyQuestion> questions = getExposedQuestions(page);
+        for (SurveyQuestion q : questions) {
+            if (q.getId() == page.getRequiredQuestionId()) {
+                if (q.getType().isOptions()) {
+                    return q.getActiveOptions();
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return List.of();
+    }
 }

@@ -152,7 +152,7 @@ $(() => {
     }
   });
 
-  $('.preview-wrapper > img, .res-embedded-tabs .ui-tabs-panel > img').on('click', (e) => {
+  $('.preview-wrapper > div > img, .res-embedded-tabs .ui-tabs-panel > img').on('click', (e) => {
     $(e.currentTarget).toggleClass('amplified');
   });
 

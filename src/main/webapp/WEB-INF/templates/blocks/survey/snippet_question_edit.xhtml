@@ -58,12 +58,12 @@
                 <p:message for="@previous"/>
             </div>
 
-            <div class="row field align-items-end" faces:rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
+            <div faces:id="type_row" class="row field align-items-end" faces:rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
                 <p:outputPanel styleClass="col d-flex flex-column">
                     <p:outputLabel for="@next" value="#{msg['survey.mod_question_type']}:" styleClass="fw-bold"/>
                     <p:selectOneMenu value="#{question.type}">
                         <f:selectItems value="#{surveyPageEditBean.questionTypes}"/>
-                        <p:ajax event="change" update="options" process="@this options" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
+                        <p:ajax event="change" update="options type_row" process="@this options" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
                     </p:selectOneMenu>
                 </p:outputPanel>
 
@@ -71,9 +71,19 @@
                 <p:outputPanel styleClass="col d-flex align-items-center">
                     <p:outputLabel for="@next" value="#{msg['survey.mod_required']}:" styleClass="fw-bold me-2"/>
                     <p:toggleSwitch value="#{question.required}">
-                        <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
+                        <p:ajax event="change" update="type_row" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
                     </p:toggleSwitch>
                 </p:outputPanel>
+
+                <ui:fragment rendered="#{question.type.fixedOptions}">
+                    <p:tooltip for="@next" value="#{msg['survey.mod_exposable_tooltip']}" position="bottom"/>
+                    <p:outputPanel styleClass="col d-flex align-items-center">
+                        <p:outputLabel for="@next" value="#{msg['survey.mod_exposable']}:" styleClass="fw-bold me-2"/>
+                        <p:toggleSwitch value="#{question.exposable}" disabled="#{not question.required}">
+                            <p:ajax event="change" listener="#{surveyPageEditBean.onQuestionChange(question)}"/>
+                        </p:toggleSwitch>
+                    </p:outputPanel>
+                </ui:fragment>
             </div>
 
             <p:outputPanel id="options" styleClass="mb-3" rendered="#{question.type ne 'FULLWIDTH_HEADER'}">

@@ -1,6 +1,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="jakarta.faces.html"
-                xmlns:f="jakarta.faces.core"
+				xmlns:h="jakarta.faces.html"
+				xmlns:f="jakarta.faces.core"
 				xmlns:ui="jakarta.faces.facelets"
 				xmlns:faces="jakarta.faces"
 				xmlns:p="primefaces">
@@ -37,27 +37,28 @@
 				<h:panelGroup id="questions" layout="block">
 					<h:outputText value="#{msg['survey.empty']}" rendered="#{empty surveyAnswerBean.page.questions}"/>
 
-                    <ui:fragment rendered="#{not empty surveyAnswerBean.page.questions}">
-                        <ui:repeat var="question" value="#{surveyAnswerBean.page.questions}">
-                            <p:panel styleClass="mb-3 no-margin">
-                                <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_view.xhtml">
-                                    <ui:param name="question" value="#{question}"/>
-                                    <ui:param name="response" value="#{surveyAnswerBean.response}"/>
-                                    <ui:param name="readOnly" value="#{false}"/>
-                                    <ui:param name="bean" value="#{surveyAnswerBean}"/>
-                                </ui:decorate>
-                            </p:panel>
-                        </ui:repeat>
-                    </ui:fragment>
-                </h:panelGroup>
+					<ui:fragment rendered="#{not empty surveyAnswerBean.page.questions}">
+						<ui:repeat var="question" value="#{surveyAnswerBean.page.questions}">
+							<p:panel styleClass="mb-3 no-margin">
+								<ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_view.xhtml">
+									<ui:param name="question" value="#{question}"/>
+									<ui:param name="response" value="#{surveyAnswerBean.response}"/>
+									<ui:param name="readOnly" value="#{false}"/>
+									<ui:param name="bean" value="#{surveyAnswerBean}"/>
+								</ui:decorate>
+							</p:panel>
+						</ui:repeat>
+					</ui:fragment>
+				</h:panelGroup>
 
 				<div class="row align-items-center">
 					<div class="col-auto" faces:rendered="#{surveyAnswerBean.totalPages gt 1}">
-						<p:commandButton value="#{msg.back}" rendered="#{surveyAnswerBean.currentPage gt 1}"
+						<p:commandButton value="#{msg.back}" rendered="#{surveyAnswerBean.hasPreviousPage}"
 										 actionListener="#{surveyAnswerBean.changePage(-1)}" update="@form:page" immediate="true"/>
-						<p:commandButton value="#{msg.next_step}" rendered="#{surveyAnswerBean.currentPage lt surveyAnswerBean.totalPages}"
-										 actionListener="#{surveyAnswerBean.changePage(1)}" update="@form:page"/>
+						<p:commandButton value="#{msg.next_step}" rendered="#{surveyAnswerBean.hasNextPage}"
+                                         actionListener="#{surveyAnswerBean.changePage(1)}" update="@form:page"/>
 					</div>
+
 					<div class="col" faces:rendered="#{surveyAnswerBean.totalPages gt 1}">
 						<h:outputFormat value="#{msg['survey.answer_page_progress']}">
 							<f:param value="#{surveyAnswerBean.currentPage}"/>
@@ -65,9 +66,10 @@
 						</h:outputFormat>
 						<p:progressBar value="#{surveyAnswerBean.currentPage / surveyAnswerBean.totalPages * 100}" displayOnly="true" style="height: 0.5rem;"/>
 					</div>
+
 					<div class="col d-flex justify-content-end">
-						<p:commandButton value="Discard changes" action="#{surveyAnswerBean.onDiscard}" ajax="true" immediate="true" update="@form" styleClass="ui-button-danger" rendered="#{userBean.admin}"/>
-						<p:commandButton value="#{msg.submit}" action="#{surveyAnswerBean.onSubmit}" ajax="true" update="@form" styleClass="ui-button-info" rendered="#{surveyAnswerBean.currentPage eq surveyAnswerBean.totalPages}">
+						<p:commandButton value="#{msg.discard_changes}" action="#{surveyAnswerBean.onDiscard}" ajax="true" immediate="true" update="@form" styleClass="ui-button-danger" rendered="#{userBean.admin}"/>
+						<p:commandButton value="#{msg.submit}" action="#{surveyAnswerBean.onSubmit}" ajax="true" update="@form" styleClass="ui-button-info" rendered="#{not surveyAnswerBean.hasNextPage}">
 							<p:confirm message="#{msg['survey.answer_submit_confirmation']}"/>
 						</p:commandButton>
 					</div>

@@ -134,6 +134,8 @@ public interface SurveyDao extends SqlObject, Serializable {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("page_id", SqlHelper.toNullable(page.getId()));
         params.put("resource_id", SqlHelper.toNullable(page.getResourceId()));
+        params.put("required_question_id", page.getRequiredQuestionId());
+        params.put("required_answer", page.getRequiredAnswer());
         params.put("deleted", page.isDeleted());
         params.put("order", page.getOrder());
         params.put("title", SqlHelper.toNullable(page.getTitle()));
@@ -159,6 +161,7 @@ public interface SurveyDao extends SqlObject, Serializable {
         params.put("description", SqlHelper.toNullable(question.getDescription()));
         params.put("placeholder", SqlHelper.toNullable(question.getPlaceholder()));
         params.put("required", question.isRequired());
+        params.put("exposable", question.isExposable());
         params.put("min_length", question.getMinLength());
         params.put("max_length", question.getMaxLength());
 
@@ -321,6 +324,8 @@ public interface SurveyDao extends SqlObject, Serializable {
             SurveyPage page = new SurveyPage();
             page.setId(rs.getInt("page_id"));
             page.setResourceId(rs.getInt("resource_id"));
+            page.setRequiredQuestionId(SqlHelper.toNullable(rs.getInt("required_question_id")));
+            page.setRequiredAnswer(SqlHelper.toNullable(rs.getString("required_answer")));
             page.setDeleted(rs.getBoolean("deleted"));
             page.setOrder(rs.getInt("order"));
             page.setTitle(rs.getString("title"));
@@ -352,6 +357,7 @@ public interface SurveyDao extends SqlObject, Serializable {
             question.setDescription(rs.getString("description"));
             question.setPlaceholder(rs.getString("placeholder"));
             question.setRequired(rs.getBoolean("required"));
+            question.setExposable(rs.getBoolean("exposable"));
             question.setMinLength(SqlHelper.toNullable(rs.getInt("min_length")));
             question.setMaxLength(SqlHelper.toNullable(rs.getInt("max_length")));
             return question;

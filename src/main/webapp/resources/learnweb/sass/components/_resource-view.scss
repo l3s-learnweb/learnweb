@@ -19,26 +19,33 @@ body .res-view {
       padding: 0;
       overflow: auto;
 
-      > iframe,
-      > .video-js {
-        width: 100%;
-        min-height: 25rem;
-      }
+      > div {
+        &:has(> .ui-tabs),
+        &:has(> form) {
+          height: 100%;
+        }
 
-      > img {
-        max-height: 100%;
-        max-width: 100%;
-        object-fit: contain;
-        margin: auto;
-        /* stylelint-disable-next-line */
-        cursor: zoom-in;
-
-        &.amplified {
+        > iframe,
+        > .video-js {
           width: 100%;
-          max-height: initial;
-          object-fit: initial;
+          min-height: 25rem;
+        }
+
+        > img {
+          max-height: 100%;
+          max-width: 100%;
+          object-fit: contain;
+          margin: auto;
           /* stylelint-disable-next-line */
-          cursor: zoom-out;
+          cursor: zoom-in;
+
+          &.amplified {
+            width: 100%;
+            max-height: initial;
+            object-fit: initial;
+            /* stylelint-disable-next-line */
+            cursor: zoom-out;
+          }
         }
       }
     }
@@ -93,6 +100,10 @@ body .res-view {
     .ui-tabs-panels {
       overflow: auto;
       flex-grow: 1;
+
+      > .ui-tabs-panel {
+        height: 100%;
+      }
     }
   }
 

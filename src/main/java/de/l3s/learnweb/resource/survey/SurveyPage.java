@@ -16,11 +16,13 @@ public class SurveyPage implements HasId, Deletable, Serializable {
 
     private int id;
     private int resourceId;
+    private Integer requiredQuestionId;
+    private String requiredAnswer;
     private boolean deleted = false;
     private int order;
     private String title;
     private String description;
-    private boolean sampling = false;
+    private boolean sampling;
     private ArrayList<SurveyPageVariant> variants = new ArrayList<>();
 
     private transient List<SurveyQuestion> questions;
@@ -31,6 +33,8 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     public SurveyPage(SurveyPage other) {
         this.id = 0;
         this.resourceId = other.resourceId;
+        this.requiredQuestionId = other.requiredQuestionId;
+        this.requiredAnswer = other.requiredAnswer;
         this.title = other.title;
         this.description = other.description;
         this.sampling = other.sampling;
@@ -108,6 +112,26 @@ public class SurveyPage implements HasId, Deletable, Serializable {
 
     public void setResourceId(final int resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public boolean hasCondition() {
+        return requiredQuestionId != null && requiredAnswer != null && !requiredAnswer.isBlank();
+    }
+
+    public Integer getRequiredQuestionId() {
+        return requiredQuestionId;
+    }
+
+    public void setRequiredQuestionId(final Integer requiredQuestionId) {
+        this.requiredQuestionId = requiredQuestionId;
+    }
+
+    public String getRequiredAnswer() {
+        return requiredAnswer;
+    }
+
+    public void setRequiredAnswer(final String requiredAnswer) {
+        this.requiredAnswer = requiredAnswer;
     }
 
     @Override

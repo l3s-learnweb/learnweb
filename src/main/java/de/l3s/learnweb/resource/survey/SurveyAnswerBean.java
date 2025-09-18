@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -29,8 +30,10 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
 
     private SurveyResource resource;
     private SurveyResponse response;
-    private int page = 1;
+    private Integer currentPageId;
     private boolean formEnabled = true;
+
+    private transient List<SurveyPage> visiblePages;
 
     @Inject
     private SurveyDao surveyDao;
@@ -78,6 +81,8 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
 
         addMessage(FacesMessage.SEVERITY_INFO, "survey.answers_discarded");
         formEnabled = true;
+        currentPageId = null;
+        visiblePages = null;
     }
 
     public void onSubmit() {
@@ -100,31 +105,78 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
             variant = getPage().getVariant(response.getId()).getId();
         }
         surveyDao.saveAnswer(response, question, variant);
+
+        if (question.isExposable()) {
+            visiblePages = null; // clear cache to re-evaluate visibility
+        }
     }
 
     public SurveyPage getPage() {
-        if (resource.getPages().isEmpty()) {
+        if (getVisiblePages().isEmpty()) {
             return null;
         }
 
-        return resource.getPages().get(page - 1);
+        return getVisiblePages().get(indexOfCurrent());
     }
 
     public void changePage(int diff) {
-        page += diff;
-        if (page < 1) {
-            page = 1;
-        } else if (page > resource.getPages().size()) {
-            page = resource.getPages().size();
+        int idx = indexOfCurrent() + diff;
+        if (idx >= 0 && idx < getVisiblePages().size()) {
+            currentPageId = getVisiblePages().get(idx).getId();
         }
     }
 
+    private List<SurveyPage> getVisiblePages() {
+        if (visiblePages == null) {
+            visiblePages = resource.getPages().stream().filter(this::isPageVisible).toList();
+        }
+
+        return visiblePages;
+    }
+
+    private boolean isPageVisible(SurveyPage page) {
+        if (!page.hasCondition()) {
+            return true;
+        }
+
+        String answer = response.getAnswers().get(page.getRequiredQuestionId());
+        if (answer == null) {
+            return false;
+        }
+
+        return answer.equalsIgnoreCase(page.getRequiredAnswer());
+    }
+
+    private int indexOfCurrent() {
+        if (currentPageId != null && currentPageId > 0) {
+            for (int i = 0; i < getVisiblePages().size(); i++) {
+                if (getVisiblePages().get(i).getId() == currentPageId) {
+                    return i;
+                }
+            }
+        }
+
+        return 0;
+    }
+
     public int getCurrentPage() {
-        return page;
+        return indexOfCurrent() + 1;
+    }
+
+    public boolean isHasPreviousPage() {
+        return indexOfCurrent() > 0;
+    }
+
+    public boolean isHasNextPage() {
+        if (getVisiblePages().isEmpty() || getVisiblePages().size() == 1) {
+            return false;
+        }
+
+        return indexOfCurrent() < getVisiblePages().size() - 1;
     }
 
     public int getTotalPages() {
-        return resource.getPages().size();
+        return getVisiblePages().size();
     }
 
     public SurveyResource getResource() {

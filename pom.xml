@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.49.5</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.12.0</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>11.13.1</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.25.1</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>8.21.1</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.19.0</maven.dependency.mockito.version>
@@ -290,7 +290,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.4.8-jre</version>
+            <version>33.5.0-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
@@ -430,7 +430,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.5.0</version>
+                <version>4.9.6.0</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>

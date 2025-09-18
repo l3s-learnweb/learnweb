@@ -1,18 +1,18 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:h="jakarta.faces.html"
-				xmlns:f="jakarta.faces.core"
-				xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
                 xmlns:faces="jakarta.faces"
-				xmlns:p="primefaces">
+                xmlns:p="primefaces">
 
 <!--@elvariable id="page" type="de.l3s.learnweb.resource.survey.SurveyPage"-->
 <!--@elvariable id="pageStatus" type="org.apache.myfaces.view.facelets.component.RepeatStatus"-->
 
 <f:subview id="p${page.id}">
 <div class="d-flex flex-column justify-content-center bg-info" style="width: 3rem;" faces:rendered="#{not empty pageStatus}">
-    <p:commandButton form="page_edit" alt="#{msg['move_up']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-up" rendered="#{!pageStatus.first}"
+    <p:commandButton form="page_edit" alt="#{msg['move_up']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-up" rendered="#{not pageStatus.first}"
                      actionListener="#{surveyEditBean.onMovePage(page, -1)}" update="pages" process="@this" immediate="true"/>
-    <p:commandButton form="page_edit" alt="#{msg['move_down']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-down" rendered="#{!pageStatus.last}"
+    <p:commandButton form="page_edit" alt="#{msg['move_down']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-down" rendered="#{not pageStatus.last}"
                      action="#{surveyEditBean.onMovePage(page, 1)}" update="pages" process="@this" immediate="true"/>
 </div>
 
@@ -24,6 +24,38 @@
                 <p:ajax event="change" listener="#{surveyPageEditBean.onPageChange(page)}"/>
             </p:inputTextarea>
             <p:message for="@previous"/>
+        </div>
+
+        <div faces:id="cond_question" class="field" faces:rendered="#{not pageStatus.first}">
+            <h:outputText value="Page visibility condition:" styleClass="fw-bold"/>
+
+            <div class="row field align-items-end mt-1">
+                <p:outputPanel styleClass="col d-flex flex-column align-items-start">
+                    <p:outputLabel for="@next" value="Question:"/>
+                    <p:selectOneMenu value="#{page.requiredQuestionId}">
+                        <f:selectItem itemLabel="(no condition)" itemValue="#{null}"/>
+                        <f:selectItems value="#{surveyEditBean.getExposedQuestions(page)}"
+                                       var="cq" itemValue="#{cq.id}" itemLabel="#{cq.question}"/>
+                        <p:ajax listener="#{surveyPageEditBean.onConditionQuestionChange(page)}" update="cond_question" process="@this"/>
+                    </p:selectOneMenu>
+                </p:outputPanel>
+
+                <p:outputPanel styleClass="col d-flex flex-column align-items-start">
+                    <ui:fragment rendered="#{not empty page.requiredQuestionId}">
+                        <p:outputLabel for="@next" value="Required answer:"/>
+                        <p:selectOneMenu value="#{page.requiredAnswer}">
+                            <f:selectItems value="#{surveyEditBean.getExposedQuestionOptions(page)}"
+                                           var="opt" itemValue="#{opt.value}" itemLabel="#{opt.value}"/>
+                            <p:ajax event="change" listener="#{surveyPageEditBean.onConditionValueChange(page)}" process="@this"/>
+                        </p:selectOneMenu>
+                        </ui:fragment>
+                </p:outputPanel>
+
+                <div class="col-auto" faces:rendered="#{not empty page.requiredQuestionId}">
+                    <p:commandButton value="Clear condition" styleClass="ui-button-secondary ui-button-flat"
+                                     actionListener="#{surveyPageEditBean.onClearCondition(page)}" process="@this" update="cond_question"/>
+                </div>
+            </div>
         </div>
 
         <div class="field">

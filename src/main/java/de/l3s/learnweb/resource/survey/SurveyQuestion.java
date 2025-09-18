@@ -55,6 +55,10 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
             return options;
         }
 
+        public boolean isFixedOptions() {
+            return options && ONE_MENU_EDITABLE != this;
+        }
+
         public boolean isMultiple() {
             return multiple;
         }
@@ -69,6 +73,7 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     private String description; // an explanation, displayed as tooltip or after the question
     private String placeholder; // a placeholder for input fields
     private boolean required = true;
+    private boolean exposable = false;
     private Integer minLength;
     private Integer maxLength;
 
@@ -91,6 +96,7 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
         this.description = question.description;
         this.placeholder = question.placeholder;
         this.required = question.required;
+        this.exposable = question.exposable;
         this.deleted = question.deleted;
         this.order = question.order;
         this.minLength = question.minLength;
@@ -143,7 +149,18 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     }
 
     public void setRequired(boolean required) {
+        if (!required) {
+            this.exposable = false;
+        }
         this.required = required;
+    }
+
+    public boolean isExposable() {
+        return exposable;
+    }
+
+    public void setExposable(final boolean exposable) {
+        this.exposable = exposable;
     }
 
     public ArrayList<SurveyQuestionOption> getOptions() {
