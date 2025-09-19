@@ -29,7 +29,7 @@
 }
 
 .no-margin {
-  p:last-child {
+  > p {
     margin-bottom: 0;
   }
 }

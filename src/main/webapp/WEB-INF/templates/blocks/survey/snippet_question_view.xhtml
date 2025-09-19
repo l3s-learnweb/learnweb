@@ -11,7 +11,7 @@
 <!--@elvariable id="bean" type="de.l3s.learnweb.resource.survey.SurveyAnswerHandler"-->
 
 <ui:fragment rendered="#{question.type eq 'FULLWIDTH_HEADER'}">
-    <h3 class="mb-0" faces:rendered="#{not empty question.question}">
+    <h3 faces:rendered="#{not empty question.question}">
         <h:outputText value="${question.question}"/>
     </h3>
     <div class="no-margin" faces:rendered="#{not empty question.description}">
