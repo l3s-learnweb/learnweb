@@ -22,7 +22,7 @@ body .res-view {
       overflow: auto;
 
       > div {
-        &:has(> .ui-tabs, > form, > iframe, > .video-js) {
+        &:has(> .ui-tabs, > form, > iframe, > .video-js, > .bg-body, > .min-h-100) {
           height: 100%;
         }
 
