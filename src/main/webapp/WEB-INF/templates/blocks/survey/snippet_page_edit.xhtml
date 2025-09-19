@@ -96,7 +96,9 @@
                          action="#{surveyPageEditBean.onAddQuestion(page)}" process="@this" immediate="true" update="questions"/>
         <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
                          action="#{surveyPageEditBean.onAddHeader(page)}" process="@this" immediate="true" update="questions"/>
-        <p:commandButton form="page_edit" styleClass="ms-auto ui-button-danger ui-button-flat" value="#{msg['survey.mod_delete_page']}"
+        <p:commandButton form="page_edit" styleClass="ms-auto ui-button-info ui-button-flat" value="#{msg['survey.mod_duplicate']}"
+                         action="#{surveyEditBean.onDuplicatePage(page)}" process="@this" immediate="true" update="pages"/>
+        <p:commandButton form="page_edit" styleClass="ui-button-danger ui-button-flat" value="#{msg['survey.mod_delete_page']}"
                          action="#{surveyEditBean.onDeletePage(page)}" process="@this" immediate="true" update="pages" rendered="#{not empty pageStatus}"/>
     </div>
 </div>

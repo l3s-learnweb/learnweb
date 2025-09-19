@@ -58,6 +58,13 @@ public class SurveyEditBean extends ApplicationBean implements Serializable {
         resource.getPages().sort(Comparator.comparingInt(SurveyPage::getOrder));
     }
 
+    public void onDuplicatePage(SurveyPage page) {
+        SurveyPage duplicate = new SurveyPage(page);
+        duplicate.setOrder(resource.getPages().size());
+        surveyDao.savePage(duplicate);
+        resource.getPages().add(duplicate);
+    }
+
     public void onDeletePage(SurveyPage page) {
         page.setDeleted(true);
         surveyDao.savePage(page);
