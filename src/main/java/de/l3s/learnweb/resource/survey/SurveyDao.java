@@ -148,6 +148,11 @@ public interface SurveyDao extends SqlObject, Serializable {
         if (pageId.isPresent() && pageId.get() != 0) {
             page.setId(pageId.get());
         }
+
+        for (SurveyQuestion question : page.getQuestions()) {
+            question.setPageId(page.getId());
+            saveQuestion(question);
+        }
     }
 
     default void saveQuestion(SurveyQuestion question) {
