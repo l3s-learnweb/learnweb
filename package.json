@@ -26,13 +26,13 @@
     "video.js": "^8.23.4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.35.0",
+    "@eslint/js": "^9.36.0",
     "esbuild": "^0.25.9",
     "esbuild-sass-plugin": "^3.3.1",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "eslint-plugin-compat": "^6.0.2",
     "globals": "^16.4.0",
-    "sass-embedded": "^1.92.1",
+    "sass-embedded": "^1.93.0",
     "stylelint": "^16.24.0",
     "stylelint-config-sass-guidelines": "^12.1.0",
     "stylelint-no-unsupported-browser-features": "^8.0.4"
