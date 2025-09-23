@@ -11,7 +11,7 @@
 				<h:outputText value="#{msg['survey.empty']}" rendered="#{empty surveyEditBean.pages}"/>
 
 				<ui:repeat id="pi" value="#{surveyEditBean.pages}" var="page" varStatus="pageStatus">
-					<div class="survey-page bg-body-tertiary d-flex flex-nowrap mb-3">
+					<div class="survey-page bg-body-tertiary d-flex flex-nowrap mb-5">
                         <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_page_edit.xhtml">
                             <ui:param name="page" value="#{page}"/>
                             <ui:param name="pageStatus" value="#{pageStatus}"/>
@@ -20,8 +20,8 @@
 				</ui:repeat>
 
 				<h:form id="survey_add" styleClass="d-flex flex-nowrap">
-					<p:commandButton action="#{surveyEditBean.onAddPage}" styleClass="ui-button-info ui-button-flat" value="#{msg['survey.mod_add_page']}"
-									 process="@this" immediate="true" update="@form:@parent"/>
+					<p:commandButton styleClass="ui-button-info ui-button-flat" value="#{msg['survey.mod_add_page']}"
+                                     actionListener="#{surveyEditBean.onAddPage}" process="@this" immediate="true" update="@form:@parent"/>
 				</h:form>
 			</h:panelGroup>
 		</div>

@@ -68,8 +68,10 @@
 					</div>
 
 					<div class="col d-flex justify-content-end">
-						<p:commandButton value="#{msg.discard_changes}" action="#{surveyAnswerBean.onDiscard}" ajax="true" immediate="true" update="@form" styleClass="ui-button-danger" rendered="#{userBean.admin}"/>
-						<p:commandButton value="#{msg.submit}" action="#{surveyAnswerBean.onSubmit}" ajax="true" update="@form" styleClass="ui-button-info" rendered="#{not surveyAnswerBean.hasNextPage}">
+						<p:commandButton value="#{msg.discard_changes}" styleClass="ui-button-danger" rendered="#{userBean.admin}"
+                                         actionListener="#{surveyAnswerBean.onDiscard}" ajax="true" immediate="true" update="@form"/>
+						<p:commandButton value="#{msg.submit}" styleClass="ui-button-info" rendered="#{not surveyAnswerBean.hasNextPage}"
+                                         actionListener="#{surveyAnswerBean.onSubmit}" ajax="true" update="@form">
 							<p:confirm message="#{msg['survey.answer_submit_confirmation']}"/>
 						</p:commandButton>
 					</div>

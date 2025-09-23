@@ -9,11 +9,11 @@
 <!--@elvariable id="pageStatus" type="org.apache.myfaces.view.facelets.component.RepeatStatus"-->
 
 <f:subview id="p${page.id}">
-<div class="d-flex flex-column justify-content-center bg-info" style="width: 3rem;" faces:rendered="#{not empty pageStatus}">
+<div class="d-flex flex-column justify-content-center #{pageStatus.index % 2 == 0 ? 'bg-info' : 'bg-warning'}" style="width: 3rem;" faces:rendered="#{not empty pageStatus}">
     <p:commandButton form="page_edit" alt="#{msg['move_up']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-up" rendered="#{not pageStatus.first}"
                      actionListener="#{surveyEditBean.onMovePage(page, -1)}" update="pages" process="@this" immediate="true"/>
     <p:commandButton form="page_edit" alt="#{msg['move_down']}" styleClass="ui-button-flat text-body mx-0" icon="fas fa-angle-down" rendered="#{not pageStatus.last}"
-                     action="#{surveyEditBean.onMovePage(page, 1)}" update="pages" process="@this" immediate="true"/>
+                     actionListener="#{surveyEditBean.onMovePage(page, 1)}" update="pages" process="@this" immediate="true"/>
 </div>
 
 <div class="flex-grow-1 p-2">
@@ -93,13 +93,13 @@
 
     <div class="d-flex flex-nowrap">
         <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_question']}"
-                         action="#{surveyPageEditBean.onAddQuestion(page)}" process="@this" immediate="true" update="questions"/>
+                         actionListener="#{surveyPageEditBean.onAddQuestion(page)}" process="@this" immediate="true" update="questions"/>
         <p:commandButton form="page_edit" styleClass="ui-button-success ui-button-flat" value="#{msg['survey.mod_add_header']}"
-                         action="#{surveyPageEditBean.onAddHeader(page)}" process="@this" immediate="true" update="questions"/>
+                         actionListener="#{surveyPageEditBean.onAddHeader(page)}" process="@this" immediate="true" update="questions"/>
         <p:commandButton form="page_edit" styleClass="ms-auto ui-button-info ui-button-flat" value="#{msg['survey.mod_duplicate']}"
-                         action="#{surveyEditBean.onDuplicatePage(page)}" process="@this" immediate="true" update="pages"/>
+                         actionListener="#{surveyEditBean.onDuplicatePage(page)}" process="@this" immediate="true" update="pages"/>
         <p:commandButton form="page_edit" styleClass="ui-button-danger ui-button-flat" value="#{msg['survey.mod_delete_page']}"
-                         action="#{surveyEditBean.onDeletePage(page)}" process="@this" immediate="true" update="pages" rendered="#{not empty pageStatus}"/>
+                         actionListener="#{surveyEditBean.onDeletePage(page)}" process="@this" immediate="true" update="pages" rendered="#{not empty pageStatus}"/>
     </div>
 </div>
 </f:subview>
