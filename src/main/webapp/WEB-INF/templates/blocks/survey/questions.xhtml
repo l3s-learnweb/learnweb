@@ -11,7 +11,7 @@
 				<h:outputText value="#{msg['survey.empty']}" rendered="#{empty surveyEditBean.pages}"/>
 
 				<ui:repeat id="pi" value="#{surveyEditBean.pages}" var="page" varStatus="pageStatus">
-					<div class="survey-page bg-body-tertiary d-flex flex-nowrap mb-5">
+					<div class="survey-page bg-body-tertiary d-flex flex-nowrap #{pageStatus.last ? 'mb-3' : 'mb-5'}">
                         <ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_page_edit.xhtml">
                             <ui:param name="page" value="#{page}"/>
                             <ui:param name="pageStatus" value="#{pageStatus}"/>
