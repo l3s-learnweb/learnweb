@@ -13,6 +13,7 @@ import jakarta.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
+import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -109,6 +110,10 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
         if (question.isExposable()) {
             visiblePages = null; // clear cache to re-evaluate visibility
         }
+
+        if (question.isExposable()) {
+            PrimeFaces.current().ajax().update("survey_tabs:survey_form:questions");
+        }
     }
 
     public SurveyPage getPage() {
@@ -145,6 +150,19 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
         }
 
         return answer.equalsIgnoreCase(page.getRequiredAnswer());
+    }
+
+    public boolean isQuestionVisible(SurveyPage page, SurveyQuestion question) {
+        if (!question.hasCondition()) {
+            return true;
+        }
+
+        String answer = response.getAnswers().get(question.getRequiredQuestionId());
+        if (answer == null) {
+            return false;
+        }
+
+        return answer.equalsIgnoreCase(question.getRequiredAnswer());
     }
 
     private int indexOfCurrent() {

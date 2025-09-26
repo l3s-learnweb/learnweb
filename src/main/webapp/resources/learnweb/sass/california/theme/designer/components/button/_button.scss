@@ -159,6 +159,12 @@ body {
     }
   }
 
+  .ui-selectbooleanbutton.ui-state-error,
+  .ui-selectonebutton.ui-state-error > .ui-button,
+  .ui-selectmanybutton.ui-state-error > .ui-button {
+    border: 1px solid $errorColor;
+  }
+
   .ui-selectbooleanbutton,
   .ui-selectonebutton > .ui-button,
   .ui-selectmanybutton > .ui-button {

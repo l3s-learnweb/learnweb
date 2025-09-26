@@ -39,7 +39,7 @@
 
 					<ui:fragment rendered="#{not empty surveyAnswerBean.page.questions}">
 						<ui:repeat var="question" value="#{surveyAnswerBean.page.questions}">
-							<p:panel styleClass="mb-3 no-margin">
+							<p:panel styleClass="mb-3 no-margin" rendered="#{surveyAnswerBean.isQuestionVisible(surveyAnswerBean.page, question)}">
 								<ui:decorate template="/WEB-INF/templates/blocks/survey/snippet_question_view.xhtml">
 									<ui:param name="question" value="#{question}"/>
 									<ui:param name="response" value="#{surveyAnswerBean.response}"/>

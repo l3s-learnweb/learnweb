@@ -160,6 +160,8 @@ public interface SurveyDao extends SqlObject, Serializable {
         params.put("question_id", SqlHelper.toNullable(question.getId()));
         params.put("page_id", SqlHelper.toNullable(question.getPageId()));
         params.put("deleted", question.isDeleted());
+        params.put("required_question_id", question.getRequiredQuestionId());
+        params.put("required_answer", question.getRequiredAnswer());
         params.put("order", question.getOrder());
         params.put("question_type", question.getType());
         params.put("question", StringUtils.defaultString(question.getQuestion()));
@@ -357,6 +359,8 @@ public interface SurveyDao extends SqlObject, Serializable {
             question.setId(rs.getInt("question_id"));
             question.setPageId(rs.getInt("page_id"));
             question.setDeleted(rs.getBoolean("deleted"));
+            question.setRequiredQuestionId(SqlHelper.toNullable(rs.getInt("required_question_id")));
+            question.setRequiredAnswer(SqlHelper.toNullable(rs.getString("required_answer")));
             question.setOrder(rs.getInt("order"));
             question.setQuestion(rs.getString("question"));
             question.setDescription(rs.getString("description"));

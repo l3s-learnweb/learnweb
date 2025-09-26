@@ -50,6 +50,38 @@
                 <p:message for="@previous"/>
             </div>
 
+            <div faces:id="question_condition" class="field">
+                <h:outputText value="Question visibility condition:" styleClass="fw-bold"/>
+
+                <div class="row field align-items-end mt-1">
+                    <p:outputPanel styleClass="col d-flex flex-column align-items-start">
+                        <p:outputLabel for="@next" value="Question:"/>
+                        <p:selectOneMenu value="#{question.requiredQuestionId}">
+                            <f:selectItem itemLabel="(no condition)" itemValue="#{null}"/>
+                            <f:selectItems value="#{surveyPageEditBean.getExposedQuestions(page, question)}"
+                                           var="cq" itemValue="#{cq.id}" itemLabel="#{cq.question}"/>
+                            <p:ajax listener="#{surveyPageEditBean.onConditionQuestionChange(question)}" update="question_condition" process="@this"/>
+                        </p:selectOneMenu>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="col d-flex flex-column align-items-start">
+                        <ui:fragment rendered="#{not empty question.requiredQuestionId}">
+                            <p:outputLabel for="@next" value="Required answer:"/>
+                            <p:selectOneMenu value="#{question.requiredAnswer}">
+                                <f:selectItems value="#{surveyPageEditBean.getExposedQuestionOptions(page, question)}"
+                                               var="opt" itemValue="#{opt.value}" itemLabel="#{opt.value}"/>
+                                <p:ajax event="change" listener="#{surveyPageEditBean.onConditionValueChange(question)}" process="@this"/>
+                            </p:selectOneMenu>
+                            </ui:fragment>
+                    </p:outputPanel>
+
+                    <div class="col-auto" faces:rendered="#{not empty question.requiredQuestionId}">
+                        <p:commandButton value="Clear condition" styleClass="ui-button-secondary ui-button-flat"
+                                         actionListener="#{surveyPageEditBean.onClearCondition(question)}" process="@this" update="question_condition"/>
+                    </div>
+                </div>
+            </div>
+
             <div class="field" faces:rendered="#{question.type eq 'INPUT_TEXT' or question.type eq 'INPUT_TEXTAREA'}">
                 <p:outputLabel for="@next" value="#{msg['survey.mod_placeholder_text']}:" styleClass="fw-bold"/>
                 <p:inputTextarea value="#{question.placeholder}" rows="1">

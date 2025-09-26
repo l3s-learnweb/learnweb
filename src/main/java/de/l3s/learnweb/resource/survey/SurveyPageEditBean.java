@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
@@ -130,5 +131,41 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
         page.setRequiredQuestionId(null);
         page.setRequiredAnswer(null);
         surveyDao.savePage(page);
+    }
+
+    public void onConditionQuestionChange(SurveyQuestion question) {
+        question.setRequiredAnswer(null);
+        surveyDao.saveQuestion(question);
+    }
+
+    public void onConditionValueChange(SurveyQuestion question) {
+        surveyDao.saveQuestion(question);
+    }
+
+    public void onClearCondition(SurveyQuestion question) {
+        question.setRequiredQuestionId(null);
+        question.setRequiredAnswer(null);
+        surveyDao.saveQuestion(question);
+    }
+
+    public List<SurveyQuestion> getExposedQuestions(SurveyPage page, SurveyQuestion question) {
+        return page.getQuestions().stream()
+            .filter(q -> q.getOrder() < question.getOrder())
+            .filter(SurveyQuestion::isExposable)
+            .toList();
+    }
+
+    public List<SurveyQuestionOption> getExposedQuestionOptions(SurveyPage page, SurveyQuestion question) {
+        for (SurveyQuestion q : page.getQuestions()) {
+            if (q.getId() == question.getRequiredQuestionId()) {
+                if (q.getType().isOptions()) {
+                    return q.getActiveOptions();
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return List.of();
     }
 }

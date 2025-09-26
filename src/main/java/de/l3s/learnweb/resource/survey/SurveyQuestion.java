@@ -67,6 +67,8 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     private int id;
     private int pageId;
     private boolean deleted = false;
+    private Integer requiredQuestionId;
+    private String requiredAnswer;
     private int order;
     private QuestionType type;
     private String question; // question on the website, it's replaced by a translated term if available
@@ -92,12 +94,14 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     public SurveyQuestion(SurveyQuestion question) {
         this.id = 0;
         this.pageId = question.pageId;
+        this.deleted = question.deleted;
+        this.requiredQuestionId = question.requiredQuestionId;
+        this.requiredAnswer = question.requiredAnswer;
         this.question = question.question;
         this.description = question.description;
         this.placeholder = question.placeholder;
         this.required = question.required;
         this.exposable = question.exposable;
-        this.deleted = question.deleted;
         this.order = question.order;
         this.minLength = question.minLength;
         this.maxLength = question.maxLength;
@@ -199,6 +203,26 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
 
     public void setDeleted(final boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean hasCondition() {
+        return requiredQuestionId != null && requiredAnswer != null && !requiredAnswer.isBlank();
+    }
+
+    public Integer getRequiredQuestionId() {
+        return requiredQuestionId;
+    }
+
+    public void setRequiredQuestionId(final Integer requiredQuestionId) {
+        this.requiredQuestionId = requiredQuestionId;
+    }
+
+    public String getRequiredAnswer() {
+        return requiredAnswer;
+    }
+
+    public void setRequiredAnswer(final String requiredAnswer) {
+        this.requiredAnswer = requiredAnswer;
     }
 
     public int getOrder() {
