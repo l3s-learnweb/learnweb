@@ -123,23 +123,23 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
         surveyDao.savePage(page);
     }
 
+    public void onConditionQuestionChange(SurveyQuestion question) {
+        question.setRequiredAnswer(null);
+        surveyDao.saveQuestion(question);
+    }
+
     public void onConditionValueChange(SurveyPage page) {
         surveyDao.savePage(page);
+    }
+
+    public void onConditionValueChange(SurveyQuestion question) {
+        surveyDao.saveQuestion(question);
     }
 
     public void onClearCondition(SurveyPage page) {
         page.setRequiredQuestionId(null);
         page.setRequiredAnswer(null);
         surveyDao.savePage(page);
-    }
-
-    public void onConditionQuestionChange(SurveyQuestion question) {
-        question.setRequiredAnswer(null);
-        surveyDao.saveQuestion(question);
-    }
-
-    public void onConditionValueChange(SurveyQuestion question) {
-        surveyDao.saveQuestion(question);
     }
 
     public void onClearCondition(SurveyQuestion question) {
