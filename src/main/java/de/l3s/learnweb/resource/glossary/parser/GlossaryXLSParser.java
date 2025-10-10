@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -100,10 +101,10 @@ public class GlossaryXLSParser {
         List<GlossaryEntry> result = new ArrayList<>();
         for (final GlossaryEntry entry : glossaryEntries) {
             boolean alreadyExist = false;
-            if (!result.isEmpty() && StringUtils.equals(result.getLast().getTopicOne(), entry.getTopicOne())
-                && StringUtils.equals(result.getLast().getTopicTwo(), entry.getTopicTwo())
-                && StringUtils.equals(result.getLast().getTopicThree(), entry.getTopicThree())
-                && StringUtils.equals(result.getLast().getDescription(), entry.getDescription())) {
+            if (!result.isEmpty() && Strings.CS.equals(result.getLast().getTopicOne(), entry.getTopicOne())
+                && Strings.CS.equals(result.getLast().getTopicTwo(), entry.getTopicTwo())
+                && Strings.CS.equals(result.getLast().getTopicThree(), entry.getTopicThree())
+                && Strings.CS.equals(result.getLast().getDescription(), entry.getDescription())) {
                 result.getLast().getTerms().addAll(entry.getTerms());
                 alreadyExist = true;
             }

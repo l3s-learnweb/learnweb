@@ -11,7 +11,7 @@ import jakarta.inject.Named;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -82,7 +82,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     }
 
     public void onGroupEdit() {
-        if (!StringUtils.equals(editedGroupDescription, group.getDescription())) {
+        if (!Strings.CS.equals(editedGroupDescription, group.getDescription())) {
             group.setDescription(editedGroupDescription);
             log(Action.group_changing_description, group.getId(), group.getId());
         }

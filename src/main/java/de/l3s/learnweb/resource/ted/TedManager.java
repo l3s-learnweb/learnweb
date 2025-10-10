@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import jakarta.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -93,7 +93,7 @@ public class TedManager {
         StringBuilder sb = new StringBuilder();
 
         for (Transcript transcript : tedTranscriptDao.findTranscriptsByResourceId(learnwebResourceId)) {
-            if (StringUtils.equalsAny(transcript.getLanguageCode(), "en", "fr", "de", "es", "it")) {
+            if (Strings.CS.equalsAny(transcript.getLanguageCode(), "en", "fr", "de", "es", "it")) {
                 for (Paragraph paragraph : transcript.getParagraphs()) {
                     sb.append(paragraph.text());
                     sb.append("\n\n");

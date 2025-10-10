@@ -23,6 +23,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.LogManager;
@@ -267,7 +268,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public void setWizard(String wizard) {
-        if (StringUtils.startsWith(wizard, "yell")) { // there exist many broken links in publications to wizards like: yell'A
+        if (Strings.CS.startsWith(wizard, "yell")) { // there exist many broken links in publications to wizards like: yell'A
             wizard = "yell";
         }
         this.wizard = wizard;

@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -175,10 +176,10 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         } else {
             sessions = allSessions.stream().filter(session -> {
                 if (finalIsSearchUser) {
-                    return StringUtils.containsIgnoreCase(session.getUser().getUsername(), finalQuery);
+                    return Strings.CI.contains(session.getUser().getUsername(), finalQuery);
                 }
 
-                return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.query(), finalQuery));
+                return session.getQueries().stream().anyMatch(query -> Strings.CI.contains(query.query(), finalQuery));
 
             }).toList();
         }

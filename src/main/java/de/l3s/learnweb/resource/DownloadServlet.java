@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -127,7 +128,7 @@ public class DownloadServlet extends HttpServlet {
             throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
             // only log the error if the referrer is uni-hannover.de. Otherwise, we have no chance to fix the link
-            Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
+            Level logLevel = Strings.CS.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
             log.log(logLevel, "Invalid download URL: {}", requestURI);
             throw new HttpException(HttpServletResponse.SC_BAD_REQUEST, "Download URL is invalid", e);
         }

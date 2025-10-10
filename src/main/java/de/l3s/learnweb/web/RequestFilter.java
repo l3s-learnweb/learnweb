@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Servlets;
@@ -74,7 +74,7 @@ public class RequestFilter extends HttpFilter {
                 return;
             }
 
-            if (StringUtils.endsWithAny(requestUri, "'", "'A=0")) {
+            if (Strings.CS.endsWithAny(requestUri, "'", "'A=0")) {
                 /*
                  * This rule should ban possible SQL injection
                  * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs

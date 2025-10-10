@@ -10,6 +10,7 @@ import jakarta.inject.Named;
 import jakarta.validation.constraints.Email;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
@@ -45,7 +46,7 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 
     public void onSubmitNewEmail() {
         User user = getUser();
-        if (StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email)) {
+        if (StringUtils.isNotEmpty(email) && !Strings.CS.equals(user.getEmail(), email)) {
             user.setEmail(email);
             userDao.save(user);
         }

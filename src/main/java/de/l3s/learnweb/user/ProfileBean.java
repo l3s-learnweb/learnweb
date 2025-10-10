@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
@@ -142,7 +143,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public void onSaveProfile() {
         // send confirmation mail if mail has been changed
-        if (StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email)) {
+        if (StringUtils.isNotEmpty(email) && !Strings.CS.equals(selectedUser.getEmail(), email)) {
             selectedUser.setEmail(email);
 
             if (emailConfirmationBean.sendEmailConfirmation(selectedUser)) {
@@ -351,7 +352,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         if (null == timeZoneIds) {
             Locale locale = getUserBean().getLocale();
 
-            timeZoneIds = ZoneId.getAvailableZoneIds().stream().filter(id -> !StringUtils.startsWithAny(id, "Etc/", "SystemV/", "PST8PDT", "GMT")).sorted()
+            timeZoneIds = ZoneId.getAvailableZoneIds().stream().filter(id -> !Strings.CS.startsWithAny(id, "Etc/", "SystemV/", "PST8PDT", "GMT")).sorted()
                 .map(id -> new SelectItem(ZoneId.of(id), id.replace("_", " ") + " (" + ZoneId.of(id).getDisplayName(TextStyle.FULL_STANDALONE, locale) + ")"))
                 .toList();
         }

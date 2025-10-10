@@ -6,7 +6,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.validator.FacesValidator;
 import jakarta.faces.validator.ValidatorException;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import de.l3s.learnweb.app.Learnweb;
 
@@ -18,7 +18,7 @@ public class EmailValidator extends AbstractValidator<Object> {
         if (value instanceof String strValue) {
             String email = strValue.trim().toLowerCase();
 
-            if (StringUtils.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it")) {
+            if (Strings.CS.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it")) {
                 String message;
                 if (email.endsWith("aulecsit.uniud.it")) {
                     message = "This mail address is invalid! Usually it is surname.name@spes.uniud.it";

@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
@@ -194,7 +195,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         // if the user logs in from the start or the login page, redirect him to the welcome page
         String viewId = Faces.getViewId();
-        if (StringUtils.endsWithAny(viewId, "/index.xhtml", "/user/login.xhtml", "/user/register.xhtml", "/admin/users.xhtml")) {
+        if (Strings.CS.endsWithAny(viewId, "/index.xhtml", "/user/login.xhtml", "/user/register.xhtml", "/admin/users.xhtml")) {
             return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
         }
 

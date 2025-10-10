@@ -1,6 +1,6 @@
 package de.l3s.maintenance;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +41,7 @@ public abstract class MaintenanceTask {
         try {
             init();
 
-            if (!requireConfirmation || StringUtils.equalsAnyIgnoreCase("--confirm", args)) {
+            if (!requireConfirmation || Strings.CI.equalsAny("--confirm", args)) {
                 run(false);
             } else {
                 log.warn("You are running the command in \"Dry run\" mode (without actual changes)!");

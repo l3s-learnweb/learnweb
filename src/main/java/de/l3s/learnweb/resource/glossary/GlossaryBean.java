@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -428,7 +428,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 HSSFRow row = sheet.getRow(i);
                 HSSFCell cellCurrent = row.getCell(0);
 
-                if (cellCurrent != null && !StringUtils.equalsIgnoreCase(cellCurrent.getStringCellValue(), cellPrev.getStringCellValue())) {
+                if (cellCurrent != null && !Strings.CI.equals(cellCurrent.getStringCellValue(), cellPrev.getStringCellValue())) {
                     cellPrev = cellCurrent;
                     sheet.shiftRows(i, sheet.getLastRowNum(), 1);
                 }

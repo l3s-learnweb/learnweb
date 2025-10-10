@@ -69,7 +69,6 @@ public final class BeanHelper {
     /**
      * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
      */
-    @Deprecated(forRemoval = true)
     public static List<SelectItem> getLocalesAsSelectItems(Collection<Locale> locales, Locale inLocale) {
         ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
 

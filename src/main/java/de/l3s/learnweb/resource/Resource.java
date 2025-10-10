@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -541,9 +542,9 @@ public class Resource extends AbstractResource implements Serializable {
             return;
         }
 
-        if (StringUtils.equalsAny(format, "text/html", "application/xhtml+xml")) {
+        if (Strings.CS.equalsAny(format, "text/html", "application/xhtml+xml")) {
             this.type = ResourceType.website;
-        } else if (format.startsWith("text/") || StringUtils.equalsAny(format, "application/json", "application/xml", "application/sql")) {
+        } else if (format.startsWith("text/") || Strings.CS.equalsAny(format, "application/json", "application/xml", "application/sql")) {
             this.type = ResourceType.text;
         } else if (format.startsWith("image/")) {
             this.type = ResourceType.image;
@@ -553,13 +554,13 @@ public class Resource extends AbstractResource implements Serializable {
             this.type = ResourceType.audio;
         } else if (format.equals("application/pdf")) {
             this.type = ResourceType.pdf;
-        } else if (StringUtils.containsAny(format, "ms-excel", "spreadsheet")) {
+        } else if (Strings.CS.containsAny(format, "ms-excel", "spreadsheet")) {
             this.type = ResourceType.spreadsheet;
-        } else if (StringUtils.containsAny(format, "ms-powerpoint", "presentation")) {
+        } else if (Strings.CS.containsAny(format, "ms-powerpoint", "presentation")) {
             this.type = ResourceType.presentation;
-        } else if (StringUtils.containsAny(format, "msword", "ms-word", "wordprocessing", "opendocument.text", "application/rtf")) {
+        } else if (Strings.CS.containsAny(format, "msword", "ms-word", "wordprocessing", "opendocument.text", "application/rtf")) {
             this.type = ResourceType.document;
-        } else if (StringUtils.equalsAny(format, "application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream",
+        } else if (Strings.CS.equalsAny(format, "application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream",
             "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822")) {
             // handle known types of downloadable resources
             this.type = ResourceType.file;
