@@ -54,9 +54,9 @@
 				<div class="row align-items-center">
 					<div class="col-auto" faces:rendered="#{surveyAnswerBean.totalPages gt 1}">
 						<p:commandButton value="#{msg.back}" rendered="#{surveyAnswerBean.hasPreviousPage}"
-										 actionListener="#{surveyAnswerBean.changePage(-1)}" update="@form:page" immediate="true"/>
+										 actionListener="#{surveyAnswerBean.changePage(-1)}" update="page" immediate="true"/>
 						<p:commandButton value="#{msg.next_step}" rendered="#{surveyAnswerBean.hasNextPage}"
-                                         actionListener="#{surveyAnswerBean.changePage(1)}" update="@form:page"/>
+                                         actionListener="#{surveyAnswerBean.changePage(1)}" update="page"/>
 					</div>
 
 					<div class="col" faces:rendered="#{surveyAnswerBean.totalPages gt 1}">

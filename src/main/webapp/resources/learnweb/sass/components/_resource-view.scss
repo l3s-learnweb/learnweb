@@ -38,8 +38,8 @@ body .res-view {
       overflow: auto;
 
       > div {
-        &:has(> .ui-tabs, > form, > iframe, > .video-js) {
-          height: 100%;
+        &:has(.ui-tabs, form, .video-js, > iframe) {
+          min-height: 100%;
         }
 
         > iframe,

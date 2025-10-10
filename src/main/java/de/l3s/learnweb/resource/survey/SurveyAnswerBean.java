@@ -112,7 +112,7 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
         }
 
         if (question.isExposable()) {
-            PrimeFaces.current().ajax().update("survey_tabs:survey_form:questions");
+            PrimeFaces.current().ajax().update("survey_form:questions");
         }
     }
 
