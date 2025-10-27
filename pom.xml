@@ -20,9 +20,9 @@
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.49.6</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.13.2</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>11.15.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.25.2</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.23.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.24.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.20.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -127,7 +127,7 @@
         <dependency>
             <groupId>software.xdev</groupId>
             <artifactId>chartjs-java-model</artifactId>
-            <version>2.8.1</version>
+            <version>2.9.0</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>
@@ -332,7 +332,7 @@
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.26.0</version>
+            <version>0.27.0</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
@@ -354,7 +354,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-junit5</artifactId>
-            <version>5.0.2.Final</version>
+            <version>5.0.3.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -430,7 +430,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.9.6.0</version>
+                <version>4.9.8.1</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -443,7 +443,7 @@
             <!-- Specifies WebARchive configuration -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <webResources>
                         <resource>
