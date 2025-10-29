@@ -38,7 +38,7 @@ else
     }' http://$solr_host/solr/$core_name/config || exit 1
 
     echo "adding /LearnwebQuery request handler"
-    curl -s --fail-with-body --fail -X POST -H 'Content-type:application/json' -d '{
+    curl -s --fail-with-body -X POST -H 'Content-type:application/json' -d '{
       "add-requesthandler": {
         "name": "/LearnwebQuery",
         "class": "solr.SearchHandler",
@@ -56,7 +56,7 @@ else
     }' http://$solr_host/solr/$core_name/config || exit 1
 
     echo "adding schema fields"
-    curl -s --fail-with-body --fail -X POST -H 'Content-type:application/json' --data-binary '{
+    curl -s --fail-with-body -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":[
     {
       "name": "title",
