@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `lw_search_history` (
     `query` VARCHAR(255) NOT NULL,
     `mode` ENUM ('text','image','video','group') NOT NULL,
     `group_id` INT(10) UNSIGNED DEFAULT NULL COMMENT 'id of a learnweb group, if mode is group',
-    `service` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') DEFAULT NULL,
+    `service` ENUM ('bing','google','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') DEFAULT NULL,
     `language` CHAR(5) DEFAULT NULL,
     `filters` VARCHAR(3072) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()

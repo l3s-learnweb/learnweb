@@ -1,9 +1,0 @@
-CREATE TABLE IF NOT EXISTS `lw_organisation_settings` (
-    `organisation_id` INT(10) UNSIGNED NOT NULL,
-    `setting_key` VARCHAR(255) NOT NULL, -- COLLATE 'latin1_general_ci'
-    `setting_value` VARCHAR(255) NOT NULL, -- COLLATE 'latin1_general_ci'
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-    PRIMARY KEY (`setting_key`, `organisation_id`)
-);
-
-ALTER TABLE `lw_organisation_settings` ADD CONSTRAINT `fk_lw_organisation_settings_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
