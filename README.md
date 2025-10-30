@@ -25,6 +25,23 @@ foreign language teachers, language students and university lecturers who can se
 to professional practice. The EU-MADE4LL project (European Multimodal and Digital Education for Language Learning)
 promotes the modernisation of higher education and the employability of graduates.
 
+## Components of Learnweb
+
+- A Learnweb web application (frontend and backend)
+  - A database, mysql or mariadb
+  - Solr Index for groups                           --- make optional
+  - File manager (simple path on the server)
+  - FFMPEG (video thumbnails and conversion)        --- remove if thumbmaker can convert video
+  - SMTP account (for sending emails)
+  - IMAP account (for email bounce handling, optional) --- make sure it's optional
+  - Sentry (for error logging, optional)
+  - Captcha (Google ReCaptcha or HCAPTCHA, for registration/login protection, optional)
+- Interweb (Search and LLM)                         --- hide search if interweb is missing
+- OnlyOffice (for document editing)
+- Thumbmaker (for generating thumbnails)
+- Learnweb Tracker (for tracking user actions, optional)
+- Archive Save Url (for archiving websites, optional)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

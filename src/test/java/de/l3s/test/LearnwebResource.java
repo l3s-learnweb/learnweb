@@ -12,13 +12,12 @@ import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.Server;
-import org.junit.jupiter.api.extension.ExtensionContext;
 
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
 
-class LearnwebResource implements ExtensionContext.Store.CloseableResource {
+class LearnwebResource implements AutoCloseable {
     private static final Logger log = LogManager.getLogger(LearnwebResource.class);
 
     private static final boolean startDbServer = false;
