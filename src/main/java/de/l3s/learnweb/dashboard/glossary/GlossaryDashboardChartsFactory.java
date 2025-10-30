@@ -24,7 +24,6 @@ import software.xdev.chartjs.model.data.PieData;
 import software.xdev.chartjs.model.dataset.BarDataset;
 import software.xdev.chartjs.model.dataset.LineDataset;
 import software.xdev.chartjs.model.dataset.PieDataset;
-import software.xdev.chartjs.model.options.elements.Fill;
 
 final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
@@ -105,7 +104,7 @@ final class GlossaryDashboardChartsFactory {
                 .addDataset(new LineDataset()
                     .setLabel("Interactions")
                     .setLineTension(0.1f)
-                    .setFill(new Fill<>(false))
+                    .setFill(false)
                     .setData(values)
                     .setBackgroundColor(new RGBAColor(75, 192, 192))))
             .toJson();

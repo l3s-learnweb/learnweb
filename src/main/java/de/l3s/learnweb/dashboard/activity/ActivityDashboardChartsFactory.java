@@ -12,7 +12,6 @@ import software.xdev.chartjs.model.charts.LineChart;
 import software.xdev.chartjs.model.color.RGBAColor;
 import software.xdev.chartjs.model.data.LineData;
 import software.xdev.chartjs.model.dataset.LineDataset;
-import software.xdev.chartjs.model.options.elements.Fill;
 
 public final class ActivityDashboardChartsFactory {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -34,7 +33,7 @@ public final class ActivityDashboardChartsFactory {
 
             chartData.addDataset(new LineDataset()
                 .setData(values)
-                .setFill(new Fill<>(false))
+                .setFill(false)
                 .setBorderColor(colors.getFirst())
                 .setLabel(activityData.getName())
                 .setLineTension(0.1f));
