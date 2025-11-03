@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: 'package.json'
           cache: 'npm'
@@ -30,7 +30,7 @@ jobs:
 
       - run: mvn --batch-mode -P prod,!local -Dmaven.test.skip=true -Drevision=dev-${{ github.sha }} install
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: target/Learnweb.war
