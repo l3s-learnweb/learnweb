@@ -16,13 +16,13 @@
         <revision>3.0.0-SNAPSHOT</revision>
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <maven.dependency.myfaces.version>4.1.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.12.0</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.49.6</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>11.15.0</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.50.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>11.17.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.25.2</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.25.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.26.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.20.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,7 +34,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.14.0</version>
+                <version>5.14.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>9.0.1.Final</version>
+            <version>9.1.0.Final</version>
         </dependency>
         <!-- Jakarta Mail API & Impl -->
         <dependency>
@@ -97,12 +97,12 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>5.0-M4</version>
+            <version>5.0-M5</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>15.0.9</version>
+            <version>15.0.10</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -145,7 +145,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.20.0</version>
+            <version>2.21.0</version>
         </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
@@ -220,7 +220,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>9.9.0</version>
+            <version>9.10.0</version>
             <exclusions>
                 <!-- We use alternative binding to Log4j-->
                 <exclusion>
@@ -259,7 +259,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${maven.dependency.log4j.version}</version>
         </dependency>
         <dependency>
@@ -535,7 +535,7 @@
                                     <version>[3.8,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>[21,)</version>
+                                    <version>[25,)</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>

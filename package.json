@@ -6,7 +6,6 @@
   "browserslist": [
     "Firefox ESR",
     "> 0.5% in DE",
-    "not Firefox 115",
     "not op_mini all"
   ],
   "scripts": {
@@ -26,13 +25,13 @@
     "video.js": "^8.23.4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
-    "esbuild": "^0.25.9",
+    "@eslint/js": "^9.39.1",
+    "esbuild": "^0.27.0",
     "esbuild-sass-plugin": "^3.3.1",
-    "eslint": "^9.37.0",
+    "eslint": "^9.39.1",
     "eslint-plugin-compat": "^6.0.2",
-    "globals": "^16.4.0",
-    "sass-embedded": "^1.93.2",
+    "globals": "^16.5.0",
+    "sass-embedded": "^1.93.3",
     "stylelint": "^16.25.0",
     "stylelint-config-sass-guidelines": "^12.1.0",
     "stylelint-no-unsupported-browser-features": "^8.0.4"
@@ -42,7 +41,7 @@
     "@percy/puppeteer": "^2.0.2"
   },
   "engines": {
-    "node": ">=22.11.0"
+    "node": ">=24.11.0"
   },
   "stylelint": {
     "extends": [
