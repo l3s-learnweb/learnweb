@@ -49,7 +49,6 @@ public class UserBean implements Serializable {
 
     private int userId = 0;
     private Locale locale;
-    private ColorTheme colorTheme = ColorTheme.emerald;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private transient String sessionId;
@@ -152,7 +151,7 @@ public class UserBean implements Serializable {
     }
 
     public ColorTheme getColorTheme() {
-        return activeOrganisation != null ? activeOrganisation.getTheme() : colorTheme;
+        return getActiveOrganisation().map(Organisation::getTheme).orElse(ColorTheme.emerald);
     }
 
     public String getPreference(String key, String defaultValue) {
@@ -303,7 +302,7 @@ public class UserBean implements Serializable {
     }
 
     public String getBannerLink() {
-        return getActiveOrganisation().map(o -> "./" + o.getWelcomePage()).orElse("./");
+        return getActiveOrganisation().map(o -> "./" + o.getWelcomePage()).orElse("./myhome/welcome.jsf");
     }
 
     /**

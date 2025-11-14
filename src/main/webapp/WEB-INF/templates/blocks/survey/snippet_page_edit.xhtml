@@ -44,6 +44,7 @@
                     <ui:fragment rendered="#{not empty page.requiredQuestionId}">
                         <p:outputLabel for="@next" value="Required answer:"/>
                         <p:selectOneMenu value="#{page.requiredAnswer}">
+                            <f:selectItem itemLabel="(select condition)" itemValue="#{null}"/>
                             <f:selectItems value="#{surveyEditBean.getExposedQuestionOptions(page)}"
                                            var="opt" itemValue="#{opt.value}" itemLabel="#{opt.value}"/>
                             <p:ajax event="change" listener="#{surveyPageEditBean.onConditionValueChange(page)}" process="@this"/>
