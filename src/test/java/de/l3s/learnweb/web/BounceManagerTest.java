@@ -30,13 +30,8 @@ class BounceManagerTest {
      */
     @Test
     @Disabled("Call to real mail server")
-    void testConnection() throws MessagingException {
-        Store store = bounceManager.getStore();
-        store.connect();
-
-        Folder inboxFolder = store.getFolder("INBOX");
-        assertTrue(inboxFolder.exists());
-        store.close();
+    void testConnection() {
+        assertTrue(bounceManager.checkConnection());
     }
 
     @Test

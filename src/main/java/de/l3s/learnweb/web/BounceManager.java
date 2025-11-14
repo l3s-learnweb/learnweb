@@ -13,7 +13,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Flags;
@@ -37,22 +37,39 @@ import de.l3s.mail.PasswordAuthenticator;
  *
  * @author Kate
  */
-@Dependent
+@ApplicationScoped
 public class BounceManager {
     private static final Logger log = LogManager.getLogger(BounceManager.class);
 
     private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("(?<=Status: )\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
     private static final Pattern ORIGINAL_RECIPIENT_PATTERN = Pattern.compile("(?<=Original-Recipient:)(\\s.+;)(.+)\\s");
 
+    private final boolean enabled;
     private Instant lastBounceCheck;
 
-    @Inject
-    private BounceDao bounceDao;
+    private final BounceDao bounceDao;
+    private final ConfigProvider config;
 
     @Inject
-    private ConfigProvider config;
+    public BounceManager(final ConfigProvider configProvider, final BounceDao bounceDao) {
+        this.config = configProvider;
+        this.bounceDao = bounceDao;
+        this.enabled = checkConnection();
+    }
 
-    public Store getStore() throws MessagingException {
+    final boolean checkConnection() {
+        try (Store store = getStore()) {
+            store.connect();
+
+            Folder inboxFolder = store.getFolder("INBOX");
+            return inboxFolder.exists();
+        } catch (MessagingException e) {
+            log.info("BounceManager disabled: IMAP connection check failed. Verify 'imap_host' and credentials.", e);
+            return false;
+        }
+    }
+
+    final Store getStore() throws MessagingException {
         Properties props = new Properties();
         props.setProperty("mail.debug", String.valueOf(config.getPropertyBoolean("imap_debug", config.getPropertyBoolean("smtp_debug", false))));
         props.setProperty("mail.imap.host", config.getProperty("imap_host", config.getProperty("smtp_host", "localhost")));
@@ -66,10 +83,17 @@ public class BounceManager {
             config.getProperty("imap_username", config.getProperty("smtp_username")),
             config.getProperty("imap_password", config.getProperty("smtp_password"))
         );
+
         return Session.getInstance(props, authenticator).getStore("imap");
     }
 
     public void parseInbox() throws MessagingException, IOException {
+        if (!enabled) {
+            log.debug("BounceManager is disabled; skipping inbox parsing.");
+            return;
+        }
+
+
         Instant currentCheck = Instant.now();
 
         if (lastBounceCheck == null) {
