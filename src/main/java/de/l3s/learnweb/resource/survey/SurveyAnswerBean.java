@@ -10,6 +10,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
@@ -149,7 +150,7 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
             return false;
         }
 
-        return answer.equalsIgnoreCase(page.getRequiredAnswer());
+        return Strings.CI.equalsAny(answer, page.getRequiredAnswer());
     }
 
     public boolean isQuestionVisible(SurveyPage page, SurveyQuestion question) {

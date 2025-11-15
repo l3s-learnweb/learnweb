@@ -66,6 +66,14 @@ public final class SqlHelper {
         return StringUtils.isBlank(value) ? null : value.trim();
     }
 
+    public static String join(String[] array) {
+        return StringUtils.join(array, '|');
+    }
+
+    public static String[] split(String str) {
+        return StringUtils.split(str, '|');
+    }
+
     public static Instant getInstant(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toInstant();
     }

@@ -17,7 +17,7 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     private int id;
     private int resourceId;
     private Integer requiredQuestionId;
-    private String requiredAnswer;
+    private String[] requiredAnswer;
     private boolean deleted = false;
     private int order;
     private String title;
@@ -115,7 +115,7 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     }
 
     public boolean hasCondition() {
-        return requiredQuestionId != null && requiredAnswer != null && !requiredAnswer.isBlank();
+        return requiredQuestionId != null && requiredAnswer != null;
     }
 
     public Integer getRequiredQuestionId() {
@@ -126,11 +126,11 @@ public class SurveyPage implements HasId, Deletable, Serializable {
         this.requiredQuestionId = requiredQuestionId;
     }
 
-    public String getRequiredAnswer() {
+    public String[] getRequiredAnswer() {
         return requiredAnswer;
     }
 
-    public void setRequiredAnswer(final String requiredAnswer) {
+    public void setRequiredAnswer(final String[] requiredAnswer) {
         this.requiredAnswer = requiredAnswer;
     }
 
