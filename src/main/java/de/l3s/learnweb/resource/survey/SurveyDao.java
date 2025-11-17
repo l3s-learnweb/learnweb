@@ -91,6 +91,16 @@ public interface SurveyDao extends SqlObject, Serializable {
     @SqlUpdate("DELETE FROM lw_survey_response_answer WHERE response_id = ?")
     void deleteAnswersByResponseId(int responseId);
 
+    /**
+     * Increments the order field by 1 for all questions in a page that have order greater than the specified value.
+     * Used when inserting a new question in the middle of the page.
+     *
+     * @param pageId the page ID
+     * @param fromOrder the order threshold (exclusive) - questions with order > fromOrder will be updated
+     */
+    @SqlUpdate("UPDATE lw_survey_question SET `order` = `order` + 1 WHERE page_id = ? AND `order` > ?")
+    void incrementQuestionOrdersAfter(int pageId, int fromOrder);
+
     default List<SurveyPage> findPagesAndVariantsByResourceId(int resourceId) {
         return findPagesByResourceId(resourceId).stream()
             .peek(page -> page.getVariants().addAll(findVariantsByPageId(page.getId())))

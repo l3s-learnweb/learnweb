@@ -111,11 +111,26 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
     }
 
     public void onDuplicateQuestion(SurveyPage page, SurveyQuestion question) {
+        int originalOrder = question.getOrder();
+
+        // Batch update all subsequent questions' order in the database
+        surveyDao.incrementQuestionOrdersAfter(page.getId(), originalOrder);
+
+        // Update in-memory list to match database
+        for (SurveyQuestion q : page.getQuestions()) {
+            if (q.getOrder() > originalOrder) {
+                q.setOrder(q.getOrder() + 1);
+            }
+        }
+
+        // Create and insert duplicate right after the original
         SurveyQuestion duplicate = new SurveyQuestion(question);
-        duplicate.setOrder(page.getQuestions().size());
+        duplicate.setOrder(originalOrder + 1);
         duplicate.setPageId(page.getId());
         surveyDao.saveQuestion(duplicate);
-        page.getQuestions().add(duplicate);
+
+        // Insert right after the original in the list
+        page.getQuestions().add(page.getQuestions().indexOf(question) + 1, duplicate);
     }
 
     public void onConditionQuestionChange(SurveyPage page) {
