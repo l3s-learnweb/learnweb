@@ -26,6 +26,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
@@ -36,6 +37,7 @@ import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.searchhistory.SearchEvent;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -128,9 +130,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             }
 
             search.getResourcesByPage(1); // load first page
-
-            log(Action.searching, 0, search.getId(), query);
-
+            fireEvent(new SearchEvent(Action.searching, search).setParams(query));
             resourcesGroupedBySource = null;
         }
 
@@ -192,7 +192,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             if (search != null) {
                 search.logResourceSaved(selectedResource.getRank(), newResource.getId());
-                log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
+                fireEvent(new SearchEvent(Action.search_result_saved, search).setRank(selectedResource.getRank()).setResourceId(newResource.getId()));
+                fireEvent(new ResourceEvent(Action.adding_resource, newResource).setParams(search.getId() + " - " + selectedResource.getRank()));
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
@@ -232,9 +233,10 @@ public class SearchBean extends ApplicationBean implements Serializable {
     public void commandOnResourceClick() {
         try {
             Map<String, String> params = Faces.getRequestParameterMap();
-            int tempResourceId = Integer.parseInt(params.get("resourceId"));
+            int rank = Integer.parseInt(params.get("resourceId")); // the element id holds the rank, not the resource id
 
-            search.logResourceClicked(tempResourceId);
+            search.logResourceClicked(rank);
+            fireEvent(new SearchEvent(Action.search_result_clicked, search).setRank(rank));
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
         }

@@ -34,6 +34,9 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
     @Inject
     private UserDao userDao;
 
+    @Inject
+    private LoginBean loginBean;
+
     public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
@@ -58,7 +61,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
     }
 
     public String rootLogin(User targetUser) {
-        return LoginBean.rootLogin(this, targetUser);
+        return loginBean.rootLogin(targetUser);
     }
 
     public List<UserView> getUserViews() {

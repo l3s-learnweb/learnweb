@@ -19,6 +19,7 @@ import org.primefaces.event.FileUploadEvent;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.GroupEvent;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.user.User;
@@ -84,10 +85,10 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     public void onGroupEdit() {
         if (!Strings.CS.equals(editedGroupDescription, group.getDescription())) {
             group.setDescription(editedGroupDescription);
-            log(Action.group_changing_description, group.getId(), group.getId());
+            fireEvent(new GroupEvent(Action.group_changing_description, group));
         }
         if (!editedGroupTitle.equals(group.getTitle())) {
-            log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
+            fireEvent(new GroupEvent(Action.group_changing_title, group).setParams(group.getTitle())); // old title
             group.setTitle(editedGroupTitle);
         }
         if (editedGroupLeaderId != group.getLeaderUserId()) {
@@ -96,10 +97,9 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             }
 
             group.setLeaderUserId(editedGroupLeaderId);
-            log(Action.group_changing_leader, group.getId(), group.getId());
+            fireEvent(new GroupEvent(Action.group_changing_leader, group));
         }
         groupDao.save(group);
-        //getLearnweb().getGroupManager().resetCache();
         getUser().clearCaches();
 
         addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");

@@ -22,6 +22,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ForumEvent;
 
 @Named
 @ViewScoped
@@ -76,7 +77,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         forumTopicDao.updateIncreaseReplies(post.getTopicId(), post.getId(), post.getUserId(), post.getCreatedAt());
         post.getUser().incForumPostCount();
 
-        log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);
+        fireEvent(new ForumEvent(Action.forum_topic_added, topic));
         return "/lw/group/forum_topic.jsf?faces-redirect=true&topic_id=" + topic.getId();
     }
 

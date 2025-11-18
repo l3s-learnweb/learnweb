@@ -13,8 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -22,6 +20,8 @@ import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ActivityEvent;
+import de.l3s.learnweb.logging.GroupEvent;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.User;
@@ -33,7 +33,6 @@ import de.l3s.util.StringHelper;
 public class AdminCoursesBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -5469152668344315959L;
-    private static final Logger log = LogManager.getLogger(AdminCoursesBean.class);
 
     private Course newCourse = new Course();
 
@@ -79,9 +78,8 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         groupDao.save(group);
         user.joinGroup(group);
 
-        // log and show notification
-        log(Action.group_creating, group.getId(), group.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "admin.course_group_created");
+        fireEvent(new GroupEvent(Action.group_creating, group));
         return "admin/course.jsf?course_id=" + course.getId();
     }
 
@@ -140,22 +138,20 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
     public void onDeleteCourse(Course course) {
         List<User> undeletedUsers = courseDao.deleteHard(course, getUser().isAdmin());
 
-        log.info("Deleted course {}", course);
-        log(Action.course_delete, 0, course.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "admin.course_deleted", course.getTitle());
         if (!undeletedUsers.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_INFO, "admin.course_users_not_deleted", String.join(", ", undeletedUsers.stream().map(User::getUsername).toList()));
         }
 
         courses.remove(course);
+        fireEvent(new ActivityEvent(Action.course_delete).setTargetId(course.getId()));
     }
 
     public void onAnonymiseCourse(Course course) {
         courseDao.anonymize(course);
 
-        log.info("Anonymized course {}", course);
-        log(Action.course_anonymize, 0, course.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "admin.course_anonymised", course.getTitle());
+        fireEvent(new ActivityEvent(Action.course_anonymize).setTargetId(course.getId()));
     }
 
     public Course getNewCourse() {

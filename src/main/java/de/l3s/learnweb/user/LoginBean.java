@@ -10,7 +10,6 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -19,14 +18,14 @@ import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
-import org.omnifaces.util.Servlets;
-import org.omnifaces.util.Utils;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ActivityEvent;
+import de.l3s.learnweb.logging.UserEvent;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.HashHelper;
 
@@ -140,7 +139,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, config().getContextPath());
         }
 
-        return loginUser(this, user);
+        return loginUser(user);
     }
 
     /**
@@ -156,15 +155,15 @@ public class LoginBean extends ApplicationBean implements Serializable {
             userBean.setModeratorUser(null);
             return "/lw/admin/users.xhtml?faces-redirect=true";
         } else {
-            log(Action.logout, 0, 0);
+            fireEvent(new ActivityEvent(Action.logout));
             Faces.invalidateSession();
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, config().getContextPath());
             return "/lw/index.jsf?faces-redirect=true";
         }
     }
 
-    public static String rootLogin(ApplicationBean bean, User targetUser) {
-        UserBean userBean = bean.getUserBean();
+    public String rootLogin(User targetUser) {
+        UserBean userBean = getUserBean();
         // validate permission
         if (!userBean.canLoginToAccount(targetUser)) {
             log.warn("User {} tried to log in to the account of user {} without permission", userBean.getUser().getId(), targetUser.getId());
@@ -173,19 +172,18 @@ public class LoginBean extends ApplicationBean implements Serializable {
         // store moderator account while logged in as user
         userBean.setModeratorUser(userBean.getUser());
         // login
-        return loginUser(bean, targetUser);
+        return loginUser(targetUser);
     }
 
-    public static String loginUser(ApplicationBean bean, User user) {
-        UserBean userBean = bean.getUserBean();
+    public String loginUser(User user) {
+        UserBean userBean = getUserBean();
         userBean.setUser(user); // logs the user in
 
-        user.updateLoginDate(); // the last login date has to be updated before we log a new login event
-
         if (userBean.getModeratorUser() != null) {
-            bean.log(Action.moderator_login, 0, userBean.getModeratorUser().getId());
+            fireEvent(new UserEvent(Action.moderator_login, userBean.getModeratorUser())); // target_id = the moderator
         } else {
-            bean.log(Action.login, 0, 0, Faces.getRequestURI());
+            user.updateLoginDate(); // the last login date has to be updated before we log a new login event
+            fireEvent(new ActivityEvent(Action.login).setParams(Faces.getRequestURI()));
         }
 
         Organisation userOrganisation = user.getOrganisation();
@@ -222,12 +220,5 @@ public class LoginBean extends ApplicationBean implements Serializable {
         }
 
         return redirectUrl + (redirectUrl.contains("?") ? "&" : "?") + "faces-redirect=true";
-    }
-
-    public static String prepareLoginURL(HttpServletRequest request) {
-        String requestURI = Servlets.getRequestURI(request).substring(request.getContextPath().length());
-        String queryString = Servlets.getRequestQueryString(request);
-        String redirectToUrl = (queryString == null) ? requestURI : (requestURI + "?" + queryString);
-        return request.getContextPath() + "/lw/user/login.jsf?redirect=" + Utils.encodeURL(redirectToUrl);
     }
 }

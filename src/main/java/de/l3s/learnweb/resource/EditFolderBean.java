@@ -16,6 +16,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ResourceEvent;
 
 @Named
 @ViewScoped
@@ -44,8 +45,8 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
         folder.unlockResource(getUser());
         folder.save();
 
-        log(Action.edit_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
         addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", folder.getTitle());
+        fireEvent(new ResourceEvent(Action.edit_folder, folder).setParams(folder.getTitle()));
     }
 
     public Folder getFolder() {

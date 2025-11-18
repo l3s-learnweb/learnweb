@@ -30,7 +30,10 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ActivityEvent;
+import de.l3s.learnweb.logging.GroupEvent;
 import de.l3s.learnweb.resource.File;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ProfileImageHelper;
@@ -81,6 +84,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     @Inject
     private EmailConfirmationBean emailConfirmationBean;
 
+    @Inject
+    private LoginBean loginBean;
+
     public String onLoad() {
         course = findCourse();
 
@@ -128,7 +134,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (existingUser.isPresent()) {
             if (existingUser.get().getPassword() == null && existingUser.get().isMemberOfCourse(course.getId())) {
-                return LoginBean.loginUser(this, existingUser.get());
+                return loginBean.loginUser(existingUser.get());
             } else {
                 addMessage(FacesMessage.SEVERITY_ERROR, "login_with_password_required");
                 setKeepMessages();
@@ -143,7 +149,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setLocale(getUserBean().getLocale());
 
             registerUser(user);
-            return LoginBean.loginUser(this, user);
+            return loginBean.loginUser(user);
         }
     }
 
@@ -204,7 +210,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             }
         }
 
-        return LoginBean.loginUser(this, user);
+        return loginBean.loginUser(user);
     }
 
     private void registerUser(final User user) {
@@ -226,7 +232,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         userDao.save(user);
-        log(Action.register, null, null, null, user);
+        fireEvent(new ActivityEvent(Action.register), user); // the user is not logged in yet
 
         course.addUser(user);
     }
@@ -238,8 +244,10 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         if (groupToJoin != 0) {
-            user.joinGroup(dao().getGroupDao().findByIdOrElseThrow(groupToJoin));
-            log(Action.group_joining, groupToJoin, groupToJoin, null, user);
+            final Group group = dao().getGroupDao().findByIdOrElseThrow(groupToJoin);
+            user.joinGroup(group);
+
+            fireEvent(new GroupEvent(Action.group_joining, group), user);
         }
     }
 

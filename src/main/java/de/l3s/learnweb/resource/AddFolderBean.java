@@ -10,6 +10,7 @@ import jakarta.inject.Named;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ResourceEvent;
 
 @Named
 @ViewScoped
@@ -38,9 +39,8 @@ public class AddFolderBean extends ApplicationBean implements Serializable {
         folder.setUser(getUser());
         folder.save();
 
-        log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
-
         addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
+        fireEvent(new ResourceEvent(Action.add_folder, folder).setParams(folder.getTitle()));
     }
 
     public Group getTargetGroup() {

@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.GroupEvent;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -62,8 +63,9 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         user.joinGroup(selectedGroup);
         myGroups = getUser().getGroups();
         joinAbleGroups = groupDao.findJoinAble(getUser());
-        log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
+
         addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
+        fireEvent(new GroupEvent(Action.group_joining, selectedGroup));
     }
 
     public void leaveGroup() {
@@ -71,13 +73,12 @@ public class GroupsBean extends ApplicationBean implements Serializable {
             return;
         }
 
-        log(Action.group_leaving, selectedGroup.getId(), selectedGroup.getId());
-
         getUser().leaveGroup(selectedGroup);
         myGroups = getUser().getGroups();
         joinAbleGroups = groupDao.findJoinAble(getUser());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "groupLeft", selectedGroup.getTitle());
+        fireEvent(new GroupEvent(Action.group_leaving, selectedGroup));
     }
 
     public String deleteGroup() {
@@ -91,7 +92,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
             return null;
         }
 
-        log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
+        fireEvent(new GroupEvent(Action.group_deleting, selectedGroup).setParams(selectedGroup.getTitle()));
 
         groupDao.deleteSoft(selectedGroup);
         myGroups = getUser().getGroups();
@@ -119,15 +120,13 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         }
         groupDao.save(newGroup);
         user.joinGroup(newGroup);
-        // refresh group list
-        myGroups = user.getGroups();
 
-        // log and show notification
-        log(Action.group_creating, newGroup.getId(), newGroup.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
-        getUserBean().setSidebarMenuModel(null);
+        fireEvent(new GroupEvent(Action.group_creating, newGroup));
 
-        // reset new group var
+        // refresh group list & clean cache
+        myGroups = user.getGroups();
+        getUserBean().setSidebarMenuModel(null);
         newGroup = new Group();
     }
 

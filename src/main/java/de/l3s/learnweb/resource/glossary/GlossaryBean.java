@@ -55,6 +55,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
@@ -222,7 +223,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         if (duration > 500) {
             log.warn("Glossary loading time: {}", duration);
         }
-        log(Action.glossary_open, glossaryResource);
+
+        fireEvent(new ResourceEvent(Action.glossary_open, glossaryResource));
 
         // convert tree like glossary structure to flat table
         repaintTable();
@@ -262,13 +264,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             return;
         }
 
-        //logging
-        if (formEntry.getId() > 1) {
-            log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
-        } else {
-            log(Action.glossary_entry_add, glossaryResource, formEntry.getId());
-        }
-
         formEntry.setLastChangedByUserId(getUser().getId());
 
         //to reset fulltext search
@@ -281,11 +276,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             term.setLastChangedByUserId(getUser().getId());
             //log term edit actions
             if (term.getId() != 0) {
-                log(Action.glossary_term_edit, glossaryResource, term.getId());
+                fireEvent(new ResourceEvent(Action.glossary_term_edit, glossaryResource).setParams(term.getId()));
             }
         }
 
+        Action action = formEntry.getId() > 0 ? Action.glossary_entry_edit : Action.glossary_entry_add;
         Learnweb.dao().getGlossaryDao().saveEntry(formEntry);
+        fireEvent(new ResourceEvent(action, glossaryResource).setParams(formEntry.getId()));
 
         // the glossary edit form uses a working copy (clone) therefore we have to replace the original entry
         glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
@@ -312,8 +309,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         glossaryResource.getEntries().remove(row.getEntry());
         repaintTable();
 
-        log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
         addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
+        fireEvent(new ResourceEvent(Action.glossary_entry_delete, glossaryResource).setParams(row.getEntryId()));
     }
 
     public void onDeleteTerm(GlossaryTerm term) {
@@ -330,8 +327,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         formEntry.setFulltext(null); // reset full text index
 
         addGrowl(FacesMessage.SEVERITY_INFO, "glossary.term_deleted", term.getTerm());
-
-        log(Action.glossary_term_delete, glossaryResource, term.getId());
+        fireEvent(new ResourceEvent(Action.glossary_term_delete, glossaryResource).setParams(term.getId()));
     }
 
     private boolean containsUndeletedTerms(GlossaryEntry entry) {
@@ -359,8 +355,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         newTerm.setLanguage(unusedLanguages.getFirst());
         formEntry.addTerm(newTerm);
-
-        log(Action.glossary_term_add, glossaryResource, formEntry.getId());
+        fireEvent(new ResourceEvent(Action.glossary_term_add, glossaryResource).setParams(formEntry.getId()));
     }
 
     /**
@@ -438,8 +433,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                     Learnweb.dao().getGlossaryDao().saveEntry(entry);
                     savedEntries.add(entry);
 
-                    log(Action.glossary_entry_add, glossaryResource, entry.getId());
-                    entry.getTerms().forEach(term -> log(Action.glossary_term_add, glossaryResource, term.getId()));
+                    fireEvent(new ResourceEvent(Action.glossary_entry_add, glossaryResource).setParams(entry.getId()));
+                    entry.getTerms().forEach(term -> fireEvent(new ResourceEvent(Action.glossary_term_add, glossaryResource).setParams(term.getId())));
                 }
             } finally {
                 glossaryResource.getEntries().addAll(savedEntries);

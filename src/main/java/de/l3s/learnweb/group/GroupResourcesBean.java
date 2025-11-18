@@ -32,6 +32,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.GroupEvent;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.ExportManager;
@@ -308,7 +310,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                 this.currentFolder = null;
             } else {
                 Folder targetFolder = folderDao.findByIdOrElseThrow(folderId);
-                log(Action.opening_folder, targetFolder.getGroupId(), targetFolder.getId(), targetFolder.getTitle());
+                fireEvent(new ResourceEvent(Action.opening_folder, targetFolder).setParams(targetFolder.getTitle()));
                 this.currentFolder = targetFolder;
             }
 
@@ -376,7 +378,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             newResource.save();
-            log(Action.adding_resource, targetGroup.getId(), newResource.getId());
+            fireEvent(new ResourceEvent(Action.adding_resource, newResource));
         }
 
         for (Folder folder : items.getFolders()) {
@@ -386,7 +388,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             newFolder.setParentFolderId(targetFolderId);
             newFolder.setUserId(getUser().getId());
             newFolder.save();
-            log(Action.add_folder, targetGroup.getId(), newFolder.getId(), newFolder.getTitle());
+            fireEvent(new ResourceEvent(Action.add_folder, newFolder).setParams(newFolder.getTitle()));
 
             ResourceUpdateBatch copyChild = new ResourceUpdateBatch(folder.getResources(), folder.getSubFolders());
             copyResources(copyChild, targetGroup, newFolder, true);
@@ -425,7 +427,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
             folder.moveTo(targetGroupId, targetFolderId);
 
-            log(Action.move_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+            fireEvent(new ResourceEvent(Action.move_folder, folder).setParams(folder.getTitle()));
         }
 
         for (Resource resource : items.getResources()) {
@@ -436,7 +438,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
             resource.moveTo(targetGroupId, targetFolderId);
 
-            log(Action.move_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+            fireEvent(new ResourceEvent(Action.move_resource, resource).setParams(resource.getTitle()));
         }
 
         if (skipped != 0) {
@@ -463,7 +465,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             folder.delete();
-            log(Action.deleting_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+            fireEvent(new ResourceEvent(Action.deleting_folder, folder).setParams(folder.getTitle()));
 
             if (folder.equals(currentFolder)) {
                 currentFolder = null;
@@ -477,7 +479,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             resource.delete();
-            log(Action.deleting_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+            fireEvent(new ResourceEvent(Action.deleting_resource, resource).setParams(resource.getTitle()));
         }
 
         if (items.size() - skipped > 0) {
@@ -500,7 +502,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             resource.addTag(tag, getUser());
-            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
+            fireEvent(new ResourceEvent(Action.tagging_resource, resource).setParams(tag));
         }
 
         int tagged = items.getResources().size() - skipped;
@@ -566,7 +568,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             this.searchQuery = null;
         } else if (!searchQuery.equalsIgnoreCase(this.searchQuery)) {
             this.searchQuery = searchQuery;
-            log(Action.group_resource_search, group.getId(), 0, searchQuery);
+            fireEvent(new GroupEvent(Action.group_resource_search, group).setParams(searchQuery));
         }
     }
 

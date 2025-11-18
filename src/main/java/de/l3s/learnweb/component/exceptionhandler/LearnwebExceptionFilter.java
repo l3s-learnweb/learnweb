@@ -18,10 +18,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.omnifaces.exceptionhandler.FullAjaxExceptionHandler;
 import org.omnifaces.util.Exceptions;
+import org.omnifaces.util.Servlets;
+import org.omnifaces.util.Utils;
 
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
-import de.l3s.learnweb.user.LoginBean;
 
 /**
  * The filter uses the idea of {@link org.omnifaces.filter.FacesExceptionFilter}.
@@ -68,7 +69,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
                 sendMalformedRequestError(response);
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
-                response.sendRedirect(LoginBean.prepareLoginURL(request));
+                response.sendRedirect(prepareLoginURLWithRedirect(request));
             } else if (throwable instanceof HttpException httpException) {
                 // Show an appropriate error page, these exceptions usually expected
                 request.setAttribute(ERROR_REASON, httpException.getReason());
@@ -98,5 +99,12 @@ public class LearnwebExceptionFilter extends HttpFilter {
     private Throwable unwrap(final Throwable throwable) {
         Throwable cause = throwable instanceof ServletException exception && exception.getRootCause() != null ? exception.getRootCause() : throwable;
         return Exceptions.unwrap(cause, exceptionTypesToUnwrap);
+    }
+
+    private static String prepareLoginURLWithRedirect(HttpServletRequest request) {
+        String requestURI = Servlets.getRequestRelativeURI(request);
+        String queryString = Servlets.getRequestQueryString(request);
+        String redirectToUrl = (queryString == null) ? requestURI : (requestURI + "?" + queryString);
+        return request.getContextPath() + "/lw/user/login.jsf?redirect=" + Utils.encodeURL(redirectToUrl);
     }
 }

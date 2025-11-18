@@ -20,6 +20,7 @@ import org.primefaces.PrimeFaces;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.util.bean.BeanHelper;
@@ -97,8 +98,9 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
 
         response.setSubmitted(true);
         surveyDao.saveResponse(response);
+
         addMessage(FacesMessage.SEVERITY_INFO, "survey.answer_submitted");
-        log(Action.survey_submit, resource.getGroupId(), resource.getId());
+        fireEvent(new ResourceEvent(Action.survey_submit, resource));
         formEnabled = false;
     }
 

@@ -7,8 +7,6 @@ import java.util.ResourceBundle;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
@@ -16,21 +14,20 @@ import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.i18n.MessagesBundle;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.logging.ActivityEvent;
+import de.l3s.learnweb.logging.EventDispatcher;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.StringHelper;
 
 @SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class ApplicationBean {
-    private static final Logger log = LogManager.getLogger(ApplicationBean.class);
-
-    private transient Learnweb learnweb;
-    private transient String sessionId;
 
     @Inject
     private UserBean userBean;
+
+    @Inject
+    private EventDispatcher eventDispatcher;
 
     // User ------------------------------------------------------------------------------------------------------------
 
@@ -60,6 +57,22 @@ public abstract class ApplicationBean {
 
     public UserBean getUserBean() {
         return userBean;
+    }
+
+    // Activity --------------------------------------------------------------------------------------------------------
+
+    /**
+     * Fires the activity event on behalf of the currently logged-in user.
+     */
+    protected void fireEvent(ActivityEvent event) {
+        eventDispatcher.fire(event);
+    }
+
+    /**
+     * Fires the activity event on behalf of the given user, e.g. when the user is not logged in yet.
+     */
+    protected void fireEvent(ActivityEvent event, User performer) {
+        eventDispatcher.fire(event, performer);
     }
 
     // i18n ------------------------------------------------------------------------------------------------------------
@@ -92,59 +105,6 @@ public abstract class ApplicationBean {
      */
     public void setPreference(String key, String value) {
         userBean.setPreference(key, value);
-    }
-
-    // Logging ---------------------------------------------------------------------------------------------------------
-
-    /**
-     * Logs a user action for the currently active user.
-     *
-     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
-     */
-    public void log(Action action, int groupId, int targetId, int params) {
-        log(action, groupId, targetId, Integer.toString(params), getUser());
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     *
-     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
-     */
-    public void log(Action action, int groupId, int targetId, String params) {
-        log(action, groupId, targetId, params, getUser());
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     *
-     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
-     */
-    public void log(Action action, int groupId, int targetId) {
-        log(action, groupId, targetId, null, getUser());
-    }
-
-    public void log(Action action, Resource resource, int params) {
-        log(action, resource.getGroupId(), resource.getId(), Integer.toString(params), getUser());
-    }
-
-    public void log(Action action, Resource resource, String params) {
-        log(action, resource.getGroupId(), resource.getId(), params, getUser());
-    }
-
-    public void log(Action action, Resource resource) {
-        log(action, resource.getGroupId(), resource.getId(), null, getUser());
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     * The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
-     */
-    protected void log(Action action, Integer groupId, Integer targetId, String params, User user) {
-        if (null != user) {
-            // TODO: anonymous logging
-            dao().getLogDao().insert(user, action, groupId, targetId, params, userBean.getSessionId());
-        }
     }
 
     // Messaging -------------------------------------------------------------------------------------------------------
@@ -189,17 +149,14 @@ public abstract class ApplicationBean {
     // Helper ----------------------------------------------------------------------------------------------------------
 
     protected Learnweb getLearnweb() {
-        if (null == learnweb) {
-            learnweb = Learnweb.getInstance();
-        }
-        return learnweb;
+        return Learnweb.getInstance();
     }
 
     protected DaoProvider dao() {
-        return getLearnweb().getDaoProvider();
+        return Learnweb.dao();
     }
 
     protected ConfigProvider config() {
-        return getLearnweb().getConfigProvider();
+        return Learnweb.config();
     }
 }

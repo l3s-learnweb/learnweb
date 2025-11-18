@@ -20,6 +20,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileUtility;
@@ -144,7 +145,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         res.save();
 
         log.debug("addResource; saved={}", res.getId());
-        log(Action.adding_resource, res.getGroupId(), res.getId());
+        fireEvent(new ResourceEvent(Action.adding_resource, res));
 
         // create temporal thumbnails
         res.postConstruct();

@@ -24,6 +24,7 @@ import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 
@@ -73,7 +74,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
         }
 
-        log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
+        fireEvent(new ResourceEvent(Action.opening_resource, resource));
 
         embeddedTab = resource.getDefaultTab().ordinal();
         if (editResource) {
@@ -141,21 +142,19 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         releaseResourceIfLocked();
         if (!resource.lockResource(getUser())) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.locked_by_user", resource.getLockUsername());
-            log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
+            fireEvent(new ResourceEvent(Action.lock_rejected_edit_resource, resource));
             return;
         }
 
-        log(Action.opening_resource, resource.getGroupId(), resource.getId());
         viewAction = ViewAction.editResource;
     }
 
     public void saveEdit() {
         BeanAssert.hasPermission(resource.canEditResource(getUser()));
-
         resource.save();
 
-        log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
         addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+        fireEvent(new ResourceEvent(Action.edit_resource, resource).setParams(resource.getTitle()));
 
         resource.unlockResource(getUser());
         viewAction = ViewAction.viewResource;
@@ -175,8 +174,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     public void editActivityListener() {
         if (resource != null && !resource.lockerUpdate(getUser())) {
             releaseResourceIfLocked();
-            log(Action.lock_interrupted_returned_resource, resource.getGroupId(), resource.getId());
+
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.edit_interrupted");
+            fireEvent(new ResourceEvent(Action.lock_interrupted_returned_resource, resource));
 
             viewAction = ViewAction.viewResource;
             PrimeFaces.current().ajax().update(":resource_view");
@@ -206,7 +206,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
         resource.addTag(newTag, getUser());
         addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-        log(Action.tagging_resource, resource.getGroupId(), resource.getId(), newTag);
+        fireEvent(new ResourceEvent(Action.tagging_resource, resource).setParams(newTag));
+
         newTag = ""; // clear tag input field
     }
 
@@ -281,15 +282,17 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void onDeleteComment(Comment comment) {
         resource.deleteComment(comment);
+
         addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-        log(Action.deleting_comment, resource.getGroupId(), comment.getResourceId(), comment.getId());
+        fireEvent(new ResourceEvent(Action.deleting_comment, resource).setParams(comment.getId()));
     }
 
     public void addComment() {
         Comment comment = resource.addComment(newComment, getUser());
-        log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId());
-        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
         newComment = "";
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
+        fireEvent(new ResourceEvent(Action.commenting_resource, resource).setParams(comment.getId()));
     }
 
     public void setResourceThumbnail(String archiveUrl) {
@@ -308,8 +311,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
 
             resource.save();
-            log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
+
             addGrowl(FacesMessage.SEVERITY_INFO, "archive.thumbnail_updated");
+            fireEvent(new ResourceEvent(Action.resource_thumbnail_update, resource));
         } catch (RuntimeException | IOException e) {
             throw new HttpException("Failed to set thumbnail", e);
         }
@@ -376,9 +380,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             return;
         }
 
-        log(Action.rating_resource, resource.getGroupId(), resource.getId());
-
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
+        fireEvent(new ResourceEvent(Action.rating_resource, resource));
     }
 
     public List<LogEntry> getLogs() {

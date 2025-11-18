@@ -15,6 +15,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ForumEvent;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -81,7 +82,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
             posts.add(dialogPost);
             forumTopicDao.updateIncreaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getCreatedAt());
             dialogPost.getUser().incForumPostCount();
-            log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
+            fireEvent(new ForumEvent(Action.forum_post_added, topic));
         } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         }
@@ -95,13 +96,11 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     public void deletePost(ForumPost post) {
         User user = getUser();
-        if (user.isModerator() || user.getId() == post.getUserId()) {
-            forumPostDao.delete(post.getId());
-        }
+        BeanAssert.hasPermission(user.isModerator() || user.getId() == post.getUserId());
 
+        forumPostDao.delete(post.getId());
         posts.remove(post);
-
-        log(Action.forum_post_deleted, group.getId(), post.getId(), topic.getTitle());
+        fireEvent(new ForumEvent(Action.forum_post_deleted, topic, post));
     }
 
     public void replyPost() {

@@ -30,6 +30,8 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     private TokenDao tokenDao;
     @Inject
     private UserDao userDao;
+    @Inject
+    private LoginBean loginBean;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
@@ -48,7 +50,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
             tokenDao.deleteByTypeAndUser(Token.TokenType.EMAIL_CONFIRMATION, user.getId());
 
             if (user.equals(confirmRequiredBean.getLoggedInUser())) {
-                LoginBean.loginUser(this, user);
+                loginBean.loginUser(user);
                 return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
             }
             return null;
