@@ -2,8 +2,8 @@ package de.l3s.util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.jdbi.v3.core.argument.Argument;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -21,12 +21,8 @@ public interface HasId extends Argument {
     /**
      * Returns a list of all ids of the given list of objects.
      */
-    static ArrayList<Integer> collectIds(Collection<? extends HasId> collection) {
-        ArrayList<Integer> ids = new ArrayList<>(collection.size());
-        for (HasId item : collection) {
-            ids.add(item.getId());
-        }
-        return ids;
+    static List<Integer> collectIds(Collection<? extends HasId> collection) {
+        return collection.stream().map(HasId::getId).toList();
     }
 
     static Integer getIdOrDefault(HasId object, Integer def) {

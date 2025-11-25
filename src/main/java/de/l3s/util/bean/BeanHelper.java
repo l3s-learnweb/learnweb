@@ -70,16 +70,10 @@ public final class BeanHelper {
      * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
      */
     public static List<SelectItem> getLocalesAsSelectItems(Collection<Locale> locales, Locale inLocale) {
-        ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
-
-        for (Locale locale : locales) {
-            if (!locale.getDisplayLanguage(inLocale).isEmpty()) {
-                selectItems.add(new SelectItem(locale, StringUtils.capitalize(locale.getDisplayLanguage(inLocale))));
-            }
-        }
-        selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
-
-        return selectItems;
+        return locales.stream()
+            .filter(locale -> !locale.getDisplayLanguage(inLocale).isEmpty())
+            .map(locale -> new SelectItem(locale, StringUtils.capitalize(locale.getDisplayLanguage(inLocale))))
+            .sorted(Misc.SELECT_ITEM_LABEL_COMPARATOR).toList();
     }
 
     public static TreeNode<?> createHierarchicalGroupsTree(final User user, final boolean includeUsers) {
@@ -107,8 +101,8 @@ public final class BeanHelper {
         TreeSet<Integer> selectedUsers = new TreeSet<>();
         if (selectedNodes != null) {
             for (TreeNode<?> node : selectedNodes) {
-                if ("user".equals(node.getType()) && node.getData() instanceof User) {
-                    selectedUsers.add(((User) node.getData()).getId());
+                if ("user".equals(node.getType()) && node.getData() instanceof User user) {
+                    selectedUsers.add(user.getId());
                 }
             }
         }
@@ -120,8 +114,8 @@ public final class BeanHelper {
         TreeSet<Integer> selectedGroups = new TreeSet<>();
         if (selectedNodes != null) {
             for (TreeNode<?> node : selectedNodes) {
-                if ("group".equals(node.getType()) && node.getData() instanceof Group) {
-                    selectedGroups.add(((Group) node.getData()).getId());
+                if ("group".equals(node.getType()) && node.getData() instanceof Group group) {
+                    selectedGroups.add(group.getId());
                 }
             }
         }

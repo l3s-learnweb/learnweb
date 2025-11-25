@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.survey;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -168,11 +169,9 @@ public class SurveyAnswerBean extends ApplicationBean implements Serializable, S
 
     private int indexOfCurrent() {
         if (currentPageId != null && currentPageId > 0) {
-            for (int i = 0; i < getVisiblePages().size(); i++) {
-                if (getVisiblePages().get(i).getId() == currentPageId) {
-                    return i;
-                }
-            }
+            return IntStream.range(0, getVisiblePages().size())
+                .filter(i -> getVisiblePages().get(i).getId() == currentPageId)
+                .findFirst().orElse(0);
         }
 
         return 0;

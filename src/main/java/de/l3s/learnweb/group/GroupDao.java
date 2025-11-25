@@ -108,8 +108,8 @@ public interface GroupDao extends SqlObject, Serializable {
      * These are all groups of his courses except for groups he has already joined + groups that are open to everybody.
      */
     default List<Group> findJoinAble(User user) {
-        ArrayList<Integer> coursesIn = HasId.collectIds(user.getCourses());
-        ArrayList<Integer> groupsIn = HasId.collectIds(user.getGroups());
+        List<Integer> coursesIn = HasId.collectIds(user.getCourses());
+        List<Integer> groupsIn = new ArrayList<>(HasId.collectIds(user.getGroups()));
         groupsIn.add(0); // make sure that the list is not empty
 
         return getHandle().createQuery("SELECT g.* FROM lw_group g JOIN lw_course USING(course_id) WHERE g.deleted = 0 AND g.group_id NOT IN(<groupsIn>) "

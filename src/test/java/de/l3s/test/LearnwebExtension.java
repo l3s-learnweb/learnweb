@@ -80,7 +80,7 @@ public final class LearnwebExtension implements BeforeAllCallback, AfterAllCallb
         if (resource == null) {
             lock.lock();
             try {
-                resource = store.getOrComputeIfAbsent("res", s -> new LearnwebResource(useRealDatabase), LearnwebResource.class);
+                resource = store.computeIfAbsent("res", s -> new LearnwebResource(useRealDatabase), LearnwebResource.class);
             } finally {
                 lock.unlock();
             }

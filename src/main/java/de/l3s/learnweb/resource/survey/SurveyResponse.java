@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -134,11 +134,9 @@ public class SurveyResponse implements Serializable, HasId {
             return "";
         }
 
-        StringJoiner joiner = new StringJoiner(separator);
-        for (String s : answers) {
-            joiner.add(s.replace(separator, escapedSeparator));
-        }
-        return joiner.toString();
+        return Arrays.stream(answers)
+            .map(s -> s.replace(separator, escapedSeparator))
+            .collect(Collectors.joining(separator));
     }
 
     public static String[] splitAnswers(String answers) {
@@ -146,6 +144,8 @@ public class SurveyResponse implements Serializable, HasId {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
-        return Arrays.stream(answers.split(separator)).map(s -> s.replace(escapedSeparator, separator)).toArray(String[]::new);
+        return Arrays.stream(answers.split(separator))
+            .map(s -> s.replace(escapedSeparator, separator))
+            .toArray(String[]::new);
     }
 }

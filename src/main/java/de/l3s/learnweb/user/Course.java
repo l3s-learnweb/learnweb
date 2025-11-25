@@ -210,13 +210,6 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         return Learnweb.dao().getUserDao().findByCourseId(id);
     }
 
-    /**
-     * @return The userIds of all course members
-     */
-    public List<Integer> getUserIds() {
-        return HasId.collectIds(getMembers());
-    }
-
     public synchronized void addUser(User user) {
         if (memberCount != null) {
             memberCount++;

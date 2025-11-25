@@ -54,12 +54,13 @@ It provides advanced features for organizing and sharing distributed resources w
 -   **State Management**: Session-scoped beans must be `Serializable`. Use `transient` for non-serializable fields.
 -   **Logging**: Use Log4j2 via `LogManager.getLogger()`. Avoid logging sensitive data.
 -   **Error Handling**: Use `HttpException` subclasses for HTTP-related errors. Use `ForbiddenHttpException` and `UnauthorizedHttpException` for access control.
--   **Code Style**: Use 4-space indentation (see `.editorconfig`). No wildcard imports. Follow import order: Java SE (`java.*`, `javax.*`), Jakarta EE (`jakarta.*`), third-party (`io.*`, `org.*`), internal (`de.l3s.*`).
+-   **Code Style**: Use 4-space indentation for Java, 2-space for JS/SCSS/YAML (see `.editorconfig`).
+-   **Import**: No wildcard imports. Always declare imports at the top of the file; never use inline imports. Follow import order: Java SE (`java.*`, `javax.*`), Jakarta EE (`jakarta.*`), third-party (`io.*`, `org.*`), internal (`de.l3s.*`).
 -   **Testing**: Write JUnit 5 unit tests. Use Testcontainers for integration tests. Weld JUnit for CDI testing.
 
 ## Workflow & Configuration
 
--   **Setup**: Run `npm install` and `npm run build:dev`. For hot-reloading, use an `exploded` WAR deployment in your IDE (IntelliJ). Run `npm run watch` for frontend changes.
+-   **Setup**: Run `npm install` and `npm run build:dev`. For hot-reloading, use an `exploded` WAR deployment in your IDE (IntelliJ). Run `npm run start` for frontend changes.
 -   **Docker**: Use `compose.yaml` to run the full stack locally (includes MariaDB, Solr).
 -   **Profiles**: Use the `prod` Maven profile for production builds (`mvn clean package -Pprod`).
 -   **Database Migrations**: Add new migration files to `src/main/resources/db/migration/`. Naming: `V{version}__{Description}.sql`.
@@ -115,3 +116,41 @@ It provides advanced features for organizing and sharing distributed resources w
 -   **Views**: Keep business logic in backing beans, not XHTML. Use `#{userBean}` for session data, `#{msg['key']}` for i18n.
 -   **Internationalization**: Always use `#{msg['key']}` from MessagesBundle; never hardcode user-facing text.
 -   **Optional Features**: Components like `BounceManager`, Captcha, Sentry, IMAP should gracefully disable if not configured.
+
+## Common Patterns & Snippets
+
+### 1. JDBI DAO Method
+
+Always use `@SqlQuery` or `@SqlUpdate`. Register mappers if returning custom objects.
+```java
+@RegisterRowMapper(UserMapper.class)
+public interface UserDao extends Serializable {
+    @SqlQuery("SELECT * FROM users WHERE id = :id")
+    Optional<User> findById(@Bind("id") int id);
+
+    @SqlUpdate("UPDATE users SET name = :name WHERE id = :id")
+    void updateName(@Bind("id") int id, @Bind("name") String name);
+}
+```
+
+### 2. JSF Backing Bean
+
+Beans should handle logic and catch specific exceptions.
+```java
+@Named
+@ViewScoped
+public class ExampleBean implements Serializable {
+    @Inject
+    private UserDao userDao;
+
+    public void onSave() {
+        try {
+            userDao.updateName(user.getId(), user.getName());
+            addGrowl(FacesMessage.SEVERITY_INFO, "Success", "User updated");
+        } catch (Exception e) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
+            log.error("Failed to update user", e);
+        }
+    }
+}
+```

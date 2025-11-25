@@ -1,3 +1,4 @@
+
 package de.l3s.learnweb.resource.glossary;
 
 import java.io.Serial;
@@ -102,13 +103,9 @@ public class GlossaryResource extends Resource {
      * @return a flat table representation of the tree like glossary structure
      */
     public List<GlossaryTableView> getGlossaryTableView() {
-        ArrayList<GlossaryTableView> tableView = new ArrayList<>(getEntries().size());
-
-        for (GlossaryEntry entry : getEntries()) {
-            for (GlossaryTerm term : entry.getTerms()) {
-                tableView.add(new GlossaryTableView(entry, term));
-            }
-        }
-        return tableView;
+        return getEntries().stream()
+            .flatMap(entry -> entry.getTerms().stream()
+                .map(term -> new GlossaryTableView(entry, term)))
+            .toList();
     }
 }
