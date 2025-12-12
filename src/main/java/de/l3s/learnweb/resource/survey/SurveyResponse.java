@@ -36,6 +36,7 @@ public class SurveyResponse implements Serializable, HasId {
     // cache
     private transient User user;
     private transient SurveyResource resource;
+    private transient HashMap<Integer, String> simpleAnswers;
 
     @Override
     public int getId() {
@@ -91,6 +92,7 @@ public class SurveyResponse implements Serializable, HasId {
     public void clear() {
         answers.clear();
         multipleAnswers.clear();
+        simpleAnswers = null;
     }
 
     public boolean isSubmitted() {
@@ -124,9 +126,11 @@ public class SurveyResponse implements Serializable, HasId {
     }
 
     public HashMap<Integer, String> getSimplifiedAnswers() {
-        HashMap<Integer, String> simple = new LinkedHashMap<>(answers);
-        multipleAnswers.forEach((k, v) -> simple.put(k, String.join(", ", v)));
-        return simple;
+        if (simpleAnswers == null) {
+            simpleAnswers = new LinkedHashMap<>(answers);
+            multipleAnswers.forEach((k, v) -> simpleAnswers.put(k, String.join(", ", v)));
+        }
+        return simpleAnswers;
     }
 
     public static String joinAnswers(String[] answers) {
@@ -144,7 +148,7 @@ public class SurveyResponse implements Serializable, HasId {
             return ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
-        return Arrays.stream(answers.split(separator))
+        return Arrays.stream(answers.split("\\|\\|\\|"))
             .map(s -> s.replace(escapedSeparator, separator))
             .toArray(String[]::new);
     }

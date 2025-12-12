@@ -18,7 +18,7 @@
 				</h:commandLink>
 			</f:facet>
 
-			<p:column headerText="#{msg.username}">
+			<p:column headerText="#{msg.username}" rendered="#{not empty result.userId and result.userId > 0}">
 				<h:outputLink id="print_user" value="survey/answer.jsf">
 					<h:outputText value="#{result.user.displayName} "/>
 					<f:param name="resource_id" value="#{res.id}"/>
@@ -32,14 +32,7 @@
 				<h:outputText value="#{result.submitted}"/>
 			</p:column>
 			<p:columns var="q" value="#{surveyResponsesBean.writeableQuestions}" headerText="#{q.question}">
-                <ui:fragment rendered="#{not q.type.multiple}">
-                    <h:outputText value="#{result.answers[q.id]}"/>
-                </ui:fragment>
-                <ui:fragment rendered="#{q.type.multiple}">
-                    <ui:repeat value="#{result.multipleAnswers[q.id]}" var="a">
-                        <h:outputText value="#{a}"/>
-                    </ui:repeat>
-                </ui:fragment>
+                <h:outputText value="#{result.simplifiedAnswers[q.id]}"/>
 			</p:columns>
 		</p:dataTable>
 	</h:form>
