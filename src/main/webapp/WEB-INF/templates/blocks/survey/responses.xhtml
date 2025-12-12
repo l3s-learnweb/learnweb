@@ -18,12 +18,13 @@
 				</h:commandLink>
 			</f:facet>
 
+            <p:column headerText="#{msg.date}">
+                <h:outputText value="#{result.createdAt}">
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
+                </h:outputText>
+            </p:column>
 			<p:column headerText="#{msg.username}" rendered="#{not empty result.userId and result.userId > 0}">
-				<h:outputLink id="print_user" value="survey/answer.jsf">
-					<h:outputText value="#{result.user.displayName} "/>
-					<f:param name="resource_id" value="#{res.id}"/>
-					<f:param name="user_id" value="#{result.userId}"/>
-				</h:outputLink>
+				<h:outputText value="#{result.user.displayName} "/>
 			</p:column>
 			<p:column headerText="#{msg.student_id}">
 				<h:outputText value="#{result.user.studentId}"/>
