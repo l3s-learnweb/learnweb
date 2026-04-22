@@ -2506,7 +2506,7 @@
     //================================================
 
     getThumbPos: function (slide) {
-      var rez = false,
+      var rez,
         $thumb = slide.$thumb,
         thumbPos,
         btw,
@@ -3311,8 +3311,8 @@
   // ============================================
 
   function _run(e, opts) {
-    var items = [],
-      index = 0,
+    var items,
+      index,
       $target,
       value,
       instance;
@@ -3700,6 +3700,7 @@
         $el = instance.current.$content.find("iframe");
 
         if (vendor === "youtube" && YT !== undefined && YT) {
+          // eslint-disable-next-line no-useless-assignment
           player = new YT.Player($el.attr("id"), {
             events: {
               onStateChange: function (e) {
@@ -3828,7 +3829,7 @@
   };
 
   var isScrollable = function ($el) {
-    var rez = false;
+    var rez;
 
     while (true) {
       rez = hasScrollbars($el.get(0));

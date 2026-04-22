@@ -966,7 +966,7 @@
           const numIdx = parseInt(suffixRanges[i].replace(/^[a-z]+/, ''), 10);
           newSizeRngSuffixes[numIdx] = this.settings.sizeRangeSuffixes[suffixRanges[i]];
         } catch (e) {
-          throw new Error(`sizeRangeSuffixes keys must contains correct numbers (${e})`);
+          throw new Error(`sizeRangeSuffixes keys must contains correct numbers (${e})`, { cause: e });
         }
       } else {
         newSizeRngSuffixes[suffixRanges[i]] = this.settings.sizeRangeSuffixes[suffixRanges[i]];
@@ -983,7 +983,7 @@
    * @return number or null
    */
   JustifiedGallery.prototype.retrieveMaxRowHeight = function () {
-    let newMaxRowHeight = null;
+    let newMaxRowHeight;
     const { rowHeight } = this.settings;
 
     if (typeof this.settings.maxRowHeight === 'string') {
