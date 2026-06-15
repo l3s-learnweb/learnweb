@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>5.2.3</version>
+            <version>5.3.4</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
