@@ -34,7 +34,7 @@ jobs:
 
       - run: mvn --batch-mode -P prod,!local -Drevision=${{ steps.get_version.outputs.version }} install
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: target/Learnweb.war
