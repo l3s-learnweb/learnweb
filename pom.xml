@@ -22,7 +22,7 @@
         <maven.dependency.jdbi3.version>3.53.0</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>11.20.3</maven.dependency.flyway.version> <!-- do not update, uses jackson 3-->
         <maven.dependency.log4j.version>2.26.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.43.2</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.46.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.23.0</maven.dependency.mockito.version>
         <maven.dependency.jetty.version>12.1.10</maven.dependency.jetty.version>
 
@@ -35,7 +35,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>6.1.0</version>
+                <version>6.1.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>9.1.0.Final</version>
+            <version>9.1.1.Final</version>
         </dependency>
         <!-- Jakarta Mail API & Impl -->
         <dependency>
@@ -333,7 +333,7 @@
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.28.0</version>
+            <version>0.29.0</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
