@@ -46,15 +46,17 @@
                         Import <i class="fas fa-fw fa-upload" aria-hidden="true"></i>
                     </p:commandLink>
 
-                    Export to:
-                    <p:commandLink styleClass="text-success">
-                        <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
-                        <p:dataExporter type="xls" target="dt" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
-                    </p:commandLink>
-                    <p:commandLink styleClass="text-danger">
-                        <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
-                        <p:dataExporter type="pdf" fileName="glossary" target="dt" preProcessor="#{glossaryBean.rotatePDF}"/>
-                    </p:commandLink>
+                    <h:panelGroup rendered="#{glossaryBean.optionExportEnabled}">
+                        Export to:
+                        <p:commandLink styleClass="text-success">
+                            <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
+                            <p:dataExporter type="xls" target="dt" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
+                        </p:commandLink>
+                        <p:commandLink styleClass="text-danger">
+                            <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
+                            <p:dataExporter type="pdf" fileName="glossary" target="dt" preProcessor="#{glossaryBean.rotatePDF}"/>
+                        </p:commandLink>
+                    </h:panelGroup>
                 </div>
             </div>
         </f:facet>

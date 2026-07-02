@@ -126,6 +126,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     private boolean optionMandatoryDescription;
     private boolean optionImportEnabled;
+    private boolean optionExportEnabled;
 
     private ArrayList<Locale> tableLanguageFilter;
 
@@ -175,6 +176,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
         optionImportEnabled = user.getOrganisation().getOption(Option.Glossary_Enable_Import);
+        optionExportEnabled = user.getOrganisation().getOption(Option.Glossary_Enable_Export);
     }
 
     public void setGlossaryForm(GlossaryTableView tableItem) {
@@ -575,6 +577,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public boolean isOptionImportEnabled() {
         return optionImportEnabled;
+    }
+
+    public boolean isOptionExportEnabled() {
+        return optionExportEnabled;
     }
 
     public Column[] getColumns() {
