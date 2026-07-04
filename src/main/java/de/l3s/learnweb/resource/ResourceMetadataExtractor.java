@@ -129,9 +129,17 @@ public class ResourceMetadataExtractor {
     private void processSpeechRepositoryResource(Resource resource) throws IOException {
         Document document = Jsoup.connect(resource.getUrl()).get();
         Element content = document.select("#content > .content-inner").first();
+        if (content == null) {
+            log.warn("Can't parse speech repository page for resource {}", resource.getId());
+            return;
+        }
 
         String title = content.select("#content-header h1").text();
         Element speechElement = content.select("#content-area .node-speech").first();
+        if (speechElement == null) {
+            log.warn("Can't find speech element for resource {}", resource.getId());
+            return;
+        }
         String rights = speechElement.select(".field-name-field-rights").text();
         String date = speechElement.select(".field-name-field-date").text();
         String body = speechElement.select(".field-name-body .field-items").text();
@@ -154,19 +162,21 @@ public class ResourceMetadataExtractor {
 
         description.append("Speech details:").append('\n');
         Element speechDetailsElement = speechElement.select("#node-speech-full-group-speech-details").first();
-        for (Element element : speechDetailsElement.select(".field")) {
-            String key = element.select(".field-label").text().replace(":", "").replace("\u00a0", " ").trim();
-            String value = element.select(".field-items").text();
-            if ("Duration".equals(key)) {
-                String[] tokens = value.split(":");
-                int duration = 0;
-                int multiply = 0;
-                for (int i = tokens.length - 1; i >= 0; --i) {
-                    duration += Integer.parseInt(tokens[i]) * (int) Math.pow(60, multiply++);
+        if (speechDetailsElement != null) {
+            for (Element element : speechDetailsElement.select(".field")) {
+                String key = element.select(".field-label").text().replace(":", "").replace("\u00a0", " ").trim();
+                String value = element.select(".field-items").text();
+                if ("Duration".equals(key)) {
+                    String[] tokens = value.split(":");
+                    int duration = 0;
+                    int multiply = 0;
+                    for (int i = tokens.length - 1; i >= 0; --i) {
+                        duration += Integer.parseInt(tokens[i]) * (int) Math.pow(60, multiply++);
+                    }
+                    resource.setDuration(duration);
+                } else if (!"Speech number".equals(key)) {
+                    description.append('\t').append(key).append(": ").append(value).append('\n');
                 }
-                resource.setDuration(duration);
-            } else if (!"Speech number".equals(key)) {
-                description.append('\t').append(key).append(": ").append(value).append('\n');
             }
         }
 

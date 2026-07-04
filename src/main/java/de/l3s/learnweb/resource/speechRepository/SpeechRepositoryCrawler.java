@@ -50,12 +50,18 @@ public class SpeechRepositoryCrawler implements Runnable {
         try {
             Document doc = Jsoup.connect(categoryPageUrl).timeout(TIMEOUT).get();
             Element content = doc.select("#block-system-main").first();
+            if (content == null) {
+                return null;
+            }
             Element paginationElement = content.select(".item-list > .pager").first();
 
-            Element nextCategoryPage = paginationElement.select(".pager-next a").first();
+            Element nextCategoryPage = paginationElement == null ? null : paginationElement.select(".pager-next a").first();
             String nextCategoryPageUrl = nextCategoryPage == null ? null : nextCategoryPage.attr("href");
 
             Element tableElement = content.select(".view-content table").first();
+            if (tableElement == null) {
+                return nextCategoryPageUrl;
+            }
             Elements tableRows = tableElement.select("tbody > tr");
 
             for (Element tableRow : tableRows) {
@@ -87,7 +93,13 @@ public class SpeechRepositoryCrawler implements Runnable {
     private void visitPage(final String pageUrl) throws IOException {
         Document doc = Jsoup.connect(pageUrl).timeout(TIMEOUT).get();
         Element content = doc.select("#content > .content-inner").first();
+        if (content == null) {
+            return;
+        }
         Element speechElement = content.select("#content-area .node-speech").first();
+        if (speechElement == null) {
+            return;
+        }
         Element speechDetailsElement = speechElement.select("#node-speech-full-group-speech-details").first();
 
         SpeechRepositoryEntity speechEntity = new SpeechRepositoryEntity();
@@ -99,25 +111,27 @@ public class SpeechRepositoryCrawler implements Runnable {
         speechEntity.setNotes(speechElement.select(".field-name-field-notes .field-items").text());
 
         // extracting details
-        for (Element element : speechDetailsElement.select(".field")) {
-            String key = element.select(".field-label").text()
-                .replace(":", "").replace("\u00a0", " ").trim();
-            String value = element.select(".field-items").text();
+        if (speechDetailsElement != null) {
+            for (Element element : speechDetailsElement.select(".field")) {
+                String key = element.select(".field-label").text()
+                    .replace(":", "").replace("\u00a0", " ").trim();
+                String value = element.select(".field-items").text();
 
-            if (key.contains("Duration")) {
-                speechEntity.setDuration(value);
-            } else if (key.contains("Language")) {
-                speechEntity.setLanguage(value);
-            } else if (key.contains("Level")) {
-                speechEntity.setLevel(value);
-            } else if (key.contains("Use")) {
-                speechEntity.setUse(value);
-            } else if (key.contains("Type")) {
-                speechEntity.setType(value);
-            } else if (key.contains("Domains")) {
-                speechEntity.setDomains(value);
-            } else if (key.contains("Terminology")) {
-                speechEntity.setTerminology(value);
+                if (key.contains("Duration")) {
+                    speechEntity.setDuration(value);
+                } else if (key.contains("Language")) {
+                    speechEntity.setLanguage(value);
+                } else if (key.contains("Level")) {
+                    speechEntity.setLevel(value);
+                } else if (key.contains("Use")) {
+                    speechEntity.setUse(value);
+                } else if (key.contains("Type")) {
+                    speechEntity.setType(value);
+                } else if (key.contains("Domains")) {
+                    speechEntity.setDomains(value);
+                } else if (key.contains("Terminology")) {
+                    speechEntity.setTerminology(value);
+                }
             }
         }
 
@@ -173,7 +187,7 @@ public class SpeechRepositoryCrawler implements Runnable {
         resource.setMetadataValue("type", speechEntity.getType());
         resource.setMetadataValue("domains", speechEntity.getDomains());
         resource.setMetadataValue("terminology", speechEntity.getTerminology());
-        //resource.setTranscript("");
+        // resource.setTranscript("");
 
         // parse language, example: ???
         if (StringUtils.isNotBlank(speechEntity.getLanguage())) {

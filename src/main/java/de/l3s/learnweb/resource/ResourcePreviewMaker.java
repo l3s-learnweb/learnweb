@@ -236,8 +236,10 @@ public class ResourcePreviewMaker implements Serializable {
         FFmpegFormat format = in.getFormat();
         log.info(String.format("Converting '%s' from format '%s' into mp4 format.", StringHelper.getNameFromPath(format.filename), format.format_long_name));
 
-        FFmpegBuilder builder = new FFmpegBuilder().setInput(in)
+        FFmpegBuilder builder = new FFmpegBuilder()
             .overrideOutputFiles(true)
+            .setInput(in)
+            .done()
             .addOutput(outputMediaPath)
             .setFormat("mp4")
             .setVideoCodec("libx264")
@@ -282,7 +284,7 @@ public class ResourcePreviewMaker implements Serializable {
         FFmpegFormat format = in.getFormat();
         log.info(String.format("Creating thumbnail for '%s'...", StringHelper.getNameFromPath(format.filename)));
 
-        FFmpegBuilder builder = new FFmpegBuilder().setStartOffset(seconds, TimeUnit.SECONDS).setInput(in).addOutput(outputMediaPath).setFrames(1).done();
+        FFmpegBuilder builder = new FFmpegBuilder().setInput(in).setStartOffset(seconds, TimeUnit.SECONDS).done().addOutput(outputMediaPath).setFrames(1).done();
 
         getFFmpegExecutor().createJob(builder).run();
         log.info("Creating thumbnail done.");

@@ -86,7 +86,7 @@ public class TedCrawlerSimple implements Runnable {
                 }
                 paragraphText = new StringBuilder(paragraphText.toString().replace("\n", " "));
 
-                //log.info("start time: " + startTime + " paragraph: " + paragraphText);
+                // log.info("start time: " + startTime + " paragraph: " + paragraphText);
                 tedTranscriptDao.saveTranscriptParagraphs(resourceId, language, Math.toIntExact(startTime), paragraphText.toString());
             }
         } catch (IOException e) {
@@ -102,6 +102,10 @@ public class TedCrawlerSimple implements Runnable {
             Document doc = Jsoup.connect(tedTalksURLPrefix + "page=1").timeout(10000).get();
 
             Element lastBrowsingPageEl = doc.select("a.pagination__item").last();
+            if (lastBrowsingPageEl == null) {
+                log.error("Can't find pagination on TED talks page");
+                return;
+            }
             String lastPage = lastBrowsingPageEl.text();
             int totalPages = Integer.parseInt(lastPage);
             log.info("Total no. of pages: {}", totalPages);
@@ -198,46 +202,51 @@ public class TedCrawlerSimple implements Runnable {
         TedVideo tedVideo = new TedVideo();
         tedVideo.setSlug(slug);
 
-        //Since there is no explicit meta property for ted id, it is extracted like below in order to be able to get transcripts
+        // Since there is no explicit meta property for ted id, it is extracted like below in order to be able to get transcripts
         Element iosURLEl = doc.select("meta[property=al:ios:url]").first();
         if (iosURLEl != null) {
             String tedId = iosURLEl.attr("content").split("ted://talks/")[1];
             tedId = tedId.replace("?source=facebook", "");
             tedVideo.setTedId(Integer.parseInt(tedId));
         } else {
-            return; //Few TED talks have broken links and it redirects it to the homepage
+            return; // Few TED talks have broken links and it redirects it to the homepage
         }
 
         if (resourceId.isEmpty()) {
             resourceId = tedTranscriptDao.findResourceIdByTedId(tedVideo.getTedId());
         }
 
-        Element titleEl = doc.select("meta[name=title]").first();
-        tedVideo.setTitle(titleEl.attr("content"));
+        tedVideo.setTitle(doc.select("meta[name=title]").attr("content"));
+        tedVideo.setDescription(doc.select("meta[name=description]").attr("content"));
 
-        Element descriptionEl = doc.select("meta[name=description]").first();
-        tedVideo.setDescription(descriptionEl.attr("content"));
-
-        //if the videos are new, crawl for the basic attributes such as title, speaker, transcripts
+        // if the videos are new, crawl for the basic attributes such as title, speaker, transcripts
         if (resourceId.isEmpty()) {
             Element totalViewsEl = doc.select("meta[itemprop=interactionCount]").first();
-            tedVideo.setViewedCount(Integer.parseInt(totalViewsEl.attr("content")));
+            if (totalViewsEl != null) {
+                tedVideo.setViewedCount(Integer.parseInt(totalViewsEl.attr("content")));
+            }
 
-            Element imgLinkEl = doc.select("meta[property=og:image]").first();
-            tedVideo.setPhotoUrl(imgLinkEl.attr("content"));
+            tedVideo.setPhotoUrl(doc.select("meta[property=og:image]").attr("content"));
 
             Element imageHeightElement = doc.select("meta[property=og:image:height]").first();
-            tedVideo.setPhotoHeight(Integer.parseInt(imageHeightElement.attr("content")));
+            if (imageHeightElement != null) {
+                tedVideo.setPhotoHeight(Integer.parseInt(imageHeightElement.attr("content")));
+            }
 
             Element imageWidthElement = doc.select("meta[property=og:image:width]").first();
-            tedVideo.setPhotoWidth(Integer.parseInt(imageWidthElement.attr("content")));
+            if (imageWidthElement != null) {
+                tedVideo.setPhotoWidth(Integer.parseInt(imageWidthElement.attr("content")));
+            }
 
             Element durationEl = doc.select("meta[property=og:video:duration]").first();
-            int duration = (int) Float.parseFloat(durationEl.attr("content"));
-            tedVideo.setDuration(duration);
+            if (durationEl != null) {
+                tedVideo.setDuration((int) Float.parseFloat(durationEl.attr("content")));
+            }
 
             Element releaseDateEl = doc.select("meta[property=og:video:release_date]").first();
-            tedVideo.setPublishedAt(LocalDateTime.ofInstant(Instant.ofEpochSecond(Integer.parseInt(releaseDateEl.attr("content"))), ZoneId.systemDefault()));
+            if (releaseDateEl != null) {
+                tedVideo.setPublishedAt(LocalDateTime.ofInstant(Instant.ofEpochSecond(Integer.parseInt(releaseDateEl.attr("content"))), ZoneId.systemDefault()));
+            }
 
             StringJoiner tags = new StringJoiner(",");
             Elements tagEl = doc.select("meta[property=og:video:tag]");
@@ -255,7 +264,7 @@ public class TedCrawlerSimple implements Runnable {
             tedResource.setTitle(tedVideo.getTitle());
             tedResource.setDescription(tedVideo.getDescription());
             tedResource.setUrl("https://www.ted.com/talks/" + tedVideo.getSlug());
-            tedResource.setDuration(duration);
+            tedResource.setDuration(tedVideo.getDuration());
             tedResource.setWidth(tedVideo.getPhotoWidth());
             tedResource.setHeight(tedVideo.getPhotoHeight());
             tedResource.setMaxImageUrl(tedVideo.getPhotoUrl());
@@ -271,7 +280,7 @@ public class TedCrawlerSimple implements Runnable {
 
                 tedVideo.setResourceId(tedResource.getId());
 
-                //save new TED resource ID in order to use it later for saving transcripts
+                // save new TED resource ID in order to use it later for saving transcripts
                 resourceId = Optional.of(tedResource.getId());
                 tedTranscriptDao.saveTedVideo(tedVideo);
 
@@ -281,15 +290,15 @@ public class TedCrawlerSimple implements Runnable {
             }
         }
 
-        //if video already added, check if slug has changed and then update basic attributes if so
+        // if video already added, check if slug has changed and then update basic attributes if so
         if (resourceId.isPresent()) {
             updateResourceData(resourceId.get(), slug, tedVideo.getTitle(), tedVideo.getDescription());
         } else {
             return;
         }
 
-        //if the videos are already added, crawl for new transcripts
-        //log.info("Extracting transcripts for existing ted video: " + resourceId);
+        // if the videos are already added, crawl for new transcripts
+        // log.info("Extracting transcripts for existing ted video: " + resourceId);
         Elements transcriptLinkElements = doc.select("link[rel=alternate]");
         if (!transcriptLinkElements.isEmpty()) {
             for (Element transcriptLinkElement : transcriptLinkElements) {
