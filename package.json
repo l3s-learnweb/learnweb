@@ -25,17 +25,17 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "shepherd.js": "^15.2.2",
-    "video.js": "^8.23.7"
+    "video.js": "^8.23.9"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "esbuild": "^0.28.0",
     "esbuild-sass-plugin": "^3.7.0",
-    "eslint": "^10.2.1",
+    "eslint": "^10.6.0",
     "eslint-plugin-compat": "^7.0.1",
-    "globals": "^17.5.0",
+    "globals": "^17.7.0",
     "sass-embedded": "^1.99.0",
-    "stylelint": "^17.8.0",
+    "stylelint": "^17.14.0",
     "stylelint-config-sass-guidelines": "^13.0.0",
     "stylelint-no-unsupported-browser-features": "^8.1.1"
   },
