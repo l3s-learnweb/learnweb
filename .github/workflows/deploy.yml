@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build ]
     env:
-      DEPLOY_ROOT: ~/stacks/learnweb_dev/webapps
+      DEPLOY_ROOT: /srv/stacks/learnweb_dev/webapps
       DEPLOY_NAME: dev
     steps:
       - uses: appleboy/ssh-action@v1
