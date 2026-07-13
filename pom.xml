@@ -22,9 +22,9 @@
         <maven.dependency.jdbi3.version>3.54.0</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>11.20.3</maven.dependency.flyway.version> <!-- do not update, uses jackson 3-->
         <maven.dependency.log4j.version>2.26.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.47.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.48.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.23.0</maven.dependency.mockito.version>
-        <maven.dependency.jetty.version>12.1.10</maven.dependency.jetty.version>
+        <maven.dependency.jetty.version>12.1.11</maven.dependency.jetty.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -35,7 +35,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>6.1.1</version>
+                <version>6.1.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>15.0.16</version>
+            <version>15.0.17</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -431,7 +431,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.10.2.0</version>
+                <version>4.10.3.0</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
