@@ -1,6 +1,7 @@
 services:
   webapp:
-    image: tomcat:11-jdk25
+    build: .
+    image: learnweb-webapp:local
     restart: unless-stopped
     volumes:
       # the project has to be built (mvn clean package -Pprod) before running the docker-compose
