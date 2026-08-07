@@ -62,7 +62,7 @@
                 onclick="doResourceAction('move')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="candeleteresource"/>
     <p:menuitem value="#{msg.removeFromGroup}" url="javascript:void(0)" icon="fas fa-trash"
                 onclick="doResourceAction('delete')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="candeleteresource"/>
-    <p:menuitem value="#{msg.download}" url="javascript:void(0)" icon="fas fa-download"
+    <p:menuitem value="#{msg.download}" url="javascript:void(0)" icon="fas fa-download" rendered="#{userBean.resourcesDownloadEnabled}"
                 onclick="doResourceAction('download')" pt:data-type="folder|folders|resource|resources|mixed" pt:data-check="candeleteresource"/>
 </p:contextMenu>
 

@@ -19,7 +19,7 @@
 </div>
 
 <dl class="row">
-	<ui:fragment rendered="${res.mainFile ne null}">
+	<ui:fragment rendered="${userBean.resourcesDownloadEnabled and res.mainFile ne null}">
 		<dt class="col-sm-4">#{msg.file}:</dt>
 		<dd class="col-sm-8">
 			<a href="#{res.mainFile.getResourceUrl(res.id)}" target="_top">

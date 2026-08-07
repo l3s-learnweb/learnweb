@@ -55,6 +55,7 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
         Resource_Disable_video_preview,
         Search_Chat_enabled,
         Glossary_Enable_Export, // enables the glossary file export
+        Resource_Disable_resources_download,
     }
 
     private int id;

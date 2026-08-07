@@ -502,6 +502,10 @@ public class UserBean implements Serializable {
         return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Disable_video_preview)).orElse(true);
     }
 
+    public boolean isResourcesDownloadEnabled() {
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Disable_resources_download)).orElse(true);
+    }
+
     public boolean isLoggingEnabled() {
         return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Logging_disabled)).orElse(true);
     }

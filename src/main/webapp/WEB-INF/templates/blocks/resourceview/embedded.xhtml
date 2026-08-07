@@ -81,7 +81,7 @@
         <div class="bg-body-secondary text-white text-center align-self-center p-4 px-5 m-3">
             <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
             <p:linkButton icon="fas fa-download" value="#{msg.download}" href="#{resourceDetailBean.resource.downloadUrl}"
-                          rendered="#{resourceDetailBean.resource.downloadUrl ne null}"/>
+                          rendered="#{userBean.resourcesDownloadEnabled and resourceDetailBean.resource.downloadUrl ne null}"/>
         </div>
     </c:otherwise>
 </c:choose>

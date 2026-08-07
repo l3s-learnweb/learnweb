@@ -39,7 +39,7 @@
                                       title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'website'}"/>
 
                         <p:linkButton href="#{resourceDetailBean.resource.downloadUrl}" title="#{resourceDetailBean.resource.title}" icon="fas fa-download" target="_blank"
-                                      styleClass="ui-button-flat ui-button-plain" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'pdf' or resourceDetailBean.resource.type eq 'file'}"/>
+                                      styleClass="ui-button-flat ui-button-plain" rendered="#{userBean.resourcesDownloadEnabled and (resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'pdf' or resourceDetailBean.resource.type eq 'file')}"/>
 
                         <p:button icon="fas #{resourceDetailBean.aside ? 'fa-toggle-on' : 'fa-toggle-off'}" styleClass="ui-button-flat ui-button-plain" title="#{msg.toggle_details}"
                                   onclick="$('.res-view-details').toggleClass('collapse');

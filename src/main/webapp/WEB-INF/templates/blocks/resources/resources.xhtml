@@ -78,7 +78,7 @@
                     </p:commandButton>
 
                     <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fas fa-cloud-download-alt"
-                                     onclick="PF('dataExportedDialog').show();" rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}"/>
+                                     onclick="PF('dataExportedDialog').show();" rendered="#{userBean.resourcesDownloadEnabled and groupResourcesBean.group.canDeleteGroup(userBean.user)}"/>
                 </f:facet>
 
                 <f:facet name="right">
@@ -216,7 +216,8 @@
 
 <p:dialog id="downloadConfirmDialog" header="#{msg.download}" widgetVar="downloadConfirm" appendTo="@(body)"
           modal="true" responsive="true" closeOnEscape="true" dynamic="true"
-          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false"
+          rendered="#{userBean.resourcesDownloadEnabled}">
     <h:outputText value="#{msg.download_confirm_dialog_content}"/>
 
     <h:form styleClass="text-end" prependId="false">
@@ -258,7 +259,7 @@
 
 <p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dataExportedDialog" appendTo="@(body)" modal="true" closeOnEscape="true" dynamic="true"
           resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false"
-          rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}">
+          rendered="#{userBean.resourcesDownloadEnabled and groupResourcesBean.group.canDeleteGroup(userBean.user)}">
     <h:form>
         <h:outputFormat value="#{msg.export_resources_warning}" styleClass="d-block mb-3">
             <f:param value="#{groupResourcesBean.group.resourcesCount}"/>
