@@ -38,6 +38,7 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
         sassPlugin({
             embedded: true,
             quietDeps: true,
+            silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
             precompile(source) {
                 // Replace relative paths to images with relative to the output directory (../images)
                 return source.replace(/(url\(['"]?)(\.{1,2}\/)+images\/([^'")]+['"]?\))/g, `$1../images/$3`)
