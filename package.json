@@ -9,7 +9,7 @@
     "> 0.5% in IT",
     "not dead",
     "not op_mini all",
-    "not Firefox 115"
+    "not Firefox < 140"
   ],
   "scripts": {
     "build": "node esbuild.js",

@@ -51,7 +51,7 @@
         <dependency>
             <groupId>de.l3s.interweb</groupId>
             <artifactId>interweb-client</artifactId>
-            <version>4.5.4</version>
+            <version>4.5.5</version>
         </dependency>
 
         <!-- ################ Jakarta ################ -->
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (Excel or XML)) -->
         <dependency>
