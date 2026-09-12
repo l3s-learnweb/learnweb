@@ -64,8 +64,10 @@
 }
 
 .modal-dialog-select {
-  max-width: 365px;
-  width: 100% !important;
+  .ui-dialog-box {
+    max-width: 365px;
+    width: 100% !important;
+  }
 
   .ui-selectonemenu-label {
     max-width: 254px;

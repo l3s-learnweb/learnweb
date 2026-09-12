@@ -6,10 +6,10 @@
  * This file will be loaded on every page.
  * Include only methods which are required on every page.
  */
-PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
+class LearnwebTheme extends PrimeFaces.widget.BaseWidget {
 
   init(cfg) {
-    this._super(cfg);
+    super.init(cfg);
     this.wrapper = $('.layout-wrapper');
 
     if (this.wrapper.length === 0) return;
@@ -21,7 +21,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     this.bindEvents();
     this.autoComplete();
-  },
+  }
 
   bindEvents() {
     // Used for expanding resource filters on devices without hover
@@ -46,13 +46,20 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     /**
      * Listener to trigger modal close, when clicked on dialog overlay.
+     * Since PrimeFaces 16, the viewport-sized .ui-dialog container covers the mask, so clicks outside .ui-dialog-box land on it.
      */
-    $(document).on('click', '.ui-dialog-mask', (e) => {
-      const widget = getWidgetVarById(e.currentTarget.id.replace('_modal', ''));
-      if (widget) {
+    let dialogMousedownTarget = null;
+    $(document).on('mousedown', '.ui-dialog', (e) => {
+      dialogMousedownTarget = e.target;
+    });
+
+    $(document).on('click', '.ui-dialog', (e) => {
+      // ignore clicks inside the dialog box and selections which started inside it
+      if (e.target !== e.currentTarget || dialogMousedownTarget !== e.currentTarget) return;
+
+      const widget = getWidgetVarById(e.currentTarget.id);
+      if (widget && widget.cfg.modal) {
         widget.hide();
-      } else {
-        e.currentTarget.remove();
       }
     });
 
@@ -83,7 +90,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
       this.sidebarMenuClick = false;
     });
-  },
+  }
 
   autoComplete() {
     const searchField = this.header.find('#navbar_form\\:searchfield');
@@ -122,15 +129,15 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         });
       },
     });
-  },
+  }
 
   isDesktop() {
     return window.innerWidth > 1200; // Do not forget to change scss value according
-  },
+  }
 
   isTouchDevice() {
     return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
-  },
+  }
 
   resize() {
     if (window.cqApi && typeof window.cqApi.reevaluate === 'function') {
@@ -140,23 +147,25 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         window.cqApi.reevaluate(false);
       }, 200);
     }
-  },
-});
+  }
+}
+
+PrimeFaces.widget.LearnwebTheme = LearnwebTheme;
 
 /**
  * PrimeFaces LearnwebMenu component
  */
-PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
+class LearnwebMenu extends PrimeFaces.widget.BaseWidget {
 
   init(cfg) {
-    this._super(cfg);
+    super.init(cfg);
 
     this.menu = this.jq;
     this.menulinks = this.menu.find('a');
 
     this.bindEvents();
     this.expandActiveItems();
-  },
+  }
 
   bindEvents() {
     this.menulinks.off('click.menu').on('click.menu', (e) => {
@@ -181,7 +190,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         e.preventDefault();
       }
     });
-  },
+  }
 
   activate(item, animate) {
     const submenu = item.children('ul');
@@ -194,7 +203,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         submenu.show();
       }
     }
-  },
+  }
 
   deactivate(item) {
     const submenu = item.children('ul');
@@ -203,7 +212,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     if (submenu.length) {
       submenu.hide();
     }
-  },
+  }
 
   deactivateItems(items, animate) {
     for (let i = 0; i < items.length; i++) {
@@ -236,7 +245,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         this.deactivate(item);
       }
     }
-  },
+  }
 
   expandActiveItems() {
     let currentPath = window.location.href;
@@ -252,8 +261,10 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         this.activate($(li));
       });
     });
-  },
-});
+  }
+}
+
+PrimeFaces.widget.LearnwebMenu = LearnwebMenu;
 
 function updateSearchQuery(param, value) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -392,14 +403,14 @@ $(() => {
  * This is a new implementation of old script which changes size of filters list.
  * If list contains more than N items, then all after N will be hidden and 'Show more' will be displayed instead.
  */
-PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
+class LimitedList extends PrimeFaces.widget.BaseWidget {
   init(cfg) {
-    this._super(cfg);
+    super.init(cfg);
 
     this.defaultVisibleItems = 5;
     this.targetLists = $('.js-limited-list');
-    this.targetLists.each(this.initList);
-  },
+    this.targetLists.each((index, element) => this.initList(index, element));
+  }
 
   initList(index, element) {
     const $list = $(element);
@@ -424,5 +435,7 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
         return false;
       });
     }
-  },
-});
+  }
+}
+
+PrimeFaces.widget.LimitedList = LimitedList;

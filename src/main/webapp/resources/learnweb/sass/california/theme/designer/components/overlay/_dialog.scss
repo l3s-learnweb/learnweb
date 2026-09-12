@@ -1,9 +1,40 @@
 body {
+  // since PrimeFaces 16, .ui-dialog is a viewport-sized container and .ui-dialog-box is the visible dialog
   .ui-dialog {
-    padding: 0;
-    box-shadow: $overlayContainerShadow;
-    border: $overlayContentBorder;
-    border-radius: $borderRadius;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+
+    &.ui-overflow-hidden,
+    &.ui-dialog-absolute,
+    &.ui-dialog-fitviewport {
+      overflow-y: hidden;
+    }
+
+    &.ui-dialog-absolute .ui-dialog-box {
+      position: absolute;
+    }
+
+    .ui-dialog-box {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      padding: 0;
+      box-shadow: $overlayContainerShadow;
+      border: $overlayContentBorder;
+      border-radius: $borderRadius;
+    }
+
+    .ui-dialog-content:last-child,
+    .ui-dialog-footer {
+      border-bottom-left-radius: inherit;
+      border-bottom-right-radius: inherit;
+    }
 
     .ui-dialog-titlebar {
       background: $dialogHeaderBg;
@@ -11,6 +42,8 @@ body {
       font-weight: $dialogHeaderFontWeight;
       border-bottom: $dialogHeaderBorder;
       padding: $dialogHeaderPadding;
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
 
       .ui-dialog-title {
         margin: 0;

@@ -93,5 +93,12 @@
         }
       }
     ]
+  },
+  "allowScripts": {
+    "@parcel/watcher": true,
+    "@percy/core": true,
+    "esbuild": true,
+    "protobufjs": true,
+    "puppeteer": true
   }
 }

@@ -12,12 +12,12 @@ import jakarta.faces.event.ListenerFor;
 import jakarta.faces.event.PostAddToViewEvent;
 
 import org.primefaces.component.api.Widget;
-import org.primefaces.component.menu.AbstractMenu;
+import org.primefaces.component.menu.AbstractMenuImpl;
 import org.primefaces.model.menu.MenuModel;
 
 @FacesComponent(createTag = true, tagName = "menu", namespace = "learnweb")
 @ListenerFor(sourceClass = LearnwebMenu.class, systemEventClass = PostAddToViewEvent.class)
-public final class LearnwebMenu extends AbstractMenu implements Widget {
+public final class LearnwebMenu extends AbstractMenuImpl implements Widget {
 
     public static final String COMPONENT_TYPE = "de.l3s.learnweb.component.LearnwebMenu";
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";

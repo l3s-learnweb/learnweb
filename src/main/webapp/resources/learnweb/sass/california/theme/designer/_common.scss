@@ -44,7 +44,18 @@ body {
     }
   }
 
-  .ui-helper-reset {
+  // since PrimeFaces 16, these lists are rendered without .ui-helper-reset
+  .ui-helper-reset,
+  .ui-menu-list,
+  .ui-tabmenu-nav,
+  .ui-tabs-nav,
+  .ui-wizard-step-titles,
+  .ui-selectonemenu-items,
+  .ui-selectcheckboxmenu-items,
+  .ui-autocomplete-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     line-height: normal;
   }
 

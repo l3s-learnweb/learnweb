@@ -1,5 +1,5 @@
 body {
-  .ui-dialog {
+  .ui-dialog .ui-dialog-box {
     @include media-breakpoint-up(md) {
       min-width: map-get($grid-breakpoints, 'sm');
     }
