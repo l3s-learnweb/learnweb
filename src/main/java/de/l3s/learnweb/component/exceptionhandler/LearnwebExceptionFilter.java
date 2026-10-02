@@ -6,6 +6,7 @@ import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serial;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.faces.application.ViewExpiredException;
 import jakarta.servlet.FilterChain;
@@ -48,10 +49,15 @@ public class LearnwebExceptionFilter extends HttpFilter {
         } catch (FileNotFoundException exception) {
             // Ignoring thrown exception; this is a Faces quirk, and it should be interpreted as 404.
             response.sendError(HttpException.NOT_FOUND);
-        } catch (ServletException exception) {
-            // get unwrapped exception
-            Throwable throwable = Exceptions.unwrap(exception.getRootCause() != null ? exception.getRootCause() : exception, exceptionTypesToUnwrap);
+        } catch (Throwable exception) {
+            // usually a ServletException thrown by Faces, but non-Faces servlets can throw e.g. an HttpException directly
+            Throwable throwable = unwrap(exception);
             LearnwebExceptionHandler.logException(throwable, request);
+
+            if (response.isCommitted()) {
+                // too late to send an error page, let the container abort the response
+                throw exception;
+            }
 
             request.setAttribute(ERROR_MESSAGE, throwable.getMessage());
             request.setAttribute(ERROR_EXCEPTION, throwable);
@@ -59,7 +65,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             if (throwable instanceof ViewExpiredException) {
                 response.sendError(HttpException.SESSION_EXPIRED);
             } else if (LearnwebExceptionHandler.isMalformedRequest(throwable)) {
-                response.sendError(HttpException.BAD_REQUEST);
+                sendMalformedRequestError(response);
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
                 response.sendRedirect(LoginBean.prepareLoginURL(request));
@@ -71,18 +77,26 @@ public class LearnwebExceptionFilter extends HttpFilter {
                 // An unexpected error, usually something went wrong
                 throw exception;
             }
-        } catch (Throwable throwable) {
-            // Theoretically should never happen, all errors should be of type ServletException
-            LearnwebExceptionHandler.logException(throwable, request);
-            if (LearnwebExceptionHandler.isMalformedRequest(throwable) && !response.isCommitted()) {
-                // e.g. a non-Faces servlet calling getParameter() on a request with malformed parameters
-                response.sendError(HttpException.BAD_REQUEST);
-                return;
-            }
-            throw new ServletException(throwable);
         } finally {
             // same workaround as in FullAjaxExceptionHandler
             request.removeAttribute(ERROR_EXCEPTION);
         }
+    }
+
+    /**
+     * The error page is a Faces page, which often can't be rendered for a malformed request,
+     * e.g. Tomcat throws the parse exception again on every getParameter() call. So a plain text error is sent instead.
+     */
+    private static void sendMalformedRequestError(final HttpServletResponse response) throws IOException {
+        response.reset();
+        response.setStatus(HttpException.BAD_REQUEST);
+        response.setContentType("text/plain");
+        response.setCharacterEncoding(StandardCharsets.UTF_8);
+        response.getWriter().write("400 Bad Request");
+    }
+
+    private Throwable unwrap(final Throwable throwable) {
+        Throwable cause = throwable instanceof ServletException exception && exception.getRootCause() != null ? exception.getRootCause() : throwable;
+        return Exceptions.unwrap(cause, exceptionTypesToUnwrap);
     }
 }

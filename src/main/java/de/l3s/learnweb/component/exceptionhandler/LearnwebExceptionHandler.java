@@ -1,12 +1,12 @@
 package de.l3s.learnweb.component.exceptionhandler;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import jakarta.faces.application.ViewExpiredException;
 import jakarta.faces.context.ExceptionHandler;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -24,6 +24,8 @@ import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 
 public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
     private static final Logger log = LogManager.getLogger(LearnwebExceptionHandler.class);
+    // compared by name, because container classes are not available at compile time
+    private static final Set<String> CLIENT_ABORT_EXCEPTIONS = Set.of("org.apache.catalina.connector.ClientAbortException", "org.eclipse.jetty.io.EofException");
 
     public LearnwebExceptionHandler(ExceptionHandler wrapped) {
         super(wrapped);
@@ -58,6 +60,8 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
             log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request", rootCause);
         } else if (rootCause instanceof ViewExpiredException) {
             log.debug("View expired", rootCause);
+        } else if (CLIENT_ABORT_EXCEPTIONS.contains(rootCause.getClass().getName())) {
+            log.debug("Client aborted request: {}", rootCause.getMessage());
         } else {
             log.error("Unhandled error", rootCause);
         }
@@ -65,29 +69,15 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
 
     /**
      * Returns true if the exception was caused by a malformed request, which is a client error:
-     * Tomcat failing to parse the request parameters (e.g. invalid encoding, aborted multipart upload)
+     * Tomcat failing to parse the request parameters (e.g. invalid encoding, aborted multipart upload,
+     * exceeded maxParameterCount, maxPartCount or maxPostSize, which valid requests rarely do)
      * or MyFaces failing to decode a malformed (e.g. tampered) {@code jakarta.faces.ViewState}.
-     * Exceeded Tomcat limits (e.g. maxPartCount, maxPostSize) are not considered malformed, as they usually indicate a configuration problem.
      */
     protected static boolean isMalformedRequest(Throwable throwable) {
-        if ("org.apache.tomcat.util.http.InvalidParameterException".equals(throwable.getClass().getName())) {
-            // compared by name, because Tomcat classes are not available at compile time
-            return getTomcatErrorCode(throwable) != HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE;
-        }
-
-        return throwable instanceof IllegalArgumentException && Arrays.stream(throwable.getStackTrace())
+        // compared by name, because Tomcat classes are not available at compile time
+        return "org.apache.tomcat.util.http.InvalidParameterException".equals(throwable.getClass().getName())
+            || throwable instanceof IllegalArgumentException && Arrays.stream(throwable.getStackTrace())
             .anyMatch(element -> "org.apache.myfaces.application.viewstate.StateUtils".equals(element.getClassName()) && "decode".equals(element.getMethodName()));
-    }
-
-    /**
-     * Returns the HTTP status code Tomcat assigned to an {@code InvalidParameterException}, or 400 if it can't be determined.
-     */
-    private static int getTomcatErrorCode(Throwable throwable) {
-        try {
-            return (int) throwable.getClass().getMethod("getErrorCode").invoke(throwable);
-        } catch (ReflectiveOperationException e) {
-            return HttpServletResponse.SC_BAD_REQUEST;
-        }
     }
 
     /**
