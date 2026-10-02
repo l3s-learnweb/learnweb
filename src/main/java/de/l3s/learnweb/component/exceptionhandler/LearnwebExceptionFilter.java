@@ -6,10 +6,7 @@ import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serial;
-import java.lang.reflect.InvocationTargetException;
 
-import jakarta.el.ELException;
-import jakarta.faces.FacesException;
 import jakarta.faces.application.ViewExpiredException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +15,7 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.jboss.weld.exceptions.WeldException;
+import org.omnifaces.exceptionhandler.FullAjaxExceptionHandler;
 import org.omnifaces.util.Exceptions;
 
 import de.l3s.learnweb.exceptions.HttpException;
@@ -35,6 +32,13 @@ public class LearnwebExceptionFilter extends HttpFilter {
 
     private static final String ERROR_REASON = "de.l3s.learnweb.error.reason";
 
+    private Class<? extends Throwable>[] exceptionTypesToUnwrap;
+
+    @Override
+    public void init() {
+        exceptionTypesToUnwrap = FullAjaxExceptionHandler.getExceptionTypesToUnwrap(getServletContext());
+    }
+
     @Override
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws IOException, ServletException {
@@ -46,7 +50,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             response.sendError(HttpException.NOT_FOUND);
         } catch (ServletException exception) {
             // get unwrapped exception
-            Throwable throwable = Exceptions.unwrap(exception.getRootCause(), FacesException.class, ELException.class, WeldException.class, InvocationTargetException.class);
+            Throwable throwable = Exceptions.unwrap(exception.getRootCause() != null ? exception.getRootCause() : exception, exceptionTypesToUnwrap);
             LearnwebExceptionHandler.logException(throwable, request);
 
             request.setAttribute(ERROR_MESSAGE, throwable.getMessage());
@@ -54,6 +58,8 @@ public class LearnwebExceptionFilter extends HttpFilter {
 
             if (throwable instanceof ViewExpiredException) {
                 response.sendError(HttpException.SESSION_EXPIRED);
+            } else if (LearnwebExceptionHandler.isMalformedRequest(throwable)) {
+                response.sendError(HttpException.BAD_REQUEST);
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
                 response.sendRedirect(LoginBean.prepareLoginURL(request));
@@ -68,6 +74,11 @@ public class LearnwebExceptionFilter extends HttpFilter {
         } catch (Throwable throwable) {
             // Theoretically should never happen, all errors should be of type ServletException
             LearnwebExceptionHandler.logException(throwable, request);
+            if (LearnwebExceptionHandler.isMalformedRequest(throwable)) {
+                // e.g. a non-Faces servlet calling getParameter() on a request with malformed parameters
+                response.sendError(HttpException.BAD_REQUEST);
+                return;
+            }
             throw new ServletException(throwable);
         } finally {
             // same workaround as in FullAjaxExceptionHandler

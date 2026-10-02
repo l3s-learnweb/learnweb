@@ -3,7 +3,8 @@
 				xmlns:h="jakarta.faces.html"
 				xmlns:f="jakarta.faces.core"
 				xmlns:faces="jakarta.faces"
-				xmlns:p="primefaces">
+				xmlns:p="primefaces"
+				xmlns:o="omnifaces">
 
 <ui:param name="pageTitle" value="#{msg.registerLabel}"/>
 <ui:param name="extraPageClass" value="container"/>
@@ -39,7 +40,8 @@
 			<p>You have to <h:commandLink action="#{loginBean.logout}">logout</h:commandLink> before you can create a new account.</p>
 		</h:form>
 
-		<h:form id="registration_form" rendered="#{not userBean.loggedIn}">
+		<!-- includeViewParams keeps the wizard in the postback URL, so the course can be restored if the view scoped bean is re-created -->
+		<o:form id="registration_form" rendered="#{not userBean.loggedIn}" includeViewParams="true">
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.username}:"/>
 				<p:inputText value="#{registrationBean.username}" required="true" validator="#{registrationBean.validateUsername}">
@@ -113,7 +115,7 @@
 				}
 			</h:outputScript>
 			<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
-		</h:form>
+		</o:form>
 
 		<h:panelGroup rendered="#{not empty registrationBean.wizard}">
 			<hr/>

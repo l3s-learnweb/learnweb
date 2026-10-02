@@ -1,4 +1,4 @@
-# Copilot Instructions for Learnweb
+# Agent Instructions for Learnweb
 
 ## Project Overview
 
@@ -55,7 +55,7 @@ It provides advanced features for organizing and sharing distributed resources w
 -   **Logging**: Use Log4j2 via `LogManager.getLogger()`. Avoid logging sensitive data.
 -   **Error Handling**: Use `HttpException` subclasses for HTTP-related errors. Use `ForbiddenHttpException` and `UnauthorizedHttpException` for access control.
 -   **Code Style**: Use 4-space indentation for Java, 2-space for JS/SCSS/YAML (see `.editorconfig`).
--   **Import**: No wildcard imports. Always declare imports at the top of the file; never use inline imports. Follow import order: Java SE (`java.*`, `javax.*`), Jakarta EE (`jakarta.*`), third-party (`io.*`, `org.*`), internal (`de.l3s.*`).
+-   **Import**: No wildcard imports (except static imports in tests, e.g. `import static org.junit.jupiter.api.Assertions.*;`). Always declare imports at the top of the file; never use inline imports. Follow import order: Java SE (`java.*`, `javax.*`), Jakarta EE (`jakarta.*`), third-party (`io.*`, `org.*`), internal (`de.l3s.*`).
 -   **Testing**: Write JUnit 5 unit tests. Use Testcontainers for integration tests. Weld JUnit for CDI testing.
 
 ## Workflow & Configuration

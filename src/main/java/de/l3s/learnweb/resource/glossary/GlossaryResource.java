@@ -3,10 +3,10 @@ package de.l3s.learnweb.resource.glossary;
 
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -24,7 +24,8 @@ public class GlossaryResource extends Resource {
     private static final long serialVersionUID = 8388778401614338522L;
 
     private ArrayList<Locale> allowedLanguages = new ArrayList<>();
-    private LinkedList<GlossaryEntry> entries = new LinkedList<>();
+    // thread-safe, because the resource is cached and shared between all users viewing the glossary
+    private List<GlossaryEntry> entries = new CopyOnWriteArrayList<>();
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource() {
@@ -40,7 +41,7 @@ public class GlossaryResource extends Resource {
         this.allowedLanguages = new ArrayList<>(other.allowedLanguages);
         this.clonedButNotSaved = true;
 
-        other.getEntries().forEach(entry -> this.entries.add(new GlossaryEntry(entry)));
+        this.entries = new CopyOnWriteArrayList<>(other.getEntries().stream().map(GlossaryEntry::new).toList());
     }
 
     @Override
@@ -83,12 +84,12 @@ public class GlossaryResource extends Resource {
         return this;
     }
 
-    public LinkedList<GlossaryEntry> getEntries() {
+    public List<GlossaryEntry> getEntries() {
         return entries;
     }
 
-    public void setEntries(LinkedList<GlossaryEntry> entries) {
-        this.entries = entries;
+    public void setEntries(List<GlossaryEntry> entries) {
+        this.entries = new CopyOnWriteArrayList<>(entries);
     }
 
     public boolean isClonedButNotSaved() {

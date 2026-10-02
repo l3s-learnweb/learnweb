@@ -50,11 +50,14 @@
 				<p:outputPanel id="transcript_options">
 					<div class="p-2 bg-body-tertiary">
 						<h:form>
-							<p:outputLabel for="@next" styleClass="me-2" value="#{msg.select_transcript_lang}:"/>
-							<p:selectOneMenu id="select_lang" styleClass="me-2" value="#{tedTranscriptBean.transcriptLanguage}" converter="localeConverter">
-								<f:selectItems value="#{tedTranscriptBean.languageList}"/>
-								<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
-							</p:selectOneMenu>
+							<h:outputText styleClass="me-2" value="#{msg['ted_transcript.no_transcripts']}" rendered="#{empty tedTranscriptBean.languageList}"/>
+							<ui:fragment rendered="#{not empty tedTranscriptBean.languageList}">
+								<p:outputLabel for="@next" styleClass="me-2" value="#{msg.select_transcript_lang}:"/>
+								<p:selectOneMenu id="select_lang" styleClass="me-2" value="#{tedTranscriptBean.transcriptLanguage}" converter="localeConverter">
+									<f:selectItems value="#{tedTranscriptBean.languageList}"/>
+									<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
+								</p:selectOneMenu>
+							</ui:fragment>
 							<p:commandButton id="save" styleClass="me-2" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 							<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
 							<p:commandButton id="submit" value="#{msg.submit}" styleClass="me-2" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
