@@ -28,6 +28,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -121,15 +122,57 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     private void initCourse() {
         if (course.getId() == 1618) { // random course selection for SoMeCliCS Literacy
-            List<Course> randomPool = new ArrayList<>();
-            randomPool.add(course);
-            randomPool.add(courseDao.findByIdOrElseThrow(1629));
-            randomPool.add(courseDao.findByIdOrElseThrow(1630));
-
+            List<Course> randomPool = getCoursePool(course);
             Collections.shuffle(randomPool);
             course = randomPool.getFirst();
         }
 
+        initCourseOptions();
+    }
+
+    /**
+     * Returns the courses a user who registers for the given course can be assigned to.
+     */
+    private List<Course> getCoursePool(Course baseCourse) {
+        List<Course> pool = new ArrayList<>();
+        pool.add(baseCourse);
+        if (baseCourse.getId() == 1618) {
+            pool.add(courseDao.findByIdOrElseThrow(1629));
+            pool.add(courseDao.findByIdOrElseThrow(1630));
+        }
+        return pool;
+    }
+
+    /**
+     * The view scoped bean can be re-created on postback (e.g. after the view expired from the session). Then the view action (onLoad)
+     * isn't called and the view params are applied only after the inputs were decoded. Restores the course from the request parameters,
+     * so the course specific inputs are rendered and their submitted values are applied.
+     */
+    private void restoreCourse() {
+        if (course != null) {
+            return;
+        }
+
+        if (wizard == null) {
+            wizard = Faces.getRequestParameter("wizard");
+        }
+        log.warn("Course is not initialized, restoring it from the request, wizard: {}", wizard);
+
+        Course baseCourse = findCourse();
+        // keep the course that was shown when the form was rendered, but only if the user could have been assigned to it
+        int renderedCourseId = NumberUtils.toInt(Faces.getRequestParameter("course_id"));
+        Optional<Course> renderedCourse = getCoursePool(baseCourse).stream().filter(c -> c.getId() == renderedCourseId).findFirst();
+
+        if (renderedCourse.isPresent()) {
+            course = renderedCourse.get();
+            initCourseOptions();
+        } else {
+            course = baseCourse;
+            initCourse();
+        }
+    }
+
+    private void initCourseOptions() {
         mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
         affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
         studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
@@ -175,10 +218,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     public String register() {
         if (course == null) {
-            // the view scoped bean was re-created on postback, so the view action (onLoad) wasn't called for this instance
-            log.warn("Course is not initialized on registration, wizard: {}", wizard);
-            course = findCourse();
-            initCourse();
+            restoreCourse();
 
             // the form was validated without the course specific required fields, show the form again to fill them
             if ((mailRequired && StringUtils.isBlank(email)) || (affiliationRequired && StringUtils.isBlank(affiliation))
@@ -316,6 +356,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public boolean isMailRequired() {
+        restoreCourse();
         return mailRequired;
     }
 
@@ -336,10 +377,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public boolean isAffiliationRequired() {
+        restoreCourse();
         return affiliationRequired;
     }
 
     public boolean isStudentIdRequired() {
+        restoreCourse();
         return studentIdRequired;
     }
 
@@ -368,6 +411,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public Course getCourse() {
+        restoreCourse();
         return course;
     }
 

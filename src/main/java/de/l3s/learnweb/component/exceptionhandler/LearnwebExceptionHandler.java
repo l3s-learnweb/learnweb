@@ -67,16 +67,25 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
      * Returns true if the exception was caused by a malformed request, which is a client error:
      * Tomcat failing to parse the request parameters (e.g. invalid encoding, aborted multipart upload)
      * or MyFaces failing to decode a malformed (e.g. tampered) {@code jakarta.faces.ViewState}.
-     * Exceeded Tomcat limits (e.g. maxPartCount, maxPostSize) are not considered malformed, as they usually indicate a configuration problem.
+     * Exceeded Tomcat limits (e.g. maxParameterCount, maxPartCount, maxPostSize) are not considered malformed, as they usually indicate a configuration problem.
      */
     protected static boolean isMalformedRequest(Throwable throwable) {
         if ("org.apache.tomcat.util.http.InvalidParameterException".equals(throwable.getClass().getName())) {
             // compared by name, because Tomcat classes are not available at compile time
-            return getTomcatErrorCode(throwable) != HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE;
+            return getTomcatErrorCode(throwable) != HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE && !isParameterCountExceeded(throwable);
         }
 
         return throwable instanceof IllegalArgumentException && Arrays.stream(throwable.getStackTrace())
             .anyMatch(element -> "org.apache.myfaces.application.viewstate.StateUtils".equals(element.getClassName()) && "decode".equals(element.getMethodName()));
+    }
+
+    /**
+     * Tomcat reports an exceeded maxParameterCount with status 400 (not 413), the only place it is thrown from is {@code Parameters.addParameter}.
+     */
+    private static boolean isParameterCountExceeded(Throwable throwable) {
+        StackTraceElement[] stackTrace = throwable.getStackTrace();
+        return stackTrace.length > 0 && "org.apache.tomcat.util.http.Parameters".equals(stackTrace[0].getClassName())
+            && "addParameter".equals(stackTrace[0].getMethodName());
     }
 
     /**

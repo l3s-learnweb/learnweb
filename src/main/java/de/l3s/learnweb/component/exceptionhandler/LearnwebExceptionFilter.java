@@ -59,7 +59,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             if (throwable instanceof ViewExpiredException) {
                 response.sendError(HttpException.SESSION_EXPIRED);
             } else if (LearnwebExceptionHandler.isMalformedRequest(throwable)) {
-                response.sendError(HttpException.BAD_REQUEST);
+                sendBadRequest(response);
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
                 response.sendRedirect(LoginBean.prepareLoginURL(request));
@@ -74,9 +74,9 @@ public class LearnwebExceptionFilter extends HttpFilter {
         } catch (Throwable throwable) {
             // Theoretically should never happen, all errors should be of type ServletException
             LearnwebExceptionHandler.logException(throwable, request);
-            if (LearnwebExceptionHandler.isMalformedRequest(throwable)) {
+            if (LearnwebExceptionHandler.isMalformedRequest(Exceptions.unwrap(throwable, exceptionTypesToUnwrap))) {
                 // e.g. a non-Faces servlet calling getParameter() on a request with malformed parameters
-                response.sendError(HttpException.BAD_REQUEST);
+                sendBadRequest(response);
                 return;
             }
             throw new ServletException(throwable);
@@ -84,5 +84,21 @@ public class LearnwebExceptionFilter extends HttpFilter {
             // same workaround as in FullAjaxExceptionHandler
             request.removeAttribute(ERROR_EXCEPTION);
         }
+    }
+
+    /**
+     * Doesn't use sendError(), because it dispatches to the error page, which is a Faces page that reads the request parameters,
+     * and Tomcat throws the same parameter parse exception again on every getParameter() call.
+     */
+    private static void sendBadRequest(final HttpServletResponse response) throws IOException {
+        if (response.isCommitted()) {
+            return;
+        }
+
+        response.reset();
+        response.setStatus(HttpException.BAD_REQUEST);
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("400 Bad Request");
     }
 }

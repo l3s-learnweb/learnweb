@@ -42,6 +42,8 @@
 
 		<!-- includeViewParams keeps the wizard in the postback URL, so the course can be restored if the view scoped bean is re-created -->
 		<o:form id="registration_form" rendered="#{not userBean.loggedIn}" includeViewParams="true">
+			<!-- the randomly selected course, to restore the same course if the view scoped bean is re-created -->
+			<input type="hidden" name="course_id" value="#{registrationBean.course.id}"/>
 			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.username}:"/>
 				<p:inputText value="#{registrationBean.username}" required="true" validator="#{registrationBean.validateUsername}">
