@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -55,6 +56,9 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
             // try one more attempt with email, if user already used the token
             List<User> users = userDao.findByEmail(email);
             if (!users.isEmpty() && users.stream().anyMatch(User::isEmailConfirmed)) {
+                // A redirect from f:viewAction makes MyFaces keep the faces messages in the flash scope, which is stored in the session
+                // after the response is committed. Hence, the session has to be created before (the visitor may not have one yet).
+                Faces.getSession();
                 // redirect to welcome page (a login form is shown there, if user is not logged in)
                 return "/lw/" + users.getFirst().getOrganisation().getWelcomePage() + "?faces-redirect=true";
             }

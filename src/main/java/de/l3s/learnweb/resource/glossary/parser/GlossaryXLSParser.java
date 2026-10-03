@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hssf.OldExcelFormatException;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
@@ -94,6 +95,8 @@ public class GlossaryXLSParser {
             } else {
                 throw e;
             }
+        } catch (OldExcelFormatException e) { // Excel 5.0/7.0 (BIFF5) files are not supported by POI
+            return new GlossaryParserResponse(new ParsingError(-1, "", "This Excel format is too old. Please save the file in *.xls format, also called Excel 97-2003, and try again."));
         }
     }
 

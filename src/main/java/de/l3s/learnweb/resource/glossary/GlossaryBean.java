@@ -15,6 +15,7 @@ import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.application.ViewExpiredException;
 import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
@@ -35,6 +36,7 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.omnifaces.util.Beans;
+import org.omnifaces.util.Faces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FilesUploadEvent;
 import org.primefaces.model.file.UploadedFile;
@@ -145,6 +147,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         Instant start = Instant.now();
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
+        if (resource == null) {
+            // happens on postback when the view scoped ResourceDetailBean was lost (e.g. expired), it is only initialized on page load
+            throw new ViewExpiredException("The resource of the glossary is not loaded, the page has to be reloaded", Faces.getViewId());
+        }
         glossaryResource = dao().getGlossaryDao().convertToGlossaryResource(resource).orElseThrow(BeanAssert.NOT_FOUND);
 
         long duration = Duration.between(start, Instant.now()).toMillis();
@@ -194,6 +200,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public void onSave() {
+        if (!containsUndeletedTerms(formEntry)) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "glossary.term_validation");
+            return;
+        }
+
+        // the language is null if a term's select menu wasn't submitted (e.g. the client form was out of sync with the entry)
+        if (formEntry.getTerms().stream().anyMatch(term -> !term.isDeleted() && term.getLanguage() == null)) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "glossary.term_language_required");
+            return;
+        }
+
         //logging
         if (formEntry.getId() > 1) {
             log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
@@ -215,11 +232,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             if (term.getId() != 0) {
                 log(Action.glossary_term_edit, glossaryResource, term.getId());
             }
-        }
-
-        if (!containsUndeletedTerms(formEntry)) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "glossary.entry_validation");
-            return;
         }
 
         Learnweb.dao().getGlossaryDao().saveEntry(formEntry);
@@ -390,18 +402,23 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         if (importResponse.isSuccessful()) {
             // persist parsed entries
             int userId = getUser().getId();
-            for (GlossaryEntry entry : importResponse.getEntries()) {
-                // set creator of new entries
-                entry.setResourceId(glossaryResource.getId());
-                entry.setUserId(userId);
-                entry.getTerms().forEach(term -> term.setUserId(userId));
-                entry.setImported(true);
+            List<GlossaryEntry> savedEntries = new ArrayList<>();
+            try {
+                for (GlossaryEntry entry : importResponse.getEntries()) {
+                    // set creator of new entries
+                    entry.setResourceId(glossaryResource.getId());
+                    entry.setUserId(userId);
+                    entry.getTerms().forEach(term -> term.setUserId(userId));
+                    entry.setImported(true);
 
-                Learnweb.dao().getGlossaryDao().saveEntry(entry);
-                glossaryResource.getEntries().add(entry);
+                    Learnweb.dao().getGlossaryDao().saveEntry(entry);
+                    savedEntries.add(entry);
 
-                log(Action.glossary_entry_add, glossaryResource, entry.getId());
-                entry.getTerms().forEach(term -> log(Action.glossary_term_add, glossaryResource, formEntry.getId()));
+                    log(Action.glossary_entry_add, glossaryResource, entry.getId());
+                    entry.getTerms().forEach(term -> log(Action.glossary_term_add, glossaryResource, term.getId()));
+                }
+            } finally {
+                glossaryResource.getEntries().addAll(savedEntries);
             }
 
             repaintTable();

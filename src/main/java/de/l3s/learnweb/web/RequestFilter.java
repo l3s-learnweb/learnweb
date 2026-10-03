@@ -59,7 +59,7 @@ public class RequestFilter extends HttpFilter {
              * This rule should ban threats like:
              * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
              */
-            log.error("Suspicious IP address restricted: {}", ipAddr);
+            log.warn("Suspicious IP address restricted: {}", ipAddr);
 
             // We can't ban them, because their IP address is not an address, but a string, likely long string...
             response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");

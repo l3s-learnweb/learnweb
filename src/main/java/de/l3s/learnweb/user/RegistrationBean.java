@@ -84,10 +84,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private EmailConfirmationBean emailConfirmationBean;
 
     public String onLoad() {
-        if (StringUtils.isNotEmpty(wizard)) {
-            course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
-            BeanAssert.validate(!course.isRegistrationClosed(), "registration.wizard_disabled");
+        course = findCourse();
 
+        if (StringUtils.isNotEmpty(wizard)) {
             // special message for yell
             if (course.getId() == 505) {
                 addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
@@ -98,30 +97,42 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             if (StringUtils.isNotEmpty(fastLogin)) {
                 return fastLogin();
             }
-
-            if (course.getId() == 1618) { // random course selection for SoMeCliCS Literacy
-                List<Course> randomPool = new ArrayList<>();
-                randomPool.add(course);
-                randomPool.add(courseDao.findByIdOrElseThrow(1629));
-                randomPool.add(courseDao.findByIdOrElseThrow(1630));
-
-                Collections.shuffle(randomPool);
-                course = randomPool.getFirst();
-            }
         } else {
-            List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
-            if (publicCourses.isEmpty()) {
-                throw BeanAssert.NOT_FOUND.get();
-            }
-
-            course = publicCourses.getFirst();
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning", config().getAppName());
+        }
+
+        initCourse();
+        return null;
+    }
+
+    private Course findCourse() {
+        if (StringUtils.isNotEmpty(wizard)) {
+            Course wizardCourse = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
+            BeanAssert.validate(!wizardCourse.isRegistrationClosed(), "registration.wizard_disabled");
+            return wizardCourse;
+        }
+
+        List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
+        if (publicCourses.isEmpty()) {
+            throw BeanAssert.NOT_FOUND.get();
+        }
+        return publicCourses.getFirst();
+    }
+
+    private void initCourse() {
+        if (StringUtils.isNotEmpty(wizard) && course.getId() == 1618) { // random course selection for SoMeCliCS Literacy
+            List<Course> randomPool = new ArrayList<>();
+            randomPool.add(course);
+            randomPool.add(courseDao.findByIdOrElseThrow(1629));
+            randomPool.add(courseDao.findByIdOrElseThrow(1630));
+
+            Collections.shuffle(randomPool);
+            course = randomPool.getFirst();
         }
 
         mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
         affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
         studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
-        return null;
     }
 
     private String fastLogin() {
@@ -163,6 +174,20 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public String register() {
+        if (course == null) {
+            // the view scoped bean was re-created on postback, so the view action (onLoad) wasn't called for this instance
+            log.warn("Course is not initialized on registration, wizard: {}", wizard);
+            course = findCourse();
+            initCourse();
+
+            // the form was validated without the course specific required fields, show the form again to fill them
+            if ((mailRequired && StringUtils.isBlank(email)) || (affiliationRequired && StringUtils.isBlank(affiliation))
+                || (studentIdRequired && StringUtils.isBlank(studentId))) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "registration.fill_required_fields");
+                return null;
+            }
+        }
+
         final User user = new User();
         user.setUsername(username);
         user.setEmail(email);

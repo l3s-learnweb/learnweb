@@ -48,7 +48,7 @@ final class SentryRequestHttpServletRequestProcessor implements EventProcessor {
         try {
             User user = new User();
             user.setIpAddress(Servlets.getRemoteAddr(this.httpRequest));
-            HttpSession session = this.httpRequest.getSession();
+            HttpSession session = this.httpRequest.getSession(false); // don't create a session, the response may be already committed
             if (session != null) {
                 Object userId = session.getAttribute("UserId");
                 if (userId != null) {

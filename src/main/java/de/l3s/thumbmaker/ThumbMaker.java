@@ -2,7 +2,6 @@ package de.l3s.thumbmaker;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serial;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
@@ -13,10 +12,12 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 
 public class ThumbMaker implements Serializable {
     @Serial
@@ -53,7 +54,23 @@ public class ThumbMaker implements Serializable {
                 return response.body();
             }
 
-            ErrorResponse errorResponse = GSON.fromJson(new InputStreamReader(response.body(), StandardCharsets.UTF_8), ErrorResponse.class);
+            String responseBody;
+            try (InputStream body = response.body()) {
+                responseBody = new String(body.readAllBytes(), StandardCharsets.UTF_8);
+            }
+
+            ErrorResponse errorResponse = null;
+            try {
+                errorResponse = GSON.fromJson(responseBody, ErrorResponse.class);
+            } catch (JsonParseException ignored) {
+                // the error response is not JSON (e.g. a plain text error from the server or a proxy)
+            }
+
+            if (errorResponse == null) {
+                log.error("Request failed: {}; {}", response.statusCode(), StringUtils.abbreviate(responseBody, 500));
+                throw new IllegalStateException("ThumbMaker request failed with status " + response.statusCode());
+            }
+
             log.error("Request failed: {} {}; {}", errorResponse.statusCode, errorResponse.error, errorResponse.message);
             throw new IllegalStateException("ThumbMaker request failed: " + errorResponse.error);
         } catch (IOException e) {

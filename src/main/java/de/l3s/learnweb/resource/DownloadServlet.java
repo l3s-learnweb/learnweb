@@ -155,7 +155,7 @@ public class DownloadServlet extends HttpServlet {
 
         // TODO block invalid requests. But for a while we will only log them
         if (!file.getName().equals(requestData.fileName)) {
-            log.error("A resource file accessed invalid file name; db name: {}; request name: {}", file.getName(), requestData.fileName);
+            log.warn("A resource file accessed invalid file name; db name: {}; request name: {}", file.getName(), requestData.fileName);
         }
 
         if (!resource.get().getFiles().containsValue(file)) {
@@ -296,7 +296,7 @@ public class DownloadServlet extends HttpServlet {
         try {
             ifModifiedSince = request.getDateHeader("If-Modified-Since");
         } catch (IllegalArgumentException e) {
-            log.error("Illegal If-Modified-Since header: {}", e.getMessage());
+            log.warn("Illegal If-Modified-Since header: {}", e.getMessage());
         }
 
         if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {

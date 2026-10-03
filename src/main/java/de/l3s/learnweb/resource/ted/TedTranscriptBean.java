@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     private int resourceId;
     private String locale;
-    private LinkedList<SelectItem> languageList;
+    private List<SelectItem> languageList;
 
     @Inject
     private TedTranscriptDao tedTranscriptDao;
@@ -238,22 +237,15 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         }
 
         if (languageList == null) {
-            languageList = new LinkedList<>();
-            List<String> langList = tedTranscriptDao.findLanguagesByResourceId(videoResourceId);
-            if (langList.isEmpty()) {
-                languageList.add(new SelectItem(null, "No Transcripts Available"));
-            } else {
-                ArrayList<Locale> locales = new ArrayList<>();
+            ArrayList<Locale> locales = new ArrayList<>();
+            for (String lang : tedTranscriptDao.findLanguagesByResourceId(videoResourceId)) {
                 try {
-                    for (String lang : langList) {
-                        locales.add(parseTedLanguage(lang));
-                    }
+                    locales.add(parseTedLanguage(lang));
                 } catch (IllegalArgumentException e) {
                     log.error("Error while converting language code to locale", e);
                 }
-
-                languageList.addAll(BeanHelper.getLocalesAsSelectItems(locales, getLocale()));
             }
+            languageList = BeanHelper.getLocalesAsSelectItems(locales, getLocale());
         }
         return languageList;
     }

@@ -1,9 +1,12 @@
 package de.l3s.learnweb.component.exceptionhandler;
 
+import java.util.Arrays;
+
 import jakarta.faces.application.ViewExpiredException;
 import jakarta.faces.context.ExceptionHandler;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -39,6 +42,11 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
             return;
         }
 
+        if (isMalformedRequest(rootCause)) {
+            log.warn("Malformed request: {}", rootCause.getMessage()); // usually sent by vulnerability scanners or aborted uploads
+            return;
+        }
+
         if (rootCause instanceof HttpException httpException && httpException.isSilent()) {
             log.warn("Bean exception", rootCause);
             return;
@@ -52,6 +60,33 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
             log.debug("View expired", rootCause);
         } else {
             log.error("Unhandled error", rootCause);
+        }
+    }
+
+    /**
+     * Returns true if the exception was caused by a malformed request, which is a client error:
+     * Tomcat failing to parse the request parameters (e.g. invalid encoding, aborted multipart upload)
+     * or MyFaces failing to decode a malformed (e.g. tampered) {@code jakarta.faces.ViewState}.
+     * Exceeded Tomcat limits (e.g. maxPartCount, maxPostSize) are not considered malformed, as they usually indicate a configuration problem.
+     */
+    protected static boolean isMalformedRequest(Throwable throwable) {
+        if ("org.apache.tomcat.util.http.InvalidParameterException".equals(throwable.getClass().getName())) {
+            // compared by name, because Tomcat classes are not available at compile time
+            return getTomcatErrorCode(throwable) != HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE;
+        }
+
+        return throwable instanceof IllegalArgumentException && Arrays.stream(throwable.getStackTrace())
+            .anyMatch(element -> "org.apache.myfaces.application.viewstate.StateUtils".equals(element.getClassName()) && "decode".equals(element.getMethodName()));
+    }
+
+    /**
+     * Returns the HTTP status code Tomcat assigned to an {@code InvalidParameterException}, or 400 if it can't be determined.
+     */
+    private static int getTomcatErrorCode(Throwable throwable) {
+        try {
+            return (int) throwable.getClass().getMethod("getErrorCode").invoke(throwable);
+        } catch (ReflectiveOperationException e) {
+            return HttpServletResponse.SC_BAD_REQUEST;
         }
     }
 

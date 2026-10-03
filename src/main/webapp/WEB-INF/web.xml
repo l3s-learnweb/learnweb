@@ -49,6 +49,11 @@
         <!-- Version string could be any string here, or taken from @Named bean -->
         <param-value>#{config.version}</param-value>
     </context-param>
+    <!-- Used by LearnwebExceptionHandler and LearnwebExceptionFilter, unwraps exceptions thrown in @PostConstruct methods of beans -->
+    <context-param>
+        <param-name>org.omnifaces.EXCEPTION_TYPES_TO_UNWRAP</param-name>
+        <param-value>jakarta.faces.FacesException,jakarta.el.ELException,org.jboss.weld.exceptions.WeldException,java.lang.reflect.InvocationTargetException</param-value>
+    </context-param>
 
     <!-- Check these recommendations https://primefaces.github.io/primefaces/14_0_0/#/core/performance?id=recommended-configuration -->
     <!-- Also this page provides description for everything https://myfaces.apache.org/#/core40 -->

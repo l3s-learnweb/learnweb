@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
@@ -43,10 +44,13 @@ public class InterwebResultsWrapper implements Serializable {
         FacetField facetField = new FacetField("source");
         for (SearchConnectorResults connectorResults : searchResults) {
             ResourceService service = ResourceService.parse(connectorResults.getService());
-            totalResults += connectorResults.getTotalResults();
-            resultCountPerService.add(new Count(facetField, connectorResults.getService(), connectorResults.getTotalResults()));
+            List<SearchItem> items = Objects.requireNonNullElse(connectorResults.getItems(), List.of());
+            // some connectors do not report the total number of results, fall back to the number of returned items
+            long connectorTotalResults = connectorResults.getTotalResults() == null ? items.size() : connectorResults.getTotalResults();
+            totalResults += connectorTotalResults;
+            resultCountPerService.add(new Count(facetField, connectorResults.getService(), connectorTotalResults));
 
-            for (var searchResult : connectorResults.getItems()) {
+            for (var searchResult : items) {
                 WebResource resource = createResource(service, searchResult);
 
                 if (resource.getType() != ResourceType.website && null == resource.getThumbnailLargest()) { // no thumbnail set

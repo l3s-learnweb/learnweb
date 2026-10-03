@@ -29,12 +29,14 @@ public class SolrPaginator extends AbstractPaginator {
 
         this.search = search;
 
-        if (collectSearchHistory && search.getFilterGroupIds().size() == 1 && search.getQuery() != null && !"*".equals(search.getQuery())) {
+        // group id 0 is the virtual "private resources" group, which doesn't exist in lw_group
+        if (collectSearchHistory && search.getFilterGroupIds().size() == 1 && search.getFilterGroupIds().getFirst() != 0
+            && search.getQuery() != null && !"*".equals(search.getQuery())) {
             this.searchLogId = Learnweb.dao().getSearchHistoryDao().insertGroupQuery(
                 search.getFilterGroupIds().getFirst(),
                 search.getQuery(),
-                null,
                 search.getFilterLanguage(),
+                null,
                 search.getUserId()
             );
         }
