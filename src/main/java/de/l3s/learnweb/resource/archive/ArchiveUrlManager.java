@@ -6,16 +6,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -30,134 +28,73 @@ import de.l3s.learnweb.resource.web.WebResource;
 @ApplicationScoped
 public final class ArchiveUrlManager {
     private static final Logger log = LogManager.getLogger(ArchiveUrlManager.class);
+    private static final Pattern SCHEME = Pattern.compile("^https?://", Pattern.CASE_INSENSITIVE);
+    private static final Pattern SNAPSHOT_PATH = Pattern.compile("^/web/(\\d{14})[a-z_]*/");
+    private static final DateTimeFormatter WAYBACK_TIMESTAMP = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     private final String archiveSaveURL;
     private final ArchiveUrlDao archiveUrlDao;
-
-    private final ExecutorService executorService;
-    private final ExecutorService cdxExecutorService;
+    private final HttpClient httpClient = HttpClient.newBuilder()
+        .followRedirects(HttpClient.Redirect.NEVER)
+        .connectTimeout(Duration.ofSeconds(10))
+        .build();
 
     @Inject
     public ArchiveUrlManager(ConfigProvider configProvider, final ArchiveUrlDao archiveUrlDao) {
         this.archiveSaveURL = configProvider.getProperty("integration_archive_saveurl");
         this.archiveUrlDao = archiveUrlDao;
-
-        executorService = Executors.newCachedThreadPool();
-        cdxExecutorService = Executors.newSingleThreadExecutor(); // In order to sequentially poll the CDX server and not overload it
     }
 
-    public Boolean addResourceToArchive(WebResource resource) throws IOException {
-        try {
-            Future<Boolean> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
-            return executorResponse.get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error while retrieving response from a task that was interrupted by an exception for resource: {}", resource.getId(), e);
+    /**
+     * Asks the Wayback Machine to capture the resource and stores the resulting snapshot URL.
+     *
+     * @return false if the page is blocked by robots.txt
+     */
+    public boolean addResourceToArchive(WebResource resource) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(archiveSaveURL + resource.getUrl()))
+            .header("Accept", "application/xml")
+            .timeout(Duration.ofMinutes(3)) // capturing a page can take a while, but must not block the request thread forever
+            .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+
+        if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN && response.headers().firstValue("X-Archive-Wayback-Liveweb-Error")
+            .filter("RobotAccessControlException: Blocked By Robots"::equalsIgnoreCase).isPresent()) {
+            log.info("Cannot archive resource {}: blocked by robots.txt", resource.getId());
+            return false;
         }
-        return false;
+
+        // the snapshot is named in a header; redirects are not followed, since loading the snapshot page can fail even though the capture succeeded
+        URI snapshot = response.headers().firstValue("Content-Location")
+            .or(() -> response.headers().firstValue("Location"))
+            .map(response.uri()::resolve)
+            .orElse(response.uri());
+        Matcher matcher = SNAPSHOT_PATH.matcher(snapshot.getPath());
+        if (response.statusCode() >= 400 || !matcher.find()) {
+            log.debug("Archive response for resource {}: {}", resource.getId(), response.body());
+            throw new IOException("Cannot archive URL, unexpected response status: " + response.statusCode());
+        }
+
+        String archiveUrl = snapshot.toString();
+        // Wayback may return an existing capture, older ones were stored with http://
+        String archiveUrlWithoutScheme = stripScheme(archiveUrl);
+        if (resource.getArchiveUrls().stream().noneMatch(url -> stripScheme(url.archiveUrl()).equals(archiveUrlWithoutScheme))) {
+            // the snapshot timestamp is the capture time in UTC
+            LocalDateTime timestamp = LocalDateTime.parse(matcher.group(1), WAYBACK_TIMESTAMP)
+                .atZone(ZoneOffset.UTC).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+            archiveUrlDao.insertArchiveUrl(resource.getId(), archiveUrl, timestamp);
+            resource.setArchiveUrls(null);
+        }
+        return true;
+    }
+
+    private static String stripScheme(String url) {
+        return SCHEME.matcher(url).replaceFirst("");
     }
 
     @PreDestroy
     public void onDestroy() {
-        executorService.shutdown();
-        cdxExecutorService.shutdown();
-        try {
-            //Wait for a while for currently executing tasks to terminate
-            if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
-                executorService.shutdownNow(); //cancelling currently executing tasks
-            }
-        } catch (InterruptedException e) {
-            // (Re-)Cancel if current thread also interrupted
-            executorService.shutdownNow();
-            // Preserve interrupt status
-            Thread.currentThread().interrupt();
-        }
-        try {
-            //Wait for a while for currently executing tasks to terminate
-            if (!cdxExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
-                cdxExecutorService.shutdownNow(); //cancelling currently executing tasks
-            }
-        } catch (InterruptedException e) {
-            // (Re-)Cancel if current thread also interrupted
-            cdxExecutorService.shutdownNow();
-            // Preserve interrupt status
-            Thread.currentThread().interrupt();
-        }
-
+        httpClient.shutdownNow();
     }
-
-    class ArchiveNowWorker implements Callable<Boolean> {
-        private final DateTimeFormatter responseDate = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-
-        final WebResource resource;
-
-        ArchiveNowWorker(WebResource resource) {
-            this.resource = resource;
-        }
-
-        @Override
-        public Boolean call() throws InterruptedException, IOException, IllegalArgumentException {
-            if (resource == null) {
-                throw new IllegalArgumentException("resource was NULL");
-            }
-
-            if (resource.getArchiveUrls() != null) {
-                int versions = resource.getArchiveUrls().size();
-                if (versions > 0) {
-                    boolean isArchivedRecently = resource.getArchiveUrls().getLast().timestamp().isAfter(LocalDateTime.now().minusMinutes(5));
-                    if (isArchivedRecently) {
-                        throw new IllegalArgumentException("resource was last archived less than 5 minutes ago");
-                    }
-                }
-            }
-
-            String archiveURL = null;
-            String mementoDateString = null;
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(archiveSaveURL + resource.getUrl()))
-                .header("Accept", "application/xml")
-                .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                Optional<String> contentLocation = response.headers().firstValue("Content-Location");
-                if (contentLocation.isPresent()) {
-                    archiveURL = "http://web.archive.org" + contentLocation.get();
-                } else {
-                    log.debug("Content Location not found");
-                }
-
-                Optional<String> archiveOrigDate = response.headers().firstValue("X-Archive-Orig-Date");
-                if (archiveOrigDate.isPresent()) {
-                    mementoDateString = archiveOrigDate.get();
-                } else {
-                    log.debug("X-Archive-Orig-Date not found");
-                }
-
-                LocalDateTime archiveUrlDate = null;
-                if (mementoDateString != null) {
-                    archiveUrlDate = LocalDateTime.parse(mementoDateString, responseDate);
-                }
-
-                log.debug("Archived URL:{} Memento DateTime:{}", archiveURL, mementoDateString);
-                archiveUrlDao.insertArchiveUrl(resource.getId(), archiveURL, archiveUrlDate);
-                resource.setArchiveUrls(null);
-            } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-                Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
-                if (livewebError.isPresent()) {
-                    if ("RobotAccessControlException: Blocked By Robots".equalsIgnoreCase(livewebError.get())) {
-                        throw new IOException("Blocked by robots.txt");
-                    }
-                }
-
-                log.error("Cannot archive URL because of an error other than robots.txt for resource: {}; Response: {}", resource.getId(), response.body());
-                throw new InterruptedException("Cannot archive URL because of an error other than robots.txt");
-            }
-
-            return true;
-        }
-
-    }
-
 }

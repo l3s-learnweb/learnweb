@@ -15,6 +15,8 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
@@ -41,6 +43,7 @@ import software.xdev.chartjs.model.options.tooltip.TooltipOptions;
 public class WebResourceBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -655001215017199006L;
+    private static final Logger log = LogManager.getLogger(WebResourceBean.class);
 
     private WebResource resource;
 
@@ -64,14 +67,17 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
         if (addToQueue) {
             try {
                 final ArchiveUrlManager manager = Beans.getInstance(ArchiveUrlManager.class);
-                Boolean response = manager.addResourceToArchive(resource);
-                if (Boolean.TRUE.equals(response)) {
+                if (manager.addResourceToArchive(resource)) {
                     addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
                 } else {
-                    addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "archiveRobotsMessage");
                 }
-            } catch (IOException e) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "archiveRobotsMessage");
+            } catch (IOException | InterruptedException | RuntimeException e) { // e.g. an invalid resource URL or a DB error
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                }
+                log.warn("Failed to archive resource {}", resource.getId(), e);
+                addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
             }
         } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
