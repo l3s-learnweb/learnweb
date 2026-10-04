@@ -34,15 +34,15 @@
                         <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
                         <div class="row mb-3">
                             <div class="col-12 col-md-4">
-                                <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="me-3 mb-3 mb-sm-0"/>
+                                <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="#{msg['admin.days']}" class="me-3 mb-3 mb-sm-0"/>
                                 <p:message for="@previous"/>
                             </div>
                             <div class="col-12 col-md-4">
-                                <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="me-3 mb-3 mb-sm-0"/>
+                                <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="#{msg['admin.hours']}" class="me-3 mb-3 mb-sm-0"/>
                                 <p:message for="@previous"/>
                             </div>
                             <div class="col-12 col-md-4">
-                                <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
+                                <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="#{msg['admin.minutes']}"/>
                                 <p:message for="@previous"/>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="Reason" sortBy="#{ban.reason}">
+            <p:column headerText="#{msg.reason}" sortBy="#{ban.reason}">
                 <h:outputText value="#{ban.reason}"/>
             </p:column>
 
@@ -102,7 +102,7 @@
     <p:panel header="#{msg.suspicious_activity}" styleClass="mt-3" rendered="#{true}">
         <p>#{msg.suspicious_activity_message}</p>
 
-        <p:dialog header="Ban" widgetVar="banDialog" modal="true" closeOnEscape="true"
+        <p:dialog header="#{msg.ban}" widgetVar="banDialog" modal="true" closeOnEscape="true"
                   resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
             <h:form class="ban_suspicious_form" id="banDialogForm">
                 <div class="field">
@@ -115,15 +115,15 @@
                     <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
                     <div class="row mb-3">
                         <div class="col-12 col-md-4">
-                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="me-3 mb-3 mb-sm-0"/>
+                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="#{msg['admin.days']}" class="me-3 mb-3 mb-sm-0"/>
                             <p:message for="@previous"/>
                         </div>
                         <div class="col-12 col-md-4">
-                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="me-3 mb-3 mb-sm-0"/>
+                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="#{msg['admin.hours']}" class="me-3 mb-3 mb-sm-0"/>
                             <p:message for="@previous"/>
                         </div>
                         <div class="col-12 col-md-4">
-                            <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
+                            <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="#{msg['admin.minutes']}"/>
                             <p:message for="@previous"/>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
         <h:form id="suspicious_list_form">
             <p:dataTable var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                <p:column headerText="IP" sortBy="#{aggrReqData.addr}">
+                <p:column headerText="#{msg.ip_addr}" sortBy="#{aggrReqData.addr}">
                     <h:outputText value="#{aggrReqData.addr}"/>
                 </p:column>
 

@@ -145,7 +145,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
             courseDao.save(course);
         } catch (Exception e) {
             log.error("Fatal error while processing a user image", e);
-            addMessage(FacesMessage.SEVERITY_ERROR, "Fatal error while processing your image.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "image_processing_failed");
         }
     }
 

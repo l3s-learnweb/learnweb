@@ -81,7 +81,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
         // log and show notification
         log(Action.group_creating, group.getId(), group.getId());
-        addMessage(FacesMessage.SEVERITY_INFO, "A new group with the name of the course was created.");
+        addMessage(FacesMessage.SEVERITY_INFO, "admin.course_group_created");
         return "admin/course.jsf?course_id=" + course.getId();
     }
 
@@ -97,9 +97,9 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         courseDao.save(course);
 
         course.addUser(user);
-        addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
+        addMessage(FacesMessage.SEVERITY_INFO, "admin.course_created");
         if (StringUtils.isNotEmpty(course.getRegistrationWizard())) {
-            addMessage(FacesMessage.SEVERITY_INFO, "The wizard is: " + Faces.getRequestBaseURL() + course.getRegistrationWizard());
+            addMessage(FacesMessage.SEVERITY_INFO, "admin.course_wizard_link", Faces.getRequestBaseURL() + "wizard=" + course.getRegistrationWizard());
         }
 
         newCourse = new Course(); // reset input values
@@ -114,21 +114,22 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         if (course != null) {
             List<Group> groups = groupDao.findAllByCourseId(course.getId());
             if (!groups.isEmpty()) {
-                summary.append("Groups (").append(groups.size()).append(") and resources in them:").append("<br/>");
+                summary.append(getLocaleMessage("groupsTitle")).append(" (").append(groups.size()).append("):<br/>");
                 for (Group group : groups) {
-                    summary.append(" - <b>").append(StringHelper.escapeHtml(group.getTitle())).append("</b> including ").append(group.getResourcesCount()).append(" resource;<br/>");
+                    summary.append(" - <b>").append(StringHelper.escapeHtml(group.getTitle())).append("</b> (").append(getLocaleMessage("resources")).append(": ")
+                        .append(group.getResourcesCount()).append(")<br/>");
                 }
             }
 
-            summary.append("Users:").append("<br/>");
+            summary.append(getLocaleMessage("users")).append(":<br/>");
             for (User user : userDao.findByCourseId(course.getId())) {
-                String displayName = StringHelper.escapeHtml(user.getDisplayName());
-                if (userDao.countCoursesByUserId(user.getId()) > 1) {
-                    summary.append(" - <s>").append(displayName).append("</s> (have other groups)<br/>");
-                } else if (user.isAdmin()) {
-                    summary.append(" - <s>").append(displayName).append("</s> (is admin)<br/>");
+                // users who won't be deleted are struck through
+                String keptReason = userDao.countCoursesByUserId(user.getId()) > 1 ? "admin.member_of_other_courses" : user.isAdmin() ? "admin.user_is_admin" : null;
+                String name = StringHelper.escapeHtml(user.getDisplayName());
+                if (keptReason != null) {
+                    summary.append(" - <s>").append(name).append("</s> (").append(getLocaleMessage(keptReason)).append(")<br/>");
                 } else {
-                    summary.append(" - <b>").append(displayName).append("</b><br/>");
+                    summary.append(" - <b>").append(name).append("</b><br/>");
                 }
             }
         }
@@ -141,11 +142,9 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
         log.info("Deleted course {}", course);
         log(Action.course_delete, 0, course.getId());
-        if (undeletedUsers.isEmpty()) {
-            addMessage(FacesMessage.SEVERITY_INFO, "The course ''{0}'' has been deleted.", course.getTitle());
-        } else {
-            addMessage(FacesMessage.SEVERITY_INFO, "The course ''{0}'' has been deleted. But {1} were not deleted because they are member of other courses.",
-                course.getTitle(), undeletedUsers.size());
+        addMessage(FacesMessage.SEVERITY_INFO, "admin.course_deleted", course.getTitle());
+        if (!undeletedUsers.isEmpty()) {
+            addMessage(FacesMessage.SEVERITY_INFO, "admin.course_users_not_deleted", String.join(", ", undeletedUsers.stream().map(User::getUsername).toList()));
         }
 
         courses.remove(course);
@@ -156,7 +155,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
         log.info("Anonymized course {}", course);
         log(Action.course_anonymize, 0, course.getId());
-        addMessage(FacesMessage.SEVERITY_INFO, "The course ''{0}'' has been anonymized.", course.getTitle());
+        addMessage(FacesMessage.SEVERITY_INFO, "admin.course_anonymised", course.getTitle());
     }
 
     public Course getNewCourse() {

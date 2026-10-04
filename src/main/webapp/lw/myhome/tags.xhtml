@@ -19,7 +19,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:dataTable var="tag" value="#{userBean.user.tags}" emptyMessage="You haven't tagged any resource yet">
+	<p:dataTable var="tag" value="#{userBean.user.tags}" emptyMessage="#{msg.no_tags_yet}">
 		<f:facet name="header">#{msg.myTags}</f:facet>
 
 		<p:column headerText="#{msg.tags}">

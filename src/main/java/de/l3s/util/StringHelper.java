@@ -53,10 +53,11 @@ public final class StringHelper {
     }
 
     /**
-     * Escapes a plain text value for embedding into HTML.
+     * Escapes a plain text value for embedding into HTML text or a double-quoted attribute, also of emails.
+     * The xhtml mode uses numeric references (e.g. {@code &#x27;}), {@code &apos;} isn't supported by all mail clients.
      */
     public static String escapeHtml(String str) {
-        return str == null ? "" : Entities.escape(str);
+        return str == null ? "" : Entities.escape(str, new Document.OutputSettings().escapeMode(Entities.EscapeMode.xhtml));
     }
 
     /**
@@ -294,15 +295,24 @@ public final class StringHelper {
     }
 
     /**
-     * Escapes the given plain text str for HTML and adds bold tags around the query if it is present in it.
+     * Escapes the given plain text str for HTML and adds bold tags around the first match of the query pattern.
+     *
+     * @param query a pattern created by {@link #compileHighlightQuery(String)}
      */
-    public static String highlightQuery(String str, String query) {
+    public static String highlightQuery(String str, Pattern query) {
         // match on the original string, lowercasing can change its length (e.g. for "İ")
-        Matcher matcher = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(str);
+        Matcher matcher = query.matcher(str);
         if (!matcher.find()) {
             return escapeHtml(str);
         }
 
         return escapeHtml(str.substring(0, matcher.start())) + "<b>" + escapeHtml(matcher.group()) + "</b>" + escapeHtml(str.substring(matcher.end()));
+    }
+
+    /**
+     * @return a case-insensitive pattern of the literal query, to reuse it in {@link #highlightQuery(String, Pattern)} for many strings
+     */
+    public static Pattern compileHighlightQuery(String query) {
+        return Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     }
 }

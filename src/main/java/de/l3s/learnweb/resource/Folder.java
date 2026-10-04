@@ -271,7 +271,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             return; // if move to itself
         }
         if (getGroupId() == newGroupId && isParentOf(newFolderId)) {
-            throw new BadRequestHttpException("You can't move a folder to a child folder of it");
+            throw new BadRequestHttpException("error_pages.bad_request_folder_into_subfolder");
         }
 
         int groupId = getGroupId();

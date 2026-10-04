@@ -25,7 +25,7 @@
             <dt class="col-sm-4"><h:outputText value="#{msg['phone']}" /></dt>
             <dd class="col-sm-8">+49 511 762 17715</dd>
 
-            <dt class="col-sm-4">Fax</dt>
+            <dt class="col-sm-4">#{msg.fax}</dt>
             <dd class="col-sm-8">+49 511 762 17779</dd>
 
             <dt class="col-sm-4"><h:outputText value="#{msg['email_address']}" /></dt>
@@ -33,7 +33,7 @@
         </dl>
     </p:panel>
 
-    <p:panel header="#{msg['send_notification']}">
+    <p:panel header="#{msg.contact_form_title}">
         <h:form id="contact-form">
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.username}:"/>

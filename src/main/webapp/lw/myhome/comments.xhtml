@@ -19,7 +19,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:dataTable var="comment" value="#{userBean.user.comments}" emptyMessage="You haven't added any comments to resources">
+	<p:dataTable var="comment" value="#{userBean.user.comments}" emptyMessage="#{msg.no_comments_yet}">
 		<f:facet name="header">#{msg.myCommentsTitle}</f:facet>
 
 		<p:column headerText="#{msg.comment}">

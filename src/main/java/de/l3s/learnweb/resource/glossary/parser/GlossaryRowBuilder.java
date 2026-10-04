@@ -14,7 +14,6 @@ import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.resource.glossary.Column;
 import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 import de.l3s.learnweb.resource.glossary.GlossaryTerm;
-import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
 public class GlossaryRowBuilder {
@@ -34,6 +33,7 @@ public class GlossaryRowBuilder {
     protected Map<String, Locale> languageMap;
 
     private final List<ParsingError> errors = new ArrayList<>();
+    private boolean hasEntryRow = false; // true once a row after the header has been built
 
     /**
      * Checks the position and validity of the header columns.
@@ -46,7 +46,7 @@ public class GlossaryRowBuilder {
 
         for (int cellPosition = 0; cellPosition < header.getPhysicalNumberOfCells(); ++cellPosition) {
             if (header.getCell(cellPosition) == null) {
-                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Is null"));
+                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "glossary.import_error_header_empty"));
                 return false;
             }
 
@@ -75,7 +75,7 @@ public class GlossaryRowBuilder {
             } else if (isEqualForAnyLocale(cellValue, Column.phraseology)) {
                 phraseologyHeaderPosition = cellPosition;
             } else {
-                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Unknown column name: " + StringHelper.escapeHtml(cellValue)));
+                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "glossary.import_error_unknown_column", cellValue));
             }
         }
         return errors.isEmpty();
@@ -118,18 +118,27 @@ public class GlossaryRowBuilder {
         GlossaryEntry result = new GlossaryEntry();
         GlossaryTerm term = buildTerm(row);
 
-        if (getStringValueForCell(row.getCell(topicOneHeaderPosition)) != null) {
-            result.setTopicOne(getStringValueForCell(row.getCell(topicOneHeaderPosition)));
-        } else {
-            errors.add(new ParsingError(row.getRowNum(), row.getCell(topicOneHeaderPosition), "Column Topic 1 is empty"));
-        }
+        result.setTopicOne(getStringValueForCell(row.getCell(topicOneHeaderPosition)));
         result.setTopicTwo(getStringValueForCell(row.getCell(topicTwoHeaderPosition)));
         result.setTopicThree(getStringValueForCell(row.getCell(topicThreeHeaderPosition)));
         result.setDescription(getStringValueForCell(row.getCell(descriptionHeaderPosition)));
 
+        if (StringUtils.isBlank(result.getTopicOne()) && !(hasEntryRow && isTermOfPreviousEntry(result))) {
+            errors.add(new ParsingError(row.getRowNum(), row.getCell(topicOneHeaderPosition), "glossary.import_error_first_topic_empty"));
+        }
+        hasEntryRow = true;
+
         result.addTerm(term);
 
         return result;
+    }
+
+    /**
+     * Rows of further terms of an entry have no topics and description,
+     * e.g. because {@link de.l3s.learnweb.resource.glossary.GlossaryXLSXExporter} merges these cells over all terms of an entry.
+     */
+    static boolean isTermOfPreviousEntry(GlossaryEntry entry) {
+        return StringUtils.isAllBlank(entry.getTopicOne(), entry.getTopicTwo(), entry.getTopicThree(), entry.getDescription());
     }
 
     private GlossaryTerm buildTerm(Row row) {
@@ -141,10 +150,13 @@ public class GlossaryRowBuilder {
         if (languageMap.containsKey(cellValue)) {
             term.setLanguage(languageMap.get(cellValue));
         } else {
-
-            errors.add(new ParsingError(row.getRowNum(), row.getCell(languageHeaderPosition),
-                "Invalid language; Current value: " + StringUtils.firstNonBlank(StringHelper.escapeHtml(cellValue), "<i>empty</i>") +
-                    "; Valid values: " + String.join(", ", languageMap.keySet())));
+            Cell cell = row.getCell(languageHeaderPosition);
+            String validValues = String.join(", ", languageMap.keySet());
+            if (StringUtils.isBlank(cellValue)) {
+                errors.add(new ParsingError(row.getRowNum(), cell, "glossary.import_error_language_empty", validValues));
+            } else {
+                errors.add(new ParsingError(row.getRowNum(), cell, "glossary.import_error_invalid_language", cellValue, validValues));
+            }
         }
         String usesString = getStringValueForCell(row.getCell(usesHeaderPosition));
         List<String> uses = Arrays.asList(usesString.split(","));

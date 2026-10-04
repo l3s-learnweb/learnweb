@@ -32,7 +32,7 @@ public interface CourseDao extends SqlObject, Serializable {
     }
 
     default Course findByIdOrElseThrow(int courseId) {
-        return findById(courseId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_group_description"));
+        return findById(courseId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
     /**

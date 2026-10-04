@@ -113,7 +113,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         try {
             userOptional = userDao.findByUsernameAndPassword(username, password);
         } catch (IllegalStateException e) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Your password used to be hashed with an old algorithm. Please reset your password.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "password_outdated_hash");
             setKeepMessages();
             return "/lw/user/password.xhtml?faces-redirect=true";
         }

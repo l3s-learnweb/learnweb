@@ -131,7 +131,7 @@ public interface UserDao extends SqlObject, Serializable {
 
     default void deleteHard(User user) {
         if (user.getGroups().stream().anyMatch(group -> group.isLeader(user))) {
-            throw new BadRequestHttpException("Please, transfer the leadership of your groups before deleting your account.");
+            throw new BadRequestHttpException("user_delete_transfer_leadership");
         }
 
         for (Resource resource : getResourceDao().findAllByOwnerId(user.getId())) {

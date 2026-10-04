@@ -24,7 +24,7 @@
 			<f:facet name="header">
 				#{msg.notifications}
 				<p:button icon="fas fa-circle-question" onclick="return false;"/>
-				<p:tooltip for="@previous" value="On this page you can send global alerts to a group of users."/>
+				<p:tooltip for="@previous" value="#{msg['admin.notification_help']}"/>
 			</f:facet>
 
 			<div class="field">
@@ -79,7 +79,11 @@
 										 disabled="#{not adminNotificationBean.moderatorCanSendMail}"/>
 
 				<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
-					<p class="text-danger">You have to <a href="#{request.contextPath}/lw/myhome/profile.jsf">set up</a> a valid email address to send mails to your users.</p>
+					<p class="text-danger">
+						<h:outputFormat value="#{msg['admin.notification_email_required']}" escape="false">
+							<f:param value="#{request.contextPath}/lw/myhome/profile.jsf"/>
+						</h:outputFormat>
+					</p>
 				</ui:fragment>
 			</div>
 

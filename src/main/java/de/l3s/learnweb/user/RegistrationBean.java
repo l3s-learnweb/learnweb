@@ -130,7 +130,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             if (existingUser.get().getPassword() == null && existingUser.get().isMemberOfCourse(course.getId())) {
                 return LoginBean.loginUser(this, existingUser.get());
             } else {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You should use password to login.");
+                addMessage(FacesMessage.SEVERITY_ERROR, "login_with_password_required");
                 setKeepMessages();
                 return "/lw/user/login.xhtml?faces-redirect=true";
             }
@@ -247,7 +247,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         String newName = ((String) value).trim();
 
         if (newName.length() < 2) {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "The username is to short."));
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_too_short"));
         } else if (userDao.findByUsername(newName).isPresent()) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }

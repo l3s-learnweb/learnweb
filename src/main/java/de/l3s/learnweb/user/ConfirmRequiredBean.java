@@ -54,7 +54,7 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
         if (emailConfirmationBean.sendEmailConfirmation(user)) {
             addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
         } else {
-            addMessage(FacesMessage.SEVERITY_ERROR, "We were not able to send a confirmation mail");
+            addMessage(FacesMessage.SEVERITY_ERROR, "email_could_not_be_sent");
         }
     }
 

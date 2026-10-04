@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SequencedMap;
 import java.util.TreeSet;
 
 import jakarta.faces.view.ViewScoped;
@@ -95,6 +96,10 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
 
     public void resetTranscriptSummaries() {
         transcriptSummaries = null;
+    }
+
+    public SequencedMap<String, String> getActions() {
+        return TranscriptLog.ACTIONS;
     }
 
     public TreeNode<?> getTreeRoot() {

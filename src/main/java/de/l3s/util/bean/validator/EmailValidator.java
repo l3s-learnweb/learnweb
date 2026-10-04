@@ -1,5 +1,7 @@
 package de.l3s.util.bean.validator;
 
+import java.util.Date;
+
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
@@ -19,19 +21,13 @@ public class EmailValidator extends AbstractValidator<Object> {
             String email = strValue.trim().toLowerCase();
 
             if (Strings.CS.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it")) {
-                String message;
-                if (email.endsWith("aulecsit.uniud.it")) {
-                    message = "This mail address is invalid! Usually it is surname.name@spes.uniud.it";
-                } else {
-                    message = "This mail address is invalid! Check the domain.";
-                }
+                String message = email.endsWith("aulecsit.uniud.it") ? "email_invalid_uniud" : "email_invalid_domain";
                 throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
             }
 
             Learnweb.dao().getBounceDao().findByEmail(email).ifPresent(bounce -> {
-                String message = "In the past emails to " + email + " could not be delivered. On " + bounce.received()
-                    + " we received the following error: " + bounce.description();
-                throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
+                throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, "email_bounced",
+                    email, Date.from(bounce.received()), bounce.description()));
             });
         }
     }

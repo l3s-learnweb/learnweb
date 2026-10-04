@@ -43,11 +43,11 @@
                 <div class="col text-end">
                     <p:commandLink styleClass="text-warning me-2" onclick="PF('glossaryImportDialog').show();return false;"
                                    rendered="#{glossaryBean.optionImportEnabled}">
-                        Import <i class="fas fa-fw fa-upload" aria-hidden="true"></i>
+                        #{msg['glossary.import']} <i class="fas fa-fw fa-upload" aria-hidden="true"></i>
                     </p:commandLink>
 
                     <h:panelGroup rendered="#{glossaryBean.optionExportEnabled}">
-                        Export to:
+                        #{msg['glossary.export_to']}:
                         <p:commandLink styleClass="text-success">
                             <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                             <p:dataExporter type="xls" target="dt" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
@@ -74,13 +74,13 @@
         <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}" exportValue="#{item.topicOne}">
             <h:outputText value="#{item.topicOneHtml}" id="cell1" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg[Column.topicTwo]}" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}">
-            <h:outputText value="#{item.topicTwo}" id="cell2"/>
+        <p:column headerText="#{msg[Column.topicTwo]}" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}" exportValue="#{item.topicTwo}">
+            <h:outputText value="#{item.topicTwoHtml}" id="cell2" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg[Column.topicThree]}" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}">
-            <h:outputText value="#{item.topicThree}" id="cell3"/>
+        <p:column headerText="#{msg[Column.topicThree]}" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}" exportValue="#{item.topicThree}">
+            <h:outputText value="#{item.topicThreeHtml}" id="cell3" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
+        <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}" exportValue="#{item.description}">
             <a href="javascript:" faces:id="entryPictures" faces:rendered="#{item.picturesCount gt 0}" class="me-2"><i class="fas fa-camera"></i></a>
             <p:overlayPanel for="entryPictures" dynamic="true" rendered="#{item.picturesCount gt 0}">
                 <p:carousel value="#{item.pictures}" var="pic" circular="true" varStatus="status" styleClass="mw-r15">
@@ -88,10 +88,10 @@
                 </p:carousel>
             </p:overlayPanel>
 
-            <h:outputText value="#{item.description}" id="cell4"/>
+            <h:outputText value="#{item.descriptionHtml}" id="cell4" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg[Column.term]}" filterable="true" filterBy="#{item.term}">
-            <h:outputText value="#{item.term}"/>
+        <p:column headerText="#{msg[Column.term]}" filterable="true" filterBy="#{item.term}" exportValue="#{item.term}">
+            <h:outputText value="#{item.termHtml}" escape="false"/>
         </p:column>
         <p:column headerText="#{msg[Column.language]}" filterBy="#{item.language}">
             <f:facet name="filter">
@@ -114,14 +114,20 @@
             </p:commandLink>
             <h:outputText value="#{item.pronounciation}"/>
         </p:column>
-        <p:column headerText="#{msg[Column.acronym]}" filterable="true" filterBy="#{item.acronym}">
-            <h:outputText value="#{item.acronym}"/>
+        <p:column headerText="#{msg[Column.acronym]}" filterable="true" filterBy="#{item.acronym}" exportValue="#{item.acronym}">
+            <h:outputText value="#{item.acronymHtml}" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg[Column.source]}" filterable="true" filterBy="#{item.source}">
-            <h:outputText value="#{item.source}"/>
+        <p:column headerText="#{msg[Column.source]}" field="source" filterable="true" sortable="false" exportValue="#{item.source}">
+            <f:facet name="filter">
+                <p:selectOneMenu onchange="PF('glossTable').filter()">
+                    <f:selectItem itemLabel="#{msg.filter}" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{glossaryBean.sourceFilterOptions}"/>
+                </p:selectOneMenu>
+            </f:facet>
+            <h:outputText value="#{item.getSourceHtml(glossaryBean.getSourceLabel(item.source))}" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg[Column.phraseology]}" filterable="true" filterBy="#{item.phraseology}">
-            <h:outputText value="#{item.phraseology}"/>
+        <p:column headerText="#{msg[Column.phraseology]}" filterable="true" filterBy="#{item.phraseology}" exportValue="#{item.phraseology}">
+            <h:outputText value="#{item.phraseologyHtml}" escape="false"/>
         </p:column>
     </p:dataTable>
 </h:form>
@@ -151,7 +157,7 @@
                     <h:outputText value="#{error.cell}"/>
                 </p:column>
                 <p:column headerText="#{msg.error}">
-                    <h:outputText value="#{error.errorMessage}" escape="false"/>
+                    <h:outputText value="#{error.errorMessage}"/>
                 </p:column>
             </p:dataTable>
         </h:panelGroup>
@@ -208,7 +214,7 @@
 
             <div faces:id="edit_pictures" class="col-12 col-md-6">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5>Pictures</h5>
+                    <h5>#{msg.images}</h5>
                     <p:fileUpload listener="#{glossaryBean.handleFileUpload}" mode="simple" skinSimple="true" multiple="true" auto="true" update="@parent"/>
                 </div>
 
@@ -246,7 +252,7 @@
             </p:column>
 
             <p:column headerText="#{msg['glossary.use']}" rendered="#{not term.deleted}">
-                <p:selectCheckboxMenu id="use" value="#{term.uses}" label="Uses" multiple="true" filter="true" filterMatchMode="startsWith">
+                <p:selectCheckboxMenu id="use" value="#{term.uses}" label="#{msg['glossary.use']}" multiple="true" filter="true" filterMatchMode="startsWith">
                     <f:selectItem itemValue="technical" itemLabel="#{msg['glossary.use_technical']}"/>
                     <f:selectItem itemValue="popular" itemLabel="#{msg['glossary.use_popular']}"/>
                     <f:selectItem itemValue="informal" itemLabel="#{msg['glossary.use_informal']}"/>
@@ -261,16 +267,7 @@
             <p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
                 <p:selectOneMenu id="ref" value="#{term.source}">
                     <f:selectItem itemValue="#{null}" itemLabel="--#{msg['glossary.select']}--"/>
-                    <f:selectItem itemValue="Wikipedia" itemLabel="#{msg['glossary.wikipedia']}"></f:selectItem>
-                    <f:selectItem itemValue="encyclopaedia" itemLabel="#{msg['glossary.encyclopaedia']}"></f:selectItem>
-                    <f:selectItem itemValue="monolingual dictionary" itemLabel="#{msg['glossary.mono_dictionary']}"></f:selectItem>
-                    <f:selectItem itemValue="bilingual dictionary" itemLabel="#{msg['glossary.bi_dictionary']}"></f:selectItem>
-                    <f:selectItem itemValue="scientific/academic publication" itemLabel="#{msg['glossary.publication']}"></f:selectItem>
-                    <f:selectItem itemValue="institutional website" itemLabel="#{msg['glossary.website']}"></f:selectItem>
-                    <f:selectItem itemValue="glossary" itemLabel="#{msg['glossary.glossary']}"></f:selectItem>
-                    <f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
-                    <f:selectItem itemValue="patients' websites and blogs" itemLabel="#{msg['glossary.web_blog']}"></f:selectItem>
-                    <f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
+                    <f:selectItems value="#{glossaryBean.sources}"/>
                 </p:selectOneMenu>
             </p:column>
             <p:column headerText="#{msg['glossary.phraseology']}" rendered="#{not term.deleted}">

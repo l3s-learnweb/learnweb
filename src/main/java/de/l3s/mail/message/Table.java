@@ -70,7 +70,7 @@ public class Table extends Element {
             adjustClassSize(columnClass, row.getElements());
             int column = 0;
             for (Element cell : row.getElements()) {
-                if (!columnClass.isEmpty() && (columnClass.get(column) == null || columnClass.get(column).isEmpty())) {
+                if (columnClass.get(column) == null || columnClass.get(column).isEmpty()) {
                     sb.append("<td>");
                 } else {
                     sb.append("<td class = \"").append(columnClass.get(column)).append("\">");

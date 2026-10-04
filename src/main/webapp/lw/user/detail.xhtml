@@ -34,7 +34,7 @@
                                 rendered="#{userDetailBean.selectedUser eq userBean.user or userBean.moderator}" />
                     </div>
                 </f:facet>
-                <h:outputText value="This information is hidden due to the privacy settings of your organisation." rendered="#{userDetailBean.pageHidden}"/>
+                <h:outputText value="#{msg.hidden_by_privacy_settings}" rendered="#{userDetailBean.pageHidden}"/>
 
 				<div class="row" faces:rendered="#{not userDetailBean.pageHidden}">
 					<div class="col-auto">
@@ -104,7 +104,7 @@
 
 		<div class="col-lg">
 			<p:panel header="#{msg.last_activities}" id="profile_news">
-				<h:outputText value="This information is hidden due to the privacy settings of your organisation." rendered="#{userDetailBean.pageHidden}"/>
+				<h:outputText value="#{msg.hidden_by_privacy_settings}" rendered="#{userDetailBean.pageHidden}"/>
 
 				<ui:fragment rendered="#{not userDetailBean.pageHidden}">
 					<ui:repeat value="#{userDetailBean.latestLogEntries}" var="logEntry" varStatus="status">

@@ -4,22 +4,25 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
+
+import de.l3s.util.StringHelper;
 
 public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
     @Serial
@@ -31,8 +34,6 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
      * I assume that no GlossaryEntry will have more than 20 GlossaryTerms.
      */
     static final int PAGE_SIZE_MULTIPLICATOR = 20;
-    static final String[] ENTRY_FIELDS = {"topicOne", "topicTwo", "topicThree", "description"};
-    static final String[] TERM_FIELDS = {"term", "acronym", "source", "phraseology"};
 
     private final GlossaryResource glossaryResource;
 
@@ -50,7 +51,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         // create list of predicates for the given filters
         List<Predicate<GlossaryEntry>> allPredicates = new ArrayList<>();
 
-        Map<String, String> simpleFilters = new HashMap<>(); // copies all non empty filters for fields of type String
+        Map<String, Pattern> highlightQueries = new HashMap<>(); // the patterns of all non empty filters for fields of type String
 
         for (FilterMeta meta : filterBy.values()) {
             String filterFieldOriginal = meta.getField();
@@ -71,21 +72,23 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             }
             final String filterField = filterFieldOriginal;
 
-            // ignore empty filter
-            final String filterValueStr = String.valueOf(filterValue).toLowerCase();
+            // ignore empty filter; the matching and highlighting are case-insensitive, lowercasing can change the length (e.g. for "İ")
+            final String filterValueStr = String.valueOf(filterValue);
             if (StringUtils.isBlank(filterValueStr)) {
                 continue;
             }
 
-            simpleFilters.put(filterField, filterValueStr);
+            highlightQueries.put(filterField, StringHelper.compileHighlightQuery(filterValueStr));
 
             switch (filterField) { // TODO @kemkes: move fields to an ENUM rename topicOne to topic1 and so on
                 case "fulltext", "description", "topicOne", "topicTwo", "topicThree" ->
                     //log.debug("added filter for:" + filterField + " = " + filterValueStr);
-                    allPredicates.add(e -> e.getField(filterField).toLowerCase().contains(filterValueStr));
-                case "term", "pronounciation", "acronym", "source", "phraseology" ->
+                    allPredicates.add(e -> Strings.CI.contains(e.getField(filterField), filterValueStr));
+                case "source" -> // selected from a dropdown of the stored values (GlossaryBean.getSourceFilterOptions)
+                    allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> filterValueStr.equalsIgnoreCase(t.getField(filterField))));
+                case "term", "pronounciation", "acronym", "phraseology" ->
                     //log.debug("added filter for:" + filterField + " = " + filterValueStr);
-                    allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.getField(filterField).toLowerCase().contains(filterValueStr)));
+                    allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> Strings.CI.contains(t.getField(filterField), filterValueStr)));
                 default -> log.error("unsupported filter:{}", filterField);
             }
         }
@@ -93,10 +96,6 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         List<GlossaryEntry> data = glossaryResource.getEntries().stream()
             .filter(allPredicates.stream().reduce(x -> true, Predicate::and))
             .collect(Collectors.toList()); // we can't use .toList() because it produces unmodifiable list
-
-        if (filterBy.get("globalFilter") != null) {
-            highlightText(data, filterBy.get("globalFilter").getFilterValue().toString());
-        }
 
         // single column sort
         //Collections.sort(data, new LazySorter(field, order));
@@ -135,55 +134,10 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
         for (GlossaryEntry entry : page) {
             for (GlossaryTerm term : entry.getTerms()) {
-                tableView.add(new GlossaryTableView(entry, term, simpleFilters));
+                tableView.add(new GlossaryTableView(entry, term, highlightQueries));
             }
         }
         return tableView;
-    }
-
-    private String makeBold(String str) {
-        return "<b>" + str + "</b>";
-    }
-
-    private boolean isBold(String str) {
-        return str.length() > 6 && str.startsWith("<b>") && str.endsWith("</b>");
-    }
-
-    private String makeRegular(String str) {
-        if (isBold(str)) {
-            return str.substring(3, str.length() - 4);
-        }
-
-        return str;
-    }
-
-    @SuppressWarnings("DuplicatedCode")
-    private void highlightText(final List<GlossaryEntry> data, final String filterValue) {
-        for (GlossaryEntry entry : data) {
-            Arrays.stream(ENTRY_FIELDS).forEach(field -> {
-                final String fieldValue = entry.getField(field);
-                if (StringUtils.isNotBlank(filterValue) && fieldValue.contains(filterValue)) {
-                    if (!isBold(fieldValue)) {
-                        entry.setField(field, makeBold(fieldValue));
-                    }
-                } else {
-                    entry.setField(field, makeRegular(fieldValue));
-                }
-            });
-
-            for (GlossaryTerm term : entry.getTerms()) {
-                Arrays.stream(TERM_FIELDS).forEach(field -> {
-                    final String fieldValue = term.getField(field);
-                    if (StringUtils.isNotBlank(filterValue) && fieldValue.contains(filterValue)) {
-                        if (!isBold(fieldValue)) {
-                            term.setField(field, makeBold(fieldValue));
-                        }
-                    } else {
-                        term.setField(field, makeRegular(fieldValue));
-                    }
-                });
-            }
-        }
     }
 
     public static class LazySorter implements Comparator<GlossaryEntry>, Serializable {

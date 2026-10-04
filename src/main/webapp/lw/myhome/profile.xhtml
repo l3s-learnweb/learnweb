@@ -92,7 +92,7 @@
                             <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.studentIdRequired}">
                                 <p:outputLabel value="#{msg.consent}:"/>
                                 <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.selectedUser.acceptTermsAndConditions}"
-                                                         itemLabel="I've given consent to use my data for the project" validator="#{profileBean.validateConsent}"/>
+                                                         itemLabel="#{msg.consent_given}" validator="#{profileBean.validateConsent}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 

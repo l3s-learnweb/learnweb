@@ -5,7 +5,7 @@
                 xmlns:p="primefaces"
                 xmlns:lw="learnweb">
 
-<ui:param name="pageTitle" value="List of all dashboards"/>
+<ui:param name="pageTitle" value="#{msg.dashboards}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="dashboard/index.jsf" title="#{msg.dashboard}">
@@ -18,15 +18,15 @@
         <div class="row">
             <div class="col-12">
                 <h:outputLink value="dashboard/glossary.jsf">#{msg.glossary_dashboard}</h:outputLink>
-                <h:outputText class="d-block">#{msg['activity.dashboard_glossary_description']}</h:outputText>
+                <div>#{msg['activity.dashboard_glossary_description']}</div>
             </div>
             <div class="col-12 my-2">
                 <h:outputLink value="dashboard/activity.jsf">#{msg['activity.dashboard']}</h:outputLink>
-                <h:outputText class="d-block">#{msg['activity.dashboard_activity_description']}</h:outputText>
+                <div>#{msg['activity.dashboard_activity_description']}</div>
             </div>
             <h:panelGroup layout="block" styleClass="col-12" rendered="#{userBean.trackingEnabled}">
                 <h:outputLink value="dashboard/tracker.jsf">#{msg['dashboard.tracker']}</h:outputLink>
-                <h:outputText class="d-block">#{msg['activity.dashboard_tracker_description']}</h:outputText>
+                <div>#{msg['activity.dashboard_tracker_description']}</div>
             </h:panelGroup>
         </div>
     </p:panel>

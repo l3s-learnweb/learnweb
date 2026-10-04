@@ -80,7 +80,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             if (url != null) {
                 resource.setUrl(url);
             } else {
-                addGrowl(FacesMessage.SEVERITY_WARN, "We were unable to verify the URL");
+                addGrowl(FacesMessage.SEVERITY_WARN, "url_verification_failed");
             }
 
             log.debug("Extracting info from given url...");
@@ -132,7 +132,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     public void addResource(Resource res) {
         if (!targetGroup.canAddResources(getUser())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources.add_not_allowed", targetGroup.getTitle());
             return;
         }
 

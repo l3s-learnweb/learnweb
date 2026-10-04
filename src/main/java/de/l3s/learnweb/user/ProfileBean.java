@@ -131,13 +131,13 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             log.error("unhandled error", e);
 
             if (e.getMessage().startsWith("Width 100 exceeds")) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "Your image is to small.");
+                addMessage(FacesMessage.SEVERITY_ERROR, "image_too_small");
             } else {
                 throw e;
             }
         } catch (Exception e) {
             log.error("Fatal error while processing a user image", e);
-            addMessage(FacesMessage.SEVERITY_ERROR, "Fatal error while processing your image.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "image_processing_failed");
         }
     }
 
@@ -149,7 +149,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             if (emailConfirmationBean.sendEmailConfirmation(selectedUser)) {
                 addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
             } else {
-                addMessage(FacesMessage.SEVERITY_ERROR, "We were not able to send a confirmation mail");
+                addMessage(FacesMessage.SEVERITY_ERROR, "email_could_not_be_sent");
             }
         }
 

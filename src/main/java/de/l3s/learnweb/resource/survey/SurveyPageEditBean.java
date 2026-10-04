@@ -32,14 +32,14 @@ public class SurveyPageEditBean extends ApplicationBean implements Serializable 
             questionTypes = new ArrayList<>();
             ResourceBundle msg = getBundle();
 
-            SelectItemGroup testGroup = new SelectItemGroup("Text types");
+            SelectItemGroup testGroup = new SelectItemGroup(msg.getString("question_type.group_text"));
             testGroup.setSelectItems(Stream.of(
                 SurveyQuestion.QuestionType.INPUT_TEXT,
                 SurveyQuestion.QuestionType.INPUT_TEXTAREA
             ).map(q -> new SelectItem(q.name(), msg.getString("question_type." + q.name()), msg.getString("question_type.desc_" + q.name()))).toArray(SelectItem[]::new));
             questionTypes.add(testGroup);
 
-            SelectItemGroup choiceGroup = new SelectItemGroup("Choice types");
+            SelectItemGroup choiceGroup = new SelectItemGroup(msg.getString("question_type.group_choice"));
             choiceGroup.setSelectItems(Stream.of(
                 SurveyQuestion.QuestionType.ONE_BUTTON,
                 SurveyQuestion.QuestionType.ONE_RADIO,

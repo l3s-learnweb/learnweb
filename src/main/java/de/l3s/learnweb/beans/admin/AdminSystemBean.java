@@ -90,7 +90,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
             handle.execute("KILL ?", process.id());
         }
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Killed process " + process.id());
+        addGrowl(FacesMessage.SEVERITY_INFO, "admin.process_terminated", String.valueOf(process.id()));
         databaseProcesses = null;
     }
 
@@ -101,7 +101,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
             }
         }
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "All processes terminated");
+        addGrowl(FacesMessage.SEVERITY_INFO, "admin.all_processes_terminated");
         databaseProcesses = null;
     }
 
@@ -120,7 +120,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     }
 
     public void onReindexComplete() {
-        addGrowl(FacesMessage.SEVERITY_INFO, "Reindex completed");
+        addGrowl(FacesMessage.SEVERITY_INFO, "admin.reindex_completed");
     }
 
     public Integer getReindexProgress() {
@@ -136,22 +136,22 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         ResourceDao.cache.clear();
         FileDao.cache.clear();
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Caches cleared");
+        addGrowl(FacesMessage.SEVERITY_INFO, "admin.caches_cleared");
         cacheObjects = null;
     }
 
     public void clearLocales() {
         MessagesBundle.clearLocaleCache();
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Locales cleared");
+        addGrowl(FacesMessage.SEVERITY_INFO, "admin.locales_cleared");
         localeObjects = null;
     }
 
     public void onMaintenanceUpdate() {
         if (config().isMaintenance()) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "Maintenance enabled");
+            addGrowl(FacesMessage.SEVERITY_WARN, "admin.maintenance_enabled");
         } else {
-            addGrowl(FacesMessage.SEVERITY_INFO, "Maintenance disabled");
+            addGrowl(FacesMessage.SEVERITY_INFO, "admin.maintenance_disabled");
         }
     }
 

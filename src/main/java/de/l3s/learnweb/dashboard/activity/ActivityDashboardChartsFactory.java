@@ -44,16 +44,19 @@ public final class ActivityDashboardChartsFactory {
         return new LineChart().setData(chartData).toJson();
     }
 
+    /**
+     * @return rows keyed by message keys ({@code date} and {@link ActivityGraphData#getKey()}), translate them for the column headers
+     */
     public static List<Map<String, Object>> createActivitiesTable(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {
         List<Map<String, Object>> rows = new ArrayList<>();
 
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             Map<String, Object> columns = new LinkedHashMap<>();
             String dateKey = DATE_FORMAT.format(date);
-            columns.put("Date", dateKey);
+            columns.put("date", dateKey);
 
             for (ActivityGraphData activityData : data) {
-                columns.put(activityData.getName(), activityData.getActionsPerDay().getOrDefault(dateKey, 0));
+                columns.put(activityData.getKey(), activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
             rows.add(columns);
         }
@@ -62,6 +65,7 @@ public final class ActivityDashboardChartsFactory {
     }
 
     public static class ActivityGraphData {
+        private String key;
         private String name;
 
         private Map<String, Integer> actionsPerDay;
@@ -80,6 +84,14 @@ public final class ActivityDashboardChartsFactory {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
         }
     }
 }

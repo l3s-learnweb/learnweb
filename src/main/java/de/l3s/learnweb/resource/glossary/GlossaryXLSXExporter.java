@@ -60,7 +60,7 @@ public final class GlossaryXLSXExporter {
         wb = new XSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
 
-        Sheet sheet = wb.createSheet("Glossary");
+        Sheet sheet = wb.createSheet(bundle.getString("glossary.glossary"));
 
         // turn off gridlines
         sheet.setDisplayGridlines(false);

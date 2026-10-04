@@ -60,7 +60,7 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column filterBy="#{userView.id}" filterMatchMode="exact" headerText="ID" sortBy="#{userView.id}" rendered="#{userBean.admin}">
+            <p:column filterBy="#{userView.id}" filterMatchMode="exact" headerText="#{msg.id}" sortBy="#{userView.id}" rendered="#{userBean.admin}">
                 <h:outputText value="#{userView.id}"/>
             </p:column>
 
@@ -76,7 +76,7 @@
                 <p:tooltip for="@previous" value="#{userView.email}" position="top"/>
             </p:column>
 
-            <p:column headerText="Last login" sortBy="#{userView.lastLoginDate}">
+            <p:column headerText="#{msg['admin.last_login']}" sortBy="#{userView.lastLoginDate}">
                 <h:outputText value="#{userView.lastLoginDate.atZone(userView.timeZone)}" id="last_login">
                     <f:convertDateTime timeStyle="short" type="localDateTime"/>
                 </h:outputText>

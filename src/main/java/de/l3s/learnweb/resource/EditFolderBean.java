@@ -34,7 +34,7 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
             int itemId = Integer.parseInt(params.get("itemId"));
 
             folder = folderDao.findByIdOrElseThrow(itemId);
-            BeanAssert.validate(folder.canEditResource(getUser()), "You don't have permission to edit target folder.");
+            BeanAssert.validate(folder.canEditResource(getUser()), "error_pages.forbidden_edit_folder_description");
         } catch (IllegalArgumentException e) {
             throw new HttpException("Failed to edit folder", e);
         }

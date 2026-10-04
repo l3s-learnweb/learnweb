@@ -9,9 +9,13 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.SequencedMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -23,6 +27,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -119,6 +124,27 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         Map.entry(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male")
     );
 
+    /**
+     * Values stored as {@link GlossaryTerm#getSource()} mapped to their message keys.
+     * The stored values must not be changed, existing terms and exported glossaries rely on them.
+     */
+    private static final SequencedMap<String, String> SOURCES;
+
+    static {
+        SequencedMap<String, String> sources = new LinkedHashMap<>();
+        sources.put("Wikipedia", "glossary.wikipedia");
+        sources.put("encyclopaedia", "glossary.encyclopaedia");
+        sources.put("monolingual dictionary", "glossary.mono_dictionary");
+        sources.put("bilingual dictionary", "glossary.bi_dictionary");
+        sources.put("scientific/academic publication", "glossary.publication");
+        sources.put("institutional website", "glossary.website");
+        sources.put("glossary", "glossary.glossary");
+        sources.put("Linguee or Reverso", "glossary.linguee_reverso");
+        sources.put("patients' websites and blogs", "glossary.web_blog");
+        sources.put("other", "glossary.source_other");
+        SOURCES = Collections.unmodifiableSequencedMap(sources);
+    }
+
     private GlossaryResource glossaryResource;
 
     private GlossaryEntry formEntry;
@@ -134,6 +160,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     private transient GlossaryParserResponse importResponse;
     private transient LazyGlossaryTableView lazyTableItems;
+    private transient List<SelectItem> sources;
+    private transient List<SelectItem> sourceFilterOptions; // cache, depends on the sources used in the glossary
     private transient List<GlossaryTableView> tableItems;
     private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
 
@@ -240,6 +268,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
         glossaryResource.getEntries().add(formEntry);
 
+        repaintTable();
         addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         onClearEntryForm();
     }
@@ -258,6 +287,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         //Remove entry from resource
         glossaryResource.getEntries().remove(row.getEntry());
+        repaintTable();
 
         log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
         addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
@@ -276,7 +306,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
         formEntry.setFulltext(null); // reset full text index
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "{0}: {1}", getLocaleMessage("entry_deleted"), term.getTerm());
+        addGrowl(FacesMessage.SEVERITY_INFO, "glossary.term_deleted", term.getTerm());
 
         log(Action.glossary_term_delete, glossaryResource, term.getId());
     }
@@ -529,10 +559,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     /**
-     * force reload of the tableItems from the glossaryResource.
+     * force reload of the tableItems and the source filter options from the glossaryResource.
      */
     private void repaintTable() {
         tableItems = null;
+        sourceFilterOptions = null;
     }
 
     public List<GlossaryTableView> getTableItems() {
@@ -586,6 +617,47 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public void setTableLanguageFilter(ArrayList<Locale> tableLanguageFilter) {
         this.tableLanguageFilter = tableLanguageFilter;
+    }
+
+    public List<SelectItem> getSources() {
+        if (sources == null) {
+            sources = SOURCES.entrySet().stream().map(source -> new SelectItem(source.getKey(), getLocaleMessage(source.getValue()))).toList();
+        }
+        return sources;
+    }
+
+    /**
+     * @return options of the source column filter: the known sources followed by other values used in this glossary (e.g. imported from a file)
+     */
+    public List<SelectItem> getSourceFilterOptions() {
+        if (sourceFilterOptions == null) {
+            Set<String> otherSources = new TreeSet<>(String.CASE_INSENSITIVE_ORDER); // the filter is case-insensitive
+            for (GlossaryEntry entry : glossaryResource.getEntries()) {
+                for (GlossaryTerm term : entry.getTerms()) {
+                    if (StringUtils.isNotBlank(term.getSource())) {
+                        otherSources.add(term.getSource());
+                    }
+                }
+            }
+            SOURCES.keySet().forEach(otherSources::remove);
+
+            List<SelectItem> options = new ArrayList<>(getSources());
+            otherSources.forEach(source -> options.add(new SelectItem(source, source)));
+            sourceFilterOptions = options;
+        }
+        return sourceFilterOptions;
+    }
+
+    /**
+     * @return the translated label of a known source, otherwise the stored value (e.g. imported from a file)
+     */
+    public String getSourceLabel(String source) {
+        if (source == null) {
+            return null;
+        }
+
+        String msgKey = SOURCES.get(source);
+        return msgKey != null ? getLocaleMessage(msgKey) : source;
     }
 
     public String getPronounciationVoice(Locale locale) {

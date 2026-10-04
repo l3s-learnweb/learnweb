@@ -11,7 +11,7 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="hash" value="#{unsubscribeBean.hash}" required="true" requiredMessage="Missing parameter: hash"/>
+			<f:viewParam name="hash" value="#{unsubscribeBean.hash}" required="true" requiredMessage="#{msg['error_pages.bad_request_email_link']}"/>
 			<f:viewAction action="#{unsubscribeBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>

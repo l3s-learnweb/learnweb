@@ -3,11 +3,12 @@ package de.l3s.learnweb.dashboard.activity;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import jakarta.annotation.PostConstruct;
@@ -29,33 +30,37 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     @Serial
     private static final long serialVersionUID = 3326736281893564706L;
 
-    private TreeMap<String, String> actions;
+    private LinkedHashMap<String, String> actions;
     private ArrayList<SelectItemGroup> groupedActions;
     private ArrayList<String> selectedActionItems;
     private ArrayList<Integer> selectedGroupedActions;
 
     private transient String interactionsChart;
     private transient List<Map<String, Object>> interactionsTable;
+    private transient Map<String, String> interactionsTableHeaders; // column key -> header, the same names as in the chart legend
 
     @Inject
     private LogDao logDao;
 
     @PostConstruct
     public void init() {
-        actions = new TreeMap<>();
-        actions.put("Resource actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.RESOURCE)));
-        actions.put("Folder actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.FOLDER)));
-        actions.put("Glossary actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GLOSSARY)));
-        actions.put("Login/Logout actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.USER)));
-        actions.put("Search actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.SEARCH)));
-        actions.put("Group actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GROUP)));
+        actions = new LinkedHashMap<>();
         groupedActions = new ArrayList<>();
-        groupedActions.add(createGroupCheckboxes("Resource actions", Action.getActionsByCategory(ActionCategory.RESOURCE)));
-        groupedActions.add(createGroupCheckboxes("Folder actions", Action.getActionsByCategory(ActionCategory.FOLDER)));
-        groupedActions.add(createGroupCheckboxes("Glossary actions", Action.getActionsByCategory(ActionCategory.GLOSSARY)));
-        groupedActions.add(createGroupCheckboxes("Login/Logout actions", Action.getActionsByCategory(ActionCategory.USER)));
-        groupedActions.add(createGroupCheckboxes("Search actions", Action.getActionsByCategory(ActionCategory.SEARCH)));
-        groupedActions.add(createGroupCheckboxes("Group actions", Action.getActionsByCategory(ActionCategory.GROUP)));
+        addActionGroup("activity.actions_resource", ActionCategory.RESOURCE);
+        addActionGroup("activity.actions_folder", ActionCategory.FOLDER);
+        addActionGroup("activity.actions_glossary", ActionCategory.GLOSSARY);
+        addActionGroup("activity.actions_user", ActionCategory.USER);
+        addActionGroup("activity.actions_search", ActionCategory.SEARCH);
+        addActionGroup("activity.actions_group", ActionCategory.GROUP);
+    }
+
+    /**
+     * @param msgKey the i18n key of the group name, it is also used as the value of the group checkbox
+     */
+    private void addActionGroup(String msgKey, ActionCategory category) {
+        Set<Action> categoryActions = Action.getActionsByCategory(category);
+        actions.put(msgKey, getStringOfActions(categoryActions));
+        groupedActions.add(createGroupCheckboxes(getLocaleMessage(msgKey), categoryActions));
     }
 
     private SelectItemGroup createGroupCheckboxes(String name, Set<Action> actions) {
@@ -82,6 +87,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     public void cleanAndUpdateStoredData() {
         interactionsChart = null;
         interactionsTable = null;
+        interactionsTableHeaders = null;
 
         fetchDataFromManager();
     }
@@ -93,24 +99,34 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 List<ActivityGraphData> data = new ArrayList<>();
                 for (String activityGroupName : selectedActionItems) {
                     ActivityGraphData activityData = new ActivityGraphData();
-                    activityData.setName(activityGroupName);
+                    activityData.setKey(activityGroupName);
+                    activityData.setName(getLocaleMessage(activityGroupName));
                     activityData.setActionsPerDay(logDao.countActionsPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
                     data.add(activityData);
                 }
-                interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
-                interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
+                setInteractionsData(data);
             } else if (selectedGroupedActions != null) {
                 List<ActivityGraphData> data = new ArrayList<>();
                 for (Integer activityGroupName : selectedGroupedActions) {
                     ActivityGraphData activityData = new ActivityGraphData();
-                    activityData.setName(Action.values()[activityGroupName].name());
+                    String actionName = Action.values()[activityGroupName].name();
+                    activityData.setKey(actionName);
+                    activityData.setName(actionName);
                     activityData.setActionsPerDay(logDao.countActionsPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
                     data.add(activityData);
                 }
-                interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
-                interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
+                setInteractionsData(data);
             }
         }
+    }
+
+    private void setInteractionsData(List<ActivityGraphData> data) {
+        interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+        interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
+
+        interactionsTableHeaders = new HashMap<>();
+        interactionsTableHeaders.put("date", getLocaleMessage("date"));
+        data.forEach(activityData -> interactionsTableHeaders.put(activityData.getKey(), activityData.getName()));
     }
 
     public String getInteractionsChart() {
@@ -135,6 +151,14 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
 
         return getInteractionsTable().isEmpty() ? new HashSet<>() : interactionsTable.getFirst().keySet();
+    }
+
+    public Map<String, String> getInteractionsTableHeaders() {
+        if (null == interactionsTableHeaders) {
+            fetchDataFromManager();
+        }
+
+        return interactionsTableHeaders;
     }
 
     public Map<String, String> getActions() {

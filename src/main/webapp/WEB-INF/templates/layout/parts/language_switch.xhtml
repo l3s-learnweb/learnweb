@@ -8,13 +8,13 @@
 	<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
 		<li class="nav-item">
 			<h:outputLink id="languageDropdown" value="#" styleClass="nav-link nav-link-flag" onclick="return false;">
-				<h:graphicImage name="images/flags/flag_#{userBean.localeCode}.svg" alt="Language switch"/>
+				<h:graphicImage name="images/flags/flag_#{userBean.localeCode}.svg" alt="#{msg.language}"/>
 			</h:outputLink>
 
 			<p:menu overlay="true" trigger="languageDropdown" my="right top" at="right bottom" collision="fit" styleClass="ui-menu-navbar">
 				<c:forEach items="#{config.supportedLocales}" var="locale">
 					<p:menuitem action="#{userBean.setLocaleCode(locale.language)}" immediate="true" process="@this">
-						<h:graphicImage name="images/flags/flag_#{locale.language}.svg" alt="#{locale.displayName}"/>
+						<h:graphicImage name="images/flags/flag_#{locale.language}.svg" alt=""/>
 						<span class="text-capitalize">#{locale.getDisplayName(locale)}</span>
 					</p:menuitem>
 				</c:forEach>

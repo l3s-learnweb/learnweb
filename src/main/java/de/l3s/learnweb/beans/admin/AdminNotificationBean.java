@@ -72,7 +72,7 @@ public class AdminNotificationBean extends ApplicationBean {
     public void send() {
         Collection<Integer> selectedUsers = BeanHelper.getSelectedUsers(selectedNodes);
         if (selectedUsers.isEmpty()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "admin.select_recipients");
             return;
         }
 
@@ -100,13 +100,13 @@ public class AdminNotificationBean extends ApplicationBean {
             counter++;
         }
 
-        addMessage(FacesMessage.SEVERITY_INFO, counter + " internal Learnweb notifications sent");
+        addMessage(FacesMessage.SEVERITY_INFO, "admin.notifications_sent", counter);
 
         if (sendEmail && moderatorCanSendMail) {
             sendMail(recipients);
 
             if (!usersWithoutMail.isEmpty()) {
-                addMessage(FacesMessage.SEVERITY_WARN, "Some users haven''t defined a valid email address: <b>{0}</b>", StringUtils.join(usersWithoutMail, ", "));
+                addMessage(FacesMessage.SEVERITY_WARN, "admin.users_without_email", StringUtils.join(usersWithoutMail, ", "));
             }
         }
     }
@@ -119,10 +119,10 @@ public class AdminNotificationBean extends ApplicationBean {
             mail.setRecipientsBcc(recipients);
             mailService.send(mail);
 
-            addMessage(FacesMessage.SEVERITY_INFO, recipients.size() + " emails send");
+            addMessage(FacesMessage.SEVERITY_INFO, "admin.emails_sent", recipients.size());
         } catch (Exception e) {
             log.error("Could not send notification mail: {}", mail, e);
-            addMessage(FacesMessage.SEVERITY_ERROR, "Email could not be sent");
+            addMessage(FacesMessage.SEVERITY_ERROR, "admin.email_not_sent");
         }
     }
 

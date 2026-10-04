@@ -37,7 +37,7 @@
             <p:datePicker id="editDialogCloseDate" value="#{res.closeDate}" pattern="dd.MM.yyyy" showIcon="true"/>
             <p:message for="@previous"/>
             <o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
-                             message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
+                             message="#{msg['survey.start_date_after_end_date']}" showMessageFor="editDialogOpenDate" />
         </div>
     </ui:fragment>
 
@@ -53,7 +53,7 @@
 <div class="d-flex">
     <p:defaultCommand target="saveResourceButton"/>
     <div class="me-auto">
-        <p:commandButton styleClass="ui-button-warning" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
+        <p:commandButton styleClass="ui-button-warning" value="#{msg['resource.recreate_thumbnail']}" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
                          update="resourceDetails" immediate="true" rendered="#{userBean.admin}"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
     </div>

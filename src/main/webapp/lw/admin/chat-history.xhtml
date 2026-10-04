@@ -18,7 +18,7 @@
 <ui:define name="center_layout">
     <h:form>
 
-        <p:panel header="Chat history">
+        <p:panel header="#{msg.llm_chat_history}">
             <p:dataTable value="#{adminChatHistoryBean.conversations}" var="conv" emptyMessage="#{msg.no_data}">
                 <p:column headerText="#{msg.date}">
                     <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-body-secondary small"
@@ -32,18 +32,18 @@
                     <h:outputText value="#{conv.title}"/>
                 </p:column>
                 <p:column style="width:3rem;text-align: center">
-                    <p:commandButton update="conv_detail" oncomplete="PF('convDlg').show()" icon="fa fa-search" title="View">
+                    <p:commandButton update="conv_detail" oncomplete="PF('convDlg').show()" icon="fa fa-search" title="#{msg.open}">
                         <f:setPropertyActionListener value="#{conv}" target="#{adminChatHistoryBean.selectedConv}"/>
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
         </p:panel>
 
-        <p:dialog header="Conversation Details" widgetVar="convDlg" modal="true" closeOnEscape="true" dynamic="true"
+        <p:dialog header="#{msg['admin.conversation_details']}" widgetVar="convDlg" modal="true" closeOnEscape="true" dynamic="true"
                   resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false" fitViewport="true">
             <p:outputPanel id="conv_detail">
                 <h4>#{adminChatHistoryBean.selectedConv.title}</h4>
-                <h:outputText value="by #{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).displayName}"
+                <h:outputText value="#{msg.by} #{adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user).displayName}"
                               rendered="#{not empty adminChatHistoryBean.getUserById(adminChatHistoryBean.selectedConv.user)}"/>
 
                 <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
@@ -52,7 +52,7 @@
                             <div class="mb-5 d-flex align-items-start p-4 bg-warning-subtle border rounded border-warning">
                                 <i class="mt-2 fas fa-wand-magic-sparkles text-warning fs-3 me-3"></i>
                                 <div class="me-3 w-100">
-                                    <div class="fw-medium fs-5 mb-2">System message</div>
+                                    <div class="fw-medium fs-5 mb-2">#{msg.llm_system_message}</div>
                                     <h:outputText value="#{message.content}"/>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="ms-4 bg-body-secondary shadow rounded p-3 flex-fill">
                                     <div class="mb-3">
-                                        <span class="fw-medium d-inline-block me-3">Assistant</span>
+                                        <span class="fw-medium d-inline-block me-3">#{msg.llm_assistant}</span>
                                         <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}"
                                                     styleClass="text-body-secondary small" rendered="#{not empty message.created}"/>
                                     </div>

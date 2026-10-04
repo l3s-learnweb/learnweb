@@ -86,9 +86,9 @@
                 <h:outputText value="#{log.userAnnotationCount}"/>
             </p:column>
 
-            <p:column headerText="Link">
+            <p:column headerText="#{msg['admin.link']}">
                 <h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank">
-                    <h:outputText value="link"/>
+                    <h:outputText value="#{msg.open}"/>
                     <f:param name="resource_id" value="#{log.resource.id}"/>
                 </h:outputLink>
             </p:column>

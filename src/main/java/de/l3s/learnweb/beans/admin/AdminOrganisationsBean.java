@@ -42,13 +42,13 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
 
     public void onCreateOrganisation() {
         if (organisationDao.countByTitle(newOrganisationTitle) > 0) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "title_already_taken");
             return;
         }
 
         Organisation org = new Organisation(newOrganisationTitle);
         organisationDao.save(org);
-        addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
+        addMessage(FacesMessage.SEVERITY_INFO, "admin.organisation_created");
         init(); // update course list
     }
 

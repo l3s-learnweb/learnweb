@@ -20,8 +20,10 @@ public abstract class AbstractValidator<T> implements Validator<T> {
     /**
      * Creates a faces message for the given parameters. Tries to translate the message and to add the label of the input
      * element in front of the message.
+     *
+     * @param message a message key (or literal text) that is translated with the given arguments
      */
-    public FacesMessage getFacesMessage(FacesContext context, UIComponent component, FacesMessage.Severity severity, String message) {
+    public FacesMessage getFacesMessage(FacesContext context, UIComponent component, FacesMessage.Severity severity, String message, Object... args) {
         String validatorMessage = ((UIInput) component).getValidatorMessage();
 
         if (validatorMessage == null) {
@@ -30,7 +32,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
                 label = component.getValueExpression("label");
             }
 
-            validatorMessage = MessagesBundle.format(FacesLocal.getLocale(context), message);
+            validatorMessage = MessagesBundle.format(FacesLocal.getLocale(context), message, args);
             if (label != null) {
                 validatorMessage = label + ": " + validatorMessage;
             }

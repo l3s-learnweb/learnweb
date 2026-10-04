@@ -17,3 +17,14 @@ window.bootstrap = {
   Scrollspy,
   Collapse,
 };
+
+// translate fancybox button tooltips using the PrimeFaces locale of the current page
+if (window.jQuery && $.fancybox && window.PrimeFaces) {
+  const lang = document.documentElement.lang || 'en';
+  $.fancybox.defaults.i18n[lang] = $.extend({}, $.fancybox.defaults.i18n.en, $.fancybox.defaults.i18n[lang], {
+    CLOSE: PrimeFaces.getAriaLabel('close'),
+    NEXT: PrimeFaces.getAriaLabel('next'),
+    PREV: PrimeFaces.getAriaLabel('previous'),
+  });
+  $.fancybox.defaults.lang = lang;
+}

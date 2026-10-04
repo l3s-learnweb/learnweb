@@ -29,7 +29,7 @@ public class AddFolderBean extends ApplicationBean implements Serializable {
 
     public void saveFolder() {
         if (!targetGroup.canAddResources(getUser())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources.add_not_allowed", targetGroup.getTitle());
             return;
         }
 

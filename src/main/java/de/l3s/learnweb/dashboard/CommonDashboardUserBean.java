@@ -118,7 +118,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
     public void setSelectedUsersIds(List<Integer> selectedUsersIds) {
         if (selectedUsersIds.size() > USERS_LIMIT) {
             usersLimitReached = true;
-            addMessage(FacesMessage.SEVERITY_ERROR, "Please, choose less than 500 users");
+            addMessage(FacesMessage.SEVERITY_ERROR, "dashboard.too_many_users", USERS_LIMIT);
         } else {
             usersLimitReached = false;
         }

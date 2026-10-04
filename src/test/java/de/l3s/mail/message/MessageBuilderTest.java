@@ -74,13 +74,13 @@ class MessageBuilderTest {
             please use this link to confirm your mail address:
             https://learnweb/hash
 
-            If you did not request a new password, you can ignore this email, or let us know by replying to this email.
+            If you didn't request this, you can ignore this email or let us know by replying to it.
 
             _____________________________________
             Best regards,
             Learnweb Team""", builder.buildPlainText(msg));
         assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Hello testuser1,</p><p>please use this link to confirm your mail address:"
-            + "<br/><a href=\"https://learnweb/hash\">https://learnweb/hash</a></p><p>If you did not request a new password, you can ignore this email, or let us know by replying to this email.</p>"
+            + "<br/><a href=\"https://learnweb/hash\">https://learnweb/hash</a></p><p>If you didn't request this, you can ignore this email or let us know by replying to it.</p>"
             + "<footer><hr/>Best regards,<br/>Learnweb Team</footer></body></html>", builder.buildHtmlText(msg));
     }
 
@@ -96,7 +96,7 @@ class MessageBuilderTest {
             https://learnweb/change
 
             The link will expire in 24 hours.
-            If you did not request a new password, you can ignore this email, or let us know by replying to this email.
+            If you didn't request this, you can ignore this email or let us know by replying to it.
 
             _____________________________________
             Best regards,
@@ -104,7 +104,7 @@ class MessageBuilderTest {
         assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Hello testuser1,</p><p>We have received a request to reset the password"
             + " for the Learnweb account associated with test@example.com.<br/>You can reset your password by clicking the link below:<br/>"
             + "<a href=\"https://learnweb/change\">https://learnweb/change</a></p><p>The link will expire in 24 hours.<br/>"
-            + "If you did not request a new password, you can ignore this email, or let us know by replying to this email.</p>"
+            + "If you didn't request this, you can ignore this email or let us know by replying to it.</p>"
             + "<footer><hr/>Best regards,<br/>Learnweb Team</footer></body></html>", builder.buildHtmlText(msg));
     }
 
@@ -117,6 +117,7 @@ class MessageBuilderTest {
             https://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf
 
             Here are the ten most recent entries in the suspicious list:
+            IP address\tRequest count\tDate
             127.0.0.1\t0\t2021-01-01T00:00
 
 
@@ -124,7 +125,8 @@ class MessageBuilderTest {
         assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Multiple accounts have been flagged as suspicious by Learnweb protection"
             + " system. Please look at them closer at<br/><a href=\"https://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf\">"
             + "https://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf</a></p><p>Here are the ten most recent entries in the suspicious list:"
-            + "<table><tr><th>127.0.0.1</th><th>0</th><th>2021-01-01T00:00</th></tr></table></p></body></html>", builder.buildHtmlText(msg));
+            + "<table><tr><th>IP address</th><th>Request count</th><th>Date</th></tr>"
+            + "<tr><td>127.0.0.1</td><td>0</td><td>2021-01-01T00:00</td></tr></table></p></body></html>", builder.buildHtmlText(msg));
     }
 
     @Test
@@ -133,12 +135,21 @@ class MessageBuilderTest {
         assertEquals("Contact form message", builder.getSubject(msg));
         assertEquals("""
             Name: testuser
-            Email: testmail@gmx.de
+            Email address: testmail@gmx.de
             Message: ABC
 
             """, builder.buildPlainText(msg));
-        assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Name: testuser<br/>Email: testmail@gmx.de<br/>Message: ABC</p>"
+        assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Name: testuser<br/>Email address: testmail@gmx.de<br/>Message: ABC</p>"
             + "</body></html>", builder.buildHtmlText(msg));
+    }
+
+    @Test
+    void testContactEmailEscapesUserInput() {
+        MessageBuilder builder = MailFactory.buildContactFormEmail("O'Brien", "a@b.de", "<a href=\"https://evil\">Reset</a> & {0}");
+        // the plain text is kept as typed, the HTML must not contain the user's markup
+        assertTrue(builder.buildPlainText(msg).contains("Message: <a href=\"https://evil\">Reset</a> & {0}"));
+        assertTrue(builder.buildHtmlText(msg).contains("Name: O&#x27;Brien<br/>Email address: a@b.de<br/>"
+            + "Message: &lt;a href=&quot;https://evil&quot;&gt;Reset&lt;/a&gt; &amp; {0}</p>"));
     }
 
     @Test
@@ -147,7 +158,7 @@ class MessageBuilderTest {
         assertEquals("Forum notifications", builder.getSubject(msg));
         assertEquals("""
             Hello testuser,
-            recent updates on your groups forums:
+            recent updates in your groups' forums:
 
             New answers to your posts
 
@@ -171,7 +182,7 @@ class MessageBuilderTest {
             + "  .first-child{    width:20%;    max-width: 0;    white-space: nowrap;    overflow: hidden;    text-overflow: ellipsis;  }  .second-child{    "
             + "max-width: 0;    white-space: nowrap;    overflow: hidden;    text-overflow: ellipsis;    word-wrap:break-word;  }  .third-child{    width:15%;"
             + "    word-wrap:break-word;  }  ul{    padding-left:0;  }  h4{    margin-bottom:0;  }</style></head><body><p>Hello testuser,<br/>recent updates "
-            + "on your groups forums:</p><h4>New answers to your posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th></tr><tr>"
+            + "in your groups' forums:</p><h4>New answers to your posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th></tr><tr>"
             + "<td class = \"first-child\">GroupTitle</td><td class = \"second-child\">"
             + "<a href=\"https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1\">TopicTitle</a></td><td class = \"third-child\">"
             + "March 1, 2021, 12:00:00 AM UTC</td></tr></table><br/><h4>Other new posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th>"

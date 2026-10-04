@@ -38,7 +38,7 @@ public class LearnwebEncryptEmail extends UIComponentBase {
         } else {
             writer.writeAttribute("onclick", "return false;", null);
             // it can be hashed email, which should not be clickable
-            writer.write(email);
+            writer.writeText(email, null);
         }
         writer.endElement("a");
     }

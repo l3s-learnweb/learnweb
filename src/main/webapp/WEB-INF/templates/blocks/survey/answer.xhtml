@@ -12,7 +12,7 @@
 		<ui:fragment rendered="#{surveyAnswerBean.formEnabled}">
 			<div class="row mb-3 align-items-center">
 				<div class="col fs-4">
-					Code: #{surveyAnswerBean.response.id}
+					#{msg['survey.answer_code']}: #{surveyAnswerBean.response.id}
 				</div>
 				<div class="col d-flex justify-content-end">
 					<p:commandButton value="#{msg.print}" styleClass="ui-button-warning d-print-none" rendered="#{false}">

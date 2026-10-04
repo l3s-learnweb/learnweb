@@ -11,7 +11,7 @@
 <audio class="video-js vjs-fill vjs-default-skin vjs-big-play-centered"
        controls="controls" preload="none" data-setup="{}" poster="#{res.thumbnailLargest}" title="#{res.title}">
     <source src="#{res.downloadUrl}" type="#{res.format}"/>
-    <p class="vjs-no-js">To listen this audio please enable JavaScript, and consider upgrading to a web browser that supports HTML5 audio</p>
+    <p class="vjs-no-js"><h:outputText value="#{msg.javascript_disabled}" escape="false"/></p>
 </audio>
 
 </ui:composition>

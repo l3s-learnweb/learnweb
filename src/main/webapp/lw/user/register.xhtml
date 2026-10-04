@@ -36,8 +36,8 @@
 
 	<p:panel header="#{msg.registerLabel}">
 		<h:form id="errorform" rendered="#{userBean.loggedIn}">
-			<p>You are already logged in.</p>
-			<p>You have to <h:commandLink action="#{loginBean.logout}">logout</h:commandLink> before you can create a new account.</p>
+			<p>#{msg.you_are_already_logged_in}</p>
+			<p>#{msg.register_logout_first} <h:commandLink action="#{loginBean.logout}">#{msg.logout}</h:commandLink></p>
 		</h:form>
 
 		<!-- includeViewParams keeps the wizard in the postback URL, so the course can be restored if the view scoped bean is re-created -->

@@ -350,7 +350,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             if (items.failed() != 0) {
-                addGrowl(FacesMessage.SEVERITY_WARN, "For some reason, {0, choice, 1#{0} resource|1<{0} of resources} can not be processed.", items.failed());
+                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.failed", items.failed());
             }
         } catch (IllegalArgumentException | IllegalAccessError | JsonParseException e) { // these exceptions will have user-friendly messages
             throw new HttpException("Failed to update resources", e);
@@ -358,14 +358,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     }
 
     private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) {
-        BeanAssert.notDeleted(targetGroup, "Target group does not exist!");
-        BeanAssert.hasPermission(targetGroup.canAddResources(getUser()), "You are not allowed to add resources to the target group!");
+        BeanAssert.notDeleted(targetGroup, "error_pages.not_found_group_description");
+        BeanAssert.hasPermission(targetGroup.canAddResources(getUser()), "error_pages.forbidden_add_resources_description");
 
         int targetGroupId = HasId.getIdOrDefault(targetGroup, 0);
         int targetFolderId = HasId.getIdOrDefault(targetFolder, 0);
 
         for (Resource resource : items.getResources()) {
-            BeanAssert.hasPermission(resource.canViewResource(getUser()), "You don't have permission to view some of the resources!");
+            BeanAssert.hasPermission(resource.canViewResource(getUser()), "error_pages.forbidden_view_resources_description");
             Resource newResource = resource.cloneResource();
             newResource.setGroupId(targetGroupId);
             newResource.setFolderId(targetFolderId);
@@ -380,7 +380,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         for (Folder folder : items.getFolders()) {
-            BeanAssert.hasPermission(folder.canViewResource(getUser()), "You don't have permission to view some of the resources!");
+            BeanAssert.hasPermission(folder.canViewResource(getUser()), "error_pages.forbidden_view_resources_description");
             Folder newFolder = new Folder(folder);
             newFolder.setGroupId(targetGroupId);
             newFolder.setParentFolderId(targetFolderId);
@@ -414,7 +414,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (targetGroupId != 0) {
             Group targetGroup = groupDao.findByIdOrElseThrow(targetGroupId);
-            BeanAssert.validate(targetGroup.canAddResources(getUser()), "You are not allowed to add resources to target group!");
+            BeanAssert.validate(targetGroup.canAddResources(getUser()), "error_pages.forbidden_add_resources_description");
         }
 
         for (Folder folder : items.getFolders()) {
@@ -440,7 +440,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (skipped != 0) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
+            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
         }
         if (items.size() - skipped > 0) {
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.size() - skipped);
@@ -486,7 +486,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (skipped != 0) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
+            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
         }
     }
 
@@ -494,7 +494,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         int skipped = 0;
         for (Resource resource : items.getResources()) {
             if (!resource.canAnnotateResource(getUser())) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don''t have permissions to annotate this resource ''{0}''.", resource.getTitle());
+                addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.annotate_not_allowed", resource.getTitle());
                 skipped++;
                 continue;
             }
@@ -516,7 +516,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (!resource.canDeleteResource(getUser())) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don''t have permissions to delete this resource ''{0}''.", resource.getTitle());
+            addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.delete_not_allowed", resource.getTitle());
             return true;
         }
 

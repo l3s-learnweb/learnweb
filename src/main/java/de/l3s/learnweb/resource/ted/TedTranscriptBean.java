@@ -162,7 +162,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         tedTranscriptDao.saveTranscriptSelection(transcript, tedResource.getId());
 
         getUser().clearCaches();
-        addGrowl(FacesMessage.SEVERITY_INFO, "Transcript Submitted");
+        addGrowl(FacesMessage.SEVERITY_INFO, "ted_transcript.submitted_successfully");
     }
 
     /**
@@ -194,9 +194,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             }
 
             if (definitions.isEmpty() && wordCount == 1) {
-                synonymsList.append(getLocaleMessage("No definition available"));
+                synonymsList.append(getLocaleMessage("transcript.no_definition"));
             } else if (synonymsList.isEmpty()) {
-                synonymsList.append(getLocaleMessage("Multiple"));
+                synonymsList.append("multiple"); // not a message, ted-transcript.js ignores this value
             }
             PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());
         } else {

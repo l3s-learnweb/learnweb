@@ -3,9 +3,12 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +22,8 @@ public class GlossaryTableView implements Serializable {
     private GlossaryEntry entry;
     private GlossaryTerm term;
 
-    private String topicOneHtml;
+    private transient Map<String, Pattern> highlightQueries; // filter queries by field, "fulltext" is the global filter; the rows are recreated on each load
+    private transient Map<String, String> htmlCache; // JSF evaluates the values several times per request
 
     public GlossaryTableView() {
         // required by Serializable
@@ -30,14 +34,35 @@ public class GlossaryTableView implements Serializable {
         this.term = term;
     }
 
-    public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term, Map<String, String> filter) {
+    /**
+     * @param highlightQueries the queries of the filters by field (see {@link StringHelper#compileHighlightQuery}), "fulltext" is the global filter
+     */
+    public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term, Map<String, Pattern> highlightQueries) {
         this.entry = entry;
         this.term = term;
+        this.highlightQueries = highlightQueries;
+    }
 
-        // TODO @kemkes: this is only an example. Has to be generalized for all fields
-        if (filter.containsKey("topicOne")) {
-            topicOneHtml = StringHelper.highlightQuery(entry.getTopicOne(), filter.get("topicOne"));
+    /**
+     * @param field the filter field of the value, its column filter takes precedence over the global filter
+     * @return the escaped value as HTML, with the filter query highlighted if available
+     */
+    private String highlight(String field, String value) {
+        if (value == null) {
+            return "";
         }
+
+        return cachedHtml(field, () -> {
+            Pattern query = highlightQueries == null ? null : highlightQueries.getOrDefault(field, highlightQueries.get("fulltext"));
+            return query == null ? StringHelper.escapeHtml(value) : StringHelper.highlightQuery(value, query);
+        });
+    }
+
+    private String cachedHtml(String key, Supplier<String> html) {
+        if (htmlCache == null) {
+            htmlCache = new HashMap<>();
+        }
+        return htmlCache.computeIfAbsent(key, k -> html.get());
     }
 
     public int getEntryId() {
@@ -48,27 +73,32 @@ public class GlossaryTableView implements Serializable {
         return entry.getTopicOne();
     }
 
-    /**
-     * The escaped topic as HTML, with the filter query highlighted if available.
-     */
     public String getTopicOneHtml() {
-        if (topicOneHtml != null) {
-            return topicOneHtml;
-        }
-
-        return StringHelper.escapeHtml(getTopicOne());
+        return highlight("topicOne", getTopicOne());
     }
 
     public String getTopicTwo() {
         return entry.getTopicTwo();
     }
 
+    public String getTopicTwoHtml() {
+        return highlight("topicTwo", getTopicTwo());
+    }
+
     public String getTopicThree() {
         return entry.getTopicThree();
     }
 
+    public String getTopicThreeHtml() {
+        return highlight("topicThree", getTopicThree());
+    }
+
     public String getDescription() {
         return entry.getDescription();
+    }
+
+    public String getDescriptionHtml() {
+        return highlight("description", getDescription());
     }
 
     public List<File> getPictures() {
@@ -81,6 +111,10 @@ public class GlossaryTableView implements Serializable {
 
     public String getTerm() {
         return term.getTerm();
+    }
+
+    public String getTermHtml() {
+        return highlight("term", getTerm());
     }
 
     public int getTermId() {
@@ -103,12 +137,47 @@ public class GlossaryTableView implements Serializable {
         return term.getAcronym();
     }
 
+    public String getAcronymHtml() {
+        return highlight("acronym", getAcronym());
+    }
+
     public String getSource() {
         return term.getSource();
     }
 
+    /**
+     * The source column is filtered by a dropdown of the stored values, therefore only the global filter is highlighted.
+     * The global filter matches the stored value, the label is bold as a whole if only the stored value matches (e.g. a translated label).
+     *
+     * @param label the displayed label of the source (see {@link GlossaryBean#getSourceLabel})
+     * @return the escaped label as HTML, with the global filter query highlighted if available
+     */
+    public String getSourceHtml(String label) {
+        if (label == null) {
+            return "";
+        }
+
+        return cachedHtml("source:" + label, () -> {
+            Pattern query = highlightQueries == null ? null : highlightQueries.get("fulltext");
+            if (query == null) {
+                return StringHelper.escapeHtml(label);
+            }
+            if (query.matcher(label).find()) {
+                return StringHelper.highlightQuery(label, query);
+            }
+            if (getSource() != null && query.matcher(getSource()).find()) {
+                return "<b>" + StringHelper.escapeHtml(label) + "</b>";
+            }
+            return StringHelper.escapeHtml(label);
+        });
+    }
+
     public String getPhraseology() {
         return term.getPhraseology();
+    }
+
+    public String getPhraseologyHtml() {
+        return highlight("phraseology", getPhraseology());
     }
 
     public LocalDateTime getTimestamp() {

@@ -21,10 +21,12 @@ class StringHelperTest {
 
     @Test
     void testHighlightQuery() {
-        assertEquals("&lt;i&gt;Tom&lt;/i&gt; <b>&amp; J</b>erry", StringHelper.highlightQuery("<i>Tom</i> & Jerry", "& j"));
-        assertEquals("&lt;i&gt;Tom&lt;/i&gt;", StringHelper.highlightQuery("<i>Tom</i>", "Jerry"));
+        assertEquals("&lt;i&gt;Tom&lt;/i&gt; <b>&amp; J</b>erry", StringHelper.highlightQuery("<i>Tom</i> & Jerry", StringHelper.compileHighlightQuery("& j")));
+        assertEquals("&lt;i&gt;Tom&lt;/i&gt;", StringHelper.highlightQuery("<i>Tom</i>", StringHelper.compileHighlightQuery("Jerry")));
         // lowercasing "İ" changes the string length, the match must still use the original positions
-        assertEquals("İİİ <b>abc</b>", StringHelper.highlightQuery("İİİ abc", "ABC"));
+        assertEquals("İİİ <b>abc</b>", StringHelper.highlightQuery("İİİ abc", StringHelper.compileHighlightQuery("ABC")));
+        // the query is literal, regex characters are not interpreted
+        assertEquals("<b>a.c</b> abc", StringHelper.highlightQuery("a.c abc", StringHelper.compileHighlightQuery("a.c")));
     }
 
     @Test

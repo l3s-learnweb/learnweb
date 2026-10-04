@@ -24,10 +24,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Resource;
@@ -270,7 +272,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public String getDisplayName() {
         if (getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
-            return "Anonymous";
+            return MessagesBundle.format(Faces.hasContext() ? Faces.getLocale() : Locale.ENGLISH, "anonymous");
         }
 
         if (StringUtils.isNotBlank(fullName)) {

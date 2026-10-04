@@ -37,10 +37,10 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
             // ignore all parsing problems
         }
 
-        BeanAssert.validate(user != null, "Invalid value of 'hash' parameter.");
+        BeanAssert.validate(user != null, "error_pages.bad_request_email_link");
 
         String correctHash = ForumNotificator.getHash(user);
-        BeanAssert.validate(correctHash.equals(givenHash), "Invalid value of 'hash' parameter.");
+        BeanAssert.validate(correctHash.equals(givenHash), "error_pages.bad_request_email_link");
     }
 
     public String getHash() {

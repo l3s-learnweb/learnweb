@@ -32,7 +32,7 @@
         <f:facet name="header">
             #{msg.choose_options}
             <p:button icon="fas fa-circle-question" onclick="return false;"/>
-            <p:tooltip for="@previous" value="On this page you can see user activity."/>
+            <p:tooltip for="@previous" value="#{msg['activity.dashboard_activity_description']}"/>
         </f:facet>
 
         <p:outputPanel styleClass="my-3">
@@ -46,7 +46,7 @@
                 <p:selectManyCheckbox layout="responsive" columns="3" value="#{activityDashboardBean.selectedActionItems}" var="action">
                     <p:ajax event="valueChange" process="@this"/>
 
-                    <f:selectItems value="#{activityDashboardBean.actions.keySet()}" var="action" itemLabel="#{action}" itemValue="#{action}"/>
+                    <f:selectItems value="#{activityDashboardBean.actions.keySet()}" var="action" itemLabel="#{msg[action]}" itemValue="#{action}"/>
                 </p:selectManyCheckbox>
             </div>
 
@@ -72,7 +72,7 @@
             </p:tab>
             <p:tab title="#{msg.table_view}">
                 <p:dataTable var="entry" value="#{activityDashboardBean.interactionsTable}">
-                    <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{entry}">
+                    <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{activityDashboardBean.interactionsTableHeaders[key]}">
                         <h:outputText value="#{entry[key]}"/>
                     </p:columns>
                 </p:dataTable>

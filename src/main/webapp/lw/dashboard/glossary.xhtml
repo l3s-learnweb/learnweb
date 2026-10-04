@@ -184,10 +184,10 @@
                                       filterBy="#{gfs.user.displayName}" filterMatchMode="contains">
                                 <a href="#{request.contextPath}/lw/dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.displayName}</a>
                             </p:column>
-                            <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
+                            <p:column styleClass="ui-column-title" headerText="#{msg['glossary.concepts']}" sortBy="#{gfs.entries}" sortable="true">
                                 #{gfs.entries}
                             </p:column>
-                            <p:column styleClass="ui-column-title" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
+                            <p:column styleClass="ui-column-title" headerText="#{msg['glossary.terms']}" sortBy="#{gfs.terms}" sortable="true">
                                 #{gfs.terms}
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
@@ -226,7 +226,7 @@
                                 </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
-                                <f:facet name="header">AVG %</f:facet>
+                                <f:facet name="header">#{msg['glossary.avg_filled_fields']}</f:facet>
                                 <h:outputText value="#{gfs.avg*100}">
                                     <f:convertNumber maxFractionDigits="3" minFractionDigits="3"/>
                                 </h:outputText>%
@@ -267,10 +267,10 @@
                                       filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">
                                 #{gds.description}
                             </p:column>
-                            <p:column headerText="Word count" sortBy="#{gds.length}" sortable="true">
+                            <p:column headerText="#{msg['glossary.word_count']}" sortBy="#{gds.length}" sortable="true">
                                 #{gds.length}
                             </p:column>
-                            <p:column headerText="Pasted" sortBy="#{gds.descriptionPasted}" sortable="true">
+                            <p:column headerText="#{msg['glossary.pasted']}" sortBy="#{gds.descriptionPasted}" sortable="true">
                                 #{gds.descriptionPasted}
                             </p:column>
                         </p:dataTable>

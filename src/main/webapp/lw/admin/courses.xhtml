@@ -31,7 +31,7 @@
                     <div class="me-auto">
                         #{msg.courses}
                         <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                        <p:tooltip for="@previous" value="On this page you can add, delete and edit courses."/>
+                        <p:tooltip for="@previous" value="#{msg['admin.courses_help']}"/>
                     </div>
                     <div class="d-md-block d-flex flex-column">
                         <p:commandButton value="#{msg.create}" styleClass="float-end ui-button-warning" onclick="PF('createCourseWidget').show();"/>
@@ -58,7 +58,7 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="dd-sm-none" filterBy="#{course.id}">
+            <p:column headerText="#{msg.id}" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="dd-sm-none" filterBy="#{course.id}">
                 <h:outputText value="#{course.id}"/>
             </p:column>
 
@@ -67,7 +67,7 @@
             </p:column>
 
             <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.registrationWizard}" filterBy="#{course.registrationWizard}" filterMatchMode="contains">
-                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.registrationClosed}"/>
+                <h:outputText value="#{msg['admin.registration_closed']}" styleClass="font-italic" rendered="#{course.registrationClosed}"/>
 
                 <h:outputLink value="#{o:getRequestBaseURL()}wizard=#{course.registrationWizard}" rendered="#{not course.registrationClosed}">
                     <h:outputText value="#{course.registrationWizard}"/>
@@ -109,7 +109,7 @@
         <p:confirmDialog widgetVar="deleteCourseDialog" id="delete_confirm_dialog" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}">
             <f:facet name="message">
                 <h:outputText value="#{o:format1(msg.courses_delete_question, adminCoursesBean.selectedCourse.title)}" styleClass="d-block mb-2"/>
-                <h:outputText value="This action can not be reverted. The following records will be deleted permanantly:" styleClass="d-block"/>
+                <h:outputText value="#{msg['admin.course_delete_warning']}" styleClass="d-block"/>
                 <h:outputText value="#{adminCoursesBean.getDeleteSummary(adminCoursesBean.selectedCourse)}" escape="false"/>
             </f:facet>
 
@@ -139,7 +139,7 @@
             </div>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update="@form :courses_table" process="@form"
                              onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
-            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="Add course and group" styleClass="ui-button-warning ms-1"
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="#{msg['admin.add_course_and_group']}" styleClass="ui-button-warning ms-1"
                              update="@form :courses_table" process="@form" onstart="PF('createCourseOverlay').show();"
                              oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
         </h:form>

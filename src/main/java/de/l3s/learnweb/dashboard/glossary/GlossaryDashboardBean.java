@@ -105,7 +105,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             if (actionsCountPerDay == null) {
                 actionsCountPerDay = logDao.countActionsPerDay(getSelectedUsersIds(), startDate, endDate);
             }
-            interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+            interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate, getBundle());
         }
         return interactionsChart;
     }
@@ -115,7 +115,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             if (actionsWithCounters == null) {
                 actionsWithCounters = logDao.countUsagePerAction(getSelectedUsersIds(), startDate, endDate);
             }
-            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters, getBundle());
         }
         return usersActivityTypesChart;
     }
@@ -126,7 +126,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
                 glossaryConceptsCountPerUser = glossaryEntryDao.countEntriesPerUser(getSelectedUsersIds(), startDate, endDate);
                 glossaryTermsCountPerUser = glossaryTermDao.countTermsPerUser(getSelectedUsersIds(), startDate, endDate);
             }
-            usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+            usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser, getBundle());
         }
         return usersGlossaryChart;
     }

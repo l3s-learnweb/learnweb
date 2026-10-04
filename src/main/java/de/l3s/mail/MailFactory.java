@@ -11,6 +11,7 @@ import de.l3s.mail.message.LineBreak;
 import de.l3s.mail.message.Link;
 import de.l3s.mail.message.MessageBuilder;
 import de.l3s.mail.message.Paragraph;
+import de.l3s.mail.message.RawText;
 import de.l3s.mail.message.Table;
 import de.l3s.mail.message.Text;
 
@@ -59,7 +60,7 @@ public final class MailFactory {
                 "  }");
 
         builder.add(new Paragraph(new Text("greeting")).append(" ").append(username).append(",")
-            .append(new LineBreak()).append(new Text("email_forum_notifications.resent_updates")));
+            .append(new LineBreak()).append(new Text("email_forum_notifications.recent_updates")));
 
         if (!userTopics.isEmpty()) {
             builder.add(new Heading(4, "email_forum_notifications.new_answers_to_your_posts"));
@@ -87,8 +88,8 @@ public final class MailFactory {
         table.addRow("group", "title", "last_activities");
         for (ForumTopic topic : topics) {
             table.addRow(
-                new Text(topic.getGroup().getTitle()),
-                new Link(serverUrl + "/lw/group/forum_topic.jsf?topic_id=" + topic.getId(), topic.getTitle()),
+                new RawText(topic.getGroup().getTitle()),
+                Link.withPlainText(serverUrl + "/lw/group/forum_topic.jsf?topic_id=" + topic.getId(), topic.getTitle()),
                 new DateTime(topic.getUpdatedAt())
             );
         }
@@ -113,10 +114,10 @@ public final class MailFactory {
     }
 
     public static MessageBuilder buildContactFormEmail(String name, String email, String message) {
-        return new MessageBuilder("Contact form message")
-            .add(new Paragraph(new Text("Name")).append(": ").append(name).append(new LineBreak())
-                .append(new Text("Email")).append(": ").append(email).append(new LineBreak())
-                .append(new Text("Message")).append(": ").append(message));
+        return new MessageBuilder("email_contact.subject")
+            .add(new Paragraph(new Text("name")).append(": ").append(name).append(new LineBreak())
+                .append(new Text("email_address")).append(": ").append(email).append(new LineBreak())
+                .append(new Text("message")).append(": ").append(message));
     }
 
     public static MessageBuilder buildNotificationEmail(String title, String text, String username, String serverUrl, String appName) {
@@ -128,16 +129,19 @@ public final class MailFactory {
     public static MessageBuilder buildSuspiciousAlertEmail(List<Request> suspiciousRequests) {
         String serverUrl = Learnweb.config().getServerUrl();
 
-        MessageBuilder builder = new MessageBuilder("[Learnweb] Suspicious activity alert");
-        builder.add(new Paragraph("Multiple accounts have been flagged as suspicious by Learnweb protection system. Please look at them closer at")
+        String appName = Learnweb.config().getAppName();
+
+        MessageBuilder builder = new MessageBuilder("email_suspicious.subject", appName);
+        builder.add(new Paragraph(new Text("email_suspicious.flagged_accounts", appName))
             .append(new LineBreak()).append(new Link(serverUrl + "/lw/admin/banlist.jsf")));
 
         Table table = new Table();
+        table.addRow(new Text("ip_addr"), new Text("requests_count"), new Text("date")); // the first row is the header
         for (Request ard : suspiciousRequests) {
-            table.addRow(ard.getAddr(), String.valueOf(ard.getRequests()), ard.getCreatedAt().toString());
+            table.addRow(new RawText(ard.getAddr()), new RawText(String.valueOf(ard.getRequests())), new RawText(ard.getCreatedAt().toString()));
         }
 
-        builder.add(new Paragraph("Here are the ten most recent entries in the suspicious list:").append(table));
+        builder.add(new Paragraph(new Text("email_suspicious.recent_entries")).append(table));
         return builder;
     }
 }

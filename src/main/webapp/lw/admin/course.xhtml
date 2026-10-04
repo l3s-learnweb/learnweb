@@ -83,7 +83,7 @@
 							</h:panelGroup>
 						</p:panel>
 
-						<p:panel header="Registration settings:" id="registration_settings">
+						<p:panel header="#{msg['admin.registration_settings']}" id="registration_settings">
 							<div class="field">
 								<p:outputLabel for="@next" value="#{msg.registration_type}:"/>
 								<p:selectOneMenu id="c_type" value="#{adminCourseBean.course.registrationType}" required="true">
@@ -120,12 +120,12 @@
 							<div class="field" faces:id="c_icon_wrapper" faces:rendered="#{not adminCourseBean.course.registrationClosed}">
 								<div class="row">
 									<div class="col-auto">
-										<img class="d-block w-100 profile-picture m-auto fluent" src="${adminCourseBean.course.registrationIconFileUrl}" alt="Icon picture"/>
+										<img class="d-block w-100 profile-picture m-auto fluent" src="${adminCourseBean.course.registrationIconFileUrl}" alt="#{msg['admin.registration_icon']}"/>
 									</div>
 									<div class="col">
-										<p:outputLabel for="@next" value="Registration icon"/>
+										<p:outputLabel for="@next" value="#{msg['admin.registration_icon']}"/>
 										<p:fileUpload id="c_icon" listener="${adminCourseBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
-                                                      auto="true" skinSimple="true" update="c_icon_wrapper" label="#{msg.choose_file}" cancelLabel="abb">
+                                                      auto="true" skinSimple="true" update="c_icon_wrapper" label="#{msg.choose_file}" cancelLabel="#{msg.cancel}">
                                             <p:validateFile sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                                         </p:fileUpload>
 										<p:message for="@previous"/>

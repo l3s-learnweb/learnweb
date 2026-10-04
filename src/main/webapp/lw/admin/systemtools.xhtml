@@ -22,55 +22,55 @@
 <ui:define name="center_layout">
     <h:form>
         <p:dashboard id="board" model="#{adminSystemBean.model}" styleClass="row" responsive="true" reordering="false">
-            <p:panel id="memory" header="Memory usage">
+            <p:panel id="memory" header="#{msg['admin.memory_usage']}">
                 <p:panelGrid columns="2" contentStyleClass="row" columnClasses="col-6, col-6">
-                    <h:outputText value="Free memory:"/>
+                    <h:outputText value="#{msg['admin.free_memory']}:"/>
                     <h:outputText value="#{adminSystemBean.runtimeInfo.freeMemory}"/>
 
-                    <h:outputText value="Total memory:"/>
+                    <h:outputText value="#{msg['admin.total_memory']}:"/>
                     <h:outputText value="#{adminSystemBean.runtimeInfo.totalMemory}"/>
 
-                    <h:outputText value="Max memory (Java VM):"/>
+                    <h:outputText value="#{msg['admin.max_memory']}:"/>
                     <h:outputText value="#{adminSystemBean.runtimeInfo.maxMemory}"/>
                 </p:panelGrid>
             </p:panel>
 
-            <p:panel id="cache" header="Objects cache">
+            <p:panel id="cache" header="#{msg['admin.objects_cache']}">
                 <p:dataTable var="cache" value="#{adminSystemBean.cacheObjects}" styleClass="mb-3">
-                    <p:column headerText="Name"><h:outputText value="#{cache.name}"/></p:column>
-                    <p:column headerText="Size"><h:outputText value="#{cache.size}"/></p:column>
-                    <p:column headerText="Size (sec.)"><h:outputText value="#{cache.sizeSecondary}"/></p:column>
+                    <p:column headerText="#{msg.name}"><h:outputText value="#{cache.name}"/></p:column>
+                    <p:column headerText="#{msg.size}"><h:outputText value="#{cache.size}"/></p:column>
+                    <p:column headerText="#{msg['admin.size_secondary']}"><h:outputText value="#{cache.sizeSecondary}"/></p:column>
                 </p:dataTable>
 
                 <p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="ui-button-danger"/>
             </p:panel>
 
-            <p:panel id="maintenance" header="Maintenance">
+            <p:panel id="maintenance" header="#{msg['admin.maintenance']}">
                 <p:toggleSwitch value="#{config.maintenance}">
                     <p:ajax listener="#{adminSystemBean.onMaintenanceUpdate}"/>
                 </p:toggleSwitch>
             </p:panel>
 
-            <p:panel id="i18n" header="Locales">
+            <p:panel id="i18n" header="#{msg['admin.locales']}">
                 <p:dataTable var="locale" value="#{adminSystemBean.localeObjects}" styleClass="mb-3">
-                    <p:column headerText="Locale"><h:outputText value="#{locale.locale}"/></p:column>
-                    <p:column headerText="Bundle locale"><h:outputText value="#{locale.bundleLocale}"/></p:column>
-                    <p:column headerText="Bundle size"><h:outputText value="#{locale.bundleSize}"/></p:column>
+                    <p:column headerText="#{msg['admin.locale']}"><h:outputText value="#{locale.locale}"/></p:column>
+                    <p:column headerText="#{msg['admin.bundle_locale']}"><h:outputText value="#{locale.bundleLocale}"/></p:column>
+                    <p:column headerText="#{msg['admin.bundle_size']}"><h:outputText value="#{locale.bundleSize}"/></p:column>
                 </p:dataTable>
 
                 <p:commandButton actionListener="#{adminSystemBean.clearLocales()}" value="#{msg.clear_caches}" update="i18n" styleClass="ui-button-danger"/>
             </p:panel>
 
-            <p:panel id="solr_index" header="Solr Index">
+            <p:panel id="solr_index" header="#{msg['admin.search_index']}">
                 <p:panelGrid columns="2" contentStyleClass="row" columnClasses="col-6, col-6">
-                    <h:outputText value="Total resources:"/>
+                    <h:outputText value="#{msg['admin.total_resources']}:"/>
                     <h:outputText value="#{adminSystemBean.totalResources}"/>
 
-                    <h:outputText value="Indexed resources:"/>
+                    <h:outputText value="#{msg['admin.indexed_resources']}:"/>
                     <h:outputText value="#{adminSystemBean.indexedResources}"/>
                 </p:panelGrid>
 
-                <p:commandButton widgetVar="reindexBtn" actionListener="#{adminSystemBean.reindexResources()}" value="Reindex" update="solr_index"
+                <p:commandButton widgetVar="reindexBtn" actionListener="#{adminSystemBean.reindexResources()}" value="#{msg['admin.reindex']}" update="solr_index"
                                  styleClass="ui-button-danger mb-2" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
 
                 <p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
@@ -80,25 +80,25 @@
                 </p:progressBar>
             </p:panel>
 
-            <p:panel id="error_handling" header="Test Errors Handling">
+            <p:panel id="error_handling" header="#{msg['admin.test_error_handling']}">
                 <p class="mb-2">
-                    <h:commandButton value="throw runtime exception" action="#{adminSystemBean.throwRuntimeException}" styleClass="me-1"/>
-                    <p:commandButton value="throw runtime exception on ajax" action="#{adminSystemBean.throwRuntimeException}"
+                    <h:commandButton value="#{msg['admin.throw_runtime_exception']}" action="#{adminSystemBean.throwRuntimeException}" styleClass="me-1"/>
+                    <p:commandButton value="#{msg['admin.throw_runtime_exception']} (AJAX)" action="#{adminSystemBean.throwRuntimeException}"
                                      ajax="true" process="@this" update="@this"/>
                 </p>
                 <p class="mb-2">
-                    <h:commandButton value="throw SQL exception" action="#{adminSystemBean.throwSQLException}" styleClass="me-1"/>
-                    <p:commandButton value="throw SQL exception on ajax" action="#{adminSystemBean.throwSQLException}"
+                    <h:commandButton value="#{msg['admin.throw_sql_exception']}" action="#{adminSystemBean.throwSQLException}" styleClass="me-1"/>
+                    <p:commandButton value="#{msg['admin.throw_sql_exception']} (AJAX)" action="#{adminSystemBean.throwSQLException}"
                                      ajax="true" process="@this" update="@this"/>
                 </p>
                 <p class="mb-2" faces:id="render_error">
-                    <h:commandButton value="throw exception during render" styleClass="me-1"/>
-                    <p:commandButton value="throw exception during render on ajax" ajax="true" process="@form" update="render_error"/>
+                    <h:commandButton value="#{msg['admin.throw_render_exception']}" styleClass="me-1"/>
+                    <p:commandButton value="#{msg['admin.throw_render_exception']} (AJAX)" ajax="true" process="@form" update="render_error"/>
                     <h:outputText value="#{adminSystemBean.throwRuntimeException()}" rendered="#{component.namingContainer.submitted}"/>
                 </p>
                 <p class="mb-0">
-                    <h:commandButton value="cause http error" action="#{adminSystemBean.throwHttpException}" styleClass="me-1"/>
-                    <p:commandButton value="cause http error on ajax" action="#{adminSystemBean.throwHttpException}"
+                    <h:commandButton value="#{msg['admin.throw_http_error']}" action="#{adminSystemBean.throwHttpException}" styleClass="me-1"/>
+                    <p:commandButton value="#{msg['admin.throw_http_error']} (AJAX)" action="#{adminSystemBean.throwHttpException}"
                                      ajax="true" process="@this" update="@this"/>
                 </p>
             </p:panel>
@@ -108,7 +108,7 @@
                     <div class="d-flex">
                         <div class="me-auto">#{msg.database_connections}</div>
                         <div class="d-md-block d-flex flex-column">
-                            <p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="ui-button-warning"/>
+                            <p:commandButton value="#{msg['admin.terminate_all']}" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="ui-button-warning"/>
                         </div>
                     </div>
                 </f:facet>
@@ -117,7 +117,7 @@
                     <h:outputText value="#{msg.please_wait}"/>
                 </p:blockUI>
 
-                <p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="No open connections">
+                <p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="#{msg['admin.no_open_connections']}">
                     <p:column headerText="#{msg.id}" sortBy="#{process.id}">
                         <h:outputText value="#{process.id}"/>
                     </p:column>
@@ -126,15 +126,15 @@
                         <h:outputText value="#{process.user}"/>
                     </p:column>
 
-                    <p:column headerText="Host" sortBy="#{process.host}">
+                    <p:column headerText="#{msg['admin.host']}" sortBy="#{process.host}">
                         <h:outputText value="#{process.host}"/>
                     </p:column>
 
-                    <p:column headerText="DB" sortBy="#{process.db}">
+                    <p:column headerText="#{msg['admin.database']}" sortBy="#{process.db}">
                         <h:outputText value="#{process.db}"/>
                     </p:column>
 
-                    <p:column headerText="Command" sortBy="#{process.command}">
+                    <p:column headerText="#{msg['admin.command']}" sortBy="#{process.command}">
                         <h:outputText value="#{process.command}"/>
                     </p:column>
 
@@ -142,7 +142,7 @@
                         <h:outputText value="#{process.time}"/>
                     </p:column>
 
-                    <p:column headerText="State" sortBy="#{process.state}">
+                    <p:column headerText="#{msg['admin.state']}" sortBy="#{process.state}">
                         <h:outputText value="#{process.state}"/>
                     </p:column>
 
@@ -150,12 +150,12 @@
                         <h:outputText value="#{process.info}"/>
                     </p:column>
 
-                    <p:column headerText="Progress" sortBy="#{process.progress}">
+                    <p:column headerText="#{msg['admin.progress']}" sortBy="#{process.progress}">
                         <h:outputText value="#{process.progress}"/>
                     </p:column>
 
                     <p:column styleClass="text-end">
-                        <p:commandButton title="Terminate" styleClass="ui-button-danger rounded-button ui-button-flat" actionListener="#{adminSystemBean.terminateProcess(process)}"
+                        <p:commandButton title="#{msg['admin.terminate']}" styleClass="ui-button-danger rounded-button ui-button-flat" actionListener="#{adminSystemBean.terminateProcess(process)}"
                                          process="@this" update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" icon="fas fa-hand">
                         </p:commandButton>
                     </p:column>

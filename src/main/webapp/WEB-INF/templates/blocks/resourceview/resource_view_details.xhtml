@@ -4,9 +4,12 @@
 				xmlns:f="jakarta.faces.core"
 				xmlns:p="primefaces"
 				xmlns:pt="jakarta.faces.passthrough"
+				xmlns:o="omnifaces"
 				xmlns:lw="learnweb">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+<o:importFunctions type="java.util.Locale"/>
 
 <h:outputScript name="learnweb/js/lib/emoji.js" target="body"/>
 
@@ -33,7 +36,7 @@
 						<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 						#{res.originalFile.name}
 					</a>
-					(Backup <h:outputText value="#{res.originalFile.createdAt}">
+					(#{msg['resource.backup']} <h:outputText value="#{res.originalFile.createdAt}">
 						<f:convertDateTime type="localDate" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>)
 				</div>
@@ -117,7 +120,7 @@
 		<dt class="col-sm-4">#{msg.language}:</dt>
 		<dd class="col-sm-8">
 			<ui:repeat value="#{res.metadataMultiValue['language']}" var="language" varStatus="status">
-				<h:outputText value="#{msg['language_' += language]}" rendered="#{language.length() eq 2}" />
+				<h:outputText value="#{Locale:forLanguageTag(language).getDisplayLanguage(userBean.locale)}" rendered="#{language.length() eq 2}" styleClass="text-capitalize"/>
                 <h:outputText value="#{language}" rendered="#{language.length() ne 2}" />
 				<h:outputText value=", " rendered="#{!status.last}" escape="false"/>
 			</ui:repeat>

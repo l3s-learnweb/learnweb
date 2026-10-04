@@ -13,7 +13,7 @@
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="admin/requests.jsf" title="Requests">
+    <lw:breadcrumb-item link="admin/requests.jsf" title="#{msg.requests}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
     </lw:breadcrumb-item>
 </ui:define>
@@ -23,9 +23,9 @@
         <p:tab title="#{msg.requests}">
             <h:form id="requestform">
                 <p:dataTable id="requestsTable" widgetVar="requestsTable" var="reqData" value="#{adminRequestListBean.requests}" rows="100"
-                             paginator="true" paginatorPosition="bottom" currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
+                             paginator="true" paginatorPosition="bottom"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                    <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
+                    <p:column field="addr" headerText="#{msg.ip_addr}" filterMatchMode="contains"/>
 
                     <p:column field="createdAt" headerText="#{msg.time}">
                         <f:facet name="filter">
@@ -36,7 +36,7 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column field="url" headerText="URL" filterMatchMode="contains"/>
+                    <p:column field="url" headerText="#{msg.url}" filterMatchMode="contains"/>
                 </p:dataTable>
             </h:form>
         </p:tab>
@@ -44,9 +44,9 @@
         <p:tab title="#{msg.logins}">
             <h:form id="loginform">
                 <p:dataTable var="login" value="#{adminRequestListBean.logins}" rows="100"
-                             paginator="true" paginatorPosition="bottom" currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
+                             paginator="true" paginatorPosition="bottom"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                    <p:column headerText="IP" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">
+                    <p:column headerText="#{msg.ip_addr}" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">
                         <h:outputText value="#{login.key}"/>
                     </p:column>
 
@@ -62,13 +62,13 @@
             </h:form>
         </p:tab>
 
-        <p:tab title="Requests over time by IP">
+        <p:tab title="#{msg['admin.requests_by_ip']}">
             <h:form id="aggrrequestform">
                 <p:blockUI block="aggrRequestsTable" widgetVar="requestsTableOverlay">
                     <h:outputText value="#{msg.please_wait}"/>
                 </p:blockUI>
                 <span>
-					Requests updated: <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
+					#{msg['admin.last_updated']}: <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
 													<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 												 </h:outputText>
 					<p:commandButton onstart="PF('requestsTableOverlay').show()" oncomplete="PF('requestsTableOverlay').hide()"
@@ -78,7 +78,7 @@
                 <p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" rows="50"
                              paginator="true" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                    <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
+                    <p:column field="addr" headerText="#{msg.ip_addr}" filterMatchMode="contains"/>
 
                     <p:column field="requests" headerText="#{msg.requests_count}" filterMatchMode="contains"/>
 

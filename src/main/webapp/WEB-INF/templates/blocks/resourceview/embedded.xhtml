@@ -60,7 +60,7 @@
             </p:tab>
             <p:tab title="${msg['resource.tab.ARCHIVED']}">
                 <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}" faces:rendered="#{not empty res.archiveUrls}"></iframe>
-                <p class="d-block m-3" faces:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
+                <p class="d-block m-3" faces:rendered="#{empty res.archiveUrls}">#{msg['archive.not_archived_yet']}</p>
             </p:tab>
         </p:tabView>
     </c:when>

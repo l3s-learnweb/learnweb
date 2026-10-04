@@ -85,29 +85,30 @@ public class GlossaryXLSParser {
             }
 
             if (glossaryRowBuilder == null || glossaryEntries.isEmpty()) {
-                return new GlossaryParserResponse(new ParsingError(-1, "", "The file is empty"));
+                return new GlossaryParserResponse(new ParsingError(-1, "", "glossary.import_error_file_empty"));
             }
 
             return new GlossaryParserResponse(joinEntries(glossaryEntries), glossaryRowBuilder.getErrors());
         } catch (OfficeXmlFileException e) {
             if (uploadedFile.getFileName().endsWith(".xlsx")) { // wrong file format
-                return new GlossaryParserResponse(new ParsingError(-1, "", "Please save the file in *.xls format, also called Excel 97-2003, and try again."));
+                return new GlossaryParserResponse(new ParsingError(-1, "", "glossary.import_error_xlsx"));
             } else {
                 throw e;
             }
         } catch (OldExcelFormatException e) { // Excel 5.0/7.0 (BIFF5) files are not supported by POI
-            return new GlossaryParserResponse(new ParsingError(-1, "", "This Excel format is too old. Please save the file in *.xls format, also called Excel 97-2003, and try again."));
+            return new GlossaryParserResponse(new ParsingError(-1, "", "glossary.import_error_format_too_old"));
         }
     }
 
-    private static List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries) {
+    static List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries) {
         List<GlossaryEntry> result = new ArrayList<>();
         for (final GlossaryEntry entry : glossaryEntries) {
             boolean alreadyExist = false;
-            if (!result.isEmpty() && Strings.CS.equals(result.getLast().getTopicOne(), entry.getTopicOne())
+            if (!result.isEmpty() && (GlossaryRowBuilder.isTermOfPreviousEntry(entry)
+                || Strings.CS.equals(result.getLast().getTopicOne(), entry.getTopicOne())
                 && Strings.CS.equals(result.getLast().getTopicTwo(), entry.getTopicTwo())
                 && Strings.CS.equals(result.getLast().getTopicThree(), entry.getTopicThree())
-                && Strings.CS.equals(result.getLast().getDescription(), entry.getDescription())) {
+                && Strings.CS.equals(result.getLast().getDescription(), entry.getDescription()))) {
                 result.getLast().getTerms().addAll(entry.getTerms());
                 alreadyExist = true;
             }

@@ -108,7 +108,7 @@ public class LogEntry implements Serializable {
         Group group = getGroup();
 
         if (null == group) {
-            return "<b>Deleted group</b>";
+            return "<b>" + bundle.getString("deleted_group") + "</b>";
         } else {
             return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + StringHelper.escapeHtml(group.getTitle()) + "</a> ";
         }
@@ -116,7 +116,7 @@ public class LogEntry implements Serializable {
 
     private String getUsernameLink(ResourceBundle bundle) {
         if (getUser() == null || getUser().isDeleted()) {
-            return "<b>Deleted user</b>";
+            return "<b>" + bundle.getString("deleted_user") + "</b>";
         }
         return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + StringHelper.escapeHtml(getUser().getDisplayName()) + "</a>";
     }
@@ -217,9 +217,9 @@ public class LogEntry implements Serializable {
             case group_deleting_link:
                 yield usernameLink + bundle.format("log_group_deleting_link", getGroupLink(bundle));
             case forum_topic_added:
-                yield usernameLink + "has added " + "<b>" + getForumLink(bundle) + "</b>" + " post";
+                yield usernameLink + bundle.format("log_forum_topic_added", getForumLink(bundle));
             case forum_post_added:
-                yield usernameLink + "has replied to " + "<b>" + getForumLink(bundle) + "</b>" + " topic";
+                yield usernameLink + bundle.format("log_forum_post_added", getForumLink(bundle));
 
             // General actions
             case login:
@@ -231,26 +231,25 @@ public class LogEntry implements Serializable {
             case changing_profile:
                 yield usernameLink + bundle.getString("log_change_profile");
             case glossary_entry_edit:
-                yield usernameLink + " has edited an entry of " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + bundle.format("log_glossary_entry_edit", getResourceLink(bundle)); // TODO @kemkes: incorporate link to entry
             case glossary_entry_delete:
-                yield usernameLink + "has deleted an entry from " + getResourceLink(bundle); // TODO @kemkes: incorporate details of entry, translate
+                yield usernameLink + bundle.format("log_glossary_entry_delete", getResourceLink(bundle)); // TODO @kemkes: incorporate details of entry
             case glossary_entry_add:
-                yield usernameLink + "has added an entry to " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + bundle.format("log_glossary_entry_add", getResourceLink(bundle)); // TODO @kemkes: incorporate link to entry
             case glossary_term_edit:
-                yield usernameLink + "has edited a term in " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + bundle.format("log_glossary_term_edit", getResourceLink(bundle)); // TODO @kemkes: incorporate link to entry
             case glossary_term_add:
-                yield usernameLink + "has added a term to " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + bundle.format("log_glossary_term_add", getResourceLink(bundle)); // TODO @kemkes: incorporate link to entry
             case glossary_term_delete:
-                yield usernameLink + "has removed a term from " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + bundle.format("log_glossary_term_delete", getResourceLink(bundle)); // TODO @kemkes: incorporate link to entry
 
             default:
                 if (getAction().getTargetId() == ActionTargetId.RESOURCE_ID) {
-                    yield usernameLink + " has executed action <i>" + getAction().name() + "</i> on " + getResourceLink(bundle);
+                    yield usernameLink + bundle.format("log_performed_action_on", getAction().name(), getResourceLink(bundle));
                 } else {
-                    yield "Performed action <i>" + getAction().name() + "</i>"; // should never happen;
+                    yield usernameLink + bundle.format("log_performed_action", getAction().name()); // should never happen
                 }
         };
-        // unused translations that might become useful again: log_opening_url_resource, log_group_removing_resource
 
         this.descriptions.put(locale, description);
 

@@ -87,7 +87,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         }
 
         if (!canDeleteGroup(selectedGroup)) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to delete this group");
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_delete_not_allowed");
             return null;
         }
 

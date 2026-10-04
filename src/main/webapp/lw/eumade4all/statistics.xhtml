@@ -4,16 +4,16 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:p="primefaces">
 
-<ui:param name="pageTitle" value="Info"/>
+<ui:param name="pageTitle" value="#{msg.info}"/>
 <ui:param name="hideBreadcrumbs" value="true"/>
 
 <ui:define name="center_layout">
-    <p:panel header="EU-MADE4LL moved" styleClass="fs-4">
+    <p:panel header="#{msg['eumade4all.moved_title']}" styleClass="fs-4">
         <p>
-            The results of the EU-MADE4LL project have been moved to <a href="https://learnweb.l3s.uni-hannover.de/v2/">https://learnweb.l3s.uni-hannover.de/<b>v2</b>/</a>.
+            <h:outputFormat value="#{msg['eumade4all.moved_text']}" escape="false"><f:param value="https://learnweb.l3s.uni-hannover.de/v2/"/></h:outputFormat>
         </p>
         <p>
-            Please follow <a href="https://learnweb.l3s.uni-hannover.de/v2/">the link</a>. You will be asked to login again.
+            <h:outputFormat value="#{msg['eumade4all.follow_link']}" escape="false"><f:param value="https://learnweb.l3s.uni-hannover.de/v2/"/></h:outputFormat>
         </p>
     </p:panel>
 </ui:define>

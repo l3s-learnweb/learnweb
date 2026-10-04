@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans.publicPages;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Locale;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
@@ -49,7 +50,7 @@ public class ContactBean extends ApplicationBean implements Serializable {
 
     public void sendMail() {
         try {
-            Mail mail = MailFactory.buildContactFormEmail(name, email, message).build(getLocale());
+            Mail mail = MailFactory.buildContactFormEmail(name, email, message).build(Locale.UK);
             mail.addRecipient(config().getSupportEmail());
             mail.setReplyTo(email);
             mailService.send(mail);

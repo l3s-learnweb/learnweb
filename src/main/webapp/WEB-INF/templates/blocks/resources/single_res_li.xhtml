@@ -18,12 +18,12 @@
         <h6 class="mb-0 text-break">#{res.title}</h6>
 
         <ui:fragment rendered="#{not empty res.language}">
-            <p class="text-body-secondary small mb-0"><strong>Language:</strong> #{res.language}</p>
+            <p class="text-body-secondary small mb-0"><strong>#{msg.language}:</strong> #{res.language}</p>
         </ui:fragment>
 
         <ui:fragment rendered="#{not empty res.metadataMultiValue['language_level']}">
             <p class="text-body-secondary small mb-0">
-                <strong>Level (stats): </strong>
+                <strong>#{msg.language_level}: </strong>
                 <ui:repeat value="#{res.metadataMultiValue['language_level']}" var="langLevel">
                     <h:outputText value="#{langLevel}" styleClass="me-1"/>
                 </ui:repeat>
@@ -32,7 +32,7 @@
 
         <ui:fragment rendered="#{not empty res.metadataMultiValue['yell_target']}">
             <p class="text-body-secondary small mb-0">
-                <strong>Target learner (stats):</strong>
+                <strong>#{msg.yell_target}:</strong>
                 <ui:repeat value="#{res.metadataMultiValue['yell_target']}" var="target">
                     <ui:fragment rendered="#{target == 'Pre-school'}">
                         <i class="fas fa-fw fa-circle text-success" aria-hidden="true"></i>
@@ -54,7 +54,7 @@
 
         <ui:fragment rendered="#{not empty res.metadataMultiValue['yell_purpose']}">
             <p class="text-body-secondary small mb-0">
-                <strong>Purpose of use (stats):</strong>
+                <strong>#{msg.yell_purpose}:</strong>
                 <ui:repeat value="#{res.metadataMultiValue['yell_purpose']}" var="purpose">
                     <span class="text-nowrap d-inline-block">
                         <span class="bg-highlight">

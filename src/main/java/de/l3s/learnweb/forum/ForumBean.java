@@ -83,7 +83,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
     public void onDeleteTopic(ForumTopic topic) {
         forumTopicDao.delete(topic.getId());
         topics = forumTopicDao.findByGroupId(groupId);
-        addMessage(FacesMessage.SEVERITY_INFO, "The topic ''{0}'' has been deleted.", topic.getTitle());
+        addMessage(FacesMessage.SEVERITY_INFO, "forum.topic_deleted", topic.getTitle());
     }
 
     public List<SelectItem> getCategories() {

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.i18n.MessagesBundle;
+import de.l3s.util.StringHelper;
 
 public abstract class Element {
 
@@ -47,7 +48,7 @@ public abstract class Element {
         StringBuilder sb = new StringBuilder();
         finalAttributes.forEach((attr, value) -> {
             if (StringUtils.isNoneBlank(attr, value)) {
-                sb.append(' ').append(attr).append('=').append('"').append(value).append('"');
+                sb.append(' ').append(attr).append('=').append('"').append(StringHelper.escapeHtml(value)).append('"');
             }
         });
         return sb;

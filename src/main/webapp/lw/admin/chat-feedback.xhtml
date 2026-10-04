@@ -18,7 +18,7 @@
 <ui:define name="center_layout">
     <div class="row">
         <div class="col-12 col-md-6">
-            <p:panel header="Prompt survey" id="prompt">
+            <p:panel header="#{msg['admin.prompt_survey']}" id="prompt">
                 <h:form rendered="#{empty adminChatFeedbackBean.promptSurvey}">
                     <p:commandButton action="#{adminChatFeedbackBean.createPromptSurvey}" value="#{msg.create}" update="@form:@parent"/>
                 </h:form>
@@ -32,7 +32,7 @@
         </div>
 
         <div class="col-12 col-md-6">
-            <p:panel header="Response survey" id="response">
+            <p:panel header="#{msg['admin.response_survey']}" id="response">
                 <h:form rendered="#{empty adminChatFeedbackBean.responseSurvey}">
                     <p:commandButton action="#{adminChatFeedbackBean.createResponseSurvey}" value="#{msg.create}" update="@form:@parent"/>
                 </h:form>

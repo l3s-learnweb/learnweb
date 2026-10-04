@@ -172,7 +172,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
         List<SearchSession> allSessions = getSessions();
         if (allSessions == null || allSessions.isEmpty()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Sessions list is empty.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "search_history.no_sessions_recorded");
         } else {
             sessions = allSessions.stream().filter(session -> {
                 if (finalIsSearchUser) {

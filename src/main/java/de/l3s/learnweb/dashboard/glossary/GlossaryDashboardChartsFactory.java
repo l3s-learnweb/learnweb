@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +30,7 @@ final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static String createActivityTypesChart(final Map<Integer, Integer> actionsMap) {
+    public static String createActivityTypesChart(final Map<Integer, Integer> actionsMap, ResourceBundle bundle) {
         Action[] actionTypes = Action.values();
 
         int search = 0;
@@ -57,9 +58,10 @@ final class GlossaryDashboardChartsFactory {
 
         return new BarChart()
             .setData(new BarData()
-                .setLabels(Arrays.asList("Glossary", "Search", "System", "Resources"))
+                .setLabels(Arrays.asList(bundle.getString("activity.actions_glossary"), bundle.getString("activity.actions_search"),
+                    bundle.getString("activity.actions_other"), bundle.getString("activity.actions_resource")))
                 .addDataset(new BarDataset()
-                    .setLabel("Interactions")
+                    .setLabel(bundle.getString("interactions"))
                     .setData(glossary, search, system, resource)
                     .setBackgroundColor(ColorHelper.getColorList(4))))
             .toJson();
@@ -88,7 +90,7 @@ final class GlossaryDashboardChartsFactory {
             .toJson();
     }
 
-    public static String createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate) {
+    public static String createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate, ResourceBundle bundle) {
         List<Number> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
@@ -102,7 +104,7 @@ final class GlossaryDashboardChartsFactory {
             .setData(new LineData()
                 .setLabels(labels)
                 .addDataset(new LineDataset()
-                    .setLabel("Interactions")
+                    .setLabel(bundle.getString("interactions"))
                     .setLineTension(0.1f)
                     .setFill(false)
                     .setData(values)
@@ -110,7 +112,8 @@ final class GlossaryDashboardChartsFactory {
             .toJson();
     }
 
-    public static String createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser) {
+    public static String createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser,
+        ResourceBundle bundle) {
         List<String> labels = new ArrayList<>();
 
         List<Number> conceptsData = new ArrayList<>();
@@ -137,11 +140,11 @@ final class GlossaryDashboardChartsFactory {
             .setData(new BarData()
                 .setLabels(labels)
                 .addDataset(new BarDataset()
-                    .setLabel("Concepts")
+                    .setLabel(bundle.getString("glossary.concepts"))
                     .setData(conceptsData)
                     .setBackgroundColor(ColorHelper.getColorList(10)))
                 .addDataset(new BarDataset()
-                    .setLabel("Terms")
+                    .setLabel(bundle.getString("glossary.terms"))
                     .setData(termsData)
                     .setBackgroundColor(ColorHelper.getColorList(10))))
             .toJson();
@@ -166,18 +169,5 @@ final class GlossaryDashboardChartsFactory {
                 .setLabels(labels)
                 .addDataset(new BarDataset().setData(values)))
             .toJson();
-    }
-
-    public static String createUserFieldsChart(List<GlossaryUserTermsSummary> summary) {
-        GlossaryUserTermsSummary gfs = summary.getFirst();
-
-        return new BarChart()
-            .setData(new BarData()
-                .addDataset(new BarDataset().setLabel("Pronounciation").setData(gfs.getPronounciation()))
-                .addDataset(new BarDataset().setLabel("Acronym").setData(gfs.getAcronym()))
-                .addDataset(new BarDataset().setLabel("Phraseology").setData(gfs.getPhraseology()))
-                .addDataset(new BarDataset().setLabel("Uses").setData(gfs.getUses()))
-                .addDataset(new BarDataset().setLabel("Source").setData(gfs.getSource()))
-            ).toJson();
     }
 }

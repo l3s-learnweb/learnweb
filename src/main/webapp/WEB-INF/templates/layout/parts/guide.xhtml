@@ -1,6 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
-                xmlns:ui="jakarta.faces.facelets">
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:o="omnifaces">
 
 <h:outputScript name="bundle/learnweb.guide.js" target="body"/>
 
@@ -10,47 +11,47 @@
         {
             id: 1,
             page: 'myhome/welcome.jsf',
-            text: '#{msg['guide.my_resources']}',
+            text: '#{o:escapeJS(msg['guide.my_resources'])}',
             attachTo: { element: '.guide-my-resources', on: 'right-start' },
             advanceOn: { selector: '.guide-my-resources', event: 'click' }
         },
         {
             id: 2,
             page: 'myhome/welcome.jsf',
-            text: '#{msg['guide.my_groups']}',
+            text: '#{o:escapeJS(msg['guide.my_groups'])}',
             attachTo: { element: '.guide-my-groups', on: 'right-start' },
             advanceOn: { selector: '.guide-my-groups', event: 'click' }
         },
         {
             id: 3,
             page: 'myhome/welcome.jsf',
-            text: '#{msg['guide.profile_menu']}',
+            text: '#{o:escapeJS(msg['guide.profile_menu'])}',
             attachTo: { element: '.guide-link-profile', on: 'auto' },
             advanceOn: { selector: '.guide-link-profile', event: 'click' }
         },
         {
             id: 4,
             page: ['myhome/resources.jsf', 'group/resources.jsf'],
-            text: '#{msg['guide.add_resource']}',
+            text: '#{o:escapeJS(msg['guide.add_resource'])}',
             attachTo: { element: '.guide-add-resource', on: 'auto' },
             advanceOn: { selector: '.guide-add-resource', event: 'click' }
         },
         {
             id: 5,
             page: 'myhome/groups.jsf',
-            text: '#{msg['guide.groups_controls']}',
+            text: '#{o:escapeJS(msg['guide.groups_controls'])}',
             attachTo: { element: '.guide-groups-controls', on: 'auto' }
         },
         {
             id: 6,
             page: 'myhome/groups_search.jsf',
-            text: '#{msg['guide.filter_groups']}',
+            text: '#{o:escapeJS(msg['guide.filter_groups'])}',
             attachTo: { element: '.guide-search-groups', on: 'auto' }
         },
         {
             id: 7,
             page: 'group/overview.jsf',
-            text: '#{msg['guide.join_group']}',
+            text: '#{o:escapeJS(msg['guide.join_group'])}',
             attachTo: { element: '.guide-join-button', on: 'auto' },
             advanceOn: { selector: '.guide-join-button', event: 'click' }
         }

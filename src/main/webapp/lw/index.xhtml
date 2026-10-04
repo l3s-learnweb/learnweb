@@ -90,7 +90,7 @@
                             <h5 class="card-subheader"><h:outputText value="#{course.title}"/></h5>
                             <div class="card-content row mx-auto">
                                 <div class="col-4 col-lg-3">
-                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"
+                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title}"
                                                     rendered="#{not empty course.registrationIconFileUrl}"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-start">
@@ -108,7 +108,7 @@
                             <h5 class="card-subheader">#{msg['frontpage.public_courses']}</h5>
                             <div class="card-content row mx-auto py-3">
                                 <div class="col-4 col-lg-3">
-                                    <h:graphicImage library="frontpage" name="course_public.png" alt="Public courses"/>
+                                    <h:graphicImage library="frontpage" name="course_public.png" alt="#{msg.public_courses}"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-start">
                                     <h:outputText value="#{msg['frontpage.public_courses_description']}"/>
@@ -125,7 +125,7 @@
                             <h5 class="card-subheader"><h:outputText value="#{course.title}"/></h5>
                             <div class="card-content row mx-auto">
                                 <div class="col-4 col-lg-3">
-                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
+                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title}"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-start">
                                     <h:outputText value="#{lw:msgDef('frontpage.course_description_'.concat(course.registrationWizard), course.registrationDescription)}" escape="false"/>
@@ -141,7 +141,7 @@
                         <h5 class="card-subheader">#{msg['frontpage.other_courses']}</h5>
                         <div class="card-content row">
                             <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="course_other.png" alt="Other courses"/>
+                                <h:graphicImage library="frontpage" name="course_other.png" alt="#{msg['frontpage.other_courses']}"/>
                             </div>
                             <div class="col-8 col-lg-9 text-start">
                                 <h:outputText value="#{msg['frontpage.other_courses_description']}"/>

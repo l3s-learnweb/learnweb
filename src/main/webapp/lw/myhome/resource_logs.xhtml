@@ -29,7 +29,7 @@
 		<div class="col-lg">
 			<p:panel header="#{msg.last_activities}" id="profile_news" style="position: relative">
 				<ui:repeat value="#{logsBean.logEntries}" var="logEntry" varStatus="status">
-					<div style="position:absolute; right:1rem; color:#f62525">Type: #{logEntry.action}</div>
+					<div style="position:absolute; right:1rem; color:#f62525">#{msg.type}: #{logEntry.action}</div>
 
 					<ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
 						<ui:param name="showPreview" value="true"/>

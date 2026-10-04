@@ -50,7 +50,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
         usersCount = selectedUsers.size();
 
         if (selectedUsers.isEmpty()) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "You have to select at least one user.");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "admin.select_at_least_one_user");
             return;
         }
 

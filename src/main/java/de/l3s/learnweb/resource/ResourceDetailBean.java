@@ -309,7 +309,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
             resource.save();
             log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
-            addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
+            addGrowl(FacesMessage.SEVERITY_INFO, "archive.thumbnail_updated");
         } catch (RuntimeException | IOException e) {
             throw new HttpException("Failed to set thumbnail", e);
         }
@@ -371,7 +371,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
             resource.rate(getUser(), ratingType, ratingValue);
         } catch (Exception e) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "error while rating");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "rating_failed");
             log.error("error while rating", e);
             return;
         }

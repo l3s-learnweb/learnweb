@@ -52,7 +52,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
         Collection<Integer> selectedGroups = BeanHelper.getSelectedGroups(selectedNodes);
         if (selectedGroups.isEmpty()) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "You have to select at least one group.");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "admin.select_at_least_one_group");
             return;
         }
 
