@@ -77,7 +77,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             organisationDao.save(organisation);
         } catch (Exception e) {
             log.error("Could not handle uploaded banner image", e);
-            addGrowl(FacesMessage.SEVERITY_FATAL, "Could not store file");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Could not store file");
         }
     }
 

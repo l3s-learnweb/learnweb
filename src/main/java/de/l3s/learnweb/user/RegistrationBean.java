@@ -130,7 +130,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             if (existingUser.get().getPassword() == null && existingUser.get().isMemberOfCourse(course.getId())) {
                 return LoginBean.loginUser(this, existingUser.get());
             } else {
-                addMessage(FacesMessage.SEVERITY_FATAL, "You should use password to login.");
+                addMessage(FacesMessage.SEVERITY_ERROR, "You should use password to login.");
+                setKeepMessages();
                 return "/lw/user/login.xhtml?faces-redirect=true";
             }
         } else {

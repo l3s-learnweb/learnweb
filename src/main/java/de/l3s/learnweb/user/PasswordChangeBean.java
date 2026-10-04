@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -38,21 +39,18 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
     private RequestManager requestManager;
 
     public void onLoad() {
-        BeanAssert.validate(StringUtils.isNotEmpty(parameter));
+        BeanAssert.validate(StringUtils.isNotEmpty(parameter), "error_pages.bad_request_email_link");
+        String[] splits = parameter.split(":");
+        BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
 
-        try {
-            String[] splits = parameter.split(":");
-            Optional<User> userOptional = tokenDao.findUserByToken(Integer.parseInt(splits[0]), HashHelper.sha256(splits[1]));
-
-            if (userOptional.isPresent()) {
-                user = userOptional.get();
-            } else {
-                requestManager.recordFailedAttempt(Faces.getRemoteAddr(), "pass:" + splits[0]);
-                throw new BadRequestHttpException("Your request seams to be invalid. Maybe you have already changed the password?");
-            }
-        } catch (Exception e) {
-            throw new BadRequestHttpException("error_pages.bad_request_email_link", e);
+        // an invalid id is mapped to 0 and handled like an unknown token
+        Optional<User> userOptional = tokenDao.findUserByToken(NumberUtils.toInt(splits[0]), HashHelper.sha256(splits[1]));
+        if (userOptional.isEmpty()) {
+            requestManager.recordFailedAttempt(Faces.getRemoteAddr(), "pass:" + splits[0]);
+            throw new BadRequestHttpException("error_pages.bad_request_password_link");
         }
+
+        user = userOptional.get();
     }
 
     public String changePassword() {

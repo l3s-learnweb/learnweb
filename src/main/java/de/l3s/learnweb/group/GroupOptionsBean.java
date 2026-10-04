@@ -106,8 +106,12 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     }
 
     public void copyGroup() {
-        group.copyResources(selectedResourceTargetGroupId, getUser());
-        addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
+        int copied = group.copyResources(selectedResourceTargetGroupId, getUser());
+        if (copied > 0) {
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_all", copied);
+        } else {
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.no_resources_found");
+        }
     }
 
     public List<Group> getUserCopyableGroups() {
@@ -130,7 +134,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             groupDao.save(group);
         } catch (Exception e) {
             log.error("Fatal error while processing a user image", e);
-            addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Fatal error while processing your image.");
         }
     }
 

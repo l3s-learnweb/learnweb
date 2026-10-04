@@ -234,8 +234,10 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     /**
      * Copy resource from this group to another group referred to by groupId, and by which user.
+     *
+     * @return number of copied resources, folders are not counted
      */
-    public void copyResources(int groupId, User user) {
+    public int copyResources(int groupId, User user) {
         HashMap<Integer, Integer> foldersMap = new HashMap<>();
         foldersMap.put(0, 0);
 
@@ -243,7 +245,8 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             copyFolderRecursive(folder, 0, groupId, user, foldersMap);
         }
 
-        for (Resource resource : getResources()) {
+        List<Resource> resources = getResources();
+        for (Resource resource : resources) {
             Resource newResource = resource.cloneResource();
             newResource.setGroupId(groupId);
             newResource.setFolderId(foldersMap.get(newResource.getFolderId()));
@@ -255,6 +258,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
             newResource.save();
         }
+        return resources.size();
     }
 
     private void copyFolderRecursive(final Folder folder, final int parentFolderId,

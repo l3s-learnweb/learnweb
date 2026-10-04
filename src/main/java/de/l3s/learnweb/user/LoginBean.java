@@ -25,6 +25,7 @@ import org.omnifaces.util.Utils;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.HashHelper;
@@ -113,6 +114,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             userOptional = userDao.findByUsernameAndPassword(username, password);
         } catch (IllegalStateException e) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Your password used to be hashed with an old algorithm. Please reset your password.");
+            setKeepMessages();
             return "/lw/user/password.xhtml?faces-redirect=true";
         }
 
@@ -164,7 +166,10 @@ public class LoginBean extends ApplicationBean implements Serializable {
     public static String rootLogin(ApplicationBean bean, User targetUser) {
         UserBean userBean = bean.getUserBean();
         // validate permission
-        BeanAssert.hasPermission(userBean.canLoginToAccount(targetUser), userBean.getUser() + " tried to hijack account");
+        if (!userBean.canLoginToAccount(targetUser)) {
+            log.warn("User {} tried to log in to the account of user {} without permission", userBean.getUser().getId(), targetUser.getId());
+            throw new ForbiddenHttpException("error_pages.login_as_user_forbidden");
+        }
         // store moderator account while logged in as user
         userBean.setModeratorUser(userBean.getUser());
         // login

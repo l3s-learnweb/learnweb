@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Disabled;
@@ -30,9 +31,9 @@ class MessageBuilderTest {
     static final LearnwebExtension learnwebExt = new LearnwebExtension();
 
     private static final MessagesBundle msg = new MessagesBundle(Locale.ENGLISH);
-    private static final java.util.List<Request> suspiciousRequests;
-    private static final java.util.List<ForumTopic> userTopics;
-    private static final java.util.List<ForumTopic> otherTopics;
+    private static final List<Request> suspiciousRequests;
+    private static final List<ForumTopic> userTopics;
+    private static final List<ForumTopic> otherTopics;
 
     static {
         Request req = mock(Request.class);
@@ -40,7 +41,7 @@ class MessageBuilderTest {
         when(req.getUrl()).thenReturn("https://learnweb/");
         when(req.getCreatedAt()).thenReturn(LocalDateTime.of(2021, 1, 1, 0, 0, 0));
 
-        suspiciousRequests = java.util.List.of(req);
+        suspiciousRequests = List.of(req);
 
         Group group = mock(Group.class);
         when(group.getId()).thenReturn(123);
@@ -52,8 +53,15 @@ class MessageBuilderTest {
         when(forumTopicMock.getGroupId()).thenReturn(123);
         when(forumTopicMock.getGroup()).thenReturn(group);
         when(forumTopicMock.getUpdatedAt()).thenReturn(LocalDateTime.of(2021, 3, 1, 0, 0, 0));
-        otherTopics = java.util.List.of(forumTopicMock);
-        userTopics = java.util.List.of(forumTopicMock);
+        userTopics = List.of(forumTopicMock);
+
+        ForumTopic otherTopicMock = mock(ForumTopic.class);
+        when(otherTopicMock.getId()).thenReturn(2);
+        when(otherTopicMock.getTitle()).thenReturn("OtherTopicTitle");
+        when(otherTopicMock.getGroupId()).thenReturn(123);
+        when(otherTopicMock.getGroup()).thenReturn(group);
+        when(otherTopicMock.getUpdatedAt()).thenReturn(LocalDateTime.of(2021, 3, 2, 0, 0, 0));
+        otherTopics = List.of(otherTopicMock);
     }
 
     @Test
@@ -149,7 +157,7 @@ class MessageBuilderTest {
             Other new posts
 
             Group\tTitle\tLast activities
-            GroupTitle\tTopicTitle (https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1)\tMarch 1, 2021, 12:00:00 AM UTC
+            GroupTitle\tOtherTopicTitle (https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=2)\tMarch 2, 2021, 12:00:00 AM UTC
 
 
             * You can change how often we send you emails (https://learnweb.l3s.uni-hannover.de/lw/myhome/profile.jsf)
@@ -168,8 +176,8 @@ class MessageBuilderTest {
             + "<a href=\"https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1\">TopicTitle</a></td><td class = \"third-child\">"
             + "March 1, 2021, 12:00:00 AM UTC</td></tr></table><br/><h4>Other new posts</h4><table><tr><th>Group</th><th>Title</th><th>Last activities</th>"
             + "</tr><tr><td class = \"first-child\">GroupTitle</td><td class = \"second-child\">"
-            + "<a href=\"https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=1\">TopicTitle</a></td><td class = \"third-child\">"
-            + "March 1, 2021, 12:00:00 AM UTC</td></tr></table><br/><ul><li><a href=\"https://learnweb.l3s.uni-hannover.de/lw/myhome/profile.jsf\">"
+            + "<a href=\"https://learnweb.l3s.uni-hannover.de/lw/group/forum_topic.jsf?topic_id=2\">OtherTopicTitle</a></td><td class = \"third-child\">"
+            + "March 2, 2021, 12:00:00 AM UTC</td></tr></table><br/><ul><li><a href=\"https://learnweb.l3s.uni-hannover.de/lw/myhome/profile.jsf\">"
             + "You can change how often we send you emails</a></li><li><a href=\"https://learnweb.l3s.uni-hannover.de/lw/user/unsubscribe.jsf?hash=12\">"
             + "Unsubscribe from all summary emails</a></li></ul><footer><hr/>Best regards,<br/>Learnweb Team</footer></body></html>", builder.buildHtmlText(msg));
     }

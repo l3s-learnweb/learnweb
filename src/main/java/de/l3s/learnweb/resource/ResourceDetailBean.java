@@ -365,13 +365,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
         try {
             if (resource.isRated(getUser().getId(), ratingType)) {
-                addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
+                addGrowl(FacesMessage.SEVERITY_WARN, "resource_already_rated");
                 return;
             }
 
             resource.rate(getUser(), ratingType, ratingValue);
         } catch (Exception e) {
-            addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "error while rating");
             log.error("error while rating", e);
             return;
         }

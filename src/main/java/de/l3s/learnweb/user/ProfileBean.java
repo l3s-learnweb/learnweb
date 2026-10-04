@@ -137,7 +137,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             }
         } catch (Exception e) {
             log.error("Fatal error while processing a user image", e);
-            addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Fatal error while processing your image.");
         }
     }
 
@@ -149,7 +149,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             if (emailConfirmationBean.sendEmailConfirmation(selectedUser)) {
                 addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
             } else {
-                addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
+                addMessage(FacesMessage.SEVERITY_ERROR, "We were not able to send a confirmation mail");
             }
         }
 

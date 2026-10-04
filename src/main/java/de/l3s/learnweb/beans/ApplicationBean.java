@@ -15,7 +15,6 @@ import org.omnifaces.util.Messages;
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
-import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
@@ -175,10 +174,6 @@ public abstract class ApplicationBean {
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
         Messages.add(null, getFacesMessage(severity, msgKey, args));
-
-        if (FacesMessage.SEVERITY_FATAL == severity) {
-            throw new BadRequestHttpException(getLocaleMessage(msgKey, args));
-        }
     }
 
     /**

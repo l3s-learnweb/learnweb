@@ -42,7 +42,7 @@ public enum Action implements Argument {
     group_changing_restriction(ActionTargetId.GROUP_ID, ActionCategory.GROUP), //
     unused9(ActionTargetId.NONE, ActionCategory.OTHER),
     unused10(ActionTargetId.NONE, ActionCategory.OTHER),
-    opening_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
+    opening_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name
     unused7(ActionTargetId.NONE, ActionCategory.OTHER),
     deleting_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name;
     downloading(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = file_id

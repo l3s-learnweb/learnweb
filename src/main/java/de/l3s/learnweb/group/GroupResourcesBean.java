@@ -308,7 +308,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                 this.currentFolder = null;
             } else {
                 Folder targetFolder = folderDao.findByIdOrElseThrow(folderId);
-                log(Action.opening_folder, targetFolder.getGroupId(), targetFolder.getId());
+                log(Action.opening_folder, targetFolder.getGroupId(), targetFolder.getId(), targetFolder.getTitle());
                 this.currentFolder = targetFolder;
             }
 
@@ -376,7 +376,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             newResource.save();
-            log(Action.adding_resource, targetGroup.getId(), resource.getId());
+            log(Action.adding_resource, targetGroup.getId(), newResource.getId());
         }
 
         for (Folder folder : items.getFolders()) {
@@ -386,7 +386,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             newFolder.setParentFolderId(targetFolderId);
             newFolder.setUserId(getUser().getId());
             newFolder.save();
-            log(Action.add_folder, targetGroup.getId(), newFolder.getId());
+            log(Action.add_folder, targetGroup.getId(), newFolder.getId(), newFolder.getTitle());
 
             ResourceUpdateBatch copyChild = new ResourceUpdateBatch(folder.getResources(), folder.getSubFolders());
             copyResources(copyChild, targetGroup, newFolder, true);
@@ -503,12 +503,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
         }
 
-        if (!items.getResources().isEmpty()) {
-            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.annotated_successfully", items.getResources().size());
-        }
-
-        if (skipped != 0) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
+        int tagged = items.getResources().size() - skipped;
+        if (tagged > 0) {
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.annotated_successfully", tagged);
         }
     }
 

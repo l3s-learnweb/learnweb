@@ -69,7 +69,7 @@ public final class MailFactory {
 
         if (!otherTopics.isEmpty()) {
             builder.add(new Heading(4, "email_forum_notifications.other_new_posts"));
-            builder.add(activityTable(serverUrl, userTopics));
+            builder.add(activityTable(serverUrl, otherTopics));
             builder.add(new LineBreak());
         }
 
