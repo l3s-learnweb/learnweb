@@ -23,7 +23,7 @@
 
         <div class="field">
             <h:outputText value="#{msg.title}: " styleClass="fw-bold"/>
-            <h:outputText value="${res.title}" escape="false"/>
+            <h:outputText value="#{res.titleHtml}" escape="false"/>
         </div>
 
         <h:panelGroup layout="block" styleClass="field" rendered="#{not empty res.description}">

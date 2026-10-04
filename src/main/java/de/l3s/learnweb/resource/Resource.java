@@ -369,9 +369,12 @@ public class Resource extends AbstractResource implements Serializable {
         return title;
     }
 
+    /**
+     * @param title plain text, it must be escaped when embedded into HTML; convert HTML from external sources with {@link StringHelper#htmlToText}
+     */
     @Override
     public void setTitle(String title) {
-        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Safelist.none()), 980) : null;
+        this.title = title == null ? null : StringHelper.shortnString(StringUtils.normalizeSpace(title), 980);
     }
 
     public String getDescription() {

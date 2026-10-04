@@ -44,7 +44,7 @@
 					</div>
 					<span class="small fw-light">
 						<h:outputText value="#{msg.from_user} " escape="false"/>
-						<h:outputText value="#{message.senderUser.displayName} " styleClass="fw-bold" escape="false"/>
+						<h:outputText value="#{message.senderUser.displayName} " styleClass="fw-bold"/>
 						<h:outputText value="#{msg.on_date} " escape="false" styleClass="fw-light"/>
 						<h:outputText value="#{message.createdAt}">
 							<f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>

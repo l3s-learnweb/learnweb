@@ -68,7 +68,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
     public void updateUser(User targetUser) {
         // Updating moderator rights for particular user
         userDao.save(targetUser);
-        addGrowl(FacesMessage.SEVERITY_INFO, "Updated moderator settings for '" + targetUser.getUsername() + "'");
+        addGrowl(FacesMessage.SEVERITY_INFO, "Updated moderator settings for ''{0}''", targetUser.getUsername());
     }
 
     public int getCourseId() {

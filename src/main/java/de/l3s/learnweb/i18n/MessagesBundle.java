@@ -78,11 +78,16 @@ public final class MessagesBundle extends ResourceBundle {
         String msg;
         try {
             msg = bundle.getString(msgKey);
-            if (args != null && args.length > 0) {
+        } catch (MissingResourceException e) {
+            msg = msgKey; // not a key but a literal message, it can still contain placeholders
+        }
+
+        if (args != null && args.length > 0) {
+            try {
                 msg = new MessageFormat(msg, locale).format(args);
+            } catch (IllegalArgumentException e) {
+                log.debug("Invalid message pattern: {}", msg);
             }
-        } catch (MissingResourceException | IllegalArgumentException e) {
-            msg = msgKey;
         }
         return msg;
     }

@@ -494,7 +494,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         int skipped = 0;
         for (Resource resource : items.getResources()) {
             if (!resource.canAnnotateResource(getUser())) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don't have permissions to annotate this resource '{0}'.", resource.getTitle());
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don''t have permissions to annotate this resource ''{0}''.", resource.getTitle());
                 skipped++;
                 continue;
             }
@@ -519,7 +519,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (!resource.canDeleteResource(getUser())) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don't have permissions to delete this resource '{0}'.", resource.getTitle());
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don''t have permissions to delete this resource ''{0}''.", resource.getTitle());
             return true;
         }
 

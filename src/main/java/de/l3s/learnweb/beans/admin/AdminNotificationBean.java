@@ -106,7 +106,7 @@ public class AdminNotificationBean extends ApplicationBean {
             sendMail(recipients);
 
             if (!usersWithoutMail.isEmpty()) {
-                addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid email address: <b>" + StringUtils.join(usersWithoutMail, ", ") + "</b>");
+                addMessage(FacesMessage.SEVERITY_WARN, "Some users haven''t defined a valid email address: <b>{0}</b>", StringUtils.join(usersWithoutMail, ", "));
             }
         }
     }

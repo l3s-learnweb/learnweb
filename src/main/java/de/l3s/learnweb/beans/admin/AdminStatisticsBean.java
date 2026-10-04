@@ -23,6 +23,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -101,7 +102,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                 Group group = groupDao.findByIdOrElseThrow(groupId);
 
                 sb.append("<li><div style=\"color:red\">Group: ");
-                sb.append(group.getTitle());
+                sb.append(StringHelper.escapeHtml(group.getTitle()));
                 sb.append("</div>\n<ul>");
 
                 List<Resource> resources = group.getResources();
@@ -109,13 +110,13 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
                 for (Resource resource : resources) {
                     sb.append("\n\t<li><div style=\"color:").append(color[resource.getStorageType().ordinal()]).append("\">");
-                    sb.append(resource.getTitle());
+                    sb.append(StringHelper.escapeHtml(resource.getTitle()));
                     sb.append("; ");
                     sb.append(type[resource.getStorageType().ordinal()]);
                     sb.append("; Source: ");
                     sb.append(resource.getService());
                     sb.append("; Tags: ");
-                    sb.append(resource.getTagsAsString());
+                    sb.append(StringHelper.escapeHtml(resource.getTagsAsString()));
                     sb.append("</div>");
                     /*
                     if (resource.getComments().size() == 0) {
@@ -135,11 +136,11 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                         sb.append("<table class=\"admin_comments\" style=\"display:none\" border='1' cellspacing='0'>");
                         for (Comment comment : resource.getComments()) {
                             sb.append("<tr><td>");
-                            sb.append(comment.getUser().getUsername());
+                            sb.append(StringHelper.escapeHtml(comment.getUser().getUsername()));
                             sb.append("</td><td>");
                             sb.append(comment.getCreatedAt());
                             sb.append("</td><td>");
-                            sb.append(comment.getText());
+                            sb.append(StringHelper.escapeHtml(comment.getText()));
                             sb.append("</td></tr>");
                         }
                         sb.append("</table>");

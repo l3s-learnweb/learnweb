@@ -6,6 +6,28 @@ import org.junit.jupiter.api.Test;
 
 class StringHelperTest {
     @Test
+    void testEscapeHtml() {
+        assertEquals("&lt;img src=x onerror=alert(1)&gt;", StringHelper.escapeHtml("<img src=x onerror=alert(1)>"));
+        // plain text that looks like an entity is kept as typed
+        assertEquals("AT&amp;amp;T", StringHelper.escapeHtml("AT&amp;T"));
+        assertEquals("", StringHelper.escapeHtml(null));
+    }
+
+    @Test
+    void testHtmlToText() {
+        assertEquals("Tom & Jerry DE > NL", StringHelper.htmlToText("Tom &amp; Jerry <b>DE > NL</b>"));
+        assertNull(StringHelper.htmlToText(null));
+    }
+
+    @Test
+    void testHighlightQuery() {
+        assertEquals("&lt;i&gt;Tom&lt;/i&gt; <b>&amp; J</b>erry", StringHelper.highlightQuery("<i>Tom</i> & Jerry", "& j"));
+        assertEquals("&lt;i&gt;Tom&lt;/i&gt;", StringHelper.highlightQuery("<i>Tom</i>", "Jerry"));
+        // lowercasing "İ" changes the string length, the match must still use the original positions
+        assertEquals("İİİ <b>abc</b>", StringHelper.highlightQuery("İİİ abc", "ABC"));
+    }
+
+    @Test
     void testRemoveNewLines() {
         assertEquals("Hello world ", StringHelper.removeNewLines("Hello\nworld\n"));
     }

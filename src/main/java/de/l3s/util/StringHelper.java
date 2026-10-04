@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities;
 import org.jsoup.safety.Safelist;
 
 public final class StringHelper {
@@ -49,6 +50,20 @@ public final class StringHelper {
         }
 
         return str;
+    }
+
+    /**
+     * Escapes a plain text value for embedding into HTML.
+     */
+    public static String escapeHtml(String str) {
+        return str == null ? "" : Entities.escape(str);
+    }
+
+    /**
+     * Converts an HTML value (e.g. a title from an external source) to plain text: removes the markup and decodes the entities.
+     */
+    public static String htmlToText(String html) {
+        return html == null ? null : Jsoup.parseBodyFragment(html).text();
     }
 
     /**
@@ -279,19 +294,15 @@ public final class StringHelper {
     }
 
     /**
-     * Add HTML bold tags around the query if it is present in the given str.
+     * Escapes the given plain text str for HTML and adds bold tags around the query if it is present in it.
      */
     public static String highlightQuery(String str, String query) {
-        String strLowered = str.toLowerCase();
-
-        int index = strLowered.indexOf(query.toLowerCase());
-
-        StringBuilder result = new StringBuilder();
-        result.append(str);
-        if (index != -1) {
-            result.insert(index + query.length(), "</b>");
-            result.insert(index, "<b>");
+        // match on the original string, lowercasing can change its length (e.g. for "İ")
+        Matcher matcher = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(str);
+        if (!matcher.find()) {
+            return escapeHtml(str);
         }
-        return result.toString();
+
+        return escapeHtml(str.substring(0, matcher.start())) + "<b>" + escapeHtml(matcher.group()) + "</b>" + escapeHtml(str.substring(matcher.end()));
     }
 }

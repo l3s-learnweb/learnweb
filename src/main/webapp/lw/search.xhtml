@@ -100,8 +100,8 @@
                             <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column mw-r15" rendered="#{searchBean.searchMode == 'text'}">
                                 <ui:repeat value="#{gr.resources}" var="res">
                                     <span class="text-truncate d-block w-100 p-1 small">
-                                        <h:outputText value="#{res.title}" styleClass="me-1 text-primary" escape="false"/>
-                                        <h:outputText value="#{res.url}" styleClass="text-info" escape="false"/>
+                                        <h:outputText value="#{res.titleHtml}" styleClass="me-1 text-primary" escape="false"/>
+                                        <h:outputText value="#{res.url}" styleClass="text-info"/>
                                         <br/>
                                         <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-body-secondary" escape="false"/>
                                     </span>

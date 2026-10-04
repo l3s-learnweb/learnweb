@@ -30,7 +30,7 @@
 			<ui:repeat var="res" value="#{tag.resources}">
 				<h:outputLink value="resource.jsf" styleClass="me-1">
 					<f:param name="resource_id" value="#{res.id}"/>
-					<h:outputText value="#{res.title}" escape="false"/>
+					<h:outputText value="#{res.title}"/>
 				</h:outputLink>
 			</ui:repeat>
 		</p:column>

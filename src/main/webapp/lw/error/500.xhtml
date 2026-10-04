@@ -16,7 +16,7 @@
 
 		<pre class="mt-3 mb-0 collapse overflow-scroll" style="max-height: 340px;">
 			<h:outputText value="Message: #{requestScope['jakarta.servlet.error.message']}"/><br/>
-			<h:outputText value="Stack trace: #{o:printStackTrace(lw:unwrap(requestScope['jakarta.servlet.error.exception']))}" escape="false"/>
+			<h:outputText value="Stack trace: #{o:printStackTrace(lw:unwrap(requestScope['jakarta.servlet.error.exception']))}"/>
 		</pre>
 
 		<h:outputScript>$('.ui-panel-content .h5').on('click', () => $('.collapse').fadeIn());</h:outputScript>

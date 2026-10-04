@@ -276,7 +276,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
         formEntry.setFulltext(null); // reset full text index
 
-        addGrowl(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
+        addGrowl(FacesMessage.SEVERITY_INFO, "{0}: {1}", getLocaleMessage("entry_deleted"), term.getTerm());
 
         log(Action.glossary_term_delete, glossaryResource, term.getId());
     }

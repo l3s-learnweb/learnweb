@@ -7,7 +7,7 @@
 
 <div class="bg-body p-3 pb-5 min-h-100">
 	<h:form id="survey_form" styleClass="col col-md-10 col-xxl-6 mx-auto">
-		<p:messages id="messages" closable="false" globalOnly="true" rendered="#{not empty surveyAnswerBean.resource}"/>
+		<p:messages id="messages" closable="false" globalOnly="true" escape="false" rendered="#{not empty surveyAnswerBean.resource}"/>
 
 		<ui:fragment rendered="#{surveyAnswerBean.formEnabled}">
 			<div class="row mb-3 align-items-center">

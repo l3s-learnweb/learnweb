@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -20,6 +21,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
+import de.l3s.util.StringHelper;
 
 @SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class ApplicationBean {
@@ -148,8 +150,12 @@ public abstract class ApplicationBean {
 
     // Messaging -------------------------------------------------------------------------------------------------------
 
+    /**
+     * Messages are rendered as HTML (messages may contain markup), so string arguments, usually user input, are escaped here.
+     */
     protected FacesMessage getFacesMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
-        return new FacesMessage(severity, getLocaleMessage(msgKey, args), null);
+        Object[] escapedArgs = args == null ? null : Arrays.stream(args).map(arg -> arg instanceof CharSequence str ? StringHelper.escapeHtml(str.toString()) : arg).toArray();
+        return new FacesMessage(severity, getLocaleMessage(msgKey, escapedArgs), null);
     }
 
     /**

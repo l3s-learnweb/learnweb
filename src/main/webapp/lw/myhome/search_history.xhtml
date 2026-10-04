@@ -2,6 +2,7 @@
 				xmlns:ui="jakarta.faces.facelets"
 				xmlns:h="jakarta.faces.html"
 				xmlns:f="jakarta.faces.core"
+				xmlns:fn="jakarta.tags.functions"
 				xmlns:p="primefaces"
 				xmlns:pt="jakarta.faces.passthrough"
 				xmlns:lw="learnweb">
@@ -115,7 +116,7 @@
 				<h:panelGroup styleClass="sh-snippets-list overflow-auto pe-3 vh-100 w-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
 					<div>
 						<h:outputFormat value="#{msg['search_history.results_for_query']}" escape="false">
-							<f:param value="#{searchHistoryBean.selectedQuery.query}"/>
+							<f:param value="#{fn:escapeXml(searchHistoryBean.selectedQuery.query)}"/>
 							<f:param value="#{searchHistoryBean.selectedQuery.createdAt}"/>
 						</h:outputFormat>
 

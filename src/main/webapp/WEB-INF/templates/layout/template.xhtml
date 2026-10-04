@@ -20,7 +20,7 @@
 
         <h:head>
             <ui:include src="parts/head.xhtml"/>
-            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{not empty pageTitle}"/>#{config.appName}</title>
+            <title><h:outputText value="#{pageTitle} - " rendered="#{not empty pageTitle}"/>#{config.appName}</title>
 
             <h:outputScript name="locales/locale-#{userBean.locale.getLanguage()}.js" library="primefaces"/>
             <h:outputScript library="locale" name="locale.js"/>

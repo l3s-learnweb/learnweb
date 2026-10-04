@@ -273,6 +273,7 @@ public class SolrSearch implements Serializable {
         solrQuery.setHighlightSnippets(1); // number of snippets per field per resource
         solrQuery.setHighlightFragsize(200); // size of per snippet
         solrQuery.setParam("f.title.hl.fragsize", "0"); // size of snippet from title, 0 means return the whole field as snippet
+        solrQuery.setParam("f.title.hl.encoder", "html"); // the title is plain text, escape it around the highlight tags
         solrQuery.setHighlightSimplePre("<strong>");
         solrQuery.setHighlightSimplePost("</strong>");
 
@@ -462,7 +463,7 @@ public class SolrSearch implements Serializable {
 
         decoratedResource.setRank(resRank);
         if (documentSnippets.get("title") != null) {
-            decoratedResource.setTitle(documentSnippets.get("title").getFirst());
+            decoratedResource.setTitleHtml(documentSnippets.get("title").getFirst());
         }
         if (documentSnippets.get("description") != null) {
             snippet.append(documentSnippets.get("description").getFirst());

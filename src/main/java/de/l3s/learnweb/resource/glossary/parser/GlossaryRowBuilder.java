@@ -14,6 +14,7 @@ import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.resource.glossary.Column;
 import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 import de.l3s.learnweb.resource.glossary.GlossaryTerm;
+import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
 public class GlossaryRowBuilder {
@@ -74,7 +75,7 @@ public class GlossaryRowBuilder {
             } else if (isEqualForAnyLocale(cellValue, Column.phraseology)) {
                 phraseologyHeaderPosition = cellPosition;
             } else {
-                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Unknown column name: " + cellValue));
+                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Unknown column name: " + StringHelper.escapeHtml(cellValue)));
             }
         }
         return errors.isEmpty();
@@ -142,7 +143,7 @@ public class GlossaryRowBuilder {
         } else {
 
             errors.add(new ParsingError(row.getRowNum(), row.getCell(languageHeaderPosition),
-                "Invalid language; Current value: " + StringUtils.firstNonBlank(cellValue, "<i>empty</i>") +
+                "Invalid language; Current value: " + StringUtils.firstNonBlank(StringHelper.escapeHtml(cellValue), "<i>empty</i>") +
                     "; Valid values: " + String.join(", ", languageMap.keySet())));
         }
         String usesString = getStringValueForCell(row.getCell(usesHeaderPosition));

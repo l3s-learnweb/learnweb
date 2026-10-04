@@ -78,6 +78,13 @@ public class LogEntry implements Serializable {
         return params;
     }
 
+    /**
+     * Params usually contain user input (titles, tags, queries), they must be escaped before being embedded into the HTML description.
+     */
+    private String getParamsHtml() {
+        return StringHelper.escapeHtml(params);
+    }
+
     public Resource getResource() {
         if (resource == null) {
             if (action.getTargetId() == ActionTargetId.RESOURCE_ID && targetId != 0) {
@@ -103,7 +110,7 @@ public class LogEntry implements Serializable {
         if (null == group) {
             return "<b>Deleted group</b>";
         } else {
-            return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + group.getTitle() + "</a> ";
+            return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + StringHelper.escapeHtml(group.getTitle()) + "</a> ";
         }
     }
 
@@ -111,24 +118,24 @@ public class LogEntry implements Serializable {
         if (getUser() == null || getUser().isDeleted()) {
             return "<b>Deleted user</b>";
         }
-        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getDisplayName() + "</a>";
+        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + StringHelper.escapeHtml(getUser().getDisplayName()) + "</a>";
     }
 
     private String getCommentText(int commentId, ResourceBundle bundle) {
         Optional<Comment> comment = Learnweb.dao().getCommentDao().findById(commentId);
         return comment.map(value -> " " + bundle.getString("with") + " <b>"
-            + StringHelper.shortnString(value.getText(), 100) + "</b>").orElse("");
+            + StringHelper.escapeHtml(StringHelper.shortnString(value.getText(), 100)) + "</b>").orElse("");
     }
 
     private String getResourceLink(ResourceBundle bundle) {
         if (getResource() != null) {
-            return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
+            return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.escapeHtml(StringHelper.shortnString(getResource().getTitle(), 40)) + "</b></a> ";
         }
         return bundle.getString("log_a_resource");
     }
 
     private String getForumLink(ResourceBundle bundle) {
-        return "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" target=\"_top\"><b>" + getParams() + "</b></a> ";
+        return "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" target=\"_top\"><b>" + getParamsHtml() + "</b></a> ";
     }
 
     public boolean isPrivate() {
@@ -157,7 +164,7 @@ public class LogEntry implements Serializable {
             case adding_resource:
                 yield usernameLink + bundle.format("log_adding_resource", getResourceLink(bundle), getGroupLink(bundle));
             case deleting_resource:
-                yield usernameLink + bundle.format("log_deleting_resource", "<b>" + getParams() + "</b>");
+                yield usernameLink + bundle.format("log_deleting_resource", "<b>" + getParamsHtml() + "</b>");
             case edit_resource:
                 yield usernameLink + bundle.format("log_edit_resource", getResourceLink(bundle));
             case move_resource:
@@ -165,7 +172,7 @@ public class LogEntry implements Serializable {
             case opening_resource:
                 yield usernameLink + bundle.format("log_opening_resource", getResourceLink(bundle));
             case tagging_resource:
-                yield usernameLink + bundle.format("log_tagging_resource", getResourceLink(bundle), getParams());
+                yield usernameLink + bundle.format("log_tagging_resource", getResourceLink(bundle), getParamsHtml());
             case commenting_resource:
                 yield usernameLink + bundle.format("log_commenting_resource", getResourceLink(bundle))
                     + getCommentText(NumberUtils.toInt(getParams()), bundle);
@@ -174,23 +181,23 @@ public class LogEntry implements Serializable {
             case rating_resource, thumb_rating_resource:
                 yield usernameLink + bundle.format("log_thumb_rating_resource", getResourceLink(bundle));
             case searching:
-                yield usernameLink + bundle.format("log_searching_resource", getParams());
+                yield usernameLink + bundle.format("log_searching_resource", getParamsHtml());
             case downloading:
                 yield usernameLink + bundle.format("log_downloading", getResourceLink(bundle));
             case changing_office_resource:
                 yield usernameLink + bundle.format("log_document_changing", getResourceLink(bundle));
             case adding_resource_metadata:
-                yield usernameLink + bundle.format("log_add_resource_metadata", getParams()) + getResourceLink(bundle);
+                yield usernameLink + bundle.format("log_add_resource_metadata", getParamsHtml()) + getResourceLink(bundle);
 
             // Folder actions
             case add_folder:
-                yield usernameLink + bundle.format("log_add_folder", getParams());
+                yield usernameLink + bundle.format("log_add_folder", getParamsHtml());
             case deleting_folder:
-                yield usernameLink + bundle.format("log_deleting_folder", getParams());
+                yield usernameLink + bundle.format("log_deleting_folder", getParamsHtml());
             case move_folder:
-                yield usernameLink + bundle.format("log_move_folder", getParams());
+                yield usernameLink + bundle.format("log_move_folder", getParamsHtml());
             case opening_folder:
-                yield usernameLink + bundle.format("log_open_folder", getParams());
+                yield usernameLink + bundle.format("log_open_folder", getParamsHtml());
 
             // Group actions
             case group_joining:
@@ -200,7 +207,7 @@ public class LogEntry implements Serializable {
             case group_creating:
                 yield usernameLink + bundle.format("log_group_creating", getGroupLink(bundle));
             case group_deleting:
-                yield usernameLink + bundle.format("log_group_deleting", getParams());
+                yield usernameLink + bundle.format("log_group_deleting", getParamsHtml());
             case group_changing_title:
                 yield usernameLink + bundle.format("log_group_changing_title", getGroupLink(bundle));
             case group_changing_description:

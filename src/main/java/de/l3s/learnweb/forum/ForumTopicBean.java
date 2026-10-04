@@ -16,6 +16,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped
@@ -115,7 +116,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         dialogPost = new ForumPost();
         String username = post.getUser() != null ? post.getUser().getDisplayName() : "Anonymous"; // can happen for old imported posts
         String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;");
-        dialogPost.setText("<blockquote><strong>" + username + ":</strong>" + newStr + "</blockquote></br>");
+        dialogPost.setText("<blockquote><strong>" + StringHelper.escapeHtml(username) + ":</strong>" + newStr + "</blockquote></br>");
     }
 
     public int getTopicId() {

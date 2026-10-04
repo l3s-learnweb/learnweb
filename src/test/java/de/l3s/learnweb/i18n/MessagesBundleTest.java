@@ -81,6 +81,13 @@ class MessagesBundleTest {
     }
 
     @Test
+    void shouldFormatLiteralMessage() {
+        // a literal message is used instead of a key, its placeholders must still be replaced
+        assertEquals("The course 'Tom' has been deleted.", MessagesBundle.format(Locale.ENGLISH, "The course ''{0}'' has been deleted.", "Tom"));
+        assertEquals("2 resources were skipped.", MessagesBundle.format(Locale.ENGLISH, "{0, choice, 1#{0} resource|1<{0} resources} were skipped.", 2));
+    }
+
+    @Test
     void sizeShouldBeEqual() {
         MessagesBundle bundle = new MessagesBundle(Locale.of("en"));
         MessagesBundle bundleDe = new MessagesBundle(Locale.of("de"));

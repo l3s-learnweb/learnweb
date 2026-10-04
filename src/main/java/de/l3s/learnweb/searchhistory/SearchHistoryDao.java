@@ -69,7 +69,6 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
 
                 ResourceDecorator rd = new ResourceDecorator(res);
                 rd.setRank(rs.getInt("rank"));
-                rd.setTitle(rs.getString("title"));
                 rd.setSnippet(rs.getString("description"));
                 rd.setClicked(rs.getInt("clicked") > 0);
                 rd.setSaved(rs.getInt("saved") > 0);

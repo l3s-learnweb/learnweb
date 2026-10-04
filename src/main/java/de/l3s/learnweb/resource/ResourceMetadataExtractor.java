@@ -66,7 +66,7 @@ public class ResourceMetadataExtractor {
                 resource.setIdAtService(describeResults.getEntity().getId());
 
                 if (StringUtils.isEmpty(resource.getTitle()) && describeResults.getEntity().getTitle() != null) {
-                    resource.setTitle(describeResults.getEntity().getTitle());
+                    resource.setTitle(StringHelper.htmlToText(describeResults.getEntity().getTitle()));
                 }
                 if (StringUtils.isEmpty(resource.getDescription()) && describeResults.getEntity().getDescription() != null) {
                     resource.setDescription(StringHelper.shortnString(describeResults.getEntity().getDescription(), DESCRIPTION_LIMIT));

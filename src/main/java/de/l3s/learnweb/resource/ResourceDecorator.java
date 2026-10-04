@@ -25,8 +25,7 @@ public class ResourceDecorator implements Serializable {
     private final Resource resource;
     private int rank;
     private String snippet;
-    // the rank which the resource has in the current search result
-    private String title;
+    private String titleHtml;
     private String authorUrl;
 
     // used for search history
@@ -52,8 +51,11 @@ public class ResourceDecorator implements Serializable {
         return snippet;
     }
 
+    /**
+     * @param snippet HTML (Solr highlights, descriptions, external search results), it is sanitized because it is rendered unescaped
+     */
     public void setSnippet(String snippet) {
-        this.snippet = snippet;
+        this.snippet = snippet == null ? null : Jsoup.clean(snippet, Safelist.simpleText());
     }
 
     public String getShortSnippet() {
@@ -70,19 +72,26 @@ public class ResourceDecorator implements Serializable {
         return resource.getServiceIcon();
     }
 
-    /**
-     * The title with highlighted search terms.
-     */
     public String getTitle() {
-        if (title != null) {
-            return title;
-        }
-
         return resource.getTitle();
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    /**
+     * The escaped title as HTML, with highlighted search terms if available.
+     */
+    public String getTitleHtml() {
+        if (titleHtml != null) {
+            return titleHtml;
+        }
+
+        return StringHelper.escapeHtml(getTitle());
+    }
+
+    /**
+     * @param titleHtml the title with highlighted search terms, the text in it must be escaped
+     */
+    public void setTitleHtml(String titleHtml) {
+        this.titleHtml = titleHtml;
     }
 
     public String getAuthorUrl() {
@@ -212,6 +221,6 @@ public class ResourceDecorator implements Serializable {
 
     @Override
     public String toString() {
-        return "ResourceDecorator [resource=" + resource + ", rank=" + rank + ", snippet=" + snippet + ", title=" + title + "]";
+        return "ResourceDecorator [resource=" + resource + ", rank=" + rank + ", snippet=" + snippet + ", titleHtml=" + titleHtml + "]";
     }
 }

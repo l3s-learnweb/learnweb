@@ -71,14 +71,14 @@
                 <p:confirm message="#{o:format1(msg.delete_entry_confirm_message, item.topics)}"/>
             </p:commandButton>
         </p:column>
-        <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}">
-            <h:outputText value="#{item.topicOne}" id="cell1" escape="false"/>
+        <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}" exportValue="#{item.topicOne}">
+            <h:outputText value="#{item.topicOneHtml}" id="cell1" escape="false"/>
         </p:column>
         <p:column headerText="#{msg[Column.topicTwo]}" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}">
-            <h:outputText value="#{item.topicTwo}" id="cell2" escape="false"/>
+            <h:outputText value="#{item.topicTwo}" id="cell2"/>
         </p:column>
         <p:column headerText="#{msg[Column.topicThree]}" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}">
-            <h:outputText value="#{item.topicThree}" id="cell3" escape="false"/>
+            <h:outputText value="#{item.topicThree}" id="cell3"/>
         </p:column>
         <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
             <a href="javascript:" faces:id="entryPictures" faces:rendered="#{item.picturesCount gt 0}" class="me-2"><i class="fas fa-camera"></i></a>
@@ -88,10 +88,10 @@
                 </p:carousel>
             </p:overlayPanel>
 
-            <h:outputText value="#{item.description}" id="cell4" escape="false"/>
+            <h:outputText value="#{item.description}" id="cell4"/>
         </p:column>
         <p:column headerText="#{msg[Column.term]}" filterable="true" filterBy="#{item.term}">
-            <h:outputText value="#{item.term}" escape="false"/>
+            <h:outputText value="#{item.term}"/>
         </p:column>
         <p:column headerText="#{msg[Column.language]}" filterBy="#{item.language}">
             <f:facet name="filter">
@@ -115,13 +115,13 @@
             <h:outputText value="#{item.pronounciation}"/>
         </p:column>
         <p:column headerText="#{msg[Column.acronym]}" filterable="true" filterBy="#{item.acronym}">
-            <h:outputText value="#{item.acronym}" escape="false"/>
+            <h:outputText value="#{item.acronym}"/>
         </p:column>
         <p:column headerText="#{msg[Column.source]}" filterable="true" filterBy="#{item.source}">
-            <h:outputText value="#{item.source}" escape="false"/>
+            <h:outputText value="#{item.source}"/>
         </p:column>
         <p:column headerText="#{msg[Column.phraseology]}" filterable="true" filterBy="#{item.phraseology}">
-            <h:outputText value="#{item.phraseology}" escape="false"/>
+            <h:outputText value="#{item.phraseology}"/>
         </p:column>
     </p:dataTable>
 </h:form>

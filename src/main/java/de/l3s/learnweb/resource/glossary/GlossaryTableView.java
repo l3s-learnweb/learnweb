@@ -19,7 +19,7 @@ public class GlossaryTableView implements Serializable {
     private GlossaryEntry entry;
     private GlossaryTerm term;
 
-    private String topic1;
+    private String topicOneHtml;
 
     public GlossaryTableView() {
         // required by Serializable
@@ -36,9 +36,7 @@ public class GlossaryTableView implements Serializable {
 
         // TODO @kemkes: this is only an example. Has to be generalized for all fields
         if (filter.containsKey("topicOne")) {
-            topic1 = StringHelper.highlightQuery(entry.getTopicOne(), filter.get("topicOne"));
-        } else {
-            topic1 = entry.getTopicOne();
+            topicOneHtml = StringHelper.highlightQuery(entry.getTopicOne(), filter.get("topicOne"));
         }
     }
 
@@ -47,8 +45,18 @@ public class GlossaryTableView implements Serializable {
     }
 
     public String getTopicOne() {
-        return topic1;
-        // return entry.getTopicOne();
+        return entry.getTopicOne();
+    }
+
+    /**
+     * The escaped topic as HTML, with the filter query highlighted if available.
+     */
+    public String getTopicOneHtml() {
+        if (topicOneHtml != null) {
+            return topicOneHtml;
+        }
+
+        return StringHelper.escapeHtml(getTopicOne());
     }
 
     public String getTopicTwo() {
