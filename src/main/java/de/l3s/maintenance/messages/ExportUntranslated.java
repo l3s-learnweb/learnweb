@@ -33,8 +33,8 @@ public class ExportUntranslated extends MaintenanceTask {
             ResultsPrinter printer = dryRun ? new ResultsPrinter(locale) : new CsvResultsPrinter(locale);
 
             for (Map.Entry<Object, Object> entry : baseMessages.entrySet()) {
-                if (!localeMessages.containsKey(entry.getKey()) && !"unused".equals(xyMessages.get(entry.getKey()))) {
-                    printer.write(entry.getKey(), entry.getValue(), localeMessages.get(entry.getKey()), xyMessages.get(entry.getKey()));
+                if (!localeMessages.containsKey(entry.getKey())) {
+                    printer.write(entry.getKey(), entry.getValue(), xyMessages.getProperty((String) entry.getKey()));
                 }
             }
 
@@ -51,9 +51,9 @@ public class ExportUntranslated extends MaintenanceTask {
             this.locale = locale;
         }
 
-        void write(Object key, Object en, Object loc, Object xy) throws IOException {
+        void write(Object key, Object en, Object xy) throws IOException {
             counter++;
-            System.out.printf("%s %s %s %s%n", key, en, loc, xy);
+            System.out.printf("%s %s %s%n", key, en, xy);
         }
 
         public void close() throws IOException {
@@ -73,10 +73,11 @@ public class ExportUntranslated extends MaintenanceTask {
         }
 
         @Override
-        void write(Object key, Object en, Object loc, Object xy) throws IOException {
+        void write(Object key, Object en, Object xy) throws IOException {
             counter++;
 
-            csvWriter.append(String.join(CSV_SEPARATOR, new String[] {toString(key), toString(en), toString(loc), toString(xy)}));
+            // the translation column is left empty for translators to fill in
+            csvWriter.append(String.join(CSV_SEPARATOR, toCsvField(key), toCsvField(en), "", toCsvField(xy)));
             csvWriter.append(System.lineSeparator());
         }
 
@@ -86,8 +87,19 @@ public class ExportUntranslated extends MaintenanceTask {
             csvWriter.close();
         }
 
-        private static String toString(Object obj) {
-            return obj == null || "TODO".equals(obj) ? "" : String.valueOf(obj);
+        /**
+         * Quotes the value if it contains the separator, a quote or a line break (RFC 4180).
+         */
+        private static String toCsvField(Object obj) {
+            if (obj == null) {
+                return "";
+            }
+
+            String value = String.valueOf(obj);
+            if (value.contains(CSV_SEPARATOR) || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+                return '"' + value.replace("\"", "\"\"") + '"';
+            }
+            return value;
         }
     }
 

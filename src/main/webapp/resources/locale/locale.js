@@ -20,14 +20,14 @@ if (window.PrimeFaces) {
 
   PrimeFaces.locales.it = $.extend(true, {}, PrimeFaces.locales.it, {
     transcriptDeleteSelection: 'Elimina selezione',
-    guideDismiss: 'Congedare',
+    guideDismiss: 'Chiudi',
     guideGotcha: 'Capito',
   });
 
   PrimeFaces.locales.pt = $.extend(true, {}, PrimeFaces.locales.pt, {
-    transcriptDeleteSelection: 'Eliminar seleção',
+    transcriptDeleteSelection: 'Excluir seleção',
     guideDismiss: 'Fechar',
-    guideGotcha: 'Entenda',
+    guideGotcha: 'Entendi',
   });
 
   PrimeFaces.locales.uk = $.extend(true, {}, PrimeFaces.locales.uk, {

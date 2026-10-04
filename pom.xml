@@ -385,6 +385,7 @@
                 <excludes>
                     <exclude>.env</exclude>
                     <exclude>release.properties</exclude>
+                    <exclude>**/AGENTS.md</exclude>
                 </excludes>
             </resource>
             <resource>

@@ -4,6 +4,7 @@
 				xmlns:h="jakarta.faces.html"
 				xmlns:f="jakarta.faces.core"
 				xmlns:p="primefaces"
+				xmlns:o="omnifaces"
 				xmlns:lw="learnweb">
 
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
@@ -71,7 +72,7 @@
 				</div>
 			</p:panel>
 
-			<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.selectedUser.displayName}"
+			<p:panel id="group_table" header="#{o:format1(msg.groups_of_user, userDetailBean.selectedUser.displayName)}"
 					 rendered="#{not empty userDetailBean.selectedUser.groups}">
 				<ul class="list-unstyled">
 					<ui:repeat var="g" value="#{userDetailBean.selectedUser.groups}">
