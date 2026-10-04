@@ -63,20 +63,23 @@ public final class MessagesBundle extends ResourceBundle {
     }
 
     public String format(String msgKey, Object... args) {
-        return format(this, msgKey, args);
+        return format(this, locale, msgKey, args);
     }
 
     public static String format(Locale locale, String msgKey, Object... args) {
-        return format(of(locale), msgKey, args);
+        return format(of(locale), locale, msgKey, args);
     }
 
-    public static String format(ResourceBundle bundle, String msgKey, Object... args) {
+    /**
+     * @param locale the requested locale, used to format the arguments; it differs from {@code bundle.getLocale()},
+     * which is the locale of the loaded file (e.g. {@link Locale#ROOT} for English)
+     */
+    private static String format(ResourceBundle bundle, Locale locale, String msgKey, Object... args) {
         String msg;
         try {
             msg = bundle.getString(msgKey);
             if (args != null && args.length > 0) {
-                MessageFormat format = new MessageFormat(msg);
-                msg = format.format(args);
+                msg = new MessageFormat(msg, locale).format(args);
             }
         } catch (MissingResourceException | IllegalArgumentException e) {
             msg = msgKey;

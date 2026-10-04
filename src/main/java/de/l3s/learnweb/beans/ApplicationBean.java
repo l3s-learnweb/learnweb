@@ -72,7 +72,7 @@ public abstract class ApplicationBean {
      * If the msgKey doesn't exist the msgKey itself will be returned.
      */
     public String getLocaleMessage(String msgKey, Object... args) {
-        return MessagesBundle.format(getBundle(), msgKey, args);
+        return MessagesBundle.format(getLocale(), msgKey, args);
     }
 
     // Preferences -----------------------------------------------------------------------------------------------------
@@ -164,6 +164,8 @@ public abstract class ApplicationBean {
     /**
      * Adds a global message to the Faces context. Which will be displayed by the p:messages component.
      * Use if for errors and persistent messages, like expires resources, mistakes, etc.
+     *
+     * @param args string arguments are HTML-escaped (see {@link #getFacesMessage}), don't pass markup or already escaped text
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
         Messages.add(null, getFacesMessage(severity, msgKey, args));
@@ -176,6 +178,8 @@ public abstract class ApplicationBean {
     /**
      * Adds a global message to the Faces context. Which will be displayed aside for 5 seconds by the p:growl component.
      * Use it to notify users about saved data, loaded results, etc. Use it for things, that isn't necessary to read.
+     *
+     * @param args string arguments are HTML-escaped (see {@link #getFacesMessage}), don't pass markup or already escaped text
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args) {
         Messages.add("growl", getFacesMessage(severity, msgKey, args));

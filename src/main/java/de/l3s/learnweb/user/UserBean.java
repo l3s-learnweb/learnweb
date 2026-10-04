@@ -66,11 +66,11 @@ public class UserBean implements Serializable {
         try {
             // There is an issue, that sometimes it can be called before FacesContext is initialized (e.g. from @WebFilter)
             // in the case there is no ViewRoot available and default locale used. But because it happens only for existing users, we used saved locale.
-            locale = Faces.getViewRoot().getLocale();
+            locale = getLocaleByLocaleCode(Faces.getViewRoot().getLocale().getLanguage()); // the view locale has no region, map it (e.g. en -> en_GB)
             log.debug("UserBean initialized with locale {}", locale);
         } catch (NullPointerException e) {
             log.debug("UserBean initialized without FacesContext, use default locale");
-            locale = Locale.getDefault();
+            locale = Locale.UK;
         }
     }
 
@@ -225,7 +225,7 @@ public class UserBean implements Serializable {
 
         return switch (localeCode) {
             case "de" -> Locale.of("de", "DE", languageVariant);
-            case "en" -> Locale.of("en", "UK", languageVariant);
+            case "en" -> Locale.of("en", "GB", languageVariant);
             case "it" -> Locale.of("it", "IT", languageVariant);
             case "pt" -> Locale.of("pt", "BR", languageVariant);
             case "es" -> Locale.of("es", "ES", languageVariant);
@@ -233,7 +233,7 @@ public class UserBean implements Serializable {
             case "xx" -> Locale.of("xx"); // only for translation editors
             default -> {
                 log.error("Unsupported language: {}", localeCode);
-                yield Locale.of("en", "UK");
+                yield Locale.UK;
             }
         };
     }

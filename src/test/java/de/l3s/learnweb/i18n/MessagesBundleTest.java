@@ -2,6 +2,9 @@ package de.l3s.learnweb.i18n;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -34,6 +37,26 @@ class MessagesBundleTest {
         assertEquals("Hallo", new MessagesBundle(Locale.of("de", "AT")).format("greeting"));
         assertEquals("Hallo", new MessagesBundle(Locale.of("de", "DE")).format("greeting"));
         assertEquals("Hallo", new MessagesBundle(Locale.of("de", "DE")).format("greeting"));
+    }
+
+    @Test
+    void shouldFormatArgumentsInRequestedLocale() {
+        Date date = Date.from(LocalDate.of(2026, 10, 5).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        // make the JVM default differ from the requested locales, so formatting with the default locale fails the English assertions
+        Locale defaultFormatLocale = Locale.getDefault(Locale.Category.FORMAT);
+        Locale.setDefault(Locale.Category.FORMAT, Locale.GERMANY);
+        try {
+            assertEquals("Page 1,234", MessagesBundle.format(Locale.of("en", "US"), "page_number", 1234));
+            assertEquals("Seite 1.234", MessagesBundle.format(Locale.of("de"), "page_number", 1234));
+            assertTrue(MessagesBundle.format(Locale.of("en", "US"), "survey.answer_restricted_dates_between", date, date).contains("10/5/26"));
+            assertTrue(new MessagesBundle(Locale.of("de")).format("survey.answer_restricted_dates_between", date, date).contains("05.10.26"));
+
+            // the English text comes from the base bundle (Locale.ROOT), its arguments must still use the requested locale (not 2026-10-05)
+            assertTrue(MessagesBundle.format(Locale.UK, "survey.answer_restricted_dates_between", date, date).contains("05/10/2026"));
+        } finally {
+            Locale.setDefault(Locale.Category.FORMAT, defaultFormatLocale);
+        }
     }
 
     @Test

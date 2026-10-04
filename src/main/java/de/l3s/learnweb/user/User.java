@@ -91,7 +91,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private PasswordHashing hashing;
     private Theme preferredTheme = Theme.auto;
     private NotificationFrequency preferredNotificationFrequency = NotificationFrequency.NEVER; // how often will users get updates by mail
-    private Locale locale = Locale.forLanguageTag("en-US"); // preferred interface language
+    private Locale locale = Locale.UK; // preferred interface language
 
     private Gender gender = Gender.UNASSIGNED;
     private LocalDate dateOfBirth;

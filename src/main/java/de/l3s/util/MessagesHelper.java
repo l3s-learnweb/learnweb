@@ -1,9 +1,11 @@
 package de.l3s.util;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,10 +40,15 @@ public final class MessagesHelper {
             locale = "_" + locale;
         }
 
+        String resource = MESSAGES_BUNDLE + locale + ".properties";
         Properties properties = new Properties();
-        InputStream is = getResourceAsStream(MESSAGES_BUNDLE + locale + ".properties");
-        assert is != null;
-        properties.load(is);
+        InputStream is = getResourceAsStream(resource);
+        if (is == null) {
+            throw new FileNotFoundException(resource);
+        }
+        try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+            properties.load(reader);
+        }
         return properties;
     }
 
@@ -49,9 +56,15 @@ public final class MessagesHelper {
         List<String> locales = new ArrayList<>();
 
         try (InputStream in = getResourceAsStream(MESSAGES_DIR)) {
+            if (in == null) {
+                throw new FileNotFoundException(MESSAGES_DIR);
+            }
             try (BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                 String resource;
                 while ((resource = br.readLine()) != null) {
+                    if (!resource.startsWith(MESSAGES_PREFIX) || !resource.endsWith(".properties")) {
+                        continue;
+                    }
                     resource = resource.replace(MESSAGES_PREFIX + "_", "").replace(".properties", "");
                     locales.add(MESSAGES_PREFIX.equals(resource) ? "en" : resource);
                 }
