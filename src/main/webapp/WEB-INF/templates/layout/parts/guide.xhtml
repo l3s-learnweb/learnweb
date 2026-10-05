@@ -6,9 +6,6 @@
 
 <h:outputScript>
     const guideBits = "#{userBean.guideStepsCompleted}";
-</h:outputScript>
-
-<h:outputScript rendered="#{userBean.user.organisationId != 1604}">
     const guideSteps = [
         {
             id: 1,
@@ -56,77 +53,6 @@
             text: '#{msg['guide.join_group']}',
             attachTo: { element: '.guide-join-button', on: 'auto' },
             advanceOn: { selector: '.guide-join-button', event: 'click' }
-        }
-    ];
-</h:outputScript>
-
-<h:outputScript rendered="#{userBean.user.organisationId == 1604}">
-    const guideSteps = [
-        {
-            id: 32,
-            page: 'myhome/welcome.jsf',
-            text: 'Lies Dir zunächst den Aufgabentext einmal sorgfältig durch.',
-            attachTo: { element: '.guide-organisation-welcome', on: 'right-start' }
-        },
-        {
-            id: 33,
-            page: 'myhome/welcome.jsf',
-            text: 'Unter „Meine Ressourcen“ findest Du später Deine gespeicherten YouTube-Videos für die Bewertung wieder.',
-            attachTo: { element: '.guide-my-resources', on: 'right' }
-        },
-        {
-            id: 34,
-            page: 'myhome/welcome.jsf',
-            text: 'Hier kannst Du mit Deiner Video-Suche in YouTube beginnen. Gib einfach Deine(n) Suchbegriff(e) ein und drücke die ENTER-Taste.',
-            attachTo: { element: '.guide-search', on: 'right' }
-        },
-        {
-            id: 35,
-            page: 'search.jsf',
-            text: 'Die YouTube-Suchergebnisse kannst Du durch Anklicken öffnen.',
-            attachTo: { element: '.guide-search-results', on: 'top-start' }
-        },
-        {
-            id: 36,
-            page: 'search.jsf',
-            text: 'Um das Video später zu speichern, kannst Du a) den YouTube-Tab schließen und hier „Speichern“ oder b) direkt in der Kopfzeile im YouTube-Tab auf das Plus (+) klicken.',
-            attachTo: { element: '.fancybox-caption .guide-search-save-resource', on: 'left' }
-        },
-        {
-            id: 37,
-            page: 'search.jsf',
-            text: 'Öffne das ausgewählte Video nun zuerst in YouTube. Es öffnet sich automatisch ein zweiter Browser-Tab mit der YouTube- Platform.',
-            attachTo: { element: '.fancybox-caption .guide-search-open-link', on: 'left' }
-        },
-        {
-            id: 42,
-            page: 'search.jsf',
-            text: 'Zum Speichern des Videos in „Meine Ressourcen“ klicke hier auf „Speichern“. Danach kannst du den Browser-Tab schließen und mit Deiner Recherche fortfahren.',
-            attachTo: { element: '.guide-search-resource-save', on: 'right' }
-        },
-        {
-            id: 38,
-            page: 'myhome/resources.jsf',
-            text: 'Zum Speichern des Videos in „Meine Ressourcen“ klicke hier auf „Ressource hinzufügen“. Danach kannst du den Browser-Tab schließen und mit Deiner Recherche fortfahren.',
-            attachTo: { element: '.guide-create-resource-save', on: 'right' }
-        },
-        {
-            id: 39,
-            page: 'resource.jsf',
-            text: 'Beginne nun mit Deiner Bewertung des Videos und vergebe oberhalb einen tag, der die im Video gezeigte Einstellung zum Klimawandel wiedergibt.',
-            attachTo: { element: '.guide-resource-rating', on: 'right' }
-        },
-        {
-            id: 40,
-            page: 'resource.jsf',
-            text: 'Verfasse einen Tag zur im Video dargestellten Perspektive der „Klimawandel-Akzeptanz“ oder „Klimawandel-Leugnung“.',
-            attachTo: { element: '.guide-resource-tags', on: 'right' }
-        },
-        {
-            id: 41,
-            page: 'resource.jsf',
-            text: 'Schreibe einen Kommentar in dem Du Deine Bewertung und Deinen Tag anhand der Videomerkmale begründest.',
-            attachTo: { element: '.guide-resource-comments', on: 'right' }
         }
     ];
 </h:outputScript>

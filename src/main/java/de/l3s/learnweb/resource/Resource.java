@@ -1051,10 +1051,6 @@ public class Resource extends AbstractResource implements Serializable {
             };
         }
 
-        if (user.getOrganisationId() == 1604) {
-            return true; // allow all users to annotate any resources in SoMeCliCS organisation
-        }
-
         return false;
     }
 
