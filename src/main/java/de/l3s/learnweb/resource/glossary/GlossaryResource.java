@@ -25,7 +25,7 @@ public class GlossaryResource extends Resource {
 
     private ArrayList<Locale> allowedLanguages = new ArrayList<>();
     // thread-safe, because the resource is cached and shared between all users viewing the glossary
-    private List<GlossaryEntry> entries = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<GlossaryEntry> entries = new CopyOnWriteArrayList<>();
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource() {

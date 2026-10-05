@@ -57,7 +57,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     private int resourceId;
     private String locale;
-    private List<SelectItem> languageList;
+    private transient List<SelectItem> languageList;
 
     @Inject
     private TedTranscriptDao tedTranscriptDao;

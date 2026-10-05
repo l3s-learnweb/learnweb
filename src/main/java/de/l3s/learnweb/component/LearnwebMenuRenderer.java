@@ -14,7 +14,6 @@ import jakarta.faces.render.FacesRenderer;
 
 import org.primefaces.component.api.AjaxSource;
 import org.primefaces.component.api.UIOutcomeTarget;
-import org.primefaces.component.menu.AbstractMenu;
 import org.primefaces.component.menu.BaseMenuRenderer;
 import org.primefaces.component.menuitem.UIMenuItem;
 import org.primefaces.component.submenu.UISubmenu;
@@ -29,11 +28,10 @@ import org.primefaces.util.ComponentTraversalUtils;
 import org.primefaces.util.WidgetBuilder;
 
 @FacesRenderer(componentFamily = "de.l3s.learnweb.component", rendererType = "de.l3s.learnweb.component.LearnwebMenuRenderer")
-public class LearnwebMenuRenderer extends BaseMenuRenderer {
+public class LearnwebMenuRenderer extends BaseMenuRenderer<LearnwebMenu> {
 
     @Override
-    protected void encodeMarkup(FacesContext context, AbstractMenu abstractMenu) throws IOException {
-        LearnwebMenu menu = (LearnwebMenu) abstractMenu;
+    protected void encodeMarkup(FacesContext context, LearnwebMenu menu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String style = menu.getStyle();
         String styleClass = menu.getStyleClass();
@@ -54,13 +52,13 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         writer.endElement("ul");
     }
 
-    protected void encodeElements(FacesContext context, AbstractMenu menu, List<MenuElement> elements) throws IOException {
+    protected void encodeElements(FacesContext context, LearnwebMenu menu, List<MenuElement> elements) throws IOException {
         for (MenuElement element : elements) {
             encodeElement(context, menu, element);
         }
     }
 
-    protected void encodeElement(FacesContext context, AbstractMenu menu, MenuElement element) throws IOException {
+    protected void encodeElement(FacesContext context, LearnwebMenu menu, MenuElement element) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
 
         if (element.isRendered()) {
@@ -110,7 +108,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         }
     }
 
-    protected void encodeSubmenu(FacesContext context, AbstractMenu menu, Submenu submenu) throws IOException {
+    protected void encodeSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String icon = submenu.getIcon();
         String label = submenu.getLabel();
@@ -214,7 +212,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     }
 
     @Override
-    protected void encodeMenuItem(FacesContext context, AbstractMenu menu, MenuItem menuitem) throws IOException {
+    protected void encodeMenuItem(FacesContext context, LearnwebMenu menu, MenuItem menuitem) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String title = menuitem.getTitle();
         boolean disabled = menuitem.isDisabled();
@@ -287,7 +285,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     }
 
     @Override
-    protected void encodeMenuItemContent(FacesContext context, AbstractMenu menu, MenuItem menuitem) throws IOException {
+    protected void encodeMenuItemContent(FacesContext context, LearnwebMenu menu, MenuItem menuitem) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String icon = menuitem.getIcon();
         Object value = menuitem.getValue();
@@ -305,8 +303,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     }
 
     @Override
-    protected void encodeScript(FacesContext context, AbstractMenu abstractMenu) throws IOException {
-        LearnwebMenu menu = (LearnwebMenu) abstractMenu;
+    protected void encodeScript(FacesContext context, LearnwebMenu menu) throws IOException {
         WidgetBuilder wb = getWidgetBuilder(context);
         wb.init("LearnwebMenu", menu);
         wb.finish();
@@ -345,7 +342,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         return builder.build();
     }
 
-    protected String createAjaxRequest(FacesContext context, AbstractMenu menu, AjaxSource source, UIComponent form,
+    protected String createAjaxRequest(FacesContext context, LearnwebMenu menu, AjaxSource source, UIComponent form,
         Map<String, List<String>> params) {
 
         String clientId = menu.getClientId(context);

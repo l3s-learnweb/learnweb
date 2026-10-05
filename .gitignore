@@ -2,6 +2,7 @@
 
 ## InteliJ IDEA
 *.iml
+.mcp.json
 .idea/*
 !.idea/codeStyles
 !.idea/dictionaries
