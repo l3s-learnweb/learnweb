@@ -28,7 +28,7 @@
             <div class="row p-1">
                 <p:outputPanel styleClass="col">
                     <h:outputText value="#{msg.filter}" styleClass="fw-light me-2"/>
-                    <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['glossary.search_filter_placeholder']}"/>
+                    <p:inputText id="globalFilter" pt:dir="auto" onkeyup="PF('glossTable').filter()" placeholder="#{msg['glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
                 <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto ui-button-warning" process="@this"
                                  update=":glossary_add_term_form" oncomplete="PF('glossaryEditDialog').show();return false;" global="false"/>
@@ -72,13 +72,13 @@
             </p:commandButton>
         </p:column>
         <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}" exportValue="#{item.topicOne}">
-            <h:outputText value="#{item.topicOneHtml}" id="cell1" escape="false"/>
+            <h:outputText value="#{item.topicOneHtml}" id="cell1" escape="false" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.topicTwo]}" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}" exportValue="#{item.topicTwo}">
-            <h:outputText value="#{item.topicTwoHtml}" id="cell2" escape="false"/>
+            <h:outputText value="#{item.topicTwoHtml}" id="cell2" escape="false" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.topicThree]}" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}" exportValue="#{item.topicThree}">
-            <h:outputText value="#{item.topicThreeHtml}" id="cell3" escape="false"/>
+            <h:outputText value="#{item.topicThreeHtml}" id="cell3" escape="false" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}" exportValue="#{item.description}">
             <a href="javascript:" faces:id="entryPictures" faces:rendered="#{item.picturesCount gt 0}" class="me-2"><i class="fas fa-camera"></i></a>
@@ -88,10 +88,10 @@
                 </p:carousel>
             </p:overlayPanel>
 
-            <h:outputText value="#{item.descriptionHtml}" id="cell4" escape="false"/>
+            <h:outputText value="#{item.descriptionHtml}" id="cell4" escape="false" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.term]}" filterable="true" filterBy="#{item.term}" exportValue="#{item.term}">
-            <h:outputText value="#{item.termHtml}" escape="false"/>
+            <h:outputText value="#{item.termHtml}" escape="false" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.language]}" filterBy="#{item.language}">
             <f:facet name="filter">
@@ -112,10 +112,10 @@
                            onclick="responsiveVoice.speak('#{o:escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                 <i class="fas fa-fw fa-volume-up"></i>
             </p:commandLink>
-            <h:outputText value="#{item.pronounciation}"/>
+            <h:outputText value="#{item.pronounciation}" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.acronym]}" filterable="true" filterBy="#{item.acronym}" exportValue="#{item.acronym}">
-            <h:outputText value="#{item.acronymHtml}" escape="false"/>
+            <h:outputText value="#{item.acronymHtml}" escape="false" dir="auto"/>
         </p:column>
         <p:column headerText="#{msg[Column.source]}" field="source" filterable="true" sortable="false" exportValue="#{item.source}">
             <f:facet name="filter">
@@ -127,7 +127,7 @@
             <h:outputText value="#{item.getSourceHtml(glossaryBean.getSourceLabel(item.source))}" escape="false"/>
         </p:column>
         <p:column headerText="#{msg[Column.phraseology]}" filterable="true" filterBy="#{item.phraseology}" exportValue="#{item.phraseology}">
-            <h:outputText value="#{item.phraseologyHtml}" escape="false"/>
+            <h:outputText value="#{item.phraseologyHtml}" escape="false" dir="auto"/>
         </p:column>
     </p:dataTable>
 </h:form>
@@ -168,36 +168,42 @@
           resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="glossary_add_term_form">
         <div class="row mb-3">
+            <!-- topic fields set dir via f:attribute: dir="auto" on the tag works at runtime, but the taglib only declares ltr/rtl, so IDEs flag it.
+                 A pass-through attribute is no alternative, it would land on the wrapper instead of the input. -->
             <p:panelGrid id="grid" styleClass="col-12 col-md-6" contentStyleClass="row border-0" columnClasses="col-5, col-7" columns="2">
                 <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 1"/>
                 <p:column>
-                    <p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" editable="true">
-                        <f:selectItems value="#{glossaryBean.availableTopicOne}"/>
-                        <p:ajax listener="#{glossaryBean.onChangeTopicOne}" update="topic_2 topic_3" process="topic_1"/>
-                    </p:selectOneMenu>
+                    <p:autoComplete id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" styleClass="w-100"
+                                    completeMethod="#{glossaryBean.completeTopicOne}" dropdown="true" minQueryLength="0" scrollHeight="250"
+                                    autoHighlight="false" cache="true" valueChangeListener="#{glossaryBean.onChangeTopicOne}">
+                        <f:attribute name="dir" value="auto"/>
+                        <p:ajax event="change" process="@this" update="topic_2 topic_3"/>
+                    </p:autoComplete>
                     <p:message for="@previous"/>
                 </p:column>
 
                 <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 2"/>
                 <p:column>
-                    <h:panelGroup id="topic_2">
-                        <p:selectOneMenu value="#{glossaryBean.formEntry.topicTwo}" editable="true" rendered="#{not empty glossaryBean.availableTopicTwo}">
-                            <f:selectItems value="#{glossaryBean.availableTopicTwo}"/>
-                            <p:ajax listener="#{glossaryBean.onChangeTopicTwo}" update="topic_3" process="topic_1 topic_2"/>
-                        </p:selectOneMenu>
-                        <p:inputText value="#{glossaryBean.formEntry.topicTwo}" styleClass="w-100" rendered="#{empty glossaryBean.availableTopicTwo}"/>
-                    </h:panelGroup>
+                    <p:autoComplete id="topic_2" value="#{glossaryBean.formEntry.topicTwo}" styleClass="w-100"
+                                    completeMethod="#{glossaryBean.completeTopicTwo}" active="#{not empty glossaryBean.availableTopicTwo}"
+                                    dropdown="#{not empty glossaryBean.availableTopicTwo}" minQueryLength="0" scrollHeight="250"
+                                    autoHighlight="false" cache="true" valueChangeListener="#{glossaryBean.onChangeTopicTwo}">
+                        <f:attribute name="dir" value="auto"/>
+                        <p:ajax event="change" process="@this" update="topic_3"/>
+                    </p:autoComplete>
                     <p:message for="@previous"/>
                 </p:column>
 
                 <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['glossary.topic']} 3"/>
                 <p:column>
-                    <h:panelGroup id="topic_3">
-                        <p:selectOneMenu value="#{glossaryBean.formEntry.topicThree}" editable="true" rendered="#{not empty glossaryBean.availableTopicThree}">
-                            <f:selectItems value="#{glossaryBean.availableTopicThree}"/>
-                        </p:selectOneMenu>
-                        <p:inputText value="#{glossaryBean.formEntry.topicThree}" styleClass="w-100" rendered="#{empty glossaryBean.availableTopicThree}"/>
-                    </h:panelGroup>
+                    <p:autoComplete id="topic_3" value="#{glossaryBean.formEntry.topicThree}" styleClass="w-100"
+                                    completeMethod="#{glossaryBean.completeTopicThree}" active="#{not empty glossaryBean.availableTopicThree}"
+                                    dropdown="#{not empty glossaryBean.availableTopicThree}" minQueryLength="0" scrollHeight="250"
+                                    autoHighlight="false" cache="true">
+                        <f:attribute name="dir" value="auto"/>
+                        <!-- keeps the typed text in the model, so it survives the field being re-rendered by the topics above -->
+                        <p:ajax event="change" process="@this"/>
+                    </p:autoComplete>
                     <p:message for="@previous"/>
                 </p:column>
 
@@ -205,7 +211,7 @@
                 <p:column>
                     <h:panelGroup>
                         <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"/>
-                        <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="w-100"
+                        <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="w-100" pt:dir="auto"
                                      required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');"/>
                     </h:panelGroup>
                     <p:message for="description"/>
@@ -233,7 +239,7 @@
 
         <p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms">
             <p:column headerText="#{msg['glossary.term']}" rendered="#{not term.deleted}">
-                <p:inputText id="term" value="#{term.term}" styleClass="w-100" required="#{not empty param[save.clientId]}"
+                <p:inputText id="term" value="#{term.term}" styleClass="w-100" pt:dir="auto" required="#{not empty param[save.clientId]}"
                              pt:onpaste="setPasteStatus(this, 'term');" label="#{msg['glossary.term']}"/>
                 <p:message for="@previous"/>
 
@@ -259,10 +265,10 @@
                 </p:selectCheckboxMenu>
             </p:column>
             <p:column headerText="#{msg['glossary.pronounciation']}" rendered="#{not term.deleted}">
-                <p:inputText id="pronoun" value="#{term.pronounciation}" styleClass="w-100" pt:onpaste="setPasteStatus(this, 'pronounciation');"/>
+                <p:inputText id="pronoun" value="#{term.pronounciation}" styleClass="w-100" pt:dir="auto" pt:onpaste="setPasteStatus(this, 'pronounciation');"/>
             </p:column>
             <p:column headerText="#{msg['glossary.acronym']}" rendered="#{not term.deleted}">
-                <p:inputText id="acro" value="#{term.acronym}" styleClass="w-100" pt:onpaste="setPasteStatus(this, 'acronym');"/>
+                <p:inputText id="acro" value="#{term.acronym}" styleClass="w-100" pt:dir="auto" pt:onpaste="setPasteStatus(this, 'acronym');"/>
             </p:column>
             <p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
                 <p:selectOneMenu id="ref" value="#{term.source}">
@@ -271,7 +277,7 @@
                 </p:selectOneMenu>
             </p:column>
             <p:column headerText="#{msg['glossary.phraseology']}" rendered="#{not term.deleted}">
-                <p:inputTextarea id="phraseology" value="#{term.phraseology}" styleClass="w-100" autoResize="false"
+                <p:inputTextarea id="phraseology" value="#{term.phraseology}" styleClass="w-100" pt:dir="auto" autoResize="false"
                                  pt:onpaste="setPasteStatus(this, 'phraseology');"/>
             </p:column>
             <p:column width="20" rendered="#{not term.deleted}">

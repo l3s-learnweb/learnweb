@@ -24,8 +24,8 @@
     <div id="header" class="landing-header" style="background-image: url(#{resource['frontpage:luh.jpg']});">
         <section class="container" id="login">
             <div class="row align-items-center">
-                <div class="col-md-6 col-lg-4 mb-4 mb-md-0 highlight">
-                    <div class="p-3 pb-4 text-body" style="background-color: rgba(255, 255, 255, 0.9);">
+                <div class="col-md-6 col-lg-4 mb-4 mb-md-0">
+                    <div class="p-3 pb-4 text-body" style="background-color: rgba(var(--body-bg-rgb), 0.9);">
                         <ui:fragment rendered="#{!userBean.loggedIn}">
                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                         </ui:fragment>
@@ -63,7 +63,7 @@
     </div>
 
     <section id="about">
-        <div class="container py-5 highlight">
+        <div class="container py-5">
             <div class="row">
                 <div class="col-lg-6">
                     <h2 class="text-center text-primary"><h:outputFormat value="#{msg['frontpage.about_platform']}"><f:param value="#{config.appName}"/></h:outputFormat></h2>
@@ -79,7 +79,7 @@
     </section>
 
     <section id="courses" class="landing-cards">
-        <div class="container py-5 highlight">
+        <div class="container py-5">
             <h2 class="text-white text-center mb-3">#{msg.registerLabel}</h2>
             <div class="row align-items-start text-center">
                 <div class="col col-md-6">

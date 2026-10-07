@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import jakarta.faces.model.SelectItem;
 import jakarta.servlet.ServletException;
@@ -29,32 +30,41 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.Misc;
 
 public final class BeanHelper {
-    private static final List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<>());
-    private static final Set<Locale> supportedGlossaryLocales = Collections.synchronizedSet(new HashSet<>());
+    /**
+     * Languages that can be used in glossaries in addition to English and the frontend locales.
+     */
+    private static final List<Locale> EXTRA_GLOSSARY_LOCALES = Stream.of(
+        "ar", "el", "fr", "nl", "ru", "sv", "zh", "fa", "ur", "pa", "ps", "ha", "yo", "ig"
+    ).map(Locale::of).toList();
+
+    // initialized lazily because they need a FacesContext; threads racing on the first call compute the same immutable value
+    private static volatile List<Locale> supportedLocales;
+    private static volatile Set<Locale> supportedGlossaryLocales;
 
     /**
      * @return Supported frontend locales as defined in faces-config.xml
      */
     public static List<Locale> getSupportedLocales() {
-        if (supportedLocales.isEmpty()) {
-            supportedLocales.addAll(Faces.getSupportedLocales());
+        List<Locale> locales = supportedLocales;
+        if (locales == null) {
+            locales = Collections.unmodifiableList(new ArrayList<>(Faces.getSupportedLocales())); // not List.copyOf, callers may ask contains(null)
+            supportedLocales = locales;
         }
-        return Collections.unmodifiableList(supportedLocales);
+        return locales;
     }
 
     public static Set<Locale> getSupportedGlossaryLocales() {
-        if (supportedGlossaryLocales.isEmpty()) {
-            supportedGlossaryLocales.add(Locale.of("en"));
-            supportedGlossaryLocales.addAll(getSupportedLocales());
-            supportedGlossaryLocales.add(Locale.of("ar"));
-            supportedGlossaryLocales.add(Locale.of("el"));
-            supportedGlossaryLocales.add(Locale.of("fr"));
-            supportedGlossaryLocales.add(Locale.of("nl"));
-            supportedGlossaryLocales.add(Locale.of("ru"));
-            supportedGlossaryLocales.add(Locale.of("sv"));
-            supportedGlossaryLocales.add(Locale.of("zh"));
+        Set<Locale> locales = supportedGlossaryLocales;
+        if (locales == null) {
+            LinkedHashSet<Locale> glossaryLocales = new LinkedHashSet<>();
+            glossaryLocales.add(Locale.of("en"));
+            glossaryLocales.addAll(getSupportedLocales());
+            glossaryLocales.addAll(EXTRA_GLOSSARY_LOCALES);
+
+            locales = Collections.unmodifiableSequencedSet(glossaryLocales);
+            supportedGlossaryLocales = locales;
         }
-        return Collections.unmodifiableSet(supportedGlossaryLocales);
+        return locales;
     }
 
     public static boolean isMessageExists(String msgKey) {

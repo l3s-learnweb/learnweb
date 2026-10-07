@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,7 +21,7 @@ import java.util.TreeSet;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.application.ViewExpiredException;
-import jakarta.faces.event.AjaxBehaviorEvent;
+import jakarta.faces.event.ValueChangeEvent;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -65,6 +66,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HashHelper;
 import de.l3s.util.Image;
+import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -145,12 +147,47 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         SOURCES = Collections.unmodifiableSequencedMap(sources);
     }
 
+    private static final SequencedMap<String, List<String>> NO_SUBTOPICS = Collections.unmodifiableSequencedMap(new LinkedHashMap<>());
+
+    /**
+     * Suggested topics as topic 1 -> topic 2 -> topics 3, users can still enter any other topic on every level.
+     */
+    private static final SequencedMap<String, SequencedMap<String, List<String>>> TOPICS;
+
+    static {
+        SequencedMap<String, List<String>> medicine = new LinkedHashMap<>();
+        medicine.put("Diseases and disorders", List.of("Signs and symptoms", "Diagnostic techniques", "Therapies", "Drugs"));
+        medicine.put("Anatomy", List.of("Organs", "Bones", "Muscles", "Other"));
+        medicine.put("Medical branches", List.of());
+        medicine.put("Institutions", List.of());
+        medicine.put("Professions", List.of());
+        medicine.put("Food and nutrition", List.of());
+        medicine.put("other", List.of());
+
+        SequencedMap<String, List<String>> tourism = new LinkedHashMap<>();
+        tourism.put("Accommodation", List.of());
+        tourism.put("Surroundings", List.of());
+        tourism.put("Heritage", List.of("History", "Architecture", "Festivals"));
+        tourism.put("Food and Produce", List.of());
+        tourism.put("Activities and Tours", List.of());
+        tourism.put("Travel and Transport", List.of());
+
+        SequencedMap<String, SequencedMap<String, List<String>>> topics = new LinkedHashMap<>();
+        // for labint francesca.bianchi@unisalento.it
+        topics.put("Environment", NO_SUBTOPICS);
+        topics.put("European Politics", NO_SUBTOPICS);
+        topics.put("Medicine", Collections.unmodifiableSequencedMap(medicine));
+        topics.put("Tourism", Collections.unmodifiableSequencedMap(tourism));
+        // for iryna.shylnikova@unisalento.it
+        for (String topic : List.of("Business", "Migration", "Energy resources", "International relations", "Globalization", "Ecology")) {
+            topics.put(topic, NO_SUBTOPICS);
+        }
+        TOPICS = Collections.unmodifiableSequencedMap(topics);
+    }
+
     private GlossaryResource glossaryResource;
 
     private GlossaryEntry formEntry;
-    private final ArrayList<SelectItem> availableTopicOne = new ArrayList<>();
-    private final ArrayList<SelectItem> availableTopicTwo = new ArrayList<>();
-    private final ArrayList<SelectItem> availableTopicThree = new ArrayList<>();
 
     private boolean optionMandatoryDescription;
     private boolean optionImportEnabled;
@@ -186,20 +223,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             log.warn("Glossary loading time: {}", duration);
         }
         log(Action.glossary_open, glossaryResource);
-
-        // for labint francesca.bianchi@unisalento.it
-        availableTopicOne.add(new SelectItem("Environment"));
-        availableTopicOne.add(new SelectItem("European Politics"));
-        availableTopicOne.add(new SelectItem("Medicine"));
-        availableTopicOne.add(new SelectItem("Tourism"));
-
-        // for iryna.shylnikova@unisalento.it
-        availableTopicOne.add(new SelectItem("Business"));
-        availableTopicOne.add(new SelectItem("Migration"));
-        availableTopicOne.add(new SelectItem("Energy resources"));
-        availableTopicOne.add(new SelectItem("International relations"));
-        availableTopicOne.add(new SelectItem("Globalization"));
-        availableTopicOne.add(new SelectItem("Ecology"));
 
         // convert tree like glossary structure to flat table
         repaintTable();
@@ -340,64 +363,35 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         log(Action.glossary_term_add, glossaryResource, formEntry.getId());
     }
 
-    public void onChangeTopicOne(AjaxBehaviorEvent event) {
-        createAvailableTopicsTwo();
-        formEntry.setTopicTwo("");
-        formEntry.setTopicThree("");
-        availableTopicThree.clear();
-    }
-
-    private void createAvailableTopicsTwo() {
-        availableTopicTwo.clear();
-
-        if (formEntry.getTopicOne().equalsIgnoreCase("medicine")) {
-            availableTopicTwo.add(new SelectItem("Diseases and disorders"));
-            availableTopicTwo.add(new SelectItem("Anatomy"));
-            availableTopicTwo.add(new SelectItem("Medical branches"));
-            availableTopicTwo.add(new SelectItem("Institutions"));
-            availableTopicTwo.add(new SelectItem("Professions"));
-            availableTopicTwo.add(new SelectItem("Food and nutrition"));
-            availableTopicTwo.add(new SelectItem("other"));
-        } else if (formEntry.getTopicOne().equalsIgnoreCase("TOURISM")) {
-            availableTopicTwo.add(new SelectItem("Accommodation"));
-            availableTopicTwo.add(new SelectItem("Surroundings"));
-            availableTopicTwo.add(new SelectItem("Heritage"));
-            availableTopicTwo.add(new SelectItem("Food and Produce"));
-            availableTopicTwo.add(new SelectItem("Activities and Tours"));
-            availableTopicTwo.add(new SelectItem("Travel and Transport"));
+    /**
+     * Clears the subtopics, unless the topic only changed in case (e.g. a suggestion was picked for a typed topic).
+     */
+    public void onChangeTopicOne(ValueChangeEvent event) {
+        if (!isSameTopic(event)) {
+            formEntry.setTopicTwo("");
+            formEntry.setTopicThree("");
         }
     }
 
-    public void onChangeTopicTwo(AjaxBehaviorEvent event) {
-        createAvailableTopicsThree();
-        formEntry.setTopicThree("");
+    /**
+     * @see #onChangeTopicOne(ValueChangeEvent)
+     */
+    public void onChangeTopicTwo(ValueChangeEvent event) {
+        if (!isSameTopic(event)) {
+            formEntry.setTopicThree("");
+        }
     }
 
-    private void createAvailableTopicsThree() {
-        String topic1 = formEntry.getTopicOne();
-        String topic2 = formEntry.getTopicTwo();
-        availableTopicThree.clear();
+    private static boolean isSameTopic(ValueChangeEvent event) {
+        return Strings.CI.equals((String) event.getOldValue(), (String) event.getNewValue());
+    }
 
-        if (topic1.equalsIgnoreCase("medicine")) {
-            if (topic2.equalsIgnoreCase("Diseases and disorders")) {
-                availableTopicThree.add(new SelectItem("Signs and symptoms"));
-                availableTopicThree.add(new SelectItem("Diagnostic techniques"));
-                availableTopicThree.add(new SelectItem("Therapies"));
-                availableTopicThree.add(new SelectItem("Drugs"));
-            } else if (topic2.equalsIgnoreCase("Anatomy")) {
-                availableTopicThree.add(new SelectItem("Organs"));
-                availableTopicThree.add(new SelectItem("Bones"));
-                availableTopicThree.add(new SelectItem("Muscles"));
-                availableTopicThree.add(new SelectItem("Other"));
-            }
-        }
-        if (topic1.equalsIgnoreCase("TOURISM")) {
-            if (topic2.equalsIgnoreCase("Heritage")) {
-                availableTopicThree.add(new SelectItem("History"));
-                availableTopicThree.add(new SelectItem("Architecture"));
-                availableTopicThree.add(new SelectItem("Festivals"));
-            }
-        }
+    /**
+     * Case-insensitive lookup of a topic's suggested subtopics.
+     */
+    private static <T> T findSubtopics(SequencedMap<String, T> topics, String topic, T fallback) {
+        return topics.entrySet().stream().filter(entry -> Strings.CI.equals(entry.getKey(), topic))
+            .map(Map.Entry::getValue).findFirst().orElse(fallback);
     }
 
     /**
@@ -591,16 +585,24 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         return formEntry;
     }
 
-    public List<SelectItem> getAvailableTopicOne() {
-        return availableTopicOne;
+    public Collection<String> getAvailableTopicTwo() {
+        return findSubtopics(TOPICS, formEntry.getTopicOne(), NO_SUBTOPICS).sequencedKeySet();
     }
 
-    public List<SelectItem> getAvailableTopicTwo() {
-        return availableTopicTwo;
+    public Collection<String> getAvailableTopicThree() {
+        return findSubtopics(findSubtopics(TOPICS, formEntry.getTopicOne(), NO_SUBTOPICS), formEntry.getTopicTwo(), List.of());
     }
 
-    public List<SelectItem> getAvailableTopicThree() {
-        return availableTopicThree;
+    public List<String> completeTopicOne(String query) {
+        return StringHelper.filterContainsIgnoreCase(TOPICS.sequencedKeySet(), query);
+    }
+
+    public List<String> completeTopicTwo(String query) {
+        return StringHelper.filterContainsIgnoreCase(getAvailableTopicTwo(), query);
+    }
+
+    public List<String> completeTopicThree(String query) {
+        return StringHelper.filterContainsIgnoreCase(getAvailableTopicThree(), query);
     }
 
     public boolean isOptionMandatoryDescription() {

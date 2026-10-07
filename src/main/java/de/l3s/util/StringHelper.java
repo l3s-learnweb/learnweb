@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -104,6 +105,18 @@ public final class StringHelper {
             values.set(i, StringUtils.remove(values.get(i), remove));
         }
         return values;
+    }
+
+    /**
+     * Filter for autocomplete suggestions.
+     *
+     * @return the values containing the query, ignoring case; all values if the query is empty
+     */
+    public static List<String> filterContainsIgnoreCase(Collection<String> values, String query) {
+        if (StringUtils.isEmpty(query)) {
+            return List.copyOf(values);
+        }
+        return values.stream().filter(value -> Strings.CI.contains(value, query)).toList();
     }
 
     public static String getDomainName(String url) {
