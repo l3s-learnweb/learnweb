@@ -144,14 +144,14 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         }
 
         courses.remove(course);
-        fireEvent(new ActivityEvent(Action.course_delete).setTargetId(course.getId()));
+        fireEvent(new ActivityEvent(Action.course_delete).setCourseId(course.getId()));
     }
 
     public void onAnonymiseCourse(Course course) {
         courseDao.anonymize(course);
 
         addMessage(FacesMessage.SEVERITY_INFO, "admin.course_anonymised", course.getTitle());
-        fireEvent(new ActivityEvent(Action.course_anonymize).setTargetId(course.getId()));
+        fireEvent(new ActivityEvent(Action.course_anonymize).setCourseId(course.getId()));
     }
 
     public Course getNewCourse() {

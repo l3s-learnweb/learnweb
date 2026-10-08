@@ -4,6 +4,7 @@ import de.l3s.learnweb.user.User;
 
 public class UserEvent extends ActivityEvent {
     public UserEvent(Action action, User user) {
-        super(action, 0, user.getId());
+        super(action);
+        setTargetUserId(user.getId());
     }
 }

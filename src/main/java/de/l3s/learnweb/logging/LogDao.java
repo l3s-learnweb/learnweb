@@ -32,11 +32,18 @@ import de.l3s.util.StringHelper;
 @RegisterRowMapper(LogDao.LogEntryMapper.class)
 public interface LogDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND target_id = :targetId AND action IN(<actionIds>) ORDER BY created_at DESC")
-    List<LogEntry> findByGroupIdAndTargetId(@Bind("groupId") int groupId, @Bind("targetId") int targetId, @DefineList("actionIds") List<Integer> actionIds);
+    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND resource_id = :resourceId AND action IN(<actionIds>) ORDER BY created_at DESC")
+    List<LogEntry> findByGroupIdAndResourceId(@Bind("groupId") int groupId, @Bind("resourceId") int resourceId, @DefineList("actionIds") List<Integer> actionIds);
 
-    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = ? ORDER BY created_at DESC")
-    List<LogEntry> findAllByUserId(int userId);
+    /**
+     * Returns all logs of the user, except entries of {@link Action#RETIRED_IDS}.
+     */
+    default List<LogEntry> findAllByUserId(int userId) {
+        return findAllByUserId(userId, Action.RETIRED_IDS);
+    }
+
+    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = :userId AND action NOT IN(<retiredIds>) ORDER BY created_at DESC")
+    List<LogEntry> findAllByUserId(@Bind("userId") int userId, @BindList("retiredIds") Collection<Integer> retiredIds);
 
     /**
      * Get public logs of the user. This includes only logs that occurred in a group context.
@@ -70,7 +77,7 @@ public interface LogDao extends SqlObject, Serializable {
     List<LogEntry> findByUsersGroupIds(@Bind("userId") int userId, @DefineList("groupIds") List<Integer> groupIds, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
 
     @SqlQuery("SELECT created_at FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY created_at DESC LIMIT 1")
-    Optional<LocalDateTime> findDateOfLastByUserIdAndAction(int userId, int actionOrdinal);
+    Optional<LocalDateTime> findDateOfLastByUserIdAndAction(int userId, Action action);
 
     @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end GROUP BY action")
     @KeyColumn("action")
@@ -88,36 +95,29 @@ public interface LogDao extends SqlObject, Serializable {
     Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate, @Define("actions") String actions);
 
     /**
-     * Logs a user action. The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of {@link de.l3s.learnweb.logging.Action} for explanation.
-     *
-     * @param groupId the group this action belongs to; null if no group
-     * @param targetId optional value; should be 0 if not required
+     * Logs the event with its performer, session and all context ids. Context ids of 0 are stored as NULL.
      */
-    default void insert(User user, Action action, Integer groupId, Integer targetId, String params, String sessionId) {
-        int userId = user != null ? user.getId() : 0;
+    default void insert(ActivityEvent event) {
+        User user = event.getPerformer();
 
-        if (null == action) {
-            throw new IllegalArgumentException();
+        if (null == event.getAction()) {
+            throw new IllegalArgumentException("Action cannot be null");
         }
 
-        params = StringHelper.shortnString(params, 250);
-
-        if (groupId != null && groupId == 0) {
-            groupId = null;
-        }
-
-        getHandle().createUpdate("INSERT INTO lw_user_log (user_id, session_id, action, target_id, params, group_id, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)")
-            .bind(0, userId)
-            .bind(1, sessionId)
-            .bind(2, action)
-            .bind(3, targetId)
-            .bind(4, params)
-            .bind(5, groupId)
+        getHandle().createUpdate("""
+                INSERT INTO lw_user_log (user_id, session_id, action, group_id, resource_id, folder_id, topic_id, post_id, course_id, target_user_id,
+                    search_id, params, created_at)
+                VALUES (:userId, :sessionId, :action, NULLIF(:groupId, 0), NULLIF(:resourceId, 0), NULLIF(:folderId, 0), NULLIF(:topicId, 0),
+                    NULLIF(:postId, 0), NULLIF(:courseId, 0), NULLIF(:targetUserId, 0), NULLIF(:searchId, 0), :params, CURRENT_TIMESTAMP)
+                """)
+            .bindBean(event)
+            .bind("userId", user == null ? 0 : user.getId())
+            .bind("action", event.getAction())
+            .bind("params", StringHelper.shortnString(event.getParams(), 250))
             .execute();
     }
 
-    @SqlBatch("INSERT INTO lw_user_log_action (action, name, target, category) VALUES (:ordinal, :name, :getTargetId, :getCategory)")
+    @SqlBatch("INSERT INTO lw_user_log_action (action, name, category) VALUES (:getId, :name, :getCategory)")
     void insertUserLogAction(@BindMethods Action... actions);
 
     @SuppressWarnings("SqlWithoutWhere")
@@ -127,15 +127,20 @@ public interface LogDao extends SqlObject, Serializable {
     class LogEntryMapper implements RowMapper<LogEntry> {
         @Override
         public LogEntry map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            // int logEntryId = rs.getInt("log_entry_id");
-            int userId = rs.getInt("user_id");
-            // String sessionId = rs.getString("session_id");
-            Action action = Action.values()[rs.getInt("action")];
-            LocalDateTime dateTime = SqlHelper.getLocalDateTime(rs.getTimestamp("created_at"));
-            String params = rs.getString("params");
-            int groupId = rs.getInt("group_id");
-            int targetId = rs.getInt("target_id");
-            return new LogEntry(userId, action, dateTime, params, groupId, targetId);
+            LogEntry entry = new LogEntry(
+                rs.getInt("user_id"),
+                Action.findByIdOrElseThrow(rs.getInt("action")),
+                SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")),
+                rs.getString("params"));
+            entry.setGroupId(rs.getInt("group_id"));
+            entry.setResourceId(rs.getInt("resource_id"));
+            entry.setFolderId(rs.getInt("folder_id"));
+            entry.setTopicId(rs.getInt("topic_id"));
+            entry.setPostId(rs.getInt("post_id"));
+            entry.setCourseId(rs.getInt("course_id"));
+            entry.setTargetUserId(rs.getInt("target_user_id"));
+            entry.setSearchId(rs.getInt("search_id"));
+            return entry;
         }
     }
 }

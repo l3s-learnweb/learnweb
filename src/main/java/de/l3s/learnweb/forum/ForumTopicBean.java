@@ -82,7 +82,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
             posts.add(dialogPost);
             forumTopicDao.updateIncreaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getCreatedAt());
             dialogPost.getUser().incForumPostCount();
-            fireEvent(new ForumEvent(Action.forum_post_added, topic));
+            fireEvent(new ForumEvent(Action.forum_post_added, topic, dialogPost));
         } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
         }

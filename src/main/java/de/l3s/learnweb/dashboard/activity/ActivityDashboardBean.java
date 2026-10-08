@@ -67,7 +67,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         SelectItemGroup itemGroup = new SelectItemGroup(name);
         List<SelectItem> itemList = new ArrayList<>();
         for (Action action : actions) {
-            itemList.add(new SelectItem(action.ordinal(), action.name()));
+            itemList.add(new SelectItem(action.getId(), action.name()));
         }
         SelectItem[] itemArr = new SelectItem[itemList.size()];
         itemGroup.setSelectItems(itemList.toArray(itemArr));
@@ -109,7 +109,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 List<ActivityGraphData> data = new ArrayList<>();
                 for (Integer activityGroupName : selectedGroupedActions) {
                     ActivityGraphData activityData = new ActivityGraphData();
-                    String actionName = Action.values()[activityGroupName].name();
+                    String actionName = Action.findByIdOrElseThrow(activityGroupName).name();
                     activityData.setKey(actionName);
                     activityData.setName(actionName);
                     activityData.setActionsPerDay(logDao.countActionsPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
@@ -193,7 +193,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     private static String getStringOfActions(Set<Action> actions) {
         return actions.stream()
-            .map(a -> String.valueOf(a.ordinal()))
+            .map(a -> String.valueOf(a.getId()))
             .collect(Collectors.joining(","));
     }
 

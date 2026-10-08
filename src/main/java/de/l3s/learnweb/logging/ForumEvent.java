@@ -8,14 +8,14 @@ import de.l3s.learnweb.forum.ForumTopic;
  */
 public class ForumEvent extends ActivityEvent {
     public ForumEvent(Action action, ForumTopic topic) {
-        this(action, topic, topic.getId());
+        super(action);
+        setGroupId(topic.getGroupId());
+        setTopicId(topic.getId());
+        setParams(topic.getTitle());
     }
 
     public ForumEvent(Action action, ForumTopic topic, ForumPost post) {
-        this(action, topic, post.getId());
-    }
-
-    private ForumEvent(Action action, ForumTopic topic, int targetId) {
-        super(action, topic.getGroupId(), targetId, topic.getTitle());
+        this(action, topic);
+        setPostId(post.getId());
     }
 }

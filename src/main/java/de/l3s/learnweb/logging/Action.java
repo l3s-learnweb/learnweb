@@ -1,87 +1,99 @@
 package de.l3s.learnweb.logging;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import org.jdbi.v3.core.argument.Argument;
-import org.jdbi.v3.core.statement.StatementContext;
+import de.l3s.util.HasId;
 
-public enum Action implements Argument {
-    // add new values add the BOTTOM !!!
-    tagging_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = the tag
-    rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = rate
-    commenting_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = comment id
-    opening_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    unused0(ActionTargetId.NONE, ActionCategory.OTHER),
-    searching(ActionTargetId.SEARCH_ID, ActionCategory.SEARCH), // param = search query
-    group_joining(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
-    group_creating(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
-    group_leaving(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
-    login(ActionTargetId.NONE, ActionCategory.USER), // param = page the user logged in on
-    logout(ActionTargetId.NONE, ActionCategory.USER),
-    forum_topic_added(ActionTargetId.FORUM_TOPIC_ID, ActionCategory.FORUM), // param = topic title
-    register(ActionTargetId.NONE, ActionCategory.USER),
-    changing_profile(ActionTargetId.USER_ID, ActionCategory.USER), // target_id = user_id of the user whose profile was changed
-    deleting_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = resource title;
-    adding_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    forum_post_deleted(ActionTargetId.FORUM_POST_ID, ActionCategory.FORUM), // param = topic title;
-    deleting_comment(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = comment_id
-    survey_save(ActionTargetId.RESOURCE_ID, ActionCategory.SURVEY), // target_id = survey resource id
-    edit_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    survey_submit(ActionTargetId.RESOURCE_ID, ActionCategory.SURVEY), // target_id = survey resource id
-    thumb_rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    group_deleting(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = group name
-    group_changing_description(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
-    group_changing_title(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = old title
-    group_changing_leader(ActionTargetId.GROUP_ID, ActionCategory.GROUP), //
-    group_changing_restriction(ActionTargetId.GROUP_ID, ActionCategory.GROUP), //
-    unused9(ActionTargetId.NONE, ActionCategory.OTHER),
-    unused10(ActionTargetId.NONE, ActionCategory.OTHER),
-    opening_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name
-    unused7(ActionTargetId.NONE, ActionCategory.OTHER),
-    deleting_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name;
-    downloading(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = file_id
-    group_deleting_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = title of deleted link;
-    group_resource_search(ActionTargetId.GROUP_ID, ActionCategory.SEARCH), // param = query
-    add_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name
-    edit_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name
-    glossary_open(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = glossary resource id
-    unused(ActionTargetId.NONE, ActionCategory.OTHER),
-    glossary_entry_edit(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary entry id
-    glossary_entry_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary entry id
-    glossary_entry_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary entry id
-    glossary_term_edit(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary id
-    glossary_term_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary id
-    glossary_term_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary_term_id
-    resource_thumbnail_update(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    unused1(ActionTargetId.NONE, ActionCategory.OTHER),
-    unused8(ActionTargetId.NONE, ActionCategory.OTHER),
-    unused2(ActionTargetId.NONE, ActionCategory.OTHER),
-    adding_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // was added by chloe . can be reused
-    edit_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // was added by chloe . can be reused
-    unused3(ActionTargetId.NONE, ActionCategory.OTHER),
-    unused4(ActionTargetId.NONE, ActionCategory.OTHER),
-    unused11(ActionTargetId.NONE, ActionCategory.OTHER),
-    changing_office_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    forum_post_added(ActionTargetId.FORUM_TOPIC_ID, ActionCategory.FORUM), // param = topic title
-    moderator_login(ActionTargetId.USER_ID, ActionCategory.MODERATOR), // target_id = user_id of the moderator logs into a user account
-    course_delete(ActionTargetId.COURSE_ID, ActionCategory.MODERATOR), // target_id = course_id
-    course_anonymize(ActionTargetId.COURSE_ID, ActionCategory.MODERATOR), // target_id = course_id
+/**
+ * The context of a logged action (resource, folder, group, ...) is stored in the typed columns of lw_user_log, see {@link ActivityEvent}.
+ */
+public enum Action implements HasId {
+    // The id is stored in lw_user_log.action and must never change; the enum order is free. Never reuse one of RETIRED_IDS.
+    login(9, ActionCategory.USER), // param = page the user logged in on
+    logout(10, ActionCategory.USER),
+    register(12, ActionCategory.USER),
+    changing_profile(13, ActionCategory.USER), // target user = the user whose profile was changed
+    deleted_user_soft(63, ActionCategory.USER),
+    deleted_user_hard(64, ActionCategory.USER),
+    moderator_login(56, ActionCategory.MODERATOR), // target user = the moderator who logs into a user account
+    course_delete(57, ActionCategory.MODERATOR),
+    course_anonymize(58, ActionCategory.MODERATOR),
+
+    // Search actions
+    searching(5, ActionCategory.SEARCH), // param = search query
+
+    // Group actions
+    group_joining(6, ActionCategory.GROUP),
+    group_creating(7, ActionCategory.GROUP),
+    group_leaving(8, ActionCategory.GROUP),
+    group_deleting(22, ActionCategory.GROUP), // param = group name
+    group_changing_description(23, ActionCategory.GROUP),
+    group_changing_title(24, ActionCategory.GROUP), // param = old title
+    group_changing_leader(25, ActionCategory.GROUP),
+    group_changing_restriction(26, ActionCategory.GROUP),
+    group_deleting_link(33, ActionCategory.GROUP), // param = title of deleted link;
+    group_resource_search(34, ActionCategory.SEARCH), // param = query
+
+    // Folder actions
+    opening_folder(29, ActionCategory.FOLDER), // param = folder name
+    deleting_folder(31, ActionCategory.FOLDER), // param = folder name;
+    add_folder(35, ActionCategory.FOLDER), // param = folder name
+    edit_folder(36, ActionCategory.FOLDER), // param = folder name
+    move_folder(65, ActionCategory.FOLDER), // param = folder name;
+
+    // Resource actions
+    tagging_resource(0, ActionCategory.RESOURCE), // param = the tag
+    rating_resource(1, ActionCategory.RESOURCE), // param = rate
+    commenting_resource(2, ActionCategory.RESOURCE), // param = comment id
+    opening_resource(3, ActionCategory.RESOURCE),
+    deleting_resource(14, ActionCategory.RESOURCE), // param = resource title;
+    adding_resource(15, ActionCategory.RESOURCE),
+    deleting_comment(17, ActionCategory.RESOURCE), // param = comment_id
+    edit_resource(19, ActionCategory.RESOURCE),
+    thumb_rating_resource(21, ActionCategory.RESOURCE),
+    downloading(32, ActionCategory.RESOURCE), // param = file_id
+    resource_thumbnail_update(45, ActionCategory.RESOURCE),
+    adding_resource_metadata(49, ActionCategory.RESOURCE), // was added by chloe . can be reused
+    edit_resource_metadata(50, ActionCategory.RESOURCE), // was added by chloe . can be reused
+    changing_office_resource(54, ActionCategory.RESOURCE),
     // when one user editing resource and another one want to edit the same resource, but locker is not allowing it
-    lock_rejected_edit_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
+    lock_rejected_edit_resource(59, ActionCategory.RESOURCE),
     // when first user who edits resource after inactive time returns to editing, but locker is now longer belongs to it
-    lock_interrupted_returned_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    unused5(ActionTargetId.NONE, ActionCategory.OTHER),
-    unused6(ActionTargetId.NONE, ActionCategory.OTHER),
-    deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),
-    deleted_user_hard(ActionTargetId.USER_ID, ActionCategory.USER),
-    move_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name;
-    move_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE); // param = resource name;
+    lock_interrupted_returned_resource(60, ActionCategory.RESOURCE),
+    move_resource(66, ActionCategory.RESOURCE), // param = resource name;
+
+    // Forum actions
+    forum_topic_added(11, ActionCategory.FORUM), // param = topic title
+    forum_post_deleted(16, ActionCategory.FORUM), // param = topic title;
+    forum_post_added(55, ActionCategory.FORUM), // param = topic title
+
+    // Glossary actions
+    glossary_open(37, ActionCategory.GLOSSARY),
+    glossary_entry_edit(39, ActionCategory.GLOSSARY), // param = glossary entry id
+    glossary_entry_add(40, ActionCategory.GLOSSARY), // param = glossary entry id
+    glossary_entry_delete(41, ActionCategory.GLOSSARY), // param = glossary entry id
+    glossary_term_edit(42, ActionCategory.GLOSSARY), // param = glossary id
+    glossary_term_add(43, ActionCategory.GLOSSARY), // param = glossary id
+    glossary_term_delete(44, ActionCategory.GLOSSARY), // param = glossary_term_id
+
+    // Survey actions
+    survey_save(18, ActionCategory.SURVEY),
+    survey_submit(20, ActionCategory.SURVEY);
+
+    /**
+     * Ids of removed actions. Old log entries may still contain them, they must not be assigned to new actions.
+     */
+    public static final Set<Integer> RETIRED_IDS = Set.of(4, 27, 28, 30, 38, 46, 47, 48, 51, 52, 53, 61, 62);
+
+    private static final Map<Integer, Action> BY_ID = Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(Action::getId, Function.identity()));
 
     private static final ArrayList<Set<Action>> ACTIONS_BY_CATEGORY = new ArrayList<>(ActionCategory.values().length);
 
@@ -117,33 +129,36 @@ public enum Action implements Argument {
         LOGS_RESOURCE_FILTER = resourceActions;
     }
 
-    private final ActionTargetId targetId;
+    private final int id;
     private final ActionCategory category;
 
     /**
-     * @param targetId the meaning of the target_id column of log entries of this type
+     * @param id the value stored in lw_user_log.action, must never change
      * @param category only relevant for the grouping of log entries in the admin dashboard
      */
-    Action(ActionTargetId targetId, ActionCategory category) {
-        this.targetId = targetId;
+    Action(int id, ActionCategory category) {
+        this.id = id;
         this.category = category;
     }
 
-    public ActionTargetId getTargetId() {
-        return targetId;
+    @Override
+    public int getId() {
+        return id;
     }
 
     public ActionCategory getCategory() {
         return category;
     }
 
-    @Override
-    public void apply(final int position, final PreparedStatement statement, final StatementContext ctx) throws SQLException {
-        statement.setInt(position, ordinal());
+    /**
+     * @return empty for {@link #RETIRED_IDS}, which may still exist in old log entries
+     */
+    public static Optional<Action> findById(int id) {
+        return Optional.ofNullable(BY_ID.get(id));
     }
 
-    public static List<Integer> collectOrdinals(EnumSet<Action> actions) {
-        return actions.stream().map(Enum::ordinal).toList();
+    public static Action findByIdOrElseThrow(int id) {
+        return findById(id).orElseThrow(() -> new IllegalArgumentException("Unknown action id: " + id));
     }
 
     public static Set<Action> getActionsByCategory(ActionCategory category) {

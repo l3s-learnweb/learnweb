@@ -4,6 +4,7 @@ import de.l3s.learnweb.group.Group;
 
 public class GroupEvent extends ActivityEvent {
     public GroupEvent(Action action, Group group) {
-        super(action, group.getId(), group.getId());
+        super(action);
+        setGroupId(group.getId());
     }
 }

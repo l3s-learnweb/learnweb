@@ -29,7 +29,7 @@
 			</h:panelGroup>
 		</p>
 		<p class="small fw-light mb-0 log-date">
-			<lw:timeAgo date="#{logEntry.date}" timeZone="#{userBean.timeZone}"/>
+			<lw:timeAgo date="#{logEntry.created}" timeZone="#{userBean.timeZone}"/>
 		</p>
 
 		<h:panelGroup rendered="#{showPreview and logEntry.resource != null}" layout="block" styleClass="resource-log-snippet mt-2">

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.ActionCategory;
-import de.l3s.learnweb.logging.ActionTargetId;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
@@ -85,7 +84,6 @@ class EnumIntegrityTest {
 
     @Test
     void testUserLog() throws SQLException {
-        assertArrayEquals(Arrays.stream(ActionTargetId.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("lw_user_log_action", "target"));
         assertArrayEquals(Arrays.stream(ActionCategory.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("lw_user_log_action", "category"));
     }
 

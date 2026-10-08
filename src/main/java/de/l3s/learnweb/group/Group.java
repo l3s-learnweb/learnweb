@@ -358,7 +358,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
      * @param limit if limit is -1 all log entries are returned
      */
     public List<LogEntry> getLogs(int limit) {
-        return Learnweb.dao().getLogDao().findByGroupId(id, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER), limit);
+        return Learnweb.dao().getLogDao().findByGroupId(id, HasId.collectIds(Action.LOGS_DEFAULT_FILTER), limit);
     }
 
     /**

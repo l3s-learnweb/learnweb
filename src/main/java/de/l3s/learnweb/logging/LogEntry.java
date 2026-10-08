@@ -20,14 +20,22 @@ import de.l3s.util.StringHelper;
 
 public class LogEntry implements Serializable {
     @Serial
-    private static final long serialVersionUID = -4239479233091966928L;
+    private static final long serialVersionUID = 2716412054388512047L;
 
     private final int userId;
     private final Action action;
-    private final LocalDateTime date;
+    private final LocalDateTime created;
     private final String params;
-    private final int groupId;
-    private final int targetId;
+
+    // context ids, 0 if not applicable
+    private int groupId;
+    private int resourceId;
+    private int folderId;
+    private int topicId;
+    private int postId;
+    private int courseId;
+    private int targetUserId;
+    private int searchId;
 
     // cache
     private transient Optional<Resource> resource;
@@ -35,13 +43,11 @@ public class LogEntry implements Serializable {
     private transient Group group;
     private HashMap<Locale, String> descriptions; // stores a description of this entry for different locales
 
-    public LogEntry(int userId, Action action, LocalDateTime date, String params, int groupId, int targetId) {
+    public LogEntry(int userId, Action action, LocalDateTime created, String params) {
         this.userId = userId;
         this.action = action;
-        this.date = date;
+        this.created = created;
         this.params = params;
-        this.groupId = groupId;
-        this.targetId = targetId;
     }
 
     /**
@@ -73,8 +79,68 @@ public class LogEntry implements Serializable {
         return groupId;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public int getFolderId() {
+        return folderId;
+    }
+
+    void setFolderId(int folderId) {
+        this.folderId = folderId;
+    }
+
+    public int getTopicId() {
+        return topicId;
+    }
+
+    void setTopicId(int topicId) {
+        this.topicId = topicId;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public int getTargetUserId() {
+        return targetUserId;
+    }
+
+    void setTargetUserId(int targetUserId) {
+        this.targetUserId = targetUserId;
+    }
+
+    public int getSearchId() {
+        return searchId;
+    }
+
+    void setSearchId(int searchId) {
+        this.searchId = searchId;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
     }
 
     public String getParams() {
@@ -90,8 +156,8 @@ public class LogEntry implements Serializable {
 
     public Resource getResource() {
         if (resource == null) {
-            if (action.getTargetId() == ActionTargetId.RESOURCE_ID && targetId != 0) {
-                resource = Learnweb.dao().getResourceDao().findById(targetId).filter(res -> !res.isDeleted());
+            if (resourceId != 0) {
+                resource = Learnweb.dao().getResourceDao().findById(resourceId).filter(res -> !res.isDeleted());
             } else {
                 resource = Optional.empty();
             }
@@ -138,7 +204,7 @@ public class LogEntry implements Serializable {
     }
 
     private String getForumLink(ResourceBundle bundle) {
-        return "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" target=\"_top\"><b>" + getParamsHtml() + "</b></a> ";
+        return "<a href=\"group/forum_topic.jsf?topic_id=" + topicId + "\" target=\"_top\"><b>" + getParamsHtml() + "</b></a> ";
     }
 
     public boolean isPrivate() {
@@ -247,7 +313,7 @@ public class LogEntry implements Serializable {
                 yield usernameLink + bundle.format("log_glossary_term_delete", getResourceLink(bundle)); // TODO @kemkes: incorporate link to entry
 
             default:
-                if (getAction().getTargetId() == ActionTargetId.RESOURCE_ID) {
+                if (resourceId != 0) {
                     yield usernameLink + bundle.format("log_performed_action_on", getAction().name(), getResourceLink(bundle));
                 } else {
                     yield usernameLink + bundle.format("log_performed_action", getAction().name()); // should never happen

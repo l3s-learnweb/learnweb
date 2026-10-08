@@ -14,6 +14,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.learnweb.logging.LogEntry;
+import de.l3s.util.HasId;
 
 @Named
 @ViewScoped
@@ -56,7 +57,7 @@ public class LogsBean extends ApplicationBean implements Serializable {
             BeanAssert.hasPermission(getUser().canModerateUser(selectedUser));
         }
 
-        logEntries = dao().getLogDao().findByUserId(selectedUser.getId(), Action.collectOrdinals(selectedActions), 100);
+        logEntries = dao().getLogDao().findByUserId(selectedUser.getId(), HasId.collectIds(selectedActions), 100);
     }
 
     public int getUserId() {

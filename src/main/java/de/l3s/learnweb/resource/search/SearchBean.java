@@ -129,7 +129,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             searchFilters.setFilter(FilterType.language, language);
 
             searchHistoryId = searchHistoryRecorder.recordQuery(query, searchMode, searchService, language, queryFilters, getUser(), getUserBean().getSessionId());
-            fireEvent(new ActivityEvent(Action.searching).setTargetId(searchHistoryId).setParams(query));
+            fireEvent(new ActivityEvent(Action.searching).setSearchId(searchHistoryId).setParams(query));
 
             loadPage(1);
             resourcesGroupedBySource = null;

@@ -24,6 +24,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
+import de.l3s.util.HasId;
 
 @Named
 @ViewScoped
@@ -88,7 +89,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     public void fetchAllLogs() {
         showAllLogs = true;
-        logMessages = logDao.findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER));
+        logMessages = logDao.findByGroupId(groupId, HasId.collectIds(Action.LOGS_DEFAULT_FILTER));
         removeForeignResources(logMessages);
     }
 
@@ -98,7 +99,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     public List<LogEntry> getLogMessages() {
         if (null == logMessages) {
-            logMessages = logDao.findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER), ACTIVITY_LIST_LIMIT);
+            logMessages = logDao.findByGroupId(groupId, HasId.collectIds(Action.LOGS_DEFAULT_FILTER), ACTIVITY_LIST_LIMIT);
             removeForeignResources(logMessages);
         }
         return logMessages;
@@ -134,7 +135,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     }
 
     private SummaryOverview createSummaryOverview(LocalDateTime from, LocalDateTime to) {
-        List<LogEntry> logs = logDao.findByGroupIdBetweenTime(groupId, Action.collectOrdinals(OVERVIEW_ACTIONS), from, to);
+        List<LogEntry> logs = logDao.findByGroupIdBetweenTime(groupId, HasId.collectIds(OVERVIEW_ACTIONS), from, to);
         removeForeignResources(logs);
 
         if (logs.isEmpty()) {

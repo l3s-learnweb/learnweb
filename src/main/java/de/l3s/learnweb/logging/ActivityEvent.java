@@ -4,48 +4,33 @@ import de.l3s.learnweb.user.User;
 
 /**
  * A user activity, fired by {@link EventDispatcher} and stored in the activity log by {@link LoggingEventListener}.
- * Subclasses take the subject of the activity and use its id as the target id, see {@link Action#getTargetId()}.
+ * Subclasses fill in every id of the context the activity happened in (e.g. a resource, its folder and its group),
+ * each id is stored in its own column of lw_user_log. An id of 0 means "not applicable".
  */
 public class ActivityEvent {
     private final Action action;
-    private final int groupId;
-    private int targetId;
     private String params;
+
+    // context ids
+    private int groupId;
+    private int resourceId;
+    private int folderId;
+    private int topicId;
+    private int postId;
+    private int courseId;
+    private int targetUserId;
+    private int searchId;
 
     // context, set by EventDispatcher
     private User performer;
     private String sessionId;
 
     public ActivityEvent(Action action) {
-        this(action, 0, 0);
-    }
-
-    protected ActivityEvent(Action action, int groupId, int targetId) {
-        this(action, groupId, targetId, null);
-    }
-
-    protected ActivityEvent(Action action, int groupId, int targetId, String params) {
         this.action = action;
-        this.groupId = groupId;
-        this.targetId = targetId;
-        this.params = params;
     }
 
     public Action getAction() {
         return action;
-    }
-
-    public int getTargetId() {
-        return targetId;
-    }
-
-    public ActivityEvent setTargetId(int targetId) {
-        this.targetId = targetId;
-        return this;
-    }
-
-    public int getGroupId() {
-        return groupId;
     }
 
     public String getParams() {
@@ -59,6 +44,78 @@ public class ActivityEvent {
 
     public ActivityEvent setParams(int params) {
         this.params = String.valueOf(params);
+        return this;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public ActivityEvent setGroupId(int groupId) {
+        this.groupId = groupId;
+        return this;
+    }
+
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public ActivityEvent setResourceId(int resourceId) {
+        this.resourceId = resourceId;
+        return this;
+    }
+
+    public int getFolderId() {
+        return folderId;
+    }
+
+    public ActivityEvent setFolderId(int folderId) {
+        this.folderId = folderId;
+        return this;
+    }
+
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public ActivityEvent setTopicId(int topicId) {
+        this.topicId = topicId;
+        return this;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public ActivityEvent setPostId(int postId) {
+        this.postId = postId;
+        return this;
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public ActivityEvent setCourseId(int courseId) {
+        this.courseId = courseId;
+        return this;
+    }
+
+    public int getTargetUserId() {
+        return targetUserId;
+    }
+
+    public ActivityEvent setTargetUserId(int targetUserId) {
+        this.targetUserId = targetUserId;
+        return this;
+    }
+
+    public int getSearchId() {
+        return searchId;
+    }
+
+    public ActivityEvent setSearchId(int searchId) {
+        this.searchId = searchId;
         return this;
     }
 
@@ -80,7 +137,8 @@ public class ActivityEvent {
 
     @Override
     public String toString() {
-        return "[event=" + action + ", groupId=" + groupId + ", targetId=" + targetId + ", params=" + params
-            + ", userId=" + (performer != null ? performer.getId() : null) + "]";
+        return "[event=" + action + ", groupId=" + groupId + ", resourceId=" + resourceId + ", folderId=" + folderId
+            + ", topicId=" + topicId + ", postId=" + postId + ", courseId=" + courseId + ", targetUserId=" + targetUserId
+            + ", searchId=" + searchId + ", params=" + params + ", userId=" + (performer != null ? performer.getId() : null) + "]";
     }
 }

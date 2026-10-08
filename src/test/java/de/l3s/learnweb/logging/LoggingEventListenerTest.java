@@ -36,7 +36,7 @@ class LoggingEventListenerTest {
 
         listener.onEvent(event);
 
-        verify(logDao).insert(user, Action.logout, event.getGroupId(), event.getTargetId(), "bye", "A1B2C3");
+        verify(logDao).insert(event);
     }
 
     @Test

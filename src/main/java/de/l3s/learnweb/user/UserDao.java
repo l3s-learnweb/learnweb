@@ -94,7 +94,7 @@ public interface UserDao extends SqlObject, Serializable {
      * @return the Instant of the last recorded login event of the given user. Empty if the user has never logged in
      */
     default Optional<LocalDateTime> findLastLoginDate(int userId) {
-        return getHandle().attach(LogDao.class).findDateOfLastByUserIdAndAction(userId, Action.login.ordinal());
+        return getHandle().attach(LogDao.class).findDateOfLastByUserIdAndAction(userId, Action.login);
     }
 
     @SqlQuery("SELECT COUNT(*) FROM lw_user u JOIN lw_course_user USING(user_id) WHERE course_id = ? AND deleted = 0")

@@ -1144,7 +1144,7 @@ public class Resource extends AbstractResource implements Serializable {
             logs = new Expirable<>(Duration.of(10, ChronoUnit.SECONDS), () -> {
                 Instant start = Instant.now();
                 List<LogEntry> logs = Learnweb.dao().getLogDao()
-                    .findByGroupIdAndTargetId(this.getGroupId(), this.getId(), Action.collectOrdinals(Action.LOGS_RESOURCE_FILTER));
+                    .findByGroupIdAndResourceId(this.getGroupId(), this.getId(), HasId.collectIds(Action.LOGS_RESOURCE_FILTER));
 
                 long duration = Duration.between(start, Instant.now()).toMillis();
                 if (duration > 100) {

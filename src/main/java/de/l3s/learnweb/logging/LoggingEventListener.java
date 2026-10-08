@@ -31,7 +31,7 @@ public class LoggingEventListener {
         }
 
         try {
-            logDao.insert(event.getPerformer(), event.getAction(), event.getGroupId(), event.getTargetId(), event.getParams(), event.getSessionId());
+            logDao.insert(event);
         } catch (Exception e) {
             log.error("Error logging event to database: {}", event, e);
         }

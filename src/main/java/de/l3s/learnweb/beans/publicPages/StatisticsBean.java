@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.SqlHelper;
 
@@ -68,8 +69,8 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             generalStatistics.put("average_number_of_comments_per_commented_resource", commentedResourcesAverage);
 
             activeUsersPerMonth = handle.select("SELECT created_at, count(distinct user_id) as count FROM lw_user_log "
-                + "WHERE action = 9 and created_at > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(created_at) ,month(created_at) "
-                + "ORDER BY year(created_at) DESC,month(created_at) DESC LIMIT 13")
+                + "WHERE action = ? and created_at > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(created_at) ,month(created_at) "
+                + "ORDER BY year(created_at) DESC,month(created_at) DESC LIMIT 13", Action.login)
                 .map((rs, ctx) -> new SimpleEntry<>(SqlHelper.getLocalDateTime(rs.getTimestamp(1)), rs.getInt(2)))
                 .list();
 

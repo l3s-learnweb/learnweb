@@ -12,6 +12,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.HasId;
 
 @Named
 @RequestScoped
@@ -44,7 +45,7 @@ public class UserDetailBean extends ApplicationBean {
             pageHidden = true;
         }
 
-        latestLogEntries = dao().getLogDao().findPublicByUserId(selectedUser.getId(), Action.collectOrdinals(USER_ACTIONS), 50);
+        latestLogEntries = dao().getLogDao().findPublicByUserId(selectedUser.getId(), HasId.collectIds(USER_ACTIONS), 50);
     }
 
     public int getUserId() {

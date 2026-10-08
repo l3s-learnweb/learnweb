@@ -57,7 +57,7 @@
             </p:column>
 
             <p:column headerText="#{msg.action_date}">
-                <h:outputText value="#{action.date}">
+                <h:outputText value="#{action.created}">
                     <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>

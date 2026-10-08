@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.ColorHelper;
@@ -27,32 +24,22 @@ import software.xdev.chartjs.model.dataset.LineDataset;
 import software.xdev.chartjs.model.dataset.PieDataset;
 
 final class GlossaryDashboardChartsFactory {
-    private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static String createActivityTypesChart(final Map<Integer, Integer> actionsMap, ResourceBundle bundle) {
-        Action[] actionTypes = Action.values();
-
         int search = 0;
         int glossary = 0;
         int resource = 0;
         int system = 0;
 
         for (final Map.Entry<Integer, Integer> entry : actionsMap.entrySet()) {
-            Integer actionId = entry.getKey();
-            if (actionId < actionTypes.length) {
-                Action action = actionTypes[actionId];
-                if (Action.getActionsByCategory(ActionCategory.SEARCH).contains(action)) {
-                    search += entry.getValue();
-                } else if (Action.getActionsByCategory(ActionCategory.GLOSSARY).contains(action)) {
-                    glossary += entry.getValue();
-                } else if (Action.getActionsByCategory(ActionCategory.RESOURCE).contains(action)) {
-                    resource += entry.getValue();
-                } else {
-                    system += entry.getValue();
-                }
-            } else {
-                log.error("Unknown actionId: {}", actionId);
+            // retired actions are counted as system actions
+            ActionCategory category = Action.findById(entry.getKey()).map(Action::getCategory).orElse(ActionCategory.OTHER);
+            switch (category) {
+                case SEARCH -> search += entry.getValue();
+                case GLOSSARY -> glossary += entry.getValue();
+                case RESOURCE -> resource += entry.getValue();
+                default -> system += entry.getValue();
             }
         }
 

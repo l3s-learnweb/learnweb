@@ -96,7 +96,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     private List<LogEntry> getLogs(EnumSet<Action> filter, int limit) {
         // ids of all groups the user is member of
         List<Integer> groupIds = HasId.collectIds(getUser().getGroups());
-        return dao().getLogDao().findByUsersGroupIds(getUser().getId(), groupIds, Action.collectOrdinals(filter), limit);
+        return dao().getLogDao().findByUsersGroupIds(getUser().getId(), groupIds, HasId.collectIds(filter), limit);
     }
 
     public List<LogEntry> getNewsResources() {
