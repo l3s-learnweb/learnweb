@@ -11,6 +11,7 @@ import jakarta.inject.Named;
 import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.HttpException;
@@ -26,13 +27,16 @@ public class ContactBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1506604546829332647L;
 
     @NotBlank
+    @Size(max = 100)
     private String name;
 
     @NotBlank
     @Email
+    @Size(max = 250)
     private String email;
 
     @NotBlank
+    @Size(min = 10, max = 3000)
     private String message;
 
     @Inject

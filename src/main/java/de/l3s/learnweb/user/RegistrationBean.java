@@ -52,6 +52,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private String password;
 
     @NotBlank
+    @Size(max = 50)
     private String studentId;
 
     @Email
@@ -64,6 +65,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private String group;
     private String fastLogin;
 
+    @Size(max = 100)
     private String affiliation;
 
     private Course course;

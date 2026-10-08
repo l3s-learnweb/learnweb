@@ -24,7 +24,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     private static final long serialVersionUID = -4815509777068370043L;
 
     @NotBlank
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 255)
     private String newOrganisationTitle;
 
     private transient List<Organisation> organisations;

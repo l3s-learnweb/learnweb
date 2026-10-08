@@ -18,6 +18,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import jakarta.validation.constraints.Size;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -80,8 +82,10 @@ public class Resource extends AbstractResource implements Serializable {
     private int groupId;
     private int folderId;
     private int ownerUserId;
+    @Size(max = 1000)
     private String title;
     private String description;
+    @Size(max = 4000)
     private String url; // `website` resources stores external link here, also `video` resources stores link to source (like YouTube page)
     private StorageType storageType = StorageType.LEARNWEB;
     private PolicyView policyView = PolicyView.DEFAULT_RIGHTS;

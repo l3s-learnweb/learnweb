@@ -16,7 +16,6 @@ public class ForumEvent extends ActivityEvent {
     }
 
     private ForumEvent(Action action, ForumTopic topic, int targetId) {
-        super(action, topic.getGroupId(), targetId);
-        setParams(topic.getTitle());
+        super(action, topic.getGroupId(), targetId, topic.getTitle());
     }
 }

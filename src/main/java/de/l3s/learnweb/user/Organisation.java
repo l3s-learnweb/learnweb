@@ -60,7 +60,7 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
 
     private int id;
     @NotBlank
-    @Size(min = 2, max = 60)
+    @Size(min = 2, max = 255)
     private String title;
     private String welcomeMessage;
     private String termsAndConditions;

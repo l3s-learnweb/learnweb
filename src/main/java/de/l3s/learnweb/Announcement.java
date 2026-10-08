@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public final class Announcement implements Serializable {
     @Serial
@@ -14,8 +15,10 @@ public final class Announcement implements Serializable {
     private int userId;
     private boolean hidden;
     @NotBlank
+    @Size(max = 500)
     private String title;
     @NotBlank
+    @Size(max = 5000)
     private String text;
     private LocalDateTime createdAt;
 

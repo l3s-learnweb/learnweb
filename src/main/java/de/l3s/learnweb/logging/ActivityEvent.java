@@ -21,9 +21,14 @@ public class ActivityEvent {
     }
 
     protected ActivityEvent(Action action, int groupId, int targetId) {
+        this(action, groupId, targetId, null);
+    }
+
+    protected ActivityEvent(Action action, int groupId, int targetId, String params) {
         this.action = action;
         this.groupId = groupId;
         this.targetId = targetId;
+        this.params = params;
     }
 
     public Action getAction() {

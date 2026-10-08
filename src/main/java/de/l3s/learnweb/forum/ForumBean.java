@@ -35,7 +35,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
     private transient List<ForumTopic> topics;
 
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 255)
     private String newTopicTitle;
     @NotBlank
     private String newTopicText;

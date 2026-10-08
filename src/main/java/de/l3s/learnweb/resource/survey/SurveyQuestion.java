@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.Size;
+
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
@@ -72,7 +74,9 @@ public class SurveyQuestion implements HasId, Deletable, Serializable {
     private int order;
     private QuestionType type;
     private String question; // question on the website, it's replaced by a translated term if available
+    @Size(max = 3000)
     private String description; // an explanation, displayed as tooltip or after the question
+    @Size(max = 3000)
     private String placeholder; // a placeholder for input fields
     private boolean required = true;
     private boolean exposable = false;

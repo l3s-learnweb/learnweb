@@ -85,7 +85,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private int leaderUserId;
     private boolean deleted;
     @NotBlank
-    @Size(min = 3, max = 60)
+    @Size(min = 3, max = 255)
     private String title;
     @Size(max = 500)
     private String description;

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import jakarta.validation.constraints.Size;
+
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
@@ -20,7 +22,9 @@ public class SurveyPage implements HasId, Deletable, Serializable {
     private String[] requiredAnswer;
     private boolean deleted = false;
     private int order;
+    @Size(max = 500)
     private String title;
+    @Size(max = 3000)
     private String description;
     private boolean sampling;
     private ArrayList<SurveyPageVariant> variants = new ArrayList<>();

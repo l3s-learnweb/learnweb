@@ -47,13 +47,14 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     private int id;
     @NotBlank
-    @Size(min = 2, max = 40)
+    @Size(min = 2, max = 255)
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
     private RegistrationType registrationType = RegistrationType.CLOSED;
-    @Size(min = 2, max = 90)
+    @Size(min = 2, max = 255)
     private String registrationWizard;
+    @Size(max = 1000)
     private String registrationDescription;
     private int registrationIconFileId;
     private int nextXUsersBecomeModerator;

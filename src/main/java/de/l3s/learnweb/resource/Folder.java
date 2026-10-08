@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     private int userId;
     private boolean deleted = false; // indicates whether this folder has been deleted
     @NotBlank
+    @Size(max = 255)
     private String title;
     private String description;
     private LocalDateTime createdAt;

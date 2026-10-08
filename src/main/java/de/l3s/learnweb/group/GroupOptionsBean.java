@@ -38,7 +38,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private int selectedResourceTargetGroupId;
 
     @NotBlank
-    @Size(min = 3, max = 60)
+    @Size(min = 3, max = 255)
     private String editedGroupTitle;
     @Size(max = 500)
     private String editedGroupDescription; // Group edit fields (Required for editing group)

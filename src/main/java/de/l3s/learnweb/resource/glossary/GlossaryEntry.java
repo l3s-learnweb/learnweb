@@ -28,11 +28,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     @Size(max = 900)
     private String description;
     private boolean descriptionPasted = false;
-    @Size(max = 90)
+    @Size(max = 255)
     private String topicOne;
-    @Size(max = 90)
+    @Size(max = 255)
     private String topicTwo;
-    @Size(max = 90)
+    @Size(max = 255)
     private String topicThree;
     private LinkedList<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; // fulltext search in glossary
