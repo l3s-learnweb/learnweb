@@ -35,7 +35,14 @@ public class EventDispatcher {
      * Fires the event on behalf of the given user, e.g. when the user is not logged in yet.
      */
     public void fire(ActivityEvent event, User performer) {
-        event.setContext(performer, userBean.getSessionId());
+        fire(event, performer, userBean.getSessionId());
+    }
+
+    /**
+     * Fires the event outside a user session, e.g. on a callback of an external service.
+     */
+    public void fire(ActivityEvent event, User performer, String sessionId) {
+        event.setContext(performer, sessionId);
         log.debug("Event fired: {}", event);
         events.fireAsync(event);
     }

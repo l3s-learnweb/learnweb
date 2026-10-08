@@ -20,7 +20,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -31,7 +30,8 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.logging.LogDao;
+import de.l3s.learnweb.logging.EventDispatcher;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
@@ -64,7 +64,7 @@ public class DownloadServlet extends HttpServlet {
     private UserBean userBean;
 
     @Inject
-    private LogDao logDao;
+    private transient EventDispatcher eventDispatcher;
 
     /**
      * Process HEAD request. This returns the same headers as GET request, but without content.
@@ -171,12 +171,18 @@ public class DownloadServlet extends HttpServlet {
         BeanAssert.hasPermission(hasPermission); // validate user has access to the resource
 
         // log downloading of the MAIN files
-        if (file.getType() == File.FileType.MAIN) {
-            if (null != user) {
-                HttpSession session = request.getSession(true);
-                logDao.insert(user, Action.downloading, resource.get().getGroupId(), resource.get().getId(), Integer.toString(file.getId()), session.getId());
-            }
+        if (file.getType() == File.FileType.MAIN && null != user && isDownloadStart(request)) {
+            eventDispatcher.fire(new ResourceEvent(Action.downloading, resource.get()).setParams(file.getId()), user);
         }
+    }
+
+    /**
+     * Whether the request starts a download, so it is logged only once and not for HEAD requests
+     * or the follow-up range requests sent e.g. by media players while seeking or buffering.
+     */
+    private static boolean isDownloadStart(HttpServletRequest request) {
+        String range = request.getHeader("Range");
+        return "GET".equals(request.getMethod()) && (range == null || range.startsWith("bytes=0-"));
     }
 
     protected void sendFile(HttpServletRequest request, HttpServletResponse response, File file, boolean content) throws IOException {

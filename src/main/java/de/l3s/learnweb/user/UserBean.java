@@ -16,6 +16,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -51,7 +52,10 @@ public class UserBean implements Serializable {
     private Locale locale;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
-    private transient String sessionId;
+    @Inject
+    @SuppressWarnings("serial") // a serializable client proxy is injected; must not be transient
+    private HttpSession httpSession;
+
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on another account
     private transient Organisation activeOrganisation;
@@ -75,13 +79,7 @@ public class UserBean implements Serializable {
     }
 
     public String getSessionId() {
-        if (null == sessionId) {
-            sessionId = Faces.getSessionId();
-            if (sessionId == null) {
-                log.warn("Couldn't create session");
-            }
-        }
-        return sessionId;
+        return httpSession.getId();
     }
 
     /**

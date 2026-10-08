@@ -10,7 +10,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,8 @@ import com.google.gson.Gson;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.logging.LogDao;
+import de.l3s.learnweb.logging.EventDispatcher;
+import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.FileDao;
@@ -43,8 +43,9 @@ public class SaverServlet extends HttpServlet {
     private static final String FILE_ID = "fileId";
 
     private static final String RESPONSE_OK = "{\"error\":0}";
+    private static final String SESSION_ID = "onlyoffice"; // the callback is sent by the document server, not within a user session
 
-    @Inject private LogDao logDao;
+    @Inject private transient EventDispatcher eventDispatcher;
     @Inject private UserDao userDao;
     @Inject private FileDao fileDao;
     @Inject private ResourceDao resourceDao;
@@ -66,7 +67,6 @@ public class SaverServlet extends HttpServlet {
         String body = null;
         Map<String, String[]> params = null;
         try {
-            HttpSession session = request.getSession(true);
             body = IOUtils.toString(request.getReader());
             params = request.getParameterMap();
 
@@ -77,7 +77,7 @@ public class SaverServlet extends HttpServlet {
                 int resourceId = Integer.parseInt(request.getParameter(RESOURCE_ID));
                 int fileId = Integer.parseInt(request.getParameter(FILE_ID));
 
-                processCallback(callbackData, resourceId, fileId, session.getId());
+                processCallback(callbackData, resourceId, fileId);
             }
 
             response.getWriter().write(RESPONSE_OK);
@@ -87,19 +87,19 @@ public class SaverServlet extends HttpServlet {
         }
     }
 
-    private void processCallback(CallbackData data, int resourceId, int fileId, String sessionId) throws IOException {
+    private void processCallback(CallbackData data, int resourceId, int fileId) throws IOException {
         // get the user who edited the document
         int userId = data.getUsers().getFirst();
         User user = userDao.findByIdOrElseThrow(userId);
 
         if (fileId == 0) {
-            saveNewDocument(data, resourceId, user, sessionId);
+            saveNewDocument(data, resourceId, user);
         } else {
-            saveEditedDocument(data, resourceId, fileId, user, sessionId);
+            saveEditedDocument(data, resourceId, fileId, user);
         }
     }
 
-    private void saveNewDocument(CallbackData data, int resourceId, User user, String sessionId) throws IOException {
+    private void saveNewDocument(CallbackData data, int resourceId, User user) throws IOException {
         Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
 
         File file = new File(FileType.MAIN, resource.getMainFile().getName(), resource.getMainFile().getMimeType());
@@ -109,10 +109,10 @@ public class SaverServlet extends HttpServlet {
         resource.save();
 
         resourcePreviewMaker.processResource(resource);
-        logDao.insert(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
+        eventDispatcher.fire(new ResourceEvent(Action.changing_office_resource, resource), user, SESSION_ID);
     }
 
-    private void saveEditedDocument(CallbackData data, int resourceId, int fileId, User user, String sessionId) throws IOException {
+    private void saveEditedDocument(CallbackData data, int resourceId, int fileId, User user) throws IOException {
         // The idea of what is going here: we copy existing file, to a new file and than replace old file with new one
         // I'm not sure why it is necessary, but I guess to have permanent link to latest file (also to avoid reindex resource)
         File file = fileDao.findByIdOrElseThrow(fileId);
@@ -136,7 +136,7 @@ public class SaverServlet extends HttpServlet {
 
         Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
         resourcePreviewMaker.processResource(resource); // create new thumbnails for the resource
-        logDao.insert(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
+        eventDispatcher.fire(new ResourceEvent(Action.changing_office_resource, resource), user, SESSION_ID);
     }
 
     private void saveDocumentHistory(CallbackData data, int resourceId, File file) throws IOException {
