@@ -15,7 +15,7 @@ public class SearchSession implements Serializable {
 
     private final int userId;
     private final String sessionId;
-    private LinkedList<SearchHistoryQuery> queries;
+    private final LinkedList<SearchHistoryQuery> queries = new LinkedList<>();
 
     private transient User user;
 
@@ -39,8 +39,8 @@ public class SearchSession implements Serializable {
         return user;
     }
 
-    public void setQueries(final List<SearchHistoryQuery> queries) {
-        this.queries = new LinkedList<>(queries);
+    public void addQuery(final SearchHistoryQuery query) {
+        queries.add(query);
     }
 
     public List<SearchHistoryQuery> getQueries() {

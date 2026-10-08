@@ -7,17 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.user.User;
@@ -37,10 +35,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private SearchHistoryQuery selectedQuery;
 
     private transient List<SearchSession> sessions;
-    private final transient Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
+    private transient Map<Integer, List<ResourceDecorator>> snippets; // by search id
 
     @Inject
     private UserDao userDao;
+
+    @Inject
+    private GroupDao groupDao;
 
     @Inject
     private SearchHistoryDao searchHistoryDao;
@@ -49,11 +50,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
      * Load the variables that needs values before the view is rendered.
      */
     public void onLoad() {
-        BeanAssert.authorized(isLoggedIn());
-
-        if (selectedUserId == 0) {
-            selectedUserId = getUser().getId();
-        }
+        getCurrentUser(); // fails early, if the user can't view the history
     }
 
     public SearchHistoryQuery getSelectedQuery() {
@@ -65,10 +62,21 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public List<SearchSession> getSessions() {
-        if (sessions == null && showGroupHistory && selectedGroupId != 0) {
-            sessions = searchHistoryDao.findSessionsByGroupId(selectedGroupId);
-        } else if (sessions == null && !showGroupHistory) {
-            sessions = searchHistoryDao.findSessionsByUserId(selectedUserId);
+        if (sessions == null) {
+            // "user:" or "u:" filters by the username, otherwise by the queries
+            String filter = StringUtils.trimToNull(searchQuery);
+            String username = null;
+            if (filter != null && (filter.startsWith("user:") || filter.startsWith("u:"))) {
+                username = StringUtils.trimToNull(StringUtils.substringAfter(filter, ":"));
+                filter = null;
+            }
+
+            if (showGroupHistory && selectedGroupId > 0) { // -1 if no group is selected
+                BeanAssert.hasPermission(groupDao.findByIdOrElseThrow(selectedGroupId).canViewSearchHistory(getUser()));
+                sessions = searchHistoryDao.findSessionsByGroupId(selectedGroupId, filter, username);
+            } else if (!showGroupHistory) {
+                sessions = searchHistoryDao.findSessionsByUserId(getCurrentUser().getId(), filter, username);
+            }
         }
 
         return sessions;
@@ -89,38 +97,42 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     public List<ResourceDecorator> getSearchResults() {
         List<ResourceDecorator> searchResults = new ArrayList<>();
         if (selectedQuery != null) {
-            if (!snippets.containsKey(selectedQuery.searchId())) {
-                snippets.put(selectedQuery.searchId(), dao().getSearchHistoryDao().findSearchResultsByQuery(selectedQuery, 100));
+            if (snippets == null) { // also after deserialization
+                snippets = new HashMap<>();
             }
-
-            searchResults.addAll(snippets.get(selectedQuery.searchId()));
+            searchResults.addAll(snippets.computeIfAbsent(selectedQuery.searchId(), searchId -> searchHistoryDao.findSearchResultsByQuery(selectedQuery, 100)));
         }
         return searchResults;
     }
 
-    public void onChangeGroup(AjaxBehaviorEvent event) {
-        reset();
-    }
-
     public void actionSetShowGroupHistory() {
         showGroupHistory = true;
-        searchQuery = null;
-        sessions = null;
+        reset();
     }
 
     public void actionSetShowUserHistory() {
         showGroupHistory = false;
-        searchQuery = null;
-        sessions = null;
         selectedGroupId = -1;
+        reset();
     }
 
     public boolean isShowGroupHistory() {
         return showGroupHistory;
     }
 
+    /**
+     * The user whose history is shown, checked on each call, because the view parameters are set again on a postback.
+     */
     public User getCurrentUser() {
-        return userDao.findById(selectedUserId).orElse(getUser());
+        BeanAssert.authorized(isLoggedIn());
+
+        if (selectedUserId == 0 || selectedUserId == getUser().getId()) {
+            return getUser();
+        }
+
+        User user = userDao.findByIdOrElseThrow(selectedUserId);
+        BeanAssert.hasPermission(getUser().canModerateUser(user));
+        return user;
     }
 
     public int getSelectedUserId() {
@@ -138,51 +150,18 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     public void setSelectedGroupId(int selectedGroupId) {
         if (selectedGroupId != this.selectedGroupId) {
             showGroupHistory = true;
-            searchQuery = null;
-            sessions = null;
+            reset();
         }
-
-        //log.info("selected group id: " + selectedGroupId);
         this.selectedGroupId = selectedGroupId;
     }
 
     public void search() {
-        sessions = null;
-        filterSessionsByQuery(searchQuery);
+        sessions = null; // reloaded with the current filter
     }
 
     public void reset() {
         sessions = null;
         searchQuery = null;
-    }
-
-    private void filterSessionsByQuery(String filterQuery) {
-        if (StringUtils.isEmpty(filterQuery)) {
-            return;
-        }
-
-        boolean isSearchUser = false;
-        if (filterQuery.startsWith("user:") || filterQuery.startsWith("u:")) {
-            isSearchUser = true;
-            filterQuery = filterQuery.replace("user:", "").replace("u:", "").trim();
-        }
-
-        final boolean finalIsSearchUser = isSearchUser;
-        final String finalQuery = filterQuery;
-
-        List<SearchSession> allSessions = getSessions();
-        if (allSessions == null || allSessions.isEmpty()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "search_history.no_sessions_recorded");
-        } else {
-            sessions = allSessions.stream().filter(session -> {
-                if (finalIsSearchUser) {
-                    return Strings.CI.contains(session.getUser().getUsername(), finalQuery);
-                }
-
-                return session.getQueries().stream().anyMatch(query -> Strings.CI.contains(query.query(), finalQuery));
-
-            }).toList();
-        }
     }
 
     public String getSearchQuery() {

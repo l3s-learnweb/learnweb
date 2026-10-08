@@ -315,6 +315,13 @@ public final class Organisation implements HasId, Serializable, Comparable<Organ
         options.set(option.ordinal(), value);
     }
 
+    /**
+     * @return false if the activities of the organisation's users must not be stored in the activity log (the search history is controlled separately)
+     */
+    public boolean isLoggingEnabled() {
+        return !getOption(Option.Privacy_Logging_disabled);
+    }
+
     protected BitSet getOptions() {
         return options;
     }

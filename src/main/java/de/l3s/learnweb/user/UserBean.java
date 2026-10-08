@@ -505,7 +505,7 @@ public class UserBean implements Serializable {
     }
 
     public boolean isLoggingEnabled() {
-        return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Logging_disabled)).orElse(true);
+        return getActiveOrganisation().map(Organisation::isLoggingEnabled).orElse(false);
     }
 
     public boolean isSearchChatEnabled() {

@@ -161,9 +161,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
      * @param user Returns TRUE if the user is member of this group
      */
     public boolean isMember(User user) {
-        List<User> members = getMembers();
-
-        return members.contains(user);
+        return user != null && user.getGroups().stream().anyMatch(group -> group.getId() == id);
     }
 
     public boolean isLeader(User user) {
@@ -513,6 +511,19 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
             case GROUP_MEMBERS, GROUP_LEADER -> isMember(user);
         };
+    }
+
+    public boolean canViewSearchHistory(User user) {
+        if (user == null) {
+            return false;
+        }
+
+        if (user.isAdmin() || isMember(user) || getCourse().isModerator(user)) {
+            return true;
+        }
+
+        // moderators of the course's organisation, they can view the history of each of its users anyway
+        return user.isModerator() && getCourse().getOrganisationId() == user.getOrganisationId();
     }
 
     public int getMaxMemberCount() {

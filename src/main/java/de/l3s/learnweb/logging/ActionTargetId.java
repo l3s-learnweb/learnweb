@@ -14,5 +14,6 @@ public enum ActionTargetId {
     FORUM_POST_ID,
     COURSE_ID,
     FOLDER_ID,
-    OTHER
+    OTHER,
+    SEARCH_ID
 }

@@ -25,7 +25,6 @@ import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
@@ -96,14 +95,7 @@ public interface LogDao extends SqlObject, Serializable {
      * @param targetId optional value; should be 0 if not required
      */
     default void insert(User user, Action action, Integer groupId, Integer targetId, String params, String sessionId) {
-        int userId = 0;
-        if (user != null) {
-            userId = user.getId();
-
-            if (user.getOrganisation().getOption(Organisation.Option.Privacy_Logging_disabled)) {
-                return; // we are not allowed to log events for this user
-            }
-        }
+        int userId = user != null ? user.getId() : 0;
 
         if (null == action) {
             throw new IllegalArgumentException();

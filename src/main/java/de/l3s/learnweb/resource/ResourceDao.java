@@ -52,6 +52,13 @@ public interface ResourceDao extends SqlObject, Serializable {
     }
 
     /**
+     * @param resourceIds must not be empty
+     * @return the resources that exist, including deleted ones, in no particular order
+     */
+    @SqlQuery("SELECT * FROM lw_resource WHERE resource_id IN (<resourceIds>)")
+    List<Resource> findByIds(@BindList("resourceIds") Collection<Integer> resourceIds);
+
+    /**
      * Returns all resources (that were not deleted).
      */
     @FetchSize(1000)

@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -24,13 +25,11 @@ import de.l3s.interweb.core.search.ContentType;
 import de.l3s.interweb.core.search.SearchExtra;
 import de.l3s.interweb.core.search.SearchQuery;
 import de.l3s.interweb.core.search.SearchResults;
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
-import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.User;
 
 public class Search implements Serializable {
@@ -68,15 +67,13 @@ public class Search implements Serializable {
     private int removedResourceCount = 0;
     private int interwebPageOffset = 0;
     private boolean stopped;
-    private int searchId;
-    private final User user;
+    private boolean failed; // a page failed to load, e.g. an external service didn't respond
 
     public Search(Interweb interweb, String query, SearchFilters sf, User user) {
         this.interweb = interweb;
         this.query = query;
         this.searchFilters = sf;
         this.userId = (null == user) ? 0 : user.getId();
-        this.user = user;
         this.solrSearch = new SolrSearch(query, user, false);
 
         if (query.startsWith("source:") || query.startsWith("groups:") || query.startsWith("title:")) {
@@ -84,7 +81,7 @@ public class Search implements Serializable {
         }
     }
 
-    private LinkedList<ResourceDecorator> doSearch(int page) {
+    private LinkedList<ResourceDecorator> doSearch(int page, Consumer<List<ResourceDecorator>> onPageLoaded) {
 
         LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
@@ -121,17 +118,13 @@ public class Search implements Serializable {
 
                 resources.addAll(newResources);
                 pages.put(page, newResources);
+                onPageLoaded.accept(newResources);
             } else if (stopped) {
                 hasMoreResults = false;
             }
         } catch (Exception e) {
             log.fatal("error during search", e);
-        }
-
-        try {
-            logResources(newResources, page);
-        } catch (Exception e) {
-            log.error("Failed to save search results", e);
+            failed = true;
         }
 
         return newResources;
@@ -389,6 +382,13 @@ public class Search implements Serializable {
     }
 
     /**
+     * @return true if a page failed to load, its results are incomplete then
+     */
+    public boolean isFailed() {
+        return failed;
+    }
+
+    /**
      * @return All resources that have been loaded
      */
     public List<GroupedResources> getResourcesGroupedBySource(Integer limit, final ResourceService searchService) {
@@ -421,9 +421,18 @@ public class Search implements Serializable {
     /**
      * May return null.
      */
-    public synchronized LinkedList<ResourceDecorator> getResourcesByPage(int page) {
+    public LinkedList<ResourceDecorator> getResourcesByPage(int page) {
+        return getResourcesByPage(page, res -> {});
+    }
+
+    /**
+     * May return null.
+     *
+     * @param onPageLoaded called with the results of each page searched by this call, but not for pages returned from the cache
+     */
+    public synchronized LinkedList<ResourceDecorator> getResourcesByPage(int page, Consumer<List<ResourceDecorator>> onPageLoaded) {
         if (page == 2) {
-            getResourcesByPage(1);
+            getResourcesByPage(1, onPageLoaded);
         }
 
         if (page > 50) {
@@ -435,7 +444,7 @@ public class Search implements Serializable {
         LinkedList<ResourceDecorator> res = pages.get(page);
 
         if (null == res) {
-            return doSearch(page);
+            return doSearch(page, onPageLoaded);
         }
 
         return res;
@@ -451,43 +460,6 @@ public class Search implements Serializable {
 
     public void stop() {
         this.stopped = true;
-    }
-
-    /**
-     * @return Unique id is generated when the query has been logged by logQuery()
-     */
-    public int getId() {
-        return searchId;
-    }
-
-    public void logQuery(String query, ResourceService searchService, String language, String queryFilters) {
-        searchId = Learnweb.dao().getSearchHistoryDao().insertQuery(query, getMode(), searchService, language, queryFilters, user);
-    }
-
-    private void logResources(List<ResourceDecorator> resources, int pageId) {
-        /*if(searchId > 0) // log resources only when logQuery() was called before; This isn't the case on the group search page
-            getSearchLogger().logResources(searchId, resources);*/
-
-        //call the method to fetch the html of the logged resources
-        //only if search_mode='text' and userId is admin/specificUser
-        if (searchId != 0) {
-            Learnweb.dao().getSearchHistoryDao().insertResources(searchId, resources);
-        }
-    }
-
-    public void logResourceClicked(int rank) {
-        if (searchId != 0) {
-            Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, SearchHistoryDao.SearchAction.resource_clicked);
-        }
-    }
-
-    /**
-     * @param newResourceId Id of the new stored resource
-     */
-    public void logResourceSaved(int rank, int newResourceId) {
-        if (searchId != 0) {
-            Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, SearchHistoryDao.SearchAction.resource_saved);
-        }
     }
 
     public static class GroupedResources implements Serializable, Comparable<GroupedResources> {

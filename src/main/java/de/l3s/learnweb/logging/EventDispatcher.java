@@ -11,7 +11,9 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 
 /**
- * Dispatches events asynchronously, enriched with the current user and session context.
+ * Dispatches events, enriched with the current user and session context.
+ * The events are delivered only to asynchronous observers ({@code @ObservesAsync}), the request never waits for them.
+ * All events are fired, the observers apply the privacy settings that concern them, e.g. {@link LoggingEventListener}.
  * Can be injected into session and view scoped beans (CDI serializes only a reference to the client proxy).
  */
 @ApplicationScoped
@@ -44,6 +46,9 @@ public class EventDispatcher {
     public void fire(ActivityEvent event, User performer, String sessionId) {
         event.setContext(performer, sessionId);
         log.debug("Event fired: {}", event);
-        events.fireAsync(event);
+        events.fireAsync(event).exceptionally(e -> {
+            log.error("Observer failed for event: {}", event, e);
+            return null;
+        });
     }
 }

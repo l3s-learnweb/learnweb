@@ -267,7 +267,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             solrSearch.setFilterLanguage(searchFilters.getFilterValue(FilterType.language));
         }
 
-        SolrPaginator sp = new SolrPaginator(solrSearch, config().isCollectSearchHistory());
+        SolrPaginator sp = new SolrPaginator(solrSearch);
         searchFilters.resetCounters();
         searchFilters.putResourceCounters(sp.getFacetFields());
         searchFilters.putResourceCounters(sp.getFacetQueries());

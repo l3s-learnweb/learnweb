@@ -5,41 +5,24 @@ import java.io.Serial;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.ResourceDecorator;
 
 public class SolrPaginator extends AbstractPaginator {
     @Serial
     private static final long serialVersionUID = 3823389610985272265L;
-    private static final Logger log = LogManager.getLogger(SolrPaginator.class);
 
     private final SolrSearch search;
-    private int searchLogId;
 
     private transient List<FacetField> facetFieldsResults;
     private transient Map<String, Integer> facetQueriesResults;
 
-    public SolrPaginator(SolrSearch search, final boolean collectSearchHistory) {
+    public SolrPaginator(SolrSearch search) {
         super(search.getResultsPerPage());
 
         this.search = search;
-
-        // group id 0 is the virtual "private resources" group, which doesn't exist in lw_group
-        if (collectSearchHistory && search.getFilterGroupIds().size() == 1 && search.getFilterGroupIds().getFirst() != 0
-            && search.getQuery() != null && !"*".equals(search.getQuery())) {
-            this.searchLogId = Learnweb.dao().getSearchHistoryDao().insertGroupQuery(
-                search.getFilterGroupIds().getFirst(),
-                search.getQuery(),
-                search.getFilterLanguage(),
-                null,
-                search.getUserId()
-            );
-        }
     }
 
     @Override
@@ -54,13 +37,6 @@ public class SolrPaginator extends AbstractPaginator {
         facetQueriesResults = search.getResultsFacetQuery();
 
         setCurrentPageCache(results);
-        try {
-            if (searchLogId != 0) {
-                Learnweb.dao().getSearchHistoryDao().insertResources(searchLogId, results);
-            }
-        } catch (Exception e) {
-            log.error("Failed to save search results", e);
-        }
         return results;
     }
 

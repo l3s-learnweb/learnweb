@@ -56,6 +56,20 @@
         <Class name="de.l3s.learnweb.component.ActiveSubmenu"/>
         <Bug pattern="SE_BAD_FIELD"/>
     </Match>
+    <!-- CDI injects serializable client proxies of these beans -->
+    <Match>
+        <Or>
+            <And>
+                <Class name="de.l3s.learnweb.user.UserBean"/>
+                <Field name="httpSession"/>
+            </And>
+            <And>
+                <Class name="de.l3s.learnweb.resource.search.SearchBean"/>
+                <Field name="searchHistoryRecorder"/>
+            </And>
+        </Or>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
     <!-- No deserialization methods -->
     <Match>
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>

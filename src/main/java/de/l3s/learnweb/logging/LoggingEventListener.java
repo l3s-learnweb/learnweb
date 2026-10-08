@@ -7,11 +7,10 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.searchhistory.SearchEvent;
+import de.l3s.learnweb.user.User;
 
 /**
- * Listener for logging events to the database.
- * Observes events asynchronously via CDI events.
+ * Stores the activity events in the activity log (lw_user_log).
  */
 @ApplicationScoped
 public class LoggingEventListener {
@@ -21,16 +20,13 @@ public class LoggingEventListener {
     private LogDao logDao;
 
     /**
-     * Observes events asynchronously and logs them to the database.
-     * Search events other than the query itself are tracked by SearchHistoryListener.
+     * Logs only the events of logged-in users, whose organisation allows the activity log.
      *
-     * @param event the event to be logged
+     * @param event the event to be logged, including the user and session context
      */
     public void onEvent(@ObservesAsync ActivityEvent event) {
-        if (event.getPerformer() == null) {
-            return; // TODO: anonymous logging
-        }
-        if (event instanceof SearchEvent && event.getAction() != Action.searching) {
+        User performer = event.getPerformer();
+        if (performer == null || !performer.getOrganisation().isLoggingEnabled()) {
             return;
         }
 

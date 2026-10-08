@@ -1,7 +1,7 @@
 INSERT INTO `lw_search_history` (`search_id`, `group_id`, `query`, `mode`, `service`, `language`, `filters`, `user_id`, `created_at`)
 VALUES (1, NULL, 'Food', 'text', 'google', 'it', NULL, 1, '2021-03-05 18:30:25'),
        (2, NULL, 'spacex', 'video', 'vimeo', 'en', NULL, 2, '2021-03-05 12:53:42'),
-       (3, 1, 'a whales tale', 'video', 'youtube', 'it', NULL, 4, '2021-03-05 07:42:29');
+       (3, NULL, 'a whales tale', 'video', 'youtube', 'it', NULL, 4, '2021-03-05 07:42:29');
 
 INSERT INTO `lw_search_history_resource` (`search_id`, `rank`, `resource_id`, `url`, `title`, `description`, `thumbnail_url`, `thumbnail_height`, `thumbnail_width`)
 VALUES (1, 1, NULL, 'https://www.foodweb.it/', '<b>FOOD</b> - Il meglio dell’industria e della distribuzione ...', 'Analisi di mercato, dossier, case history, news, interviste ai protagonisti del food system, osservatori, rubriche', NULL, NULL, NULL),

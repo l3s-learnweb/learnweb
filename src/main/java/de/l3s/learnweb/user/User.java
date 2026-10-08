@@ -347,7 +347,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      * Returns the groups the user is member off.
      */
     public List<Group> getGroups() {
-        if (null == groups || groupsCacheTime + 3000L < System.currentTimeMillis()) {
+        if (null == groups || groupsCacheTime + 30_000L < System.currentTimeMillis()) {
             groups = Learnweb.dao().getGroupDao().findByUserId(id);
             groupsCacheTime = System.currentTimeMillis();
         }

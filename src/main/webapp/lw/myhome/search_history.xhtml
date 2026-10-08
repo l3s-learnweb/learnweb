@@ -69,7 +69,7 @@
 									<p:selectOneMenu id="select-group-menu" styleClass="ms-2" value="#{searchHistoryBean.selectedGroupId}">
 										<f:selectItem itemLabel="---------------" itemValue="-1"/>
 										<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-										<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form"/>
+										<p:ajax update=":sessionsList @form"/>
 									</p:selectOneMenu>
 								</h:form>
 							</div>
@@ -86,7 +86,7 @@
 								<li class="session-single">
 									<span></span>
 
-									<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
+									<h:panelGroup layout="block" class="cursor-pointer" pt:data-userId="#{ss.userId}">
 										<div class="session-queries">
 											<ui:repeat var="query" value="#{ss.queries}">
 												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="text-wrap p-1">

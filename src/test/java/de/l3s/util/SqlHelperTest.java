@@ -24,4 +24,9 @@ class SqlHelperTest {
         String query = SqlHelper.generateUpdateQuery("lw_forum_topic", "topic_id", new String[] {"group_id", "title", "user_id", "created_at"});
         assertEquals("UPDATE lw_forum_topic SET `group_id`=?,`title`=?,`user_id`=?,`created_at`=? WHERE `topic_id`=?", query);
     }
+
+    @Test
+    void toContainsPattern() {
+        assertEquals("%space!_x 100!% !!%", SqlHelper.toContainsPattern("Space_X 100% !"));
+    }
 }

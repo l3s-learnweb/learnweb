@@ -4,7 +4,13 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.PreparedBatch;
@@ -31,20 +37,23 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         resource_saved
     }
 
+    /**
+     * @return a page of the user's queries, including those that don't belong to a session, the latest first
+     */
     @RegisterRowMapper(SearchHistoryQueryMapper.class)
-    @SqlQuery("""
-        SELECT q.*
-        FROM lw_search_history q JOIN lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id
-        WHERE l.action = 5 AND l.session_id = ?
-        ORDER BY q.created_at ASC
-        """)
-    List<SearchHistoryQuery> findQueriesBySessionId(String sessionId);
+    @SqlQuery("SELECT * FROM lw_search_history WHERE user_id = ? ORDER BY created_at DESC, search_id DESC LIMIT ? OFFSET ?")
+    List<SearchHistoryQuery> findQueriesByUserId(int userId, int limit, int offset);
+
+    @SqlQuery("SELECT COUNT(*) FROM lw_search_history WHERE user_id = ?")
+    int countQueriesByUserId(int userId);
 
     default List<ResourceDecorator> findSearchResultsByQuery(SearchHistoryQuery query, int limit) {
-        ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
+        record StoredResult(int rank, int resourceId, Resource webResource, String snippet, boolean clicked, boolean saved) {}
 
-        return getHandle().select("""
-                SELECT r.*, COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved
+        List<StoredResult> results = getHandle().select("""
+                SELECT r.*,
+                    COUNT(CASE WHEN a.action = 'resource_clicked' THEN 1 END) AS clicked,
+                    COUNT(CASE WHEN a.action = 'resource_saved' THEN 1 END) AS saved
                 FROM lw_search_history_resource r LEFT JOIN lw_search_history_action a ON r.search_id = a.search_id AND r.rank = a.rank
                 WHERE r.search_id = ?
                 GROUP BY r.resource_id, r.rank
@@ -54,75 +63,111 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             .map((rs, ctx) -> {
                 int resourceId = rs.getInt("resource_id");
 
-                Resource res;
-                if (resourceId != 0) {
-                    res = resourceDao.findByIdOrElseThrow(resourceId);
-                } else {
-                    res = new WebResource();
-                    res.setUrl(rs.getString("url"));
-                    res.setTitle(rs.getString("title"));
-                    res.setDescription(rs.getString("description"));
-                    res.setHeight(rs.getInt("thumbnail_height"));
-                    res.setWidth(rs.getInt("thumbnail_width"));
-                    res.setThumbnailMedium(rs.getString("thumbnail_url"));
+                Resource webResource = null;
+                if (resourceId == 0) { // not stored in Learnweb, the search history keeps its details
+                    webResource = new WebResource();
+                    webResource.setUrl(rs.getString("url"));
+                    webResource.setTitle(rs.getString("title"));
+                    webResource.setDescription(rs.getString("description"));
+                    webResource.setHeight(rs.getInt("thumbnail_height"));
+                    webResource.setWidth(rs.getInt("thumbnail_width"));
+                    webResource.setThumbnailMedium(rs.getString("thumbnail_url"));
                 }
 
-                ResourceDecorator rd = new ResourceDecorator(res);
-                rd.setRank(rs.getInt("rank"));
-                rd.setSnippet(rs.getString("description"));
-                rd.setClicked(rs.getInt("clicked") > 0);
-                rd.setSaved(rs.getInt("saved") > 0);
-                return rd;
+                return new StoredResult(rs.getInt("rank"), resourceId, webResource, rs.getString("description"),
+                    rs.getInt("clicked") > 0, rs.getInt("saved") > 0);
             }).list();
+
+        Set<Integer> resourceIds = results.stream().map(StoredResult::resourceId).filter(id -> id != 0).collect(Collectors.toSet());
+        Map<Integer, Resource> resources = resourceIds.isEmpty() ? Map.of() : getHandle().attach(ResourceDao.class).findByIds(resourceIds).stream()
+            .collect(Collectors.toMap(Resource::getId, Function.identity()));
+
+        List<ResourceDecorator> decorators = new ArrayList<>();
+        for (StoredResult result : results) {
+            Resource resource = result.resourceId() == 0 ? result.webResource() : resources.get(result.resourceId());
+            if (resource == null) {
+                continue; // deleted from Learnweb
+            }
+
+            ResourceDecorator rd = new ResourceDecorator(resource);
+            rd.setRank(result.rank());
+            rd.setSnippet(result.snippet());
+            rd.setClicked(result.clicked());
+            rd.setSaved(result.saved());
+            decorators.add(rd);
+        }
+        return decorators;
     }
 
-    default List<SearchSession> findSessionsByUserId(int userId) {
-        return getHandle().select("SELECT DISTINCT l.session_id FROM lw_search_history q JOIN lw_user_log l ON q.search_id = l.target_id "
-                + "AND q.user_id = l.user_id WHERE l.action = 5 AND l.user_id = ? ORDER BY q.created_at DESC LIMIT 30", userId)
-            .map((rs, ctx) -> {
-                SearchSession session = new SearchSession(rs.getString("session_id"), userId);
-                session.setQueries(findQueriesBySessionId(session.getSessionId()));
-                return session;
-            }).list();
+    /**
+     * @param query only the sessions with a query containing it, null for all
+     * @param username only the sessions of users whose username contains it, null for all
+     */
+    default List<SearchSession> findSessionsByUserId(int userId, String query, String username) {
+        return findSessions("q.user_id = ?", userId, query, username);
     }
 
-    default List<SearchSession> findSessionsByGroupId(int groupId) {
-        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM lw_search_history q JOIN lw_user_log l ON q.search_id = l.target_id "
-                + "AND q.user_id = l.user_id JOIN lw_group_user ug ON ug.user_id = l.user_id "
-                + "WHERE l.action = 5 AND ug.group_id = ? GROUP BY l.user_id, l.session_id, q.created_at ORDER BY q.created_at DESC LIMIT 30", groupId)
-            .map((rs, ctx) -> {
-                SearchSession session = new SearchSession(rs.getString("session_id"), rs.getInt("user_id"));
-                session.setQueries(findQueriesBySessionId(session.getSessionId()));
-                return session;
-            }).list();
+    /**
+     * The sessions of all group members, see {@link #findSessionsByUserId(int, String, String)} for the filters.
+     */
+    default List<SearchSession> findSessionsByGroupId(int groupId, String query, String username) {
+        return findSessions("q.user_id IN (SELECT user_id FROM lw_group_user WHERE group_id = ?)", groupId, query, username);
     }
 
-    @SqlUpdate("INSERT INTO lw_search_history (query, mode, service, language, filters, user_id) VALUES (?, ?, ?, ?, ?, ?)")
+    /**
+     * Loads the 30 latest sessions with all their queries at once.
+     */
+    private List<SearchSession> findSessions(String ownerCondition, int ownerId, String query, String username) {
+        List<Object> args = new ArrayList<>(List.of(ownerId));
+        StringBuilder sessionsQuery = new StringBuilder("SELECT q.user_id, q.session_id, MAX(q.created_at) AS last_query FROM lw_search_history q WHERE ")
+            .append(ownerCondition).append(" AND q.session_id IS NOT NULL");
+        if (username != null) {
+            sessionsQuery.append(" AND q.user_id IN (SELECT user_id FROM lw_user WHERE LOWER(username) LIKE ? " + SqlHelper.LIKE_ESCAPE + ")");
+            args.add(SqlHelper.toContainsPattern(username));
+        }
+        sessionsQuery.append(" GROUP BY q.user_id, q.session_id");
+        if (query != null) { // the whole session is shown, if any of its queries matches
+            sessionsQuery.append(" HAVING COUNT(CASE WHEN LOWER(q.query) LIKE ? " + SqlHelper.LIKE_ESCAPE + " THEN 1 END) > 0");
+            args.add(SqlHelper.toContainsPattern(query));
+        }
+        sessionsQuery.append(" ORDER BY last_query DESC LIMIT 30");
+
+        SearchHistoryQueryMapper queryMapper = new SearchHistoryQueryMapper();
+
+        Map<String, SearchSession> sessions = getHandle().select("SELECT q.* FROM lw_search_history q JOIN (" + sessionsQuery + ") s "
+                + "ON q.user_id = s.user_id AND q.session_id = s.session_id ORDER BY s.last_query DESC, q.user_id, q.session_id, q.created_at ASC", args.toArray())
+            .reduceResultSet(new LinkedHashMap<String, SearchSession>(), (acc, rs, ctx) -> {
+                int userId = rs.getInt("user_id");
+                String sessionId = rs.getString("session_id");
+                acc.computeIfAbsent(userId + ":" + sessionId, key -> new SearchSession(sessionId, userId)).addQuery(queryMapper.map(rs, ctx));
+                return acc;
+            });
+
+        return new ArrayList<>(sessions.values());
+    }
+
+    @SqlUpdate("INSERT INTO lw_search_history (query, mode, service, language, filters, user_id, session_id) VALUES (?, ?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("search_id")
-    int insertQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user);
-
-    @SqlUpdate("INSERT INTO lw_search_history (group_id, query, mode, service, language, filters, user_id) VALUES (?, ?, 'group', 'learnweb', ?, ?, ?)")
-    @GetGeneratedKeys("search_id")
-    int insertGroupQuery(int groupId, String query, String language, String searchFilters, int userId);
+    int insertQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user, String sessionId);
 
     @SqlUpdate("INSERT INTO lw_search_history_action (search_id, `rank`, action) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE action = action")
     void insertAction(int searchId, int rank, SearchAction action);
 
-    default void insertResources(int searchId, List<ResourceDecorator> resources) {
-        if (resources.isEmpty() || searchId == 0) { // failed to log query, no need to log resources
+    default void insertResources(int searchId, List<SearchHistoryResult> results) {
+        if (results.isEmpty()) {
             return;
         }
 
         PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_search_history_resource (search_id, `rank`, resource_id, url, title, description, "
             + "thumbnail_url, thumbnail_height, thumbnail_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        for (ResourceDecorator decoratedResource : resources) {
+        for (SearchHistoryResult result : results) {
             batch.bind(0, searchId);
-            batch.bind(1, decoratedResource.getRank());
+            batch.bind(1, result.rank());
 
-            if (decoratedResource.getResource().getId() != 0) {
+            if (result.resourceId() != 0) {
                 // resource is stored in Learnweb, we do not need to save the title or description
-                batch.bind(2, decoratedResource.getResource().getId());
+                batch.bind(2, result.resourceId());
                 batch.bindNull(3, Types.VARCHAR);
                 batch.bindNull(4, Types.VARCHAR);
                 batch.bindNull(5, Types.VARCHAR);
@@ -132,12 +177,12 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             } else {
                 // no learnweb resource -> store title URL and description
                 batch.bindNull(2, Types.INTEGER);
-                batch.bind(3, decoratedResource.getUrl());
-                batch.bind(4, StringHelper.shortnString(decoratedResource.getTitle(), 250));
-                batch.bind(5, StringHelper.shortnString(decoratedResource.getDescription(), 1000));
-                batch.bind(6, decoratedResource.getThumbnailMedium());
-                batch.bind(7, SqlHelper.toNullable(decoratedResource.getHeight()));
-                batch.bind(8, SqlHelper.toNullable(decoratedResource.getWidth()));
+                batch.bind(3, result.url());
+                batch.bind(4, StringHelper.shortnString(result.title(), 250));
+                batch.bind(5, StringHelper.shortnString(result.description(), 1000));
+                batch.bind(6, result.thumbnailUrl());
+                batch.bind(7, SqlHelper.toNullable(result.thumbnailHeight()));
+                batch.bind(8, SqlHelper.toNullable(result.thumbnailWidth()));
             }
             batch.add();
         }

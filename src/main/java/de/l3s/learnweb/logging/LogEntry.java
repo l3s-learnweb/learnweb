@@ -44,8 +44,11 @@ public class LogEntry implements Serializable {
         this.targetId = targetId;
     }
 
+    /**
+     * @return the user who performed the action, null if the user wasn't logged in
+     */
     public User getUser() {
-        if (null == user) {
+        if (null == user && userId != 0) {
             user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;

@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.search;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
@@ -12,6 +11,7 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +26,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ActivityEvent;
 import de.l3s.learnweb.logging.ResourceEvent;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -37,7 +38,8 @@ import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
-import de.l3s.learnweb.searchhistory.SearchEvent;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao.SearchAction;
+import de.l3s.learnweb.searchhistory.SearchHistoryRecorder;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -59,6 +61,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private int page;
 
     private Search search;
+    private int searchHistoryId; // the id of the stored query of the current search, 0 if it wasn't stored
     private Interweb interweb;
     private SearchFilters searchFilters;
 
@@ -68,8 +71,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private ResourceService searchService;
     private String view = "float"; // float, grid or list
 
-    private int counter = 0;
     private transient List<GroupedResources> resourcesGroupedBySource;
+
+    @Inject
+    @SuppressWarnings("serial") // a serializable client proxy is injected
+    private SearchHistoryRecorder searchHistoryRecorder;
 
     @PostConstruct
     public void init() {
@@ -119,18 +125,13 @@ public class SearchBean extends ApplicationBean implements Serializable {
             search.setMode(searchMode);
             searchFilters.setFilters(queryFilters);
             searchFilters.setFilter(FilterType.service, searchService.name());
-            searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
+            String language = getUserBean().getLocaleCode();
+            searchFilters.setFilter(FilterType.language, language);
 
-            if (config().isCollectSearchHistory()) {
-                try {
-                    search.logQuery(query, searchService, searchFilters.getFilterValue(FilterType.language), queryFilters);
-                } catch (Exception e) {
-                    log.error("Could not log search query", e);
-                }
-            }
+            searchHistoryId = searchHistoryRecorder.recordQuery(query, searchMode, searchService, language, queryFilters, getUser(), getUserBean().getSessionId());
+            fireEvent(new ActivityEvent(Action.searching).setTargetId(searchHistoryId).setParams(query));
 
-            search.getResourcesByPage(1); // load first page
-            fireEvent(new SearchEvent(Action.searching, search).setParams(query));
+            loadPage(1);
             resourcesGroupedBySource = null;
         }
 
@@ -142,9 +143,15 @@ public class SearchBean extends ApplicationBean implements Serializable {
             return null;
         }
 
-        // don't log anything here.
-        // this method will be called multiple times for each page
-        return search.getResourcesByPage(page);
+        return loadPage(page);
+    }
+
+    /**
+     * Returns the page of the current search, the results are stored in the search history when the page is loaded the first time.
+     * The getters call it multiple times for each page.
+     */
+    private List<ResourceDecorator> loadPage(int page) {
+        return search.getResourcesByPage(page, resources -> searchHistoryRecorder.recordResults(searchHistoryId, resources));
     }
 
     // -------------------------------------------------------------------------
@@ -191,9 +198,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
             createThumbnailThread.start();
 
             if (search != null) {
-                search.logResourceSaved(selectedResource.getRank(), newResource.getId());
-                fireEvent(new SearchEvent(Action.search_result_saved, search).setRank(selectedResource.getRank()).setResourceId(newResource.getId()));
-                fireEvent(new ResourceEvent(Action.adding_resource, newResource).setParams(search.getId() + " - " + selectedResource.getRank()));
+                searchHistoryRecorder.recordAction(searchHistoryId, selectedResource.getRank(), SearchAction.resource_saved);
+                fireEvent(new ResourceEvent(Action.adding_resource, newResource).setParams(searchHistoryId + " - " + selectedResource.getRank()));
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
@@ -234,9 +240,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         try {
             Map<String, String> params = Faces.getRequestParameterMap();
             int rank = Integer.parseInt(params.get("resourceId")); // the element id holds the rank, not the resource id
-
-            search.logResourceClicked(rank);
-            fireEvent(new SearchEvent(Action.search_result_clicked, search).setRank(rank));
+            searchHistoryRecorder.recordAction(searchHistoryId, rank, SearchAction.resource_clicked);
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
         }
@@ -390,21 +394,15 @@ public class SearchBean extends ApplicationBean implements Serializable {
         this.view = view;
     }
 
-    public int getCounter() {
-        return counter++;
-    }
-
     public boolean isShowAlternativeSources() {
         return !getUser().getOrganisation().getOption(Organisation.Option.Search_Disable_alternative_sources);
     }
 
-    @Serial
-    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
-        inputStream.defaultReadObject();
-    }
-
+    /**
+     * Runs an additional search grouped by source, once per query, as the view calls it multiple times.
+     */
     public List<GroupedResources> getResourcesGroupedBySource() {
-        if (StringUtils.isNoneBlank(query) && (resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty())) {
+        if (resourcesGroupedBySource == null && StringUtils.isNoneBlank(query)) { // empty if no other source has results
             SearchFilters searchFilters = new SearchFilters(searchMode);
             Search metaSearch = new Search(interweb, query, searchFilters, getUser());
             metaSearch.setMode(searchMode);
@@ -412,8 +410,12 @@ public class SearchBean extends ApplicationBean implements Serializable {
             metaSearch.setConfigResultsPerGroup(10);
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
             metaSearch.getResourcesByPage(2); // fetch resources
-            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(MIN_RESOURCES_PER_GROUP, searchService);
-            Collections.sort(resourcesGroupedBySource);
+            List<GroupedResources> groupedResources = metaSearch.getResourcesGroupedBySource(MIN_RESOURCES_PER_GROUP, searchService);
+            Collections.sort(groupedResources);
+            if (metaSearch.isFailed()) {
+                return groupedResources; // not cached, retried on the next render
+            }
+            resourcesGroupedBySource = groupedResources;
         }
         return resourcesGroupedBySource;
     }

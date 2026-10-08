@@ -11,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +65,20 @@ public final class SqlHelper {
 
     public static String toNullable(String value) {
         return StringUtils.isBlank(value) ? null : value.trim();
+    }
+
+    /**
+     * The escape clause the patterns of {@link #toContainsPattern(String)} need, e.g. {@code LOWER(column) LIKE ? ESCAPE '!'}.
+     * Not a backslash, its meaning in a string literal depends on the SQL mode ({@code NO_BACKSLASH_ESCAPES}).
+     */
+    public static final String LIKE_ESCAPE = "ESCAPE '!'";
+
+    /**
+     * @return a lower case pattern for {@code LOWER(column) LIKE ?} with {@link #LIKE_ESCAPE},
+     * that matches the values containing the given text literally
+     */
+    public static String toContainsPattern(String value) {
+        return "%" + value.toLowerCase(Locale.ROOT).replace("!", "!!").replace("%", "!%").replace("_", "!_") + "%";
     }
 
     public static String join(String[] array) {

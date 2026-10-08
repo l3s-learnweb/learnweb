@@ -3,7 +3,7 @@ package de.l3s.learnweb.logging;
 import de.l3s.learnweb.user.User;
 
 /**
- * A user activity, fired by {@link EventDispatcher} and observed asynchronously, e.g. by {@link LoggingEventListener}.
+ * A user activity, fired by {@link EventDispatcher} and stored in the activity log by {@link LoggingEventListener}.
  * Subclasses take the subject of the activity and use its id as the target id, see {@link Action#getTargetId()}.
  */
 public class ActivityEvent {
@@ -62,6 +62,9 @@ public class ActivityEvent {
         return this;
     }
 
+    /**
+     * @return the user who performed the event, null if the user isn't logged in
+     */
     public User getPerformer() {
         return performer;
     }
