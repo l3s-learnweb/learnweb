@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.ted;
+package de.l3s.learnweb.resource;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,15 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.SequencedMap;
 
 import de.l3s.learnweb.app.Learnweb;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
-public class TranscriptLog implements Serializable {
+public class Annotation implements Serializable {
     @Serial
     private static final long serialVersionUID = 6321296603254649454L;
 
     /**
-     * Action values stored by ted-transcript.js mapped to their message keys.
+     * Action values stored by annotator.js mapped to their message keys.
      */
     public static final SequencedMap<String, String> ACTIONS;
 
@@ -33,36 +32,27 @@ public class TranscriptLog implements Serializable {
         ACTIONS = Collections.unmodifiableSequencedMap(actions);
     }
 
-    private int userId;
+    private int annotationId;
     private int resourceId;
-    private String wordsSelected;
-    private String userAnnotation;
+    private int userId;
     private String action;
-    private Instant timestamp;
+    private String selection;
+    private String annotation;
+    private Instant createdAt;
 
     // cached values
     private transient User user;
     private transient Resource resource;
 
-    public TranscriptLog() {
-
+    public Annotation() {
     }
 
-    public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Instant timestamp) {
-        this.userId = userId;
-        this.resourceId = resourceId;
-        this.wordsSelected = wordsSelected;
-        this.userAnnotation = userAnnotation;
-        this.action = action;
-        this.timestamp = timestamp;
+    public int getAnnotationId() {
+        return annotationId;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setAnnotationId(final int annotationId) {
+        this.annotationId = annotationId;
     }
 
     public int getResourceId() {
@@ -73,20 +63,28 @@ public class TranscriptLog implements Serializable {
         this.resourceId = resourceId;
     }
 
-    public String getWordsSelected() {
-        return wordsSelected;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setWordsSelected(String wordsSelected) {
-        this.wordsSelected = wordsSelected;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getUserAnnotation() {
-        return userAnnotation;
+    public String getSelection() {
+        return selection;
     }
 
-    public void setUserAnnotation(String userAnnotation) {
-        this.userAnnotation = userAnnotation;
+    public void setSelection(final String selection) {
+        this.selection = selection;
+    }
+
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(final String annotation) {
+        this.annotation = annotation;
     }
 
     public String getAction() {
@@ -104,19 +102,17 @@ public class TranscriptLog implements Serializable {
         return ACTIONS.getOrDefault(action, action);
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
-
-    // ------------ convenience functions -----------------
 
     public User getUser() {
         if (null == user) {
-            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(getUserId());
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }

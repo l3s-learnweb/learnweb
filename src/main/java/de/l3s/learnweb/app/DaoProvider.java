@@ -30,6 +30,7 @@ import de.l3s.learnweb.forum.ForumTopicDao;
 import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.LogDao;
+import de.l3s.learnweb.resource.AnnotationDao;
 import de.l3s.learnweb.resource.CommentDao;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.ResourceDao;
@@ -74,6 +75,7 @@ public class DaoProvider {
     private final DataSource dataSource;
     private final Jdbi jdbi;
 
+    private final AnnotationDao annotationDao;
     private final AnnouncementDao announcementDao;
     private final ArchiveUrlDao archiveUrlDao;
     private final BanDao banDao;
@@ -121,6 +123,7 @@ public class DaoProvider {
             jdbi.setSqlLogger(new LearnwebSqlLogger());
         }
 
+        annotationDao = jdbi.onDemand(AnnotationDao.class);
         announcementDao = jdbi.onDemand(AnnouncementDao.class);
         archiveUrlDao = jdbi.onDemand(ArchiveUrlDao.class);
         banDao = jdbi.onDemand(BanDao.class);
@@ -221,6 +224,11 @@ public class DaoProvider {
     @Produces
     public Jdbi getJdbi() {
         return jdbi;
+    }
+
+    @Produces
+    public AnnotationDao getAnnotationDao() {
+        return annotationDao;
     }
 
     @Produces
