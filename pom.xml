@@ -25,6 +25,7 @@
         <maven.dependency.sentry.version>8.59.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.24.0</maven.dependency.mockito.version>
         <maven.dependency.jetty.version>12.1.13</maven.dependency.jetty.version>
+        <maven.dependency.jena.version>6.2.0</maven.dependency.jena.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -332,6 +333,18 @@
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.30.0</version>
+        </dependency>
+
+        <!-- RDF Graph -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-rdfconnection</artifactId>
+            <version>${maven.dependency.jena.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-querybuilder</artifactId>
+            <version>${maven.dependency.jena.version}</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
