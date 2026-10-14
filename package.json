@@ -25,7 +25,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "shepherd.js": "^15.2.2",
-    "video.js": "^8.23.7"
+    "video.js": "^8.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
