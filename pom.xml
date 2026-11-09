@@ -17,14 +17,14 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>25</maven.compiler.release>
-        <maven.dependency.myfaces.version>4.1.3</maven.dependency.myfaces.version> <!-- 4.1.4 makes UIInput.submittedValue transient, which breaks required f:viewParam on postback -->
-        <maven.dependency.imageio.version>3.15.2</maven.dependency.imageio.version>
+        <maven.dependency.myfaces.version>4.1.4</maven.dependency.myfaces.version> <!-- 4.1.4 makes UIInput.submittedValue transient, which breaks required f:viewParam on postback -->
+        <maven.dependency.imageio.version>3.15.3</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.55.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>13.9.0</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>13.12.1</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.26.1</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>8.59.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>8.63.0</maven.dependency.sentry.version>
         <maven.dependency.mockito.version>5.24.0</maven.dependency.mockito.version>
-        <maven.dependency.jetty.version>12.1.13</maven.dependency.jetty.version>
+        <maven.dependency.jetty.version>12.1.14</maven.dependency.jetty.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>9.1.4.Final</version>
+            <version>9.1.6.Final</version>
         </dependency>
         <!-- Jakarta Mail API & Impl -->
         <dependency>
@@ -103,12 +103,12 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>5.5.4</version>
+            <version>5.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>16.0.0</version>
+            <version>16.0.1</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
         <dependency>
@@ -283,25 +283,25 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
         </dependency>
         <!-- Converts Java Objects into JSON and back -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.14.0</version>
+            <version>2.15.0</version>
         </dependency>
         <!-- A dependency of several other packages, but as we anyway need to include it, feel free to use it -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.7.2-jre</version>
+            <version>33.8.0-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.23.2</version>
+            <version>1.24.1</version>
         </dependency>
         <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
@@ -331,7 +331,7 @@
         <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
-            <version>0.30.0</version>
+            <version>0.32.0</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
@@ -430,7 +430,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.10.4.1</version>
+                <version>4.10.5.0</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -438,7 +438,7 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.1</version>
                 <configuration>
                     <argLine>
                         -javaagent:${settings.localRepository}/org/mockito/mockito-core/${maven.dependency.mockito.version}/mockito-core-${maven.dependency.mockito.version}.jar
@@ -514,7 +514,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.22.0</version>
+                <version>2.24.0</version>
                 <configuration>
                     <processUnboundPlugins>true</processUnboundPlugins>
                     <ruleSet>
@@ -539,7 +539,7 @@
             <!-- A maven component that enforces minimum Java and Maven versions -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.3</version>
+                <version>3.7.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
