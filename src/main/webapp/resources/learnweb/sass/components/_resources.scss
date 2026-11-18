@@ -1,3 +1,6 @@
+@use '~@fortawesome/fontawesome-free/scss/variables' as fa;
+@use '~@fortawesome/fontawesome-free/scss/functions' as fa-fn;
+
 $resource-default-color: #606c88;
 $resource-text-color: #205493;
 $resource-video-color: #d32f2f;
@@ -27,61 +30,61 @@ $resource-glossary-color: #6a4aa5;
 
 .res-t-icon {
   color: $resource-default-color;
-  @include fa-icon-content($fa-var-file);
+  @include fa-icon-content(fa.$var-file);
 
   .res-t-text & {
     color: $resource-text-color;
-    @include fa-icon-content($fa-var-file-alt);
+    @include fa-icon-content(fa.$var-file-alt);
   }
 
   .res-t-video & {
     color: $resource-video-color;
-    @include fa-icon-content($fa-var-file-video);
+    @include fa-icon-content(fa.$var-file-video);
   }
 
   .res-t-image & {
     color: $resource-image-color;
-    @include fa-icon-content($fa-var-file-image);
+    @include fa-icon-content(fa.$var-file-image);
   }
 
   .res-t-audio & {
     color: $resource-audio-color;
-    @include fa-icon-content($fa-var-file-audio);
+    @include fa-icon-content(fa.$var-file-audio);
   }
 
   .res-t-pdf & {
     color: $resource-pdf-color;
-    @include fa-icon-content($fa-var-file-pdf);
+    @include fa-icon-content(fa.$var-file-pdf);
   }
 
   .res-t-website & {
     color: $resource-website-color;
-    @include fa-icon-content($fa-var-link);
+    @include fa-icon-content(fa.$var-link);
   }
 
   .res-t-spreadsheet & {
     color: $resource-spreadsheet-color;
-    @include fa-icon-content($fa-var-file-excel);
+    @include fa-icon-content(fa.$var-file-excel);
   }
 
   .res-t-presentation & {
     color: $resource-presentation-color;
-    @include fa-icon-content($fa-var-file-powerpoint);
+    @include fa-icon-content(fa.$var-file-powerpoint);
   }
 
   .res-t-document & {
     color: $resource-document-color;
-    @include fa-icon-content($fa-var-file-word);
+    @include fa-icon-content(fa.$var-file-word);
   }
 
   .res-t-survey & {
     color: $resource-survey-color;
-    @include fa-icon-content($fa-var-poll-h);
+    @include fa-icon-content(fa.$var-poll-h);
   }
 
   .res-t-glossary & {
     color: $resource-glossary-color;
-    @include fa-icon-content($fa-var-book);
+    @include fa-icon-content(fa.$var-book);
   }
 }
 
@@ -197,7 +200,7 @@ ul.res-breadcrumbs {
       &::after {
         @extend .fas;
 
-        content: fa-content($fa-var-chevron-right);
+        content: fa-fn.fa-content(fa.$var-chevron-right);
         position: absolute;
         top: 0.5em;
         right: -1em;
@@ -362,7 +365,7 @@ ul.res-filters {
   &::before {
     @extend .fas;
 
-    content: fa-content($fa-var-check-circle);
+    content: fa-fn.fa-content(fa.$var-check-circle);
     width: 2.5rem;
     height: 2.5rem;
     font-size: 2.25rem;
@@ -505,15 +508,15 @@ ul.res-filters {
       }
 
       .ui-icon-carat-2-n-s::before {
-        content: fa-content($fa-var-arrows-alt-v);
+        content: fa-fn.fa-content(fa.$var-arrows-alt-v);
       }
 
       .ui-icon-triangle-1-n::before {
-        content: fa-content($fa-var-long-arrow-alt-down);
+        content: fa-fn.fa-content(fa.$var-long-arrow-alt-down);
       }
 
       .ui-icon-triangle-1-s::before {
-        content: fa-content($fa-var-long-arrow-alt-up);
+        content: fa-fn.fa-content(fa.$var-long-arrow-alt-up);
       }
     }
   }
@@ -577,7 +580,7 @@ ul.res-filters {
     &::after {
       @extend .fas;
 
-      content: fa-content($fa-var-cloud-upload-alt);
+      content: fa-fn.fa-content(fa.$var-cloud-upload-alt);
       z-index: 10;
       color: var(--primary);
       position: absolute;

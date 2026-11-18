@@ -5,13 +5,12 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<h:outputStylesheet name="bundle/video-js.min.css"/>
-<h:outputScript name="bundle/video-js.min.js" target="body"/>
+<h:outputScript name="bundle/learnweb.videojs.js" target="body"/>
 
-<video class="video-js vjs-fill vjs-default-skin vjs-big-play-centered"
-       controls="controls" preload="none" data-setup="{}" poster="#{res.thumbnailLargest}" title="#{res.title}">
-    <source src="#{res.downloadUrl}" type="#{res.format}"/>
-    <p class="vjs-no-js"><h:outputText value="#{msg.javascript_disabled}" escape="false"/></p>
-</video>
+<video-player class="lw-media-player" poster="#{res.thumbnailLargest}" content-title="#{res.title}">
+    <video-skin class="lw-media-skin">
+        <video src="#{res.downloadUrl}" preload="none" playsinline="playsinline"></video>
+    </video-skin>
+</video-player>
 
 </ui:composition>

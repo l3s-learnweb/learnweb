@@ -1,3 +1,6 @@
+@use '~@fortawesome/fontawesome-free/scss/variables' as fa;
+@use '~@fortawesome/fontawesome-free/scss/functions' as fa-fn;
+
 .search-list {
   max-width: 40rem; // 640px
 
@@ -229,14 +232,14 @@
   &.mode-image::before {
     @extend .fas;
 
-    content: fa-content($fa-var-image);
+    content: fa-fn.fa-content(fa.$var-image);
     margin-right: 5px;
   }
 
   &.mode-video::before {
     @extend .fas;
 
-    content: fa-content($fa-var-video);
+    content: fa-fn.fa-content(fa.$var-video);
     margin-right: 5px;
   }
 }

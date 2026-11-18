@@ -1,24 +1,13 @@
 /*!
- * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 7.x by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2022 Fonticons, Inc.
+ * Copyright Fonticons, Inc.
  */
-$fa-font-path: './webfonts';
-
-@import '~@fortawesome/fontawesome-free/scss/functions';
-@import '~@fortawesome/fontawesome-free/scss/variables';
-@import '~@fortawesome/fontawesome-free/scss/mixins';
-@import '~@fortawesome/fontawesome-free/scss/core';
-@import '~@fortawesome/fontawesome-free/scss/sizing';
-@import '~@fortawesome/fontawesome-free/scss/fixed-width';
-//@import '~@fortawesome/fontawesome-free/scss/list';
-//@import '~@fortawesome/fontawesome-free/scss/bordered-pulled';
-@import '~@fortawesome/fontawesome-free/scss/animated'; // only fa-spin is used
-//@import '~@fortawesome/fontawesome-free/scss/rotated-flipped';
-//@import '~@fortawesome/fontawesome-free/scss/stacked';
-@import '~@fortawesome/fontawesome-free/scss/icons';
-//@import '~@fortawesome/fontawesome-free/scss/screen-reader';
-
-@import '~@fortawesome/fontawesome-free/scss/solid';
-@import '~@fortawesome/fontawesome-free/scss/regular';
-//@import '~@fortawesome/fontawesome-free/scss/brands';
+@use '~@fortawesome/fontawesome-free/scss/variables' as fa with ($font-path: './webfonts');
+@use '~@fortawesome/fontawesome-free/scss/core';
+@use '~@fortawesome/fontawesome-free/scss/sizing';
+@use '~@fortawesome/fontawesome-free/scss/widths'; // fa-fw
+@use '~@fortawesome/fontawesome-free/scss/animated'; // only fa-spin is used
+@use '~@fortawesome/fontawesome-free/scss/icons';
+@use '~@fortawesome/fontawesome-free/scss/solid';
+@use '~@fortawesome/fontawesome-free/scss/regular';

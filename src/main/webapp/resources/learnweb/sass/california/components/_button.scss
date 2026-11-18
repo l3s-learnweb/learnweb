@@ -1,3 +1,6 @@
+@use '~@fortawesome/fontawesome-free/scss/variables' as fa;
+@use '~@fortawesome/fontawesome-free/scss/functions' as fa-fn;
+
 body {
   .ui-button + .ui-button {
     margin-left: $spacer * 0.2;
@@ -19,7 +22,7 @@ body {
       &::before {
         @extend .fas;
 
-        content: fa-content($fa-var-cog);
+        content: fa-fn.fa-content(fa.$var-cog);
         padding-right: 0.5rem;
         color: $mod;
       }

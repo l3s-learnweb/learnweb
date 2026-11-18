@@ -32,6 +32,7 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
     entryPoints: [
         {in: 'src/main/webapp/resources/learnweb/main.js', out: 'learnweb.main'},
         {in: 'src/main/webapp/resources/learnweb/js/guide.js', out: 'learnweb.guide'},
+        {in: 'src/main/webapp/resources/learnweb/js/videojs.js', out: 'learnweb.videojs'},
     ],
     outdir: 'src/main/webapp/resources/bundle',
     plugins: [
@@ -48,8 +49,6 @@ const /** @type {esbuild.BuildOptions} */ defaultOptions = {
             copyOnce: true,
             targets: [
                 {from: 'node_modules/@fortawesome/fontawesome-free/webfonts'},
-                {from: 'node_modules/video.js/dist/video-js.min.css'},
-                {from: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', to: 'video-js.min.js'},
             ],
         }),
     ],

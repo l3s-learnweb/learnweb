@@ -38,13 +38,22 @@ body .res-view {
       overflow: auto;
 
       > div {
-        &:has(.ui-tabs, form, .video-js, > iframe) {
+        &:has(.ui-tabs, form, .lw-media-player, > iframe) {
           min-height: 100%;
         }
 
-        > iframe,
-        > .video-js {
+        &:has(> .lw-media-player) {
+          display: flex;
+          flex-direction: column;
+        }
+
+        > iframe {
           width: 100%;
+          min-height: 25rem;
+        }
+
+        > .lw-media-player {
+          flex: 1;
           min-height: 25rem;
         }
 

@@ -1,3 +1,6 @@
+@use '~@fortawesome/fontawesome-free/scss/variables' as fa;
+@use '~@fortawesome/fontawesome-free/scss/functions' as fa-fn;
+
 .guide-slideshow {
   position: relative;
   width: 100%;
@@ -15,7 +18,7 @@
   &::after {
     @extend .fas;
 
-    content: fa-content($fa-var-play-circle);
+    content: fa-fn.fa-content(fa.$var-play-circle);
     position: absolute;
     top: calc(50% - 3rem);
     left: calc(50% - 3rem);

@@ -1,0 +1,15 @@
+// Video.js 10 players (<video-player> / <audio-player>), themed through the documented custom properties
+.lw-media-player {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  --media-accent-color: var(--primary);
+  --media-border-radius: 0;
+}
+
+.lw-media-skin {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
